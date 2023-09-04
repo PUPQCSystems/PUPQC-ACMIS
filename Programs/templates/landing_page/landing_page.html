@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!--Card Header-->
+    <div class="card">
+        <div class="card-body" style="height: 70px;">
+                This is some text within a card body.
+        </div>
+    </div>
+    <br>
+    <!--Card Body-->
+    <div class="card" style="height: 480px;">
+        <div class="card-body">
+            <div class="row">
+                <div class="col col-lg-2">
+                    <h5 class="card-title">Programs</h5>
+                </div>
+                <div class="col col-lg-10">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        Create Program
+                    </button>
+                </div>
+
+            </div>
+
+            <hr>
+        </div>
+      </div>
+      {% include "landing_page/create_modal.html" %}
+
+{% endblock content %}
