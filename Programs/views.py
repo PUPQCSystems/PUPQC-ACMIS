@@ -1,10 +1,21 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from .models import Program
+from django.http import HttpResponse, HttpResponseRedirect
+from .models import Program #Import the model for data retieving
+from .forms import CreateForm
+from django.contrib import messages
 
 # Create your views here.
 
+def landing_page(request, pk=None):
+  #Getting all the data inside the Program table and storing it to the context variable
+    create_form = CreateForm(request.POST or None)
+    if create_form.is_valid():
+        create_form.save()
+        program_name = create_form.cleaned_data.get('abbreviation')
+        messages.success(request, f'{program_name} is successfully created!') 
+        return HttpResponseRedirect('/Programs/landing_page/')
 
-def landing_page(request):
-    context = { 'records': Program.objects.all() } 
+    context = { 'records': Program.objects.all(), 'create_form': create_form}  #Getting all the data inside the Program table and storing it to the context variable
     return render(request, 'landing_page/landing_page.html', context)
+
+

@@ -1,9 +1,9 @@
 <!-- Modal -->
-<div class="modal fade" id="edit-modal-{{ record.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="view-modal-{{ record.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit {{ record.id }} Program</h1>
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">View {{ record.id }} Program</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -12,17 +12,17 @@
           <form>
             <div class="mb-3">
               <label for="program-name" class="col-form-label">Program Name:</label>
-              <input type="text" class="form-control" id="program-name" value="{{ record.program_name }}">
+              <input type="text" class="form-control" id="program-name">
             </div>
 
             <div class="mb-3">
               <label for="abbreviation" class="col-form-label">Abbreviation:</label>
-              <input type="text" class="form-control" id="abbreviation" value="{{ record.abbreviation }}">
+              <input type="text" class="form-control" id="abbreviation">
             </div>
 
             <div class="mb-3">
               <label for="program-description" class="col-form-label">Description:</label>
-              <textarea class="form-control" id="program-description" style="height: 150px;">{{ record.description }}</textarea>
+              <textarea class="form-control" id="program-description" style="height: 150px;"></textarea>
             </div>
 
           </form>
@@ -31,7 +31,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save Changes</button>
+            <button type="button" class="btn btn-primary">Create Program</button>
         </div>
       </div>
     </div>

@@ -1,3 +1,5 @@
+{% load crispy_forms_tags %}
+
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -9,30 +11,82 @@
         <div class="modal-body">
 
 
-          <form>
+        <form method="POST" autocomplete="off">
+            {% csrf_token %}
             <div class="mb-3">
-              <label for="program-name" class="col-form-label">Program Name:</label>
+            	{{ create_form.program_name|as_crispy_field }}
+            </div>
+
+        	<div class="mb-3">
+				<div class="row">
+        			<div class="col-8">
+						{{ create_form.abbreviation|as_crispy_field }}
+
+              		</div>
+
+					  <div class="col-4">
+						{{ create_form.color_code|as_crispy_field }}
+					  </div>
+				</div>
+			</div>
+
+            <div class="mb-3">
+            	{{ create_form.description|as_crispy_field }}
+			</div>
+
+
+
+            {% comment %} <div class="mb-3">
+              <label for="program-name" class="col-form-label">Program Name</label>
               <input type="text" class="form-control" id="program-name">
+           
             </div>
 
             <div class="mb-3">
-              <label for="abbreviation" class="col-form-label">Abbreviation:</label>
-              <input type="text" class="form-control" id="abbreviation">
+
+              <div class="row">
+                <div class="col-8">
+                  <label for="abbreviation" class="col-form-label">Abbreviation</label>
+                  <input type="text" class="form-control" id="abbreviation">
+                </div>
+
+                <div class="col-4">
+                  <label for="GFG_Color" class="col-form-label">
+                    Select Background Color
+                </label>
+                <input type="color" class="form-control" 
+                    list="colors" id="GFG_Color" 
+                    placeholder="Select Color" style="height: 37px"
+                    value="#800000">
+                <datalist id="colors">
+                    <option value="#f8b195"></option>
+                    <option value="#f67280"></option>
+                    <option value="#co6c84"></option>
+                    <option value="#6c5b7b"></option>
+                    <option value="#355c7d"></option>
+                    <option value="#781424"></option>
+                    <option value="#00b4d8"></option>
+                    <option value="#00cc00"></option>
+                    <option value="#03045e"></option>
+                    <option value="#15bab3"></option>
+                    <option value="#fdfcef"></option>
+                </datalist> 
+                </div>
+              </div>
             </div>
 
             <div class="mb-3">
-              <label for="program-description" class="col-form-label">Description:</label>
+              <label for="program-description" class="col-form-label">Description</label>
               <textarea class="form-control" id="program-description" style="height: 150px;"></textarea>
-            </div>
-
-          </form>
-
+            </div>  {% endcomment %}
           
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Create Program</button>
-        </div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary">Create Program</button>
+			</div>
+
+		</form>
       </div>
     </div>
   </div>

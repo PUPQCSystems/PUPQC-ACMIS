@@ -1,54 +1,60 @@
-<div class="row row-cols-1 row-cols-md-4 g-4">
-    {% for record in records %}
-        <div class="col">
-            <div class="card" style= "height: 20rem;">
-                <div class="card-header bg-primary bg-opacity-50">
 
-                    <div class="row">
-                        <div class="col col-lg-10">
-                            <label class="h1"> {{ record.abbreviation }} </label>
-                        </div>
-
-                        <div class="col col-lg-2">  
-
-                            <div class="btn-group " style="margin: auto">
-                                    <button type="button" class="fa-solid fa-ellipsis-vertical fa-xl dropdown-toggle" 
-                                        style="color: #ffffff;" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="-50,2">
+    
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        {% for record in records %}
+            <div class="col">
+                <div class="card">
+                    <div class="card-header bg-opacity-50" style="background-color: {{ record.color_code }}">
+                        <div class="row">
+                            <div class="col col-lg-10">
+                                <label class="h1">{{ record.abbreviation }}</label>
+                            </div>
+                            <div class="col col-lg-2">
+                                <div class="btn-group">
+                                    <button class="btn btn-ellipse" type="button" data-bs-toggle="dropdown" 
+                                        data-bs-auto-close="true" aria-expanded="false" data-bs-offset="-50,2" style="color: #ffffff;">
+                                        <li class="fa-solid fa-ellipsis-vertical fa-xl"></li>
                                     </button>
-                                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+                                    <ul class="dropdown-menu">
                                         <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button></li>
                                         <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Archive</button></li>
-                                  </ul>
+                                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#archive-modal-{{ record.id }}">Archive</button></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <p class="card-text">{{ record.program_name }}</p>
+                        </div>
                     </div>
-
-                    <div class="row">
-                        <p class="card-text"> {{ record.program_name }}</p>
-                    </div>
-                </div>
-                <div class="card-body">
-            
+                    <div class="card-body">
+                        
                         {% comment %} <label class="card-title">Created by</label>
                         <p class="card-text">{{ record.modified_by }}</p> {% endcomment %}
               
-                        <label class="card-title">Date Created</label>
+                        <label class="card-title"><strong>Date Created</strong></label>
                         <p class="card-text">{{ record.created_at|date:"F d, Y" }}</p>
                     
                         {% comment %} <label class="card-title">Modified by</label>
                         <p class="card-text">{{ record.modified_by }}</p> {% endcomment %}
                     
-                        <label class="card-title">Last Modified</label>
+                        <label class="card-title"><strong>Last Modified</strong></label>
                         <p class="card-text ">{{ record.modified_at|date:"F d, Y" }}</p>
+                        
+                    </div>
                 </div>
             </div>
-        </div>
+            {% include "landing_page/view_modal.html" %}
+            {% include "landing_page/edit_modal.html" %}
+            {% include "landing_page/archive_modal.html" %}
 
-        {% include "landing_page/view_modal.html" %}
-        {% include "landing_page/edit_modal.html" %}
-    {% endfor %}
-</div>
+            {% if forloop.counter|divisibleby:4 %}
+                </div><br>
+                <div class="row row-cols-1 row-cols-md-4 g-4">
+            {% endif %}
+        {% endfor %}
+    </div>
+
 
 

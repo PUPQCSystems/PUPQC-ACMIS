@@ -1,37 +1,36 @@
 {% extends "base.html" %}
-
-
 {% block content %}
-
 <!--Card Header-->
     <div class="card">
-        <div class="card-body" style="height: 70px;">
-                This is some text within a card body.
+        <div class="card-body">
+                <h1> Setup Programs  </h1>
         </div>
     </div>
     <br>
     <!--Card Body-->
-    <div class="card" style="height: 480px;">
-        <div class="card-body">
+    <div class="card">
+        <div class="card-header">
             
             <div class="row">
-                <div class="col col-lg-2">
+                <div class="col col-lg-8">
                     <h5 class="card-title">Programs</h5>
                 </div>
-                <div class="col col-lg-10">
+                <div class="col col-lg-4">
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                        Create Program
+                    <button type="button" class="btn btn-primary  float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        Add Program
                     </button>
                 </div>
             </div>
-            <hr>
+        </div>
 
+        <div class= "card-body">
             <!-- PROGRAM CARDS -->
             {% include "landing_page/program_cards.html" %}
 
         </div>
-      </div>
+
+    </div>
       {% include "landing_page/create_modal.html" %}
 
 {% endblock content %}

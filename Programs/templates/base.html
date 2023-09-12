@@ -16,11 +16,19 @@
 
   </head>
 	<body>
+		{% for message in messages %}
+			{% if message.tags == 'success' %}
+				{% comment %} Input the message here {% endcomment %}
+			
+				<script>
+					toastr["success"]("I do not think that means what you think it means.")
+				</script>	
+			{% endif %}
+		
+		{% endfor %}
 		<div class="wrapper">
 			<!-- NAVIGATION BARS -->
 			{% include "navigation_bars/top_nav.html" %}
-			{% include "navigation_bars/left_nav.html" %}
-
 			<!-- CONTENTS -->
 			<div class = "container">
 				{% block content %} {% endblock %}
