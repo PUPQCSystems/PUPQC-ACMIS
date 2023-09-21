@@ -20,7 +20,7 @@ def create_program(request):
         program_name = create_form.cleaned_data.get('abbreviation')
         # messages.success(request, f'{program_name} is successfully created!') 
         # return HttpResponseRedirect('/Programs/landing_page/')
-        return JsonResponse({'toastr_message': 'Program created successfully!'})
+        return JsonResponse({'toastr_message': program_name + ' Program created successfully!'})
     
     else:
         # Return a validation error using a JSON response
@@ -32,20 +32,46 @@ def create_program(request):
     # return render(request, 'landing_page/landing_page.html', context)
 
 
-def update_program(request, pk):  
-    create_form = CreateForm(request.POST or None)
+# def update_program(request, pk):  
+#     create_form = CreateForm(request.POST or None)
 
-    program = Program.objects.all()
+#     program = Program.objects.get(id=pk)
+#     update_form = CreateForm(instance=program)
+
+#     if request.method == 'POST':
+#       update_form = CreateForm(request.POST, instance=program)
+#       if update_form.is_valid():
+#           update_form.save()
+#           program_name = update_form.cleaned_data.get('abbreviation')
+#           messages.success(request, f'{program_name} is successfully updated!') 
+#           return HttpResponseRedirect('/Programs/landing_page/')
+
+#     context = { 'records': Program.objects.all(), 'create_form': create_form, 'update_form': update_form}  #Getting all the data inside the Program table and storing it to the context variable
+#     return render(request, 'landing_page/landing_page.html', context)
+
+def update_program(request, pk):
+    # Retrieve the program object with the given primary key (pk)
+    try:
+        program = Program.objects.get(id=pk)
+    except Program.DoesNotExist:
+        return JsonResponse({'errors': 'Program not found'}, status=404)
+
+    # Create an instance of the form with the program data
     update_form = CreateForm(instance=program)
 
     if request.method == 'POST':
-      update_form = CreateForm(request.POST, instance=program)
-      if update_form.is_valid():
-          update_form.save()
-          program_name = update_form.cleaned_data.get('abbreviation')
-          messages.success(request, f'{program_name} is successfully updated!') 
-          return HttpResponseRedirect('/Programs/landing_page/')
+        # Process the form submission with updated data
+        update_form = CreateForm(request.POST, instance=program)
+        if update_form.is_valid():
+            # Save the updated data to the database
+            update_form.save()
+            program_name = update_form.cleaned_data.get('abbreviation')
 
-    context = { 'records': Program.objects.all(), 'create_form': create_form, 'update_form': update_form}  #Getting all the data inside the Program table and storing it to the context variable
-    return render(request, 'landing_page/landing_page.html', context)
+            # Provide a success message as a JSON response
+            return JsonResponse({'toastr_message': program_name + ' Program updated successfully!'})
+        else:
+            # Return a validation error as a JSON response
+            return JsonResponse({'errors': update_form.errors}, status=400)
+
+
 

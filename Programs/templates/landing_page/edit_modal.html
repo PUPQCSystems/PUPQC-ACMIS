@@ -11,7 +11,7 @@
         <div class="modal-body">
 
 
-        <form method="POST" autocomplete="off" id="update-program-form" action="{% url 'program-update' pk=record.id %}">
+        <form method="POST" autocomplete="off" id="update-program-form-{{ record.id }}" data-record-id="{{ record.id }}">
             {% csrf_token %}
             <div class="mb-3">
             	{{ update_form.program_name|as_crispy_field }}
@@ -33,9 +33,6 @@
             <div class="mb-3">
             	{{ update_form.description|as_crispy_field }}
 			</div>
-
-
-
 
 
 
@@ -82,7 +79,7 @@
   
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <button id="save-{{ record.id }}" type="submit" class="btn btn-primary" >Save Changes</button>
   </div>
 
 </form>

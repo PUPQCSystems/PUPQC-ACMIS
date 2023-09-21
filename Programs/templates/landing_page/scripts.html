@@ -1,0 +1,95 @@
+{% comment %} These are the scripts for the landing page. {% endcomment %}
+
+{% comment %} AJAX FOR CREATING {% endcomment %}
+<script>
+    $(document).ready(function(){
+
+        $("#submit").click(function(event) {
+            var serializedData = $("#create-program-form").serialize();
+            event.preventDefault();
+
+            $.ajax({
+                url: "{% url 'program-create' %}", 
+                data: serializedData,
+                type: "POST",
+                success: function(response) {
+                    // Hide the modal
+                    $('#staticBackdrop').modal('hide');
+
+                    // Clear the form
+                    $('#create-program-form')[0].reset();
+
+                    //Toastr success message
+                    toastr.success(response.toastr_message);
+
+                    //Refreshing the list without reloading
+                    $('#refresh-div').load(location.href + " #refresh-div");
+                    
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> 
+
+{% comment %} AJAX FOR UPDATING  {% endcomment %}
+{% comment %} <script>
+    $(document).ready(function(){
+        var recordId = $(this).data('record-id');
+        $("#save-"+recordId).click(function(event) {
+            event.preventDefault();
+            var serializedData = $("#update-program-form-" + recordId).serialize();
+            alert(recordId);
+
+
+            $.ajax({
+                url: "/program_update/" + recordId, 
+                data: serializedData,
+                type: "POST",
+                success: function(response) {
+                    // Hide the modal
+                    $('#edit-modal-'+recordId).modal('hide');
+
+                    // Clear the form
+                    $('#update-program-form-'+recordId)[0].reset();
+
+                    //Toastr success message
+                    toastr.success(response.toastr_message);
+
+                    //Refreshing the list without reloading
+                    $('#refresh-div').load(location.href + " #refresh-div");
+                    
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> {% endcomment %}
+
+
+
+
+
+

@@ -48,7 +48,7 @@
             {% include "landing_page/view_modal.html" %}
             {% include "landing_page/edit_modal.html" %}
             {% include "landing_page/archive_modal.html" %}
-
+            
             {% if forloop.counter|divisibleby:4 %}
                 </div><br>
                 <div class="row row-cols-1 row-cols-md-4 g-4">
@@ -56,44 +56,6 @@
         {% endfor %}
     </div>
 
-   <script>
-        $(document).ready(function(){
-
-            $("#submit").click(function(event) {
-                var serializedData = $("#create-program-form").serialize();
-                event.preventDefault();
-
-                $.ajax({
-                    url: "{% url 'program-create' %}", 
-                    data: serializedData,
-                    type: "POST",
-                    success: function(response) {
-                        // Hide the modal
-                        $('#staticBackdrop').modal('hide');
-
-                        // Clear the form
-                        $('#create-program-form')[0].reset();
-
-                        toastr.success(response.toastr_message);
-                        
-                    },
-                    error: function(error) {
-                        // Check for the errors field in the JSON response
-                        if (error.responseJSON && error.responseJSON.errors) {
-                            // Iterate over the errors field and display the validation errors to the user
-                            for (var field in error.responseJSON.errors) {
-                                toastr.error(error.responseJSON.errors[field]);
-                            }
-                        } else {
-                            toastr.error('Something went wrong. Please try again later.');
-                        }
-                    }
-
-                });
-            });
-
-        });
-    </script> 
-
+    {% include "landing_page/scripts.html" %}
 
 
