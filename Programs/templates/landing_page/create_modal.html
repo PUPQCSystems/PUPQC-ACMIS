@@ -10,7 +10,7 @@
         	</div>
         	<div class="modal-body">
 
-				<form method="POST" autocomplete="off" id="create-program-form" class="needs-validation">
+				<form method="POST" autocomplete="off" id="create-program-form">
 					{% csrf_token %}
 					<div class="mb-3">
 						{{ create_form.program_name|as_crispy_field }}
@@ -82,7 +82,7 @@
 
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						<button id="submit" type="submit" class="btn btn-primary">Create Program</button>
+						<button id="submit" type="button" class="btn btn-primary">Create Program</button>
 					</div>
 
 				</form>

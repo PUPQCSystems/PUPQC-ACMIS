@@ -11,25 +11,30 @@ def landing_page(request):
     create_form = CreateForm(request.POST or None)
     update_form = CreateForm(request.POST or None)
     context = { 'records': Program.objects.all(), 'create_form': create_form, 'update_form': update_form}  #Getting all the data inside the Program table and storing it to the context variable
-    return render(request, 'landing_page/landing_page.html', context)
+    return render(request, 'landing_page/program_landing.html', context)
 
 def create_program(request):
     create_form = CreateForm(request.POST or None)
+    update_form = CreateForm(request.POST or None)
+    context = {'create_form': create_form, 'update_form': update_form}  
+
     if create_form.is_valid():
         create_form.save()
         program_name = create_form.cleaned_data.get('abbreviation')
         # messages.success(request, f'{program_name} is successfully created!') 
         # return HttpResponseRedirect('/Programs/landing_page/')
-        return JsonResponse({'toastr_message': program_name + ' Program created successfully!'})
-    
+        return JsonResponse({'toastr_message': program_name + ' Program created successfully!'}, status=200)
+
     else:
         # Return a validation error using a JSON response
-
         return JsonResponse({'errors': create_form.errors}, status=400)
+        #Getting all the data inside the Program table and storing it to the context variable
+
+    return render(request, 'landing_page/program_landing.html', context)
     
 
-    # context = { 'records': Program.objects.all(), 'create_form': create_form}  #Getting all the data inside the Program table and storing it to the context variable
-    # return render(request, 'landing_page/landing_page.html', context)
+    
+
 
 
 # def update_program(request, pk):  

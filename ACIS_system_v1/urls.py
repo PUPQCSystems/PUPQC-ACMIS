@@ -22,4 +22,5 @@ urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path("Programs/", include("Programs.urls")),
     path("Users/", include("Users.urls")),
+    path("Dashboard/", include("Dashboard.urls")),
 ]

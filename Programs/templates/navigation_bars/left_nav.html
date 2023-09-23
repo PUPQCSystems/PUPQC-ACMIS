@@ -1,53 +1,55 @@
+<!-- Side Navigation -->
+<div class="col-auto col-md-2 col-xl-2 px-sm-1 px-0 bg-light">
+	<div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 min-vh-100">
+		<a href="#" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-decoration-none">
+		<small class="text-dark d-none d-sm-inline">Accreditation & Certification</small>
+		</a>
 
-<nav id="sidebar">
-    <div class="custom-menu">
-        <button type="button" id="sidebarCollapse" class="btn btn-primary">
-              <i class="fa fa-bars"></i>
-              <span class="sr-only">Toggle Menu</span>
-        </button>
-    </div>
+		<!--side navigation content goes here -->
+		<ul class="nav flex-column">
 
-    <div class="p-4">
-        <h1><a href="index.html" class="logo">Portfolic <span>Portfolio Agency</span></a></h1>
-        <ul class="list-unstyled components mb-5">
-            <li class="active">
-                <a href="#"><span class="fa fa-home mr-3"></span> Dashboard</a>
-            </li>
-            <li>
-                <a href="{% url 'users-landing' %}"><span class="fa fa-user mr-3"></span> User</a>
-            </li>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'dashboard-landing' %}">
+				<i class="fas fa-home"></i>
+				<small>Dashboard</small>
+				</a>
+			</li>
 
-            <li>
-                <a class="nav-link" href="{% url 'program-landing' %}"><span class="fa fa-sticky-note mr-3"></span>Programs</a>
-            </li>
-        </ul>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'program-landing' %}">
+				<i class="fas fa-book"></i>
+				<small>Programs</small>
+				</a>
+			</li>
 
-        <div class="mb-5">
-            <h3 class="h6 mb-3">Subscribe for newsletter</h3>
-            <form action="#" class="subscribe-form">
-                <div class="form-group d-flex">
-                    <div class="icon"><span class="icon-paper-plane"></span>
-                    </div>
-                        <input type="text" class="form-control" placeholder="Enter Email Address">
-                </div>
-            </form>
-        </div>
+			<li class="nav-item">
+				<a class="nav-link" href="accreditation.html">
+				<i class="fas fa-home"></i>
+				<small>Accreditation</small>
+				</a>
+			</li>
 
-        <div class="footer">
-            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib.com</a>
-                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
-        </div>
-    </div>
-</nav>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'users-landing' %}">
+				<i class="fas fa-book"></i>
+				<small>User</small>
+				</a>
+			</li>
 
-<script src=" {% static 'left_nav/js/jquery.min.js' %}"></script>
-<script src=" {% static 'left_nav/js/popper.js' %}"></script>
-<script src=" {% static 'left_nav/js/bootstrap.min.js' %}"></script>
-<script src=" {% static 'left_nav/js/main.js' %}"></script>
+			<li class="nav-item">
+				<a class="nav-link" href="task.html">
+				<i class="fas fa-home"></i>
+				<small>Task</small>
+				</a>
+			</li>
 
+			<li class="nav-item">
+				<a class="nav-link" href="documents.html">
+				<i class="fas fa-book"></i>
+				<small>Documents</small>
+				</a>
+			</li>
+		</ul>
 
-<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="{% static 'left_nav/css/style.css' %}">
+	</div>
+</div>

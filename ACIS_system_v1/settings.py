@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     'Programs',
     'Users.apps.UsersConfig',
+    'Dashboard',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
