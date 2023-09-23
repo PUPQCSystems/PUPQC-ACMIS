@@ -122,8 +122,9 @@
      {% endcomment %}
 </script>
 
+<!-- This causes problem to the UI when I clich the ellipse button -->
 <style>
-    .program-card.selected {
+    {% comment %} .program-card.selected {
         background-color: #d4ffd5;
     }
 
@@ -134,5 +135,5 @@
 
     .program-card:hover {
         transform: scale(1.03); /* Increase the size on hover */
-    }
+    } {% endcomment %}
 </style>
