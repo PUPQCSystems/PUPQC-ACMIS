@@ -21,6 +21,9 @@ class Migration(migrations.Migration):
                 ('description', models.TextField()),
                 ('created_at', models.DateTimeField(default=django.utils.timezone.now)),
                 ('modified_at', models.DateTimeField(auto_now=True)),
+                ('color_code', models.CharField(default=0, max_length=7)),
+                ('is_deleted', models.BooleanField(default=False)),
+ 
             ],
         ),
     ]

@@ -1,0 +1,131 @@
+{% load static %}
+{% comment %} 
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        {% for record in records %}
+            <div class="col">
+                <div class="card">
+                    <div class="card-header bg-opacity-50" style="background-color: {{ record.color_code }}">
+                        <div class="row">
+                            <div class="col col-lg-10">
+                                <label class="h1">{{ record.abbreviation }}</label>
+                            </div>
+                            <div class="col col-lg-2">
+                                <div class="btn-group">
+                                    <button class="btn btn-ellipse" type="button" data-bs-toggle="dropdown" 
+                                        data-bs-auto-close="true" aria-expanded="false" data-bs-offset="-50,2" style="color: #ffffff;">
+                                        <li class="fa-solid fa-ellipsis-vertical fa-xl"></li>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button></li>
+                                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#archive-modal-{{ record.id }}">Archive</button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <p class="card-text">{{ record.program_name }}</p>
+                        </div>
+                    </div>
+
+                    <div class="card-body">    
+                        <label class="card-title">Created by</label>
+                            <p class="card-text">{{ record.modified_by }}</p>
+                
+                            <label class="card-title"><strong>Date Created</strong></label>
+                            <p class="card-text">{{ record.created_at|date:"F d, Y" }}</p>
+                        
+                        <label class="card-title">Modified by</label>
+                            <p class="card-text">{{ record.modified_by }}</p>
+                        
+                            <label class="card-title"><strong>Last Modified</strong></label>
+                            <p class="card-text ">{{ record.modified_at|date:"F d, Y" }}</p>
+                        
+                    </div>
+                </div>
+            </div>
+            {% include "program_page/view_modal.html" %}
+            {% include "program_page/edit_modal.html" %}
+            {% include "program_page/archive_modal.html" %}
+            
+            {% if forloop.counter|divisibleby:4 %}
+                </div><br>
+                <div class="row row-cols-1 row-cols-md-4 g-4">
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    {% include "program_page/scripts.html" %} 
+    
+    {% endcomment %}
+    
+
+    <section class="bg-light pt-4 pb-1 shadow-sm">
+        <div class="row">
+            <!-- This is the program cards. It will loop multiple times depending of the list of programs in the database-->
+            {% for record in records %}
+                <div class="col-lg-4 mb-3 d-flex align-items-stretch">
+                    <div class="card program-card" style="width: 18rem;">
+                    <!-- Card TOP BACKGROUND COLOR-->
+                    <div class="card-header bg-opacity-50" style="background-color: {{ record.color_code }}">
+                
+                        <div class="row">
+
+                            <div class="col col-lg-10">
+                                <label class="h1">{{ record.abbreviation }}</label>
+                            </div>
+
+                            <div class="col col-lg-2">
+                                <div class="btn-group">
+                                    <button class="btn btn-ellipse" type="button" data-bs-toggle="dropdown" 
+                                        data-bs-auto-close="true" aria-expanded="false" data-bs-offset="-50,2" style="color: #ffffff;">
+                                        <li class="fa-solid fa-ellipsis-vertical fa-xl"></li>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button></li>
+                                        <li><button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}"
+                                            data-id={{ record.id }}
+                                            data-program-name={{ record.program_name }}
+                                            data-abbreviation={{ record.abbreviation }}
+                                            data-color-code={{ record.color_code }}
+                                            data-description={{ record.description }}>Edit</button></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <form method="POST" action="{% url 'program-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
+                                                {% csrf_token %}
+                                                <button type="button" class="dropdown-item archive-button" data-id={{ record.id }}>Archive</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                
+                        <div class="row">
+                        <p >{{ record.program_name }}</p>
+                        </div>
+                    </div>
+                
+                    <div class="card-body clickable-card " data-record-id="{{ record.id }}">
+                        <small class="h5 small" >Created by: </small><small>Francis Candelaria <small class="text-muted">(Admin I)</small></small><br>
+                        <small class="h5 small" >Date created: </small><small>Aug 23, 2023</small><br>
+                        <small class="h5 small" >Modify by: </small><small>Jonel Malinao <small class="text-muted">(Admin III)</small></small><br>
+                        <small class="h5 small" >Modified date: </small><small>Sept 03, 2023</small><br>
+                    </div>
+                
+                    </div>
+                </div>
+              
+
+                {% include "program_page/view_modal.html" %}
+                {% include "program_page/edit_modal.html" %}
+
+            {% endfor %}
+
+        </div>
+    </section>    
+    {% include "program_page/scripts.html" %} 
+
+    

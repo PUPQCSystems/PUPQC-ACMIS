@@ -15,28 +15,33 @@
     {% include "dependencies/CSS_dependencies.html" %} 
 
   </head>
-	<body>
-		{% for message in messages %}
-			{% if message.tags == 'success' %}
-				{% comment %} Input the message here {% endcomment %}
+	<body id="page-top">
+		<!-- TOP NAVIGATION BAR -->
+		{% include "navigation_bars/top_nav.html" %}
+
+		<div class="container-fluid">
+			<div class="row flex-nowrap">
+				<!--LEFT NAVIGATION BAR -->
+				{% include "navigation_bars/left_nav.html" %}
+
+				<!--MAIN CONTENTS -->
+				<div class="col-md-9 col-xl-10">
+					<!-- Begin Page Content -->
+					<div class="container-fluid" id="refresh-div">
+						{% block content %} {% endblock %}
+					<div>
+
+					<!-- FOOTER -->
+					{% include "footer.html" %}
+					
+				</div>
 			
-				<script>
-					toastr["success"]("{{ message }}")
-				</script>	
-			{% endif %}
-		
-		{% endfor %}
-		<div class="wrapper">
-			<!-- NAVIGATION BARS -->
-			{% include "navigation_bars/top_nav.html" %}
-			<!-- CONTENTS -->
-			<div class = "container">
-				{% block content %} {% endblock %}
-			<div>
-		<div>
-			
+			</div>
+		</div>
+
+
 		<!-- JS DEPENDENCIES-->
-		{% include "dependencies/JS_dependencies.html" %} 
+		{% include "dependencies/JS_dependencies.html" %}
 	</body>
 </html>
 

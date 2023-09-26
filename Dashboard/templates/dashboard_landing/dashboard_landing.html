@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <!-- TITLE OF THE PAGE -->
+    <h1 class="h3 mb-4 text-gray-800">Dashboard</h1>
+
+    <!-- Announcements Cards -->
+    {% include "dashboard_landing/announcement_cards.html" %}
+
+    <!-- GRAPHS -->
+    {% include "dashboard_landing/graphs.html" %}
+
+    <!-- News and forecast -->
+    {% include "dashboard_landing/news.html" %}
+
+{% endblock content %}

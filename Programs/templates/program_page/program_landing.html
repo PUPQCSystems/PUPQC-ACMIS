@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+
+    {% for message in messages %}
+        <script>toastr.success("{{ message }}") </script>
+    {% endfor %}
+
+    <br>
+    <h1 class="h3 mb-4 text-gray-800">Program Page</h1>
+    <div class="p-1 mb-1 bg-light text-white">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Create</button>
+        <a href="{% url 'archive-landing' %}" type="button" class="btn btn-success">Archive</a>
+    </div> 
+
+    <!-- PROGRAM CARDS -->
+    {% include "program_page/program_cards.html" %}
+    
+    <!-- MODALS-->
+    {% include "program_page/create_modal.html" %}
+
+
+{% endblock content %}
