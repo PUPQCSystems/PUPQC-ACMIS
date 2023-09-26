@@ -45,9 +45,9 @@
                     </div>
                 </div>
             </div>
-            {% include "landing_page/view_modal.html" %}
-            {% include "landing_page/edit_modal.html" %}
-            {% include "landing_page/archive_modal.html" %}
+            {% include "program_page/view_modal.html" %}
+            {% include "program_page/edit_modal.html" %}
+            {% include "program_page/archive_modal.html" %}
             
             {% if forloop.counter|divisibleby:4 %}
                 </div><br>
@@ -56,7 +56,7 @@
         {% endfor %}
     </div>
 
-    {% include "landing_page/scripts.html" %} 
+    {% include "program_page/scripts.html" %} 
     
     {% endcomment %}
     
@@ -84,9 +84,19 @@
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button></li>
-                                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button></li>
+                                        <li><button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}"
+                                            data-id={{ record.id }}
+                                            data-program-name={{ record.program_name }}
+                                            data-abbreviation={{ record.abbreviation }}
+                                            data-color-code={{ record.color_code }}
+                                            data-description={{ record.description }}>Edit</button></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#archive-modal-{{ record.id }}">Archive</button></li>
+                                        <li>
+                                            <form method="POST" action="{% url 'program-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
+                                                {% csrf_token %}
+                                                <button type="button" class="dropdown-item archive-button" data-id={{ record.id }}>Archive</button>
+                                            </form>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -109,14 +119,13 @@
                 </div>
               
 
-                {% include "landing_page/view_modal.html" %}
-                {% include "landing_page/edit_modal.html" %}
-                {% include "landing_page/archive_modal.html" %}
+                {% include "program_page/view_modal.html" %}
+                {% include "program_page/edit_modal.html" %}
 
             {% endfor %}
 
         </div>
     </section>    
-    {% include "landing_page/scripts.html" %} 
+    {% include "program_page/scripts.html" %} 
 
     

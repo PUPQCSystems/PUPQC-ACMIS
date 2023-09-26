@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-4 text-gray-800">Accreditation</h1>
+    <div class="d-grid gap-2 d-md-block">
+      	<a href="instrument.html" class="btn btn-primary">Instruments</a>
+    </div>
+	<hr>
+
+    <div class="d-grid gap-2 d-md-block">
+		<a class="accred-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Information"><i class="fa-solid fa-circle-info"></i></a>
+		<a class="accred-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Open survey"><i class="fa-solid fa-square-poll-vertical"></i></a>              
+		<a class="accred-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark as a complete self-survey"><i class="fa-solid fa-circle-check"></i></a>
+		<a class="accred-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Retrict"><i class="fa-solid fa-lock"></i></a>
+		<a class="accred-icon-ver" data-bs-toggle="tooltip" data-bs-placement="top" title="Verify Rates"><i class="fa-solid fa-star"></i></a>
+    </div>
+	<hr>
+
+    {% include "accreditation_page/level-III_section.html" %}
+
+    {% include "accreditation_page/level-IV_section.html" %}
+
+
+    {% include "accreditation_page/styles.html" %}
+{% endblock content %}

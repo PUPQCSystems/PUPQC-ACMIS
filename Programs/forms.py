@@ -1,5 +1,5 @@
 from django import forms
-from .models import Program
+from .models import Programs
 from .validators import program_name_validate, abbreviation_validate, description_validate
 
 class CreateForm(forms.ModelForm):
@@ -9,7 +9,7 @@ class CreateForm(forms.ModelForm):
     abbreviation = forms.CharField(label="Abbreviation", max_length=10, required=True)
 
     class Meta:
-        model = Program
+        model = Programs
         fields = ('program_name', 'abbreviation', 'description', 'color_code')
 
     def __init__(self, *args, **kwargs):
