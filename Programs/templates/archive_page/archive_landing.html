@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
 
-
-    {% for message in messages %}
-        <script>toastr.success("{{ message }}") </script>
-    {% endfor %}
-
     <br>
-    <h1 class="h3 mb-4 text-gray-800">Program Archive Page</h1>
-    <div class="p-1 mb-1 bg-light text-white">
-        <a href={% url 'program-landing' %} type="button" class="btn btn-primary">
-            <i class="fa-solid fa-arrow-left"></i> Back
-        </a>
-
-        <button type="button" class="btn btn-success" disabled>Restore</button>
-    </div> 
+    <div class="main-content">
+        <div class="container">
+            <h1> Program Archive Page</h1>
+            <div>
+                <div class="bg-light p-3 mb-5d-grid gap-2 d-md-flex justify-content-md-end bg-body-tertiary rounded">
+                    <a href={% url 'program-landing' %} type="button" class="btn btn-primary">
+                        <i class="fa-solid fa-arrow-left"></i> Back
+                    </a>
+                    <button type="button" class="btn btn-success" disabled>Restore</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- PROGRAM CARDS -->
     {% include "archive_page/program_cards.html" %}

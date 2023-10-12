@@ -16,11 +16,29 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from Dashboard import views as dashboard_views
+
+
+#For JWT authentication
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
-    path("Programs/", include("Programs.urls")),
-    path("Users/", include("Users.urls")),
-    path("Dashboard/", include("Dashboard.urls")),
+    path("programs/", include("Programs.urls")), 
+
+    path("dashboard/", include("Dashboard.urls")),
+    path("accreditation/", include("Accreditation.urls")),
+
+    path('', dashboard_views.index_page, name='index-page'),
+
+    path("api/user/", include("Users.urls", namespace ='users')),
+    path('api-auth/', include('rest_framework.urls', namespace ='rest_framework')),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
 ]

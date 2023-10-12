@@ -1,0 +1,227 @@
+{% comment %} These are the scripts for the landing page. {% endcomment %}
+
+{% comment %} AJAX FOR CREATING {% endcomment %}
+<script>
+    $(document).ready(function(){
+
+        $("#submit").click(function(event) {
+            var serializedData = $("#create-type-form").serialize();
+            const form = document.getElementById('create-type-form')
+            event.preventDefault();
+
+            $.ajax({
+                url: "{% url 'accreditation-type-create' %}", 
+                data: serializedData,
+                type: "POST",
+                success: function(response) {
+                    window.location.href = response.url_landing;
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> 
+
+{% comment %} AJAX FOR UPDATING  {% endcomment %}
+ <script>
+    $(document).ready(function(){
+        $(".save-changes-button").click(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var serializedData = $("#update-type-form-"+id).serialize();
+            var url = "/accreditation/accreditation_type/update/"+id+"/";
+
+
+            $.ajax({
+                url: url, 
+                data: serializedData,
+                type: "POST",
+                success: function(response) {
+                    window.location.href = response.url_landing;
+                    
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> 
+
+{% comment %} Load the data to make the update form prefilled {% endcomment %}
+<script>
+    $(document).ready(function(){
+        $(".edit-button").click(function(event) {
+            var id = $(this).data('id');
+            var name = $(this).data('name');
+            var description = $(this).data('description');
+
+            
+            var form = "#update-type-form-"+id; 
+
+            // Set the values of the form fields in the specific form
+            $(form+" #id_name").val(name);
+            $(form+" #id_description").val(description);
+            
+            
+        });   
+    });
+</script>
+
+
+{% comment %} AJAX FOR DELETEING  {% endcomment %}
+{% comment %} <script>
+    $(document).ready(function(){
+
+        $("#confirm-delete").click(function(event) {
+            event.preventDefault();
+            var recordId = $(this).data('id');
+            alert(recordId)
+            var url = "/Programs/program_delete/"+recordId+"/";
+
+            $.ajax({
+                url: url, 
+                data: ,
+                type: "POST",
+                success: function(response) {
+                    // Hide the modal
+                    $('#archive-modal-'+recordId).modal('hide');
+
+     
+                    //Toastr success message
+                    toastr.success(response.toastr_message);
+
+                    //Refreshing the list without reloading
+                    $('#refresh-div').load(location.href + " #refresh-div");
+                    
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script>  {% endcomment %}
+
+
+<script>
+    $(document).ready(function() {
+        $('.program-card').on('click', function() {
+            var card = $(this);
+            if (card.hasClass('selected')) {
+                card.removeClass('selected');
+            } else {
+                card.addClass('selected');
+            }
+        });
+
+    });
+</script>
+
+<style>
+    .program-card.selected {
+        background-color: #c2e7ff;
+
+    }
+
+    .program-card.selected:hover {
+        background-color: #c2e7ff;
+      }
+</style>
+
+<script>
+    $(".archive-button").click(function(event) {
+        var id = $(this).data('id');         //Get the Id of the record
+        var form = 'archive-form-'+id;      //Attaching the id of the record to this string for identifying the specific form
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This will be move and can be restore in the Accreditation Type Archive Page!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, archive it!',
+            cancelButtonText: 'No, cancel!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Delete the file here
+                document.getElementById(form).submit();
+            }
+        })
+    });
+</script>
+
+
+<script>
+
+    // Get the background color of the element.
+const backgroundColor = element.style.backgroundColor;
+
+// Convert the background color to a hex value.
+const hexValue = rgbToHex(backgroundColor);
+
+// Calculate the brightness of the background color.
+const brightness = calculateBrightness(hexValue);
+
+// Set the text color based on the brightness of the background color.
+if (brightness < 128) {
+  element.style.color = "white";
+} else {
+  element.style.color = "black";
+}
+
+// Function to convert RGB to hex.
+function rgbToHex(rgb) {
+  const r = rgb.substring(0, 3);
+  const g = rgb.substring(4, 7);
+  const b = rgb.substring(8, 11);
+
+  return "#" + r + g + b;
+}
+
+// Function to calculate the brightness of a hex color.
+function calculateBrightness(hexValue) {
+  const r = hexValue.substring(1, 3);
+  const g = hexValue.substring(3, 5);
+  const b = hexValue.substring(5, 7);
+
+  const red = parseInt(r, 16);
+  const green = parseInt(g, 16);
+  const blue = parseInt(b, 16);
+
+  const brightness = (red * 0.299 + green * 0.587 + blue * 0.114) / 255;
+
+  return brightness;
+}
+
+</script>

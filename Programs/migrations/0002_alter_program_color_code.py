@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='program',
+            model_name='programs',
             name='color_code',
             field=models.CharField(max_length=7),
         ),

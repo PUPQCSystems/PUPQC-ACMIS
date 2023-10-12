@@ -1,14 +1,25 @@
 {% extends 'base.html' %} 
 
 {% block content %}
-    <div class="content-section">
-        <form method="POST">
-            {% csrf_token %}
 
-            
+    <br>
+    <h1 class="h3 mb-4 text-gray-800">User Page</h1>
+    <div class="p-1 mb-1 bg-white text-white">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Register</button>
+        <a href="{% url 'archive-landing' %}" type="button" class="btn btn-success">Archive</a>
+    </div> 
 
+    <!-- USER CARDS -->
+    {% include "users/user_cards.html" %} 
 
-        </form>
-    </div>
+    <!-- STYLES -->
+    {% include "users/styles.html" %} 
+
+    <!-- REGISTER MODAL -->
+    {% include "users/adduser_modal.html" %} 
+
+    <!-- SCRIPTS -->
+    {% include "users/scripts.html" %}
 
 {% endblock content %}
+

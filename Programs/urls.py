@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views_program, views_archive, views_accreditation
+from . import views_program, views_archive
 
 urlpatterns = [
     path("program_page/", views_program.landing_page, name='program-landing'),
@@ -9,7 +9,5 @@ urlpatterns = [
     path("program_restore/<str:pk>/", views_archive.restore_program, name='program-restore'),
     path("program_destroy/<str:pk>/", views_archive.destroy_program, name='program-destroy'),
     path("archive_page/", views_archive.landing_page, name='archive-landing'),
-
-    path("accreditation_page/", views_accreditation.landing_page, name='accreditation-landing'),
 
 ]

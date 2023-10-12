@@ -1,0 +1,33 @@
+
+
+<script>
+  $(document).ready(function(){
+
+      $("#submit").click(function(event) {
+          var serializedData = $("#register-user-form").serialize();
+          const form = document.getElementById('register-user-form')
+          event.preventDefault();
+
+          $.ajax({
+              url: "{% url 'users:create_user' %}", 
+              data: serializedData,
+              type: "POST",
+              success: function(response) {
+                  window.location.href = response.url_landing;
+              },
+              error: function(error) {
+                  // Check for the errors field in the JSON response
+                  if (error.responseJSON && error.responseJSON.errors) {
+                      // Iterate over the errors field and display the validation errors to the user
+                      for (var field in error.responseJSON.errors) {
+                          toastr.error(error.responseJSON.errors[field]);
+                      }
+                  } else {
+                      toastr.error('Something went wrong. Please try again later.');
+                  }
+              }
+
+          });
+      });
+  });
+</script> 
