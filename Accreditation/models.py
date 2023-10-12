@@ -19,3 +19,11 @@ class accredtype(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     modified_at = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
+
+class accredlevel(models.Model):
+    name = models.CharField(max_length=15, unique=True)
+    description = models.CharField(max_length=2000)
+    # created_by = models.ForeignKey()
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_at = models.DateTimeField(auto_now=True)
+    is_deleted = models.BooleanField(default=False)

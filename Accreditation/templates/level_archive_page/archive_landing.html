@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <br>
+    <div class="main-content">
+        <div class="container">
+            <h1> Accreditation Level Archive Page</h1>
+            <div>
+                <div class="bg-light p-3 mb-5d-grid gap-2 d-md-flex justify-content-md-end bg-body-tertiary rounded">
+                    <a href="{% url 'accreditation-level-landing' %}" type="button" class="btn btn-primary">
+                        <i class="fa-solid fa-arrow-left"></i> Back
+                    </a>
+            
+                    <button type="button" class="btn btn-success" disabled>Restore</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Type CARDS -->
+    {% include "level_archive_page/level_cards.html" %}
+    
+
+    <!-- Scripts -->
+
+    {% include "level_archive_page/scripts.html" %}
+
+
+
+{% endblock content %}
