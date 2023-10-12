@@ -3,6 +3,8 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from .models import Programs #Import the model for data retieving
 from .forms import CreateForm
 from django.contrib import messages
+from .models import Programs
+from .serializers import ProgramSerializer
 
 # Create your views here.
 
@@ -22,7 +24,7 @@ def create_program(request):
         # return redirect('/Programs/landing_page/')
         # return JsonResponse({'toastr_message': program_name + ' Program created successfully!'}, status=200)
         messages.success(request, f'{program_name} is successfully created!') 
-        url_landing = "/Programs/landing_page/"
+        url_landing = "/programs/program_page/"
         return JsonResponse({'url_landing': url_landing}, status=200)
 
     else:
@@ -49,7 +51,7 @@ def update_program(request, pk):
 
             # Provide a success message as a JSON response
             messages.success(request, f'{program_name} is successfully updated!') 
-            url_landing = "/Programs/landing_page/"
+            url_landing = "/programs/program_page/"
             return JsonResponse({'url_landing': url_landing}, status=200)
 
 

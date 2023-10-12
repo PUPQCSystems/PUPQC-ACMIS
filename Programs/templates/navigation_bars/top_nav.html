@@ -1,63 +1,86 @@
 {% load static %}
 
-<!-- <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarText">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="{% url 'users-landing' %}">Users</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'program-landing' %}">Programs</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Dashboard</a>
-          </li>
-        </ul>
-        <span class="navbar-text">
-          Navbar text with an inline element
-        </span>
-      </div>
-    </div>
-  </nav>
-  <br> -->
+<nav class="navbar navbar-light" style="background-color: #800000;"><!-- <nav class="navbar navbar-light" style="background-color: #800000;"> -->
+	<div class="container-fluid"><!-- <div class="container-fluid">  -->
+		<a class="navbar-brand text-light" href="#">
+			<img src="{% static 'images\PUPLogo.png' %}" alt="" width="50" height="50">
+			Polytechnic University of the Philippines
+		</a>
 
-  <nav class="navbar navbar-light" style="background-color: #800000;">
-    <div class="container-fluid">
-      <a class="navbar-brand text-light" href="#">
-        <img src="{% static 'images\PUPLogo.png' %}" alt="" width="50" height="50">
-        Polytechnic University of the Philippines
-      </a>
-      <div class="navbar navbar-light fixed">
-        <a type="button" class="btn btn-custom" style="color: #fdfdfd;">
-          <i class="fas fa-envelope"></i>
-          <span class="notification-dot"></span>
-        </a>
-        <a type="button" class="btn btn-custom" style="color: #fdfdfd;">
-          <i class="fas fa-bell fa-fw mr-2"></i>
-          <span class="notification-dot"></span>
-        </a>
-        <div class="dropdown">
-          <a href="#" class="d-flex align-items-center text-light text-decoration-none me-1 dropdown-toggle"
-            id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <span class="d-inline-block text-truncate" style="max-width: 150px;">
-              Candelaria Francis J.
-            </span>
-            <img src="{% static 'images/user.jpg' %}" alt="User Profile" width="30" height="30" class="rounded-circle"
-              style="margin-left: 10px;">
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-            <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" href="#" data-dismiss="modal">Logout</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </nav>
+		<div class="navbar navbar-light fixed"><!-- start of top title -->
+			<a type="button" class="btn btn-custom" style="color: #fdfdfd;">
+				<i class="fas fa-envelope"></i>
+				<span class="notification-dot"></span>
+			</a>
+			<a type="button" class="btn btn-custom" style="color: #fdfdfd;">
+				<i class="fas fa-bell fa-fw mr-2"></i>
+				<span class="notification-dot"></span>
+			</a>
+			<div class="dropdown">
+				<a href="#" class="d-flex align-items-center text-light text-decoration-none me-1 dropdown-toggle"
+					id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+					<span class="d-inline-block text-truncate" style="max-width: 150px;">
+						Candelaria Francis J.
+					</span>
+					<img src={% static 'images\user.jpg' %} alt="User Profile" width="30" height="30" class="rounded-circle"
+						style="margin-left: 10px;">
+				</a>
+			</div>
+		</div><!-- end of top title  -->
+
+		<nav class="navbar navbar-expand-lg navbar-light">
+			<div class="container-fluid">
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+					data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+					aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<li class="hovermenu">
+							<a class="nav-link text-light" href="{% url 'dashboard-landing' %}">
+								<small>Dashboard</small>
+							</a>
+						</li>
+						<li class="hovermenu">
+							<a class="nav-link text-light" href="{% url 'accreditation-landing' %}">
+								<small>Accreditation</small>
+							</a>
+						</li>
+
+						<li class="hovermenu">
+							<a class="nav-link text-light" href="{% url 'accreditation-type-landing' %}">
+								<small>Accreditation Type</small>
+							</a>
+						</li>
+
+						<li class="hovermenu">
+							<a class="nav-link text-light" href="{% url 'program-landing' %}">
+								<small>Program</small>
+							</a>
+						</li>
+						<li class="hovermenu">
+							<a class="nav-link text-light" href="{% url 'users:landing' %}">
+								<small>User</small>
+							</a>
+						</li>
+						<li class="hovermenu">
+							<a class="nav-link text-light" href="task.html">
+								<small>Task</small>
+							</a>
+						</li>
+						<li class="hovermenu">
+							<a class="nav-link text-light" href="documents.html">
+								<small>Documents</small>
+							</a>
+						</li>
+
+						
+
+						
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</div><!-- <div class="container-fluid">  -->
+</nav><!-- <nav class="navbar navbar-light" style="background-color: #800000;"> -->

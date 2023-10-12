@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+    <br>
+    <div class="main-content">
+        <div class="container">
+            <h1> Accreditation Type Page</h1>
+            <div>
+                <div class="bg-light p-3 mb-5d-grid gap-2 d-md-flex justify-content-md-end bg-body-tertiary rounded">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Create <i class="fa-solid fa-pen"></i></button>
+                        <a href="{% url 'accreditation-type-archive-page' %}" class="btn btn-primary" type="button">Archive <i class="fa-solid fa-arrow-right"></i></a> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include "accreditation_type/type_cards.html" %}
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+    <script src="https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-alpha.6.min.js"></script>
+  
+    <!-- MODALS-->
+    {% include "accreditation_type/create_modal.html" %}
+
+    <!-- scripts -->
+    {% include "accreditation_type/scripts.html" %}
+
+{% endblock content %}

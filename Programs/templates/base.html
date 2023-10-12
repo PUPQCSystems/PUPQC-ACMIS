@@ -19,25 +19,17 @@
 		<!-- TOP NAVIGATION BAR -->
 		{% include "navigation_bars/top_nav.html" %}
 
-		<div class="container-fluid">
-			<div class="row flex-nowrap">
-				<!--LEFT NAVIGATION BAR -->
-				{% include "navigation_bars/left_nav.html" %}
+		{% for message in messages %}
+        	<script>toastr.success("{{ message }}") </script>
+   		{% endfor %}
 
-				<!--MAIN CONTENTS -->
-				<div class="col-md-9 col-xl-10">
-					<!-- Begin Page Content -->
-					<div class="container-fluid" id="refresh-div">
-						{% block content %} {% endblock %}
-					<div>
-
-					<!-- FOOTER -->
-					{% include "footer.html" %}
-					
-				</div>
-			
-			</div>
+		<div class="mx-5">
+			{% block content %} {% endblock %}
 		</div>
+
+
+		<!-- FOOTER -->
+		{% include "footer.html" %}
 
 
 		<!-- JS DEPENDENCIES-->
