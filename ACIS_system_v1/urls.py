@@ -19,12 +19,6 @@ from django.urls import path, include
 from Dashboard import views as dashboard_views
 
 
-#For JWT authentication
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,7 +32,5 @@ urlpatterns = [
 
     path("api/user/", include("Users.urls", namespace ='users')),
     path('api-auth/', include('rest_framework.urls', namespace ='rest_framework')),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 ]
