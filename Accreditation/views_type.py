@@ -4,9 +4,12 @@ from .models import accredtype #Import the model for data retieving
 from .forms import Create_Type_Form
 from django.contrib import messages
 from .models import accredtype
-from .serializers import  AccredTypeSerializer
+
+
 
 # Create your views here.
+        
+
 
 def landing_page(request):
     #Getting all the data inside the type table and storing it to the context variable

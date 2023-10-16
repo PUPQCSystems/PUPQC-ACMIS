@@ -5,7 +5,6 @@ urlpatterns = [
 
     path("accreditation_page/", views_accreditation.landing_page, name='accreditation-landing'),
 
-
     path("accreditation_type/", views_type.landing_page, name='accreditation-type-landing'),
     path("accreditation_type/create/", views_type.create_type, name='accreditation-type-create'),
     path("accreditation_type/update/<str:pk>/", views_type.update_type, name='accreditation-type-update'),
