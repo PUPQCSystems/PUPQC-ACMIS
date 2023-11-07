@@ -1,92 +1,102 @@
 {% load static %}
 
-<nav class="navbar navbar-light" style="background-color: #800000;"><!-- <nav class="navbar navbar-light" style="background-color: #800000;"> -->
-	<div class="container-fluid"><!-- <div class="container-fluid">  -->
-		<a class="navbar-brand text-light" href="#">
-			<img src="{% static 'images\PUPLogo.png' %}" alt="" width="50" height="50">
-			Polytechnic University of the Philippines
-		</a>
+<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+	<div class="container-fluid">
+		<img src="{% static 'images\PUPLogo.png' %}" alt="" width="50" height="50"> 
+		<a class="navbar-brand" href="#"><b>PUP-ACIMS</b></a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
 
-		<div class="navbar navbar-light fixed"><!-- start of top title -->
-			<a type="button" class="btn btn-custom" style="color: #fdfdfd;">
+		<div class="collapse navbar-collapse" id="navbarText">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'dashboard-landing' %}">
+						Dashboard
+					</a>
+				</li>
+
+				<li class="nav-item dropdown">
+					<a class="nav-link" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						Admin
+					</a>
+					<ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+
+						<li><a class="dropdown-item" href="{% url 'users:landing' %}">
+								User
+							</a>
+						</li>
+
+						<li class="nav-item"><a class="dropdown-item" href="{% url 'accreditation-landing' %}">
+								<small>Accreditation</small>
+							</a>
+						</li>
+
+						<li><a class="dropdown-item" href="task.html">
+								<small>Task</small>
+							</a>
+						</li>
+						
+						<li><a class="dropdown-item" href="documents.html">
+								<small>Documents</small>
+							</a>
+						</li>
+
+					</ul>
+				</li>
+
+
+				<li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						Admin Setup
+					</a>
+					<ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+
+						<li><a class="dropdown-item" href="{% url 'accreditation-type-landing' %}">
+								<small>Accreditation Types</small>
+							</a>
+						</li>
+
+						<li><a class="dropdown-item" href="{% url 'accreditation-level-landing' %}">
+								<small>Accreditation Levels</small>
+							</a>
+						</li>
+
+						<li><a class="dropdown-item" href="{% url 'accreditation-bodies-landing' %}">
+							<small>Accreditation Bodies</small>
+							</a>
+						</li>
+						
+						<li><a class="dropdown-item" href="{% url 'program-landing' %}">
+								<small>Programs</small>
+							</a>
+						</li>
+
+					</ul>
+				</li>
+
+			</ul>
+
+			<a type="button" class="btn btn-custom" style="color: red;">
 				<i class="fas fa-envelope"></i>
 				<span class="notification-dot"></span>
 			</a>
-			<a type="button" class="btn btn-custom" style="color: #fdfdfd;">
+
+			<a type="button" class="btn btn-custom" style="color: red;">
 				<i class="fas fa-bell fa-fw mr-2"></i>
 				<span class="notification-dot"></span>
 			</a>
 			<div class="dropdown">
 				<a href="#" class="d-flex align-items-center text-light text-decoration-none me-1 dropdown-toggle"
 					id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-					<span class="d-inline-block text-truncate" style="max-width: 150px;">
+					<span class="d-inline-block text-truncate" style="max-width: 150px; color: black;">
 						Candelaria Francis J.
 					</span>
 					<img src={% static 'images\user.jpg' %} alt="User Profile" width="30" height="30" class="rounded-circle"
 						style="margin-left: 10px;">
 				</a>
 			</div>
-		</div><!-- end of top title  -->
 
-		<nav class="navbar navbar-expand-lg navbar-light">
-			<div class="container-fluid">
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-					data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-					aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="navbarSupportedContent">
-					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-						<li class="hovermenu">
-							<a class="nav-link text-light" href="{% url 'dashboard-landing' %}">
-								<small>Dashboard</small>
-							</a>
-						</li>
-						<li class="hovermenu">
-							<a class="nav-link text-light" href="{% url 'accreditation-landing' %}">
-								<small>Accreditation</small>
-							</a>
-						</li>
-
-						<li class="hovermenu">
-							<a class="nav-link text-light" href="{% url 'accreditation-type-landing' %}">
-								<small>Accreditation Type</small>
-							</a>
-						</li>
-
-						<li class="hovermenu">
-							<a class="nav-link text-light" href="{% url 'accreditation-level-landing' %}">
-								<small>Accreditation Level</small>
-							</a>
-						</li>
-
-						<li class="hovermenu">
-							<a class="nav-link text-light" href="{% url 'program-landing' %}">
-								<small>Program</small>
-							</a>
-						</li>
-						<li class="hovermenu">
-							<a class="nav-link text-light" href="{% url 'users:landing' %}">
-								<small>User</small>
-							</a>
-						</li>
-						<li class="hovermenu">
-							<a class="nav-link text-light" href="task.html">
-								<small>Task</small>
-							</a>
-						</li>
-						<li class="hovermenu">
-							<a class="nav-link text-light" href="documents.html">
-								<small>Documents</small>
-							</a>
-						</li>
-
-						
-
-						
-					</ul>
-				</div>
-			</div>
-		</nav>
-	</div><!-- <div class="container-fluid">  -->
-</nav><!-- <nav class="navbar navbar-light" style="background-color: #800000;"> -->
+		</div>
+	</div>
+	</nav>

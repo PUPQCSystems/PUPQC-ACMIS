@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views_accreditation, views_level, views_type
+from . import views_accreditation, views_level, views_type, views_bodies
 
 urlpatterns = [
 
@@ -22,5 +22,14 @@ urlpatterns = [
     path("accreditation_level/archive_page/", views_level.archive_level_page, name='accreditation-level-archive-page'),
     path("accreditation_level/archive_page/restore/<str:pk>", views_level.restore_level, name='accreditation-level-archive-page-restore'),
     path("accreditation_level/archive_page/destroy/<str:pk>", views_level.destroy_level, name='accreditation-level-archive-page-destroy'),
+
+    path("accreditation_bodies/", views_bodies.landing_page, name='accreditation-bodies-landing'),
+    path("accreditation_bodies/create/", views_bodies.create_bodies, name='accreditation-bodies-create'),
+    path("accreditation_bodies/update/<str:pk>/", views_bodies.update_bodies, name='accreditation-bodies-update'),
+    path("accreditation_bodies/archive/<str:pk>/", views_bodies.archive_bodies, name='accreditation-bodies-archive'),
+
+    path("accreditation_bodies/archive_page/", views_bodies.archive_landing, name='accreditation-bodies-archive-page'),
+    path("accreditation_bodies/archive_page/restore/<str:pk>", views_bodies.restore_bodies, name='accreditation-bodies-archive-page-restore'),
+    path("accreditation_bodies/archive_page/destroy/<str:pk>", views_bodies.destroy_bodies, name='accreditation-bodies-archive-page-destroy'),
 
 ]

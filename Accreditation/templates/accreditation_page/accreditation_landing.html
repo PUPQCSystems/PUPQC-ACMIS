@@ -1,26 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
-
-    <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">Accreditation</h1>
-    <div class="d-grid gap-2 d-md-block">
-      	<a href="instrument.html" class="btn btn-primary">Instruments</a>
+    <br>
+    <div class="main-content">
+        <div class="container">
+            <h1> Accreditation</h1>
+            <div>
+                <div class="bg-light p-3 mb-5d-grid gap-2 d-md-flex justify-content-md-end bg-body-tertiary rounded">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Create <i class="fa-solid fa-pen"></i></button>
+                        <a href="{% url 'accreditation-type-archive-page' %}" class="btn btn-primary" type="button">Archive <i class="fa-solid fa-arrow-right"></i></a> 
+                </div>
+            </div>
+        </div>
     </div>
-	<hr>
-
-    <div class="d-grid gap-2 d-md-block">
-		<a class="accred-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Information"><i class="fa-solid fa-circle-info"></i></a>
-		<a class="accred-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Open survey"><i class="fa-solid fa-square-poll-vertical"></i></a>              
-		<a class="accred-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark as a complete self-survey"><i class="fa-solid fa-circle-check"></i></a>
-		<a class="accred-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Retrict"><i class="fa-solid fa-lock"></i></a>
-		<a class="accred-icon-ver" data-bs-toggle="tooltip" data-bs-placement="top" title="Verify Rates"><i class="fa-solid fa-star"></i></a>
-    </div>
-	<hr>
-
-    {% include "accreditation_page/level-III_section.html" %}
-
-    {% include "accreditation_page/level-IV_section.html" %}
 
 
+    
+    {% include "accreditation_page/accreditation_cards.html" %}
+
+    <!-- MODALS-->
+    {% include "accreditation_page/create_modal.html" %} 
+
+    <!-- scripts -->
     {% include "accreditation_page/styles.html" %}
+
 {% endblock content %}

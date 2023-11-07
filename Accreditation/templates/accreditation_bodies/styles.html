@@ -1,0 +1,264 @@
+
+<style>
+/*
+.container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+*/
+#content-wrapper {
+    min-height: calc(10vh - 1px); /* Adjust the value as needed */
+    /* Other styles as needed */
+}
+
+/*card hover css*/
+.card {
+    margin-bottom: 20px;
+    border: none;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.card-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: #007bff; /* Blue color for the numbers */
+}
+.text1 {
+    font-size: 14px;
+    font-weight: 600
+}
+
+.text2 {
+    color: #a5aec0
+}
+
+/* Styling for Charts */
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Styling for Rows */
+.row {
+    margin-bottom: 20px;
+}
+
+/* Media Query for Smaller Screens */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .card-text {
+        font-size: 20px;
+    }
+}
+
+.nav-item a.nav-link {
+    color: #a13030; /* Default font color */
+    background-color: transparent; /* Default background color */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition effect */
+    width: 150px;
+   
+}
+.nav-item a.nav-link {
+    color: #a13030; /* Default font color */
+    background-color: transparent; /* Default background color */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition effect */
+    padding: 10px 20px; /* Adjust default padding as needed */   
+}
+
+.nav-item a.nav-link:hover {
+    background-color: #800000; /* Background color on hover */
+    color: white; /* Font color on hover */
+    }
+
+.nav-item a.nav-link:hover i {
+    color: white; /* Icon color on hover */    
+}
+
+/* Styles for Alerts */
+.alerts-link {
+    color: #a13030; /* Font color for alerts link */
+    background-color: transparent; /* Background color for alerts link */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition effect for alerts link */
+    width: 150px;
+}
+
+.alerts-badge {
+    /* Styles for the alerts badge */
+    color: #30a136;
+}
+
+/* Styles for User DP and Name */
+.user-link {
+    /* Styles for user link */
+    color: #4830a1;
+}
+
+.user-item {
+    /* Styles for user dropdown items */
+    color: #a13085;
+}
+/* Default button style */
+.btn-custom {
+    position: relative;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}
+
+/* Style for the notification icon */
+.btn-custom i {
+    margin-right: 0.5rem; /* Add some space between the icon and the notification dot */
+}
+
+/* Style for the notification dot */
+.notification-dot {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0.15rem; /* Adjust the size of the dot */
+    background-color: #dc3545; /* Default background color for the dot */
+    border: 1px solid #fff; /* Border around the dot */
+    border-radius: 50%; /* Make it a circle */
+    transition: background-color 0.3s; /* Smooth transition effect for background color */
+}
+/* Active (clicked) state: Change the background color of the dot */
+.btn-custom:active .notification-dot {
+    background-color: #8ccde7;
+}
+
+.progress {
+    height: 10px;
+    border-radius: 10px
+}
+.progress div {
+    background-color: rgb(56, 74, 153)
+}
+.card {
+    background-color: #fcfcfc;
+    position: relative;
+    margin-bottom: 30px;
+    
+}
+
+
+
+#my-chart.bar {
+    height: 200px;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+
+/* Style for accred-icon */
+.accred-icon {
+    font-size: 24px; /* Adjust the size as needed */
+    padding-left: 1%;
+    color: #888; /* Reset the color */
+    transition: color 0.3s ease, font-size 0.3s ease; /* Smooth transition for color and font-size */
+  }
+  
+  .accred-icon:hover {
+    color: maroon; /* Change the color on hover */
+    font-size: 28px; /* Increase the size on hover (adjust as needed) */
+  }
+  
+  /* Style for accred-icon-ver */
+  .accred-icon-ver {
+    position: relative; /* Position it absolutely */
+    left: 86%; /* Align to the left side */
+    top: 20%; /* Center it vertically */
+    transform: translateY(-50%); /* Adjust for vertical centering */
+    font-size: 24px; /* Adjust the size as needed */
+    color: #888; /* Reset the color */
+    transition: color 0.3s ease, font-size 0.3s ease; /* Smooth transition for color and font-size */
+  }
+  
+  .accred-icon-ver:hover {
+    color: maroon; /* Change the color on hover */
+    font-size: 28px; /* Increase the size on hover (adjust as needed) */
+  }
+  
+ 
+  .user-icon {
+    font-size: 24px; /* Adjust the size as needed */
+    padding-left: 1%;
+    color: #1f6bdb; /* Reset the color */
+    transition: color 0.3s ease, font-size 0.3s ease; /* Smooth transition for color and font-size */
+  }
+  
+  .user-icon:hover {
+    color: maroon; /* Change the color on hover */
+    font-size: 28px; /* Increase the size on hover (adjust as needed) */
+  }
+  
+  /* Style for accred-icon-ver */
+  .user-icon-ver {
+    position: relative; /* Position it absolutely */
+    left: 86%; /* Align to the left side */
+    top: 20%; /* Center it vertically */
+    transform: translateY(-50%); /* Adjust for vertical centering */
+    font-size: 24px; /* Adjust the size as needed */
+    color: #888; /* Reset the color */
+    transition: color 0.3s ease, font-size 0.3s ease; /* Smooth transition for color and font-size */
+  }
+  
+  .user-icon:hover {
+    color: maroon; /* Change the color on hover */
+    font-size: 28px; /* Increase the size on hover (adjust as needed) */
+  }
+  /* Style for the separator */
+/* Style for the separator */
+/* Style for the separator */
+.separator {
+    height: 1em;
+    width: 1px;
+    background-color: #ccc; /* Adjust the color as needed */
+    display: inline-block;
+    margin: 0 10px; /* Adjust the margin to control the spacing between links and the separator */
+}
+
+
+/*card hover css*/
+.program-card {
+    border: 1px solid #ebebeb81;
+    border-radius: 8px;
+    transition: box-shadow 0.2s ease-in-out;
+    box-shadow: 0 0px 1px rgba(0, 0, 0, 0.2);
+
+}
+
+.program-card:hover {
+    background-color: #eeeeee;
+}
+
+.program-card .d-flex {
+    align-items: center;
+}
+
+.program-card .icon {
+    width: 40px;
+    height: 40px;
+    background-color: #f4f4f4;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.program-card .icon i {
+    color: #4285f4;
+}
+
+</style>
