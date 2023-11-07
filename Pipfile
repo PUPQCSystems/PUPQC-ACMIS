@@ -5,6 +5,13 @@ name = "pypi"
 
 [packages]
 django = "*"
+django-crispy-forms = "*"
+djangorestframework = "*"
+django-cors-headers = "*"
+fontawesomefree = "*"
+psycopg2 = "*"
+django-debug-toolbar = "*"
+crispy-bootstrap5 = "*"
 
 [dev-packages]
 
