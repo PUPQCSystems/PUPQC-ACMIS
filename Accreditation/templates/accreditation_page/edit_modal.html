@@ -1,0 +1,34 @@
+{% load crispy_forms_tags %}
+
+<!-- Modal -->
+<div class="modal fade" id="edit-modal-{{ record.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      	<div class="modal-content">
+        	<div class="modal-header">
+          	<h1 class="modal-title fs-5" id="staticBackdropLabel">Update {{ record.name }} Accreditation Type</h1>
+          	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+				<form method="POST" autocomplete="off" id="update-type-form-{{ record.id }}">
+					{% csrf_token %}
+					<div class="mb-3">
+						{{ update_form.name|as_crispy_field }}
+					</div>
+
+
+					<div class="mb-3">
+						{{ update_form.description|as_crispy_field }}
+					</div> 
+
+  
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<button id="save-changes" data-id={{ record.id }} type="button" class="btn btn-primary save-changes-button">Save Changes</button>
+					</div>
+
+				</form>
+  			</div>
+		</div>
+	</div>
+</div>

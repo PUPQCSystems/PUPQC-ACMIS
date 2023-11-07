@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import JsonResponse
 from .models import Programs #Import the model for data retieving
 from .forms import CreateForm
 from django.contrib import messages
@@ -12,9 +12,11 @@ def landing_page(request):
   #Getting all the data inside the Program table and storing it to the context variable
     create_form = CreateForm(request.POST or None)
     update_form = CreateForm(request.POST or None)
-    context = { 'records': Programs.objects.filter(is_deleted=False), 'create_form': create_form, 'update_form': update_form}  #Getting all the data inside the Program table and storing it to the context variable
+    records = Programs.objects.filter(is_deleted=False) #Getting all the data inside the Program table and storing it to the context variable
+    context = {'records': records, 'create_form': create_form, 'update_form': update_form}  
     return render(request, 'program_page/program_landing.html', context)
 
+#This is the function for creating the record
 def create_program(request):
     create_form = CreateForm(request.POST or None)
     if create_form.is_valid():
@@ -31,7 +33,7 @@ def create_program(request):
         # Return a validation error using a JSON response
         return JsonResponse({'errors': create_form.errors}, status=400)
 
-
+#This is the function for updating the record
 def update_program(request, pk):
     # Retrieve the program object with the given primary key (pk)
     try:
