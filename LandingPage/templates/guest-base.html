@@ -1,0 +1,25 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Accreditation & Certification Information System</title>
+		{% include "CSS_dependencies.html" %}
+
+
+	</head>
+
+	<body>
+		{% include "top-nav.html" %}
+
+		<div style= "padding: 30px;"> 
+			{% block content %}{% endblock content %}
+		</div>
+
+		{% include "JS_dependencies.html" %}
+
+	</body>
+
+</html>

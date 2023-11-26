@@ -1,13 +1,18 @@
 {% extends 'base.html' %} 
-
 {% block content %}
-
     <br>
-    <h1 class="h3 mb-4 text-gray-800">User Page</h1>
-    <div class="p-1 mb-1 bg-white text-white">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Register</button>
-        <a href="{% url 'archive-landing' %}" type="button" class="btn btn-success">Archive</a>
-    </div> 
+    <div class="main-content">
+        <div class="container">
+            <h1>User Page</h1>
+            <div>
+                <div class="bg-light p-3 mb-5d-grid gap-2 d-md-flex justify-content-md-end bg-body-tertiary rounded">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Register</button>
+                        <a href=" {% url "users:archive-landing" %} " class="btn btn-success" type="button">Archive <i class="fa-solid fa-arrow-right"></i></a> 
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- USER CARDS -->
     {% include "users/user_cards.html" %} 
@@ -16,7 +21,7 @@
     {% include "users/styles.html" %} 
 
     <!-- REGISTER MODAL -->
-    {% include "users/adduser_modal.html" %} 
+    {% include "users/register_modal.html" %} 
 
     <!-- SCRIPTS -->
     {% include "users/scripts.html" %}

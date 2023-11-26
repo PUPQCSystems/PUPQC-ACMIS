@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='newuser',
+            model_name='customuser',
             name='profile_pic',
             field=models.TextField(blank=True),
         ),

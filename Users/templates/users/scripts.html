@@ -1,6 +1,6 @@
 
 
-<script>
+ <script>
   $(document).ready(function(){
 
       $("#submit").click(function(event) {
@@ -31,3 +31,99 @@
       });
   });
 </script> 
+
+{% comment %} AJAX FOR UPDATING  {% endcomment %}
+<script>
+    $(document).ready(function(){
+        $(".save-changes-button").click(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var serializedData = $("#update-user-form-"+id).serialize();
+            var url = "/user/update/"+id+"/";
+
+            $.ajax({
+                url: url, 
+                data: serializedData, 
+                type: "POST",
+                success: function(response) {
+                    window.location.href = response.url_landing;
+                    
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> 
+
+<script>
+	const deleteButtons = document.querySelectorAll('.deactivate-button');
+
+	deleteButtons.forEach((deleteButton) => {
+			deleteButton.addEventListener('click', async () => {
+					const id = event.target.dataset.id; // Get the ID of the button
+					const { value: password, isConfirmed } = await Swal.fire({
+							title: 'Are you sure?',
+							text: "This account will be deactivated and cannot be used for logging into the system. You can still view and reactivate it on the archive page.",
+							icon: 'warning',
+							showCancelButton: true,
+							confirmButtonColor: '#3085d6',
+							cancelButtonColor: '#d33',
+							confirmButtonButtonText: 'Yes, delete it!',
+							cancelButtonButtonText: 'No, cancel',
+							input: 'password',
+							inputPlaceholder: 'Enter your password to confirm action',
+							inputAttributes: {
+									maxlength: 20,
+									autocapitalize: 'off',
+									autocorrect: 'off'
+							}
+					});
+					if (isConfirmed) 
+					{
+                        if (password) 
+                        {
+                            var url = "/user/deactivate/"+id+"/";
+                            // Send AJAX request to verify password
+                            $.ajax({
+                                    url: url,
+                                    method: 'POST',
+                                    data: { password: password,
+                                            'csrfmiddlewaretoken': '{{ csrf_token }}', },
+                                    success: function(response) {
+                                            if (response.success) {
+                                                    window.location.href = response.url_landing;
+                                            } else {
+                                                    toastr.error(response.error);
+                                            }
+                                    },
+                                    error: function() {
+                                            toastr.error('Error verifying password');
+                                    }
+                            });
+                        } 
+
+                        else 
+                        {   Swal.fire({
+                                icon: 'error',
+                                title: 'Please input a password!',
+                                showConfirmButton: true,
+                            });
+					    }
+                    }
+			});
+	});
+	 
+		
+</script>

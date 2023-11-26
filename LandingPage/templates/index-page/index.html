@@ -1,0 +1,48 @@
+{% extends "guest-base.html" %}
+{% load static %}
+
+{% block content %}
+
+	<!-- Main content -->
+	<div class="welcome-container" id="welcome">
+		<div class="container-fluid ">
+			<div class="row d-flex">
+				<div class="col align-middle">
+					<div class="px-2 py-2">
+						<img src="{% static 'assets/guest/landing-page/images/pup acis.png' %}" alt="..." style="width: 100%;">
+					</div>
+				</div>
+				<div class="col">
+					<div class="px-5 py-5 mt-5">
+						<div class="px-2 py-2 align-middle">
+							<h4>Welcome to PUP Accreditation & Certification Information System</h4>
+							<p> An Accreditation and Certification Information System is designed to 
+								manage and maintain information related to the accreditation and 
+								certification processes within an organization. It helps centralize 
+								data, streamline workflows, and ensure compliance with accreditation 
+								and certification standards
+							</p>
+						</div>
+						<div class="px-2 py-2">
+							<a href="{% url 'login' %}" class="btn btn-outline-primary">Login</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	<!-- Real time Analytics-->
+	{% include "index-page/analytics.html" %}
+
+	<!--  /Card container  -->
+	{% include "index-page/accredited-programs.html" %}
+
+	<!--  events  -->
+	{% include "index-page/events.html" %}
+		
+
+	<!--  banner container  -->
+	{% include "index-page/featured-courses.html" %}
+
+{% endblock content %}

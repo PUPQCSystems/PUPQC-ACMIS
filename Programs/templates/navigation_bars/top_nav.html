@@ -3,7 +3,7 @@
 <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
 	<div class="container-fluid">
 		<img src="{% static 'images\PUPLogo.png' %}" alt="" width="50" height="50"> 
-		<a class="navbar-brand" href="#"><b>PUP-ACIMS</b></a>
+		<a class="navbar-brand" href="#"><b>PUP-ACIS</b></a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -12,7 +12,7 @@
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
 				<li class="nav-item">
-					<a class="nav-link" href="{% url 'dashboard-landing' %}">
+					<a class="nav-link" href="{% url 'dashboards:dashboard-landing' %}">
 						Dashboard
 					</a>
 				</li>
@@ -28,7 +28,7 @@
 							</a>
 						</li>
 
-						<li class="nav-item"><a class="dropdown-item" href="{% url 'accreditation-landing' %}">
+						<li class="nav-item"><a class="dropdown-item" href="{% url 'accreditations:landing' %}">
 								<small>Accreditation</small>
 							</a>
 						</li>
@@ -52,27 +52,33 @@
 					</a>
 					<ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
 
-						<li><a class="dropdown-item" href="{% url 'accreditation-type-landing' %}">
+						<li><a class="dropdown-item" href="{% url 'accreditations:type-landing' %}">
 								<small>Accreditation Types</small>
 							</a>
 						</li>
 
-						<li><a class="dropdown-item" href="{% url 'accreditation-level-landing' %}">
+						<li><a class="dropdown-item" href="{% url 'accreditations:level-landing' %}">
 								<small>Accreditation Levels</small>
 							</a>
 						</li>
 
-						<li><a class="dropdown-item" href="{% url 'accreditation-bodies-landing' %}">
+						<li><a class="dropdown-item" href="{% url 'accreditations:bodies-landing' %}">
 							<small>Accreditation Bodies</small>
 							</a>
 						</li>
 						
-						<li><a class="dropdown-item" href="{% url 'program-landing' %}">
+						<li><a class="dropdown-item" href="{% url 'programs:landing' %}">
 								<small>Programs</small>
 							</a>
 						</li>
 
 					</ul>
+				</li>
+				
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'logout' %}">
+						Logout
+					</a>
 				</li>
 
 			</ul>
@@ -99,4 +105,4 @@
 
 		</div>
 	</div>
-	</nav>
+</nav>

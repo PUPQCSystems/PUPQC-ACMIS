@@ -16,22 +16,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from Dashboard import views as dashboard_views
 
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("__debug__/", include("debug_toolbar.urls")),
-    path("programs/", include("Programs.urls")), 
+    path('__debug__/', include('debug_toolbar.urls')),
 
-    path("dashboard/", include("Dashboard.urls")),
-    path("accreditation/", include("Accreditation.urls")),
+    path('programs/', include('Programs.urls', namespace='programs')), 
+    path('dashboard/', include('Dashboard.urls', namespace='dashboards')),
+    path('accreditation/', include('Accreditation.urls', namespace= 'accreditation')),
+    path('user/', include('Users.urls', namespace ='users')),
 
-    path('', dashboard_views.index_page, name='index-page'),
+    path('', include('LandingPage.urls', namespace = 'index')),
 
-    path("api/user/", include("Users.urls", namespace ='users')),
-    path('api-auth/', include('rest_framework.urls', namespace ='rest_framework')),
+    path('accounts/', include('django.contrib.auth.urls')),
 
 ]
 

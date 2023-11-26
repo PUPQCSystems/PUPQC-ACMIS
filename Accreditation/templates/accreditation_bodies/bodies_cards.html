@@ -5,7 +5,7 @@
             <div class="row hidden-md-up">
     
                 <!-- For loop here -->
-                {% for record in records %}
+                {% for record, update_form, created_by, modified_by in update_forms  %}
                     <div class="col-md-4" style="margin-top: 10px; margin-bottom: 10px;">
                         <div class="ccard">
     
@@ -17,16 +17,11 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button></li>
-                                    <li><button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}"
-                                        data-id={{ record.id }}
-                                        data-program-name={{ record.name }}
-                                        data-abbreviation={{ record.abbreviation }}
-                                        data-color-code={{ record.color_code }}
-                                        data-description={{ record.description }}>Edit</button></li>
+                                    <li><button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>                              
                                                             
-                                        <form method="POST" action="{% url 'accreditation-bodies-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
+                                        <form method="POST" action="{% url 'accreditations:bodies-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
                                             {% csrf_token %}
                                             <button type="button" class="dropdown-item archive-button" data-id={{ record.id }}>Archive</button>
                                         </form>
@@ -38,10 +33,10 @@
                                     <h1 class="c-title">{{ record.abbreviation }}</h1>
                                     <h6 class="card-subtitle text-muted">{{ record.name }}</h6>
                                     <hr>
-                                    <small class="card-text p-y-1 text-muted">Created by: </small><small class="card-text p-y-1">Jonel Malinao</small><br>
-                                    <small class="card-text p-y-1 text-muted">Date Created: </small><small class="card-text p-y-1">Sept. 20, 2023</small><br>
-                                    <small class="card-text p-y-1 text-muted">Modified by: </small><small class="card-text p-y-1">Francis Candelaria </small><br>
-                                    <small class="card-text p-y-1 text-muted">Last Modified: </small><small class="card-text p-y-1">Sept. 22, 2023</small><br>
+                                    <small class="card-text p-y-1 text-muted">Created by: </small><small class="card-text p-y-1">{{ created_by.first_name }} {{ created_by.last_name }}</small><br>
+                                    <small class="card-text p-y-1 text-muted">Date Created: </small><small class="card-text p-y-1">{{ record.created_at }}</small><br>
+                                    <small class="card-text p-y-1 text-muted">Modified by: </small><small class="card-text p-y-1">{{ modified_by.first_name }} {{ modified_by.last_name }} </small><br>
+                                    <small class="card-text p-y-1 text-muted">Last Modified: </small><small class="card-text p-y-1">{{ record.modified_at }}</small><br>
                                 </div>
                             </div>
                         </div>

@@ -22,7 +22,7 @@
                                 <li><hr class="dropdown-divider"></li>
                                 <li>                              
                                                         
-                                    <form method="POST" action="{% url 'accreditation-type-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
+                                    <form method="POST" action="{% url 'accreditations:type-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
                                         {% csrf_token %}
                                         <button type="button" class="dropdown-item archive-button" data-id={{ record.id }}>Archive</button>
                                     </form>

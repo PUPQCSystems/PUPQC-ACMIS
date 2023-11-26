@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
@@ -34,7 +35,7 @@ class CustomAccountManager(BaseUserManager):
         return user
 
 
-class NewUser(AbstractBaseUser, PermissionsMixin):
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(max_length=150, blank=True)
     middle_name = models.CharField(max_length=150, blank=True)
@@ -43,8 +44,14 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     about = models.TextField(_(
         'about'), max_length=500, blank=True)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     profile_pic = models.TextField(blank=True)
+    created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_customuser', null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_customuser', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deactivated_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+
 
     objects = CustomAccountManager()
     USERNAME_FIELD = 'email'

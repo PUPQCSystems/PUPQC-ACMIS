@@ -11,12 +11,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='newuser',
+            model_name='customuser',
             name='last_name',
             field=models.CharField(blank=True, max_length=150),
         ),
         migrations.AddField(
-            model_name='newuser',
+            model_name='customuser',
             name='middle_name',
             field=models.CharField(blank=True, max_length=150),
         ),

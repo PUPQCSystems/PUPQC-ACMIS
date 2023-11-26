@@ -1,0 +1,23 @@
+/* CSS for custom dropdown on hover */
+#blogDropdown:hover + .customSubMenu,
+.customSubMenu:hover {
+    display: block;
+}
+
+/* Hide the dropdown by default */
+.customSubMenu {
+    display: none;
+    /* Full-width display */
+    width: 100%; /* Full width of the parent container */
+    /* Center align the dropdown */
+    left: 50%;
+    transform: translateX(-50%);
+    /* Position the dropdown in the center of the screen */
+    top: 30%;
+    transform: translate(-50%, -50%);
+    /* Additional styling for positioning */
+    position: fixed;
+    z-index: 1000; /* Ensure it's above other content if needed */
+    background-color: #8f4c4c; /* Background color */
+    /* Add more styling as needed */
+}

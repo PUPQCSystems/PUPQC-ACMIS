@@ -10,36 +10,33 @@
   integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" 
   crossorigin="anonymous"></script>
 
-
-    <!--js chart-->
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
-    <script src="{% static 'js/charts/chart1.js' %}"></script>
-    <script src="{% static 'js/charts/chart2.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+<script src="{% static 'js/charts/chart1.js' %}"></script>
+<script src="{% static 'js/charts/chart2.js' %}"></script>
 
    <!-- END -->
 
 
 <script>
   // Example starter JavaScript for disabling form submissions if there are invalid fields
-(function () {
-  'use strict'
+	(function () {
+		'use strict'
 
-  // Fetch all the forms we want to apply custom Bootstrap validation styles to
-  var forms = document.querySelectorAll('.needs-validation')
+		// Fetch all the forms we want to apply custom Bootstrap validation styles to
+		var forms = document.querySelectorAll('.needs-validation')
 
-  // Loop over them and prevent submission
-  Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
+		// Loop over them and prevent submission
+		Array.prototype.slice.call(forms)
+		.forEach(function (form) {
+			form.addEventListener('submit', function (event) {
+			if (!form.checkValidity()) {
+				event.preventDefault()
+				event.stopPropagation()
+			}
 
-        form.classList.add('was-validated')
-      }, false)
-    })
-})()
+			form.classList.add('was-validated')
+			}, false)
+		})
+	})()
 </script>

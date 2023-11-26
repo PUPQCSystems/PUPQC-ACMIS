@@ -1,0 +1,39 @@
+{% load static %}
+<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+            <a href=".">
+                <img src="{% static 'assets/guest/landing-page/images/PUPQC-ACIS-SEAL.png' %}" width="150"
+                    style="margin-right: 5px;">
+        </h1>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index:index-page' %}">
+                        Home
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">
+                        Login
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href= "{% url 'index:about-page' %}">
+                        About ACIS
+                    </a>
+                </li>
+            </div>
+
+            <button onclick="topFunction()" id="scrollToTopBtn" title="Go to top"><i class="fa-solid fa-arrow-up scrollToTopBtn"></i></button>
+
+        </div>
+    </div>
+</nav>
