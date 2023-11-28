@@ -1,5 +1,5 @@
 {% load static %}
-
+{% include "navigation_bars/styles.html" %}
 <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
 	<div class="container-fluid">
 		<img src="{% static 'images\PUPLogo.png' %}" alt="" width="50" height="50"> 
@@ -74,13 +74,6 @@
 
 					</ul>
 				</li>
-				
-				<li class="nav-item">
-					<a class="nav-link" href="{% url 'logout' %}">
-						Logout
-					</a>
-				</li>
-
 			</ul>
 
 			<a type="button" class="btn btn-custom" style="color: red;">
@@ -93,15 +86,145 @@
 				<span class="notification-dot"></span>
 			</a>
 			<div class="dropdown">
-				<a href="#" class="d-flex align-items-center text-light text-decoration-none me-1 dropdown-toggle"
-					id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-					<span class="d-inline-block text-truncate" style="max-width: 150px; color: black;">
-						Candelaria Francis J.
-					</span>
-					<img src={% static 'images\user.jpg' %} alt="User Profile" width="30" height="30" class="rounded-circle"
-						style="margin-left: 10px;">
-				</a>
+				<ul class="nav navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+							<img src={% static 'images\user.jpg' %} alt="User Profile" width="35" height="35" class="rounded-circle"
+							style="margin-left: 10px;">
+						</a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a href="{% url 'users:profile' %}" class="dropdown-item"><i class="fas fa-user-alt pe-2"></i> My Profile</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-cog fa-fw"></i> Settings</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="{% url 'logout' %}" class="dropdown-item"><i class="fas fa-sign-out-alt fa-fw"></i> Logout</a>
+                        </div>
+                    </li>
+                </ul>
+
 			</div>
+
+			<a href="#" class="nav_link dropdown_link">Blog <i class="bx bxs-chevron-down dropdown_icon"></i></a>
+                    
+			<!--menu-->
+				<div class="megamenu">
+					<ul class="content">
+						<li class="megamenu_item header_megamenu">About PUP</li>
+						<li class="megamenu_item">
+							<div class="menu_icon"><i class='bx bxs-extension' ></i>
+
+							</div>
+							<div class="megamenu_link">
+								<a href="#">University Profile</a>
+								<p>Lorem ipsum dolor sit.</p>
+							</div>
+						</li>
+						<li class="megamenu_item">
+							<div class="menu_icon">
+								<i class='bx bxs-extension' ></i>
+							</div>
+							<div class="megamenu_link">
+								<a href="#">Mission and Vision</a>
+								<p>Lorem ipsum dolor sit.</p>
+							</div>
+						</li>
+						<li class="megamenu_item">
+							<div class="menu_icon">
+								<i class='bx bxs-extension' ></i>
+							</div>
+							<div class="megamenu_link">
+								<a href="#">History</a>
+								<p>Lorem ipsum dolor sit.</p>
+							</div>
+						</li>
+						<li class="megamenu_item">
+							<div class="menu_icon">
+								<i class='bx bxs-extension' ></i>
+							</div>
+							<div class="megamenu_link">
+								<a href="#">University Code</a>
+								<p>Lorem ipsum dolor sit.</p>
+							</div>
+						</li>
+					</ul>
+					<ul class="content">
+						<li class="megamenu_item header_megamenu">Academic</li>
+						<li class="megamenu_item">
+							<div class="menu_icon"><i class='bx bxs-extension' ></i>
+
+							</div>
+							<div class="megamenu_link">
+								<a href="#">Academic Programs</a>
+								<p>Lorem ipsum dolor sit.</p>
+							</div>
+						</li>
+						<li class="megamenu_item">
+							<div class="menu_icon">
+								<i class='bx bxs-extension' ></i>
+							</div>
+							<div class="megamenu_link">
+								<a href="#">Open University</a>
+								<p>Lorem ipsum dolor sit.</p>
+							</div>
+						</li>
+						<li class="megamenu_item">
+							<div class="menu_icon">
+								<i class='bx bxs-extension' ></i>
+							</div>
+							<div class="megamenu_link">
+								<a href="#">Colleges</a>
+								<p>Lorem ipsum dolor sit.</p>
+							</div>
+						</li>
+						<li class="megamenu_item">
+							<div class="menu_icon">
+								<i class='bx bxs-extension' ></i>
+							</div>
+							<div class="megamenu_link">
+								<a href="#">Graduate Studies</a>
+								<p>Lorem ipsum dolor sit.</p>
+							</div>
+						</li>
+					</ul>
+					<ul class="content">
+						<li class="megamenu_item header_megamenu">Students</li>
+						<li class="megamenu_item">
+							<div class="menu_icon"><i class='bx bxs-extension' ></i>
+
+							</div>
+							<div class="megamenu_link">
+								<a href="#">Students Services</a>
+								<p>Lorem ipsum dolor sit.</p>
+							</div>
+						</li>
+						<li class="megamenu_item">
+							<div class="menu_icon">
+								<i class='bx bxs-extension' ></i>
+							</div>
+							<div class="megamenu_link">
+								<a href="#">Student Organizations/a>
+								<p>Lorem ipsum dolor sit.</p>
+							</div>
+						</li>
+						<li class="megamenu_item">
+							<div class="menu_icon">
+								<i class='bx bxs-extension' ></i>
+							</div>
+							<div class="megamenu_link">
+								<a href="#">Student Publications</a>
+								<p>Lorem ipsum dolor sit.</p>
+							</div>
+						</li>
+						<li class="megamenu_item">
+							<div class="menu_icon">
+								<i class='bx bxs-extension' ></i>
+							</div>
+							<div class="megamenu_link">
+								<a href="#">Student Handbook</a>
+								<p>Lorem ipsum dolor sit.</p>
+							</div>
+						</li>
+					</ul>
+				</div>
 
 		</div>
 	</div>

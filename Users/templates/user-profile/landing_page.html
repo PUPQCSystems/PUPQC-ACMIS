@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+	<div class="container mt-5">
+		<div class="row">
+			<!-- Left side: Profile, Account Info, Contact Info -->
+			<div class="col-md-4">
+					<!-- Profile Card -->
+					{% include "user-profile/picture-card.html" %}
+
+					<!-- Account Information Card -->
+					{% include "user-profile/account-card.html" %}
+
+			</div>
+
+			<!-- Right side: Personal Info, Recent Activity -->
+			<div class="col-md-8">
+					<!-- Personal Information Card -->
+					{% include "user-profile/personal-card.html" %}
+
+					<!-- Address Card -->
+					{% include "user-profile/address-card.html" %}
+					
+					<!-- Recent Activity Card -->
+					{% include "user-profile/recent-card.html" %}
+
+			</div>
+		</div>
+	</div>
+
+	{% include "user-profile/styles.html" %}
+{% endblock content %}
+

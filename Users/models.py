@@ -59,3 +59,26 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.first_name
+    
+class CustomUser_profile(models.Model):
+    account = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    birth_date = models.DateField(null=True, blank=True)
+    religion = models.CharField(max_length=150, blank=True, null=True)
+    sex = models.CharField(max_length=6,blank=True, null=True)
+    civil_status = models.CharField(max_length=20, blank=True, null=True)
+    nationality = models.CharField(max_length=20, blank=True, null=True)
+    personal_no = models.CharField(max_length=11, blank=True, null=True)
+    contact_no = models.CharField(max_length=11, blank=True, null=True)
+    contact_email = models.CharField(max_length=50, blank=True, null=True)
+    province = models.CharField(max_length=30, blank=True, null=True)
+    city = models.CharField(max_length=30, blank=True, null=True)
+    house_no = models.CharField(max_length=30, blank=True, null=True)
+    street_address = models.CharField(max_length=30, blank=True, null=True)
+    barangay = models.CharField(max_length=30, blank=True, null=True)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_profile', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True, null=True)
+    
