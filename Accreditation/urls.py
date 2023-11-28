@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views_accreditation, views_level, views_type, views_bodies
+from . import views_accreditation, views_level, views_type, views_bodies, views_instrument
 
 
 app_name = 'accreditations'
@@ -35,4 +35,5 @@ urlpatterns = [
     path("bodies/archive_page/restore/<str:pk>/", views_bodies.restore_bodies, name='bodies-archive-page-restore'),
     path("bodies/archive_page/destroy/<str:pk>/", views_bodies.destroy_bodies, name='bodies-archive-page-destroy'),
 
+    path("instrument/", views_instrument.landing_page, name='instrument-landing'),
 ]

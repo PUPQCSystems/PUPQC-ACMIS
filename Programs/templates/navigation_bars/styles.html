@@ -1,155 +1,155 @@
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,500;0,600;0,700;1,300;1,800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,500;0,600;0,700;1,300;1,800&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Open Sans;
-}
-
-a {
-    text-decoration: none;
-}
-
-li {
-    list-style: none;
-}
-
-body {
-    background-color: rgb(241, 235, 235);
-}
-
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgb(241, 235, 235);
-    z-index: 99;
-}
-
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    height:5rem;
-    padding: 0 1rem;
-    margin: 0 auto;
-    z-index: 999;
-}
-
-.toggle_menu, .close_menu {
-    display: none;
-}
-
-.nav_list {
-    display: flex;
-}
-
-.nav_item {
-    margin: 0 1.5rem;
-    padding: 1.4rem 0;
-}
-
-.nav_link {
-    font-size: 500;
-    color: black;
-}
-
-.nav_link:hover {
-    color: brown;
-}
-
-.dropdown_link {
-    display: flex;
-    align-items: center;
-}
-
-.dropdown_icon {
-    font-size: 1rem;
-}
-
-.megamenu {
-    position: absolute;
-    width: 100%;
-    top: 4rem;
-    left: 0;
-    background-color: #fff;
-    display: flex;
-    justify-content: center;
-    border-radius: 0 0 20px 20px;
-    box-shadow: 0 23px 23px -22px rgb(196, 190, 190);
-    z-index: -99;
-    visibility: hidden;
-    opacity: 0;
-}
-
-.content {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 1rem;
-}
-
-.megamenu_item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.header_megamenu {
-    font-weight: 600;
-    color: brown;
-    margin-bottom: 1rem;
-}
-
-.menu_icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    text-align: center;
-    background-color: aliceblue;
-    margin-right: 0.5rem;
-}
-
-.menu_icon i{
-    line-height: 32px;
-    font-size: 22px;
-    color: rgb(226, 43, 52);
-}
-
-.megamenu_link a{
-    font-weight: 500;
-    color: black;
-}.megamenu_link a:hover{
-    color: rgb(226, 43, 52);
-}.megamenu_link p{
-    font-weight: 400;
-    color: rgb(151, 149, 149);
-}
-
-.dropdown:hover {
-    color: rgb(230, 101, 27);
-    visibility: visible;
-    transition: all 0.3s ease;
-    opacity: 1;
-}
-
-.nav_item:hover .dropdown_icon{
-    transform: rotate(180deg);
-}
-
-.dropdown_link:hover + .megamenu {
-    visibility: visible;
-    opacity: 1;
-    z-index: 999;
-}
-
-@media screen and (max-width: 768px) {
-    .megamenu{
-        justify-content: start;
-        flex-wrap: wrap;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Open Sans;
     }
-}
+    
+    a {
+        text-decoration: none;
+    }
+    
+    li {
+        list-style: none;
+    }
+    
+    
+    .toggle_menu, .close_menu {
+        display: none;
+    }
+    
+    .nav_list {
+        display: flex;
+    }
+    
+    .nav_item {
+        margin: 0 1.5rem;
+        padding: 1.4rem 0;
+    }
+    
+    .nav_link {
+        font-size: 500;
+        color: black;
+        text-decoration: none;
+    }
+    
+    .nav_link:hover {
+        color: brown;
+    }
+    
+    .dropdown_link {
+        display: flex;
+        align-items: center;
+    }
+    
+    .dropdown_icon {
+        font-size: 1rem;
+    }
+    
+    .megamenu {
+        position: absolute;
+        {% comment %} width: 100%; {% endcomment %}
+        margin-left: 10px ;
+        margin-right: 10px;
+        padding-left: 60px;
+        padding-right: 60px;
+        top: 3rem;
+        left: 0;
+        background-color: #fff;
+        display: flex;
+        justify-content: center;
+        border-radius: 0 0 20px 20px;
+        box-shadow: 0 23px 23px -22px rgb(196, 190, 190);
+        z-index: -99;
+        visibility: hidden; 
+        opacity: 0;
+        transition: all 0.3s ease; 
+    }
+    
+    /* nag add ako ng bagong rule para mahold itong megamenu kasi nawawala sya diba */
+    .megamenu:hover {
+        visibility: visible;
+        opacity: 1;
+        z-index: 999;
+    }
+    
+    /* ... The rest of your existing CSS ... */
+    
+    
+    .content {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 1rem;
+    }
+    
+    .megamenu_item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .header_megamenu {
+        font-weight: 600;
+        color: brown;
+        margin-bottom: 1rem;
+    }
+    
+    .menu_icon {
+        text-align: center;
+        margin-right: 1.5rem;
+    }
+    
+    .description-text {
+        font-size: 13px;
+    }
+
+    .instrument-icon {
+        font-size: 20px;
+        margin-right: 2.1rem;
+    }
+    {% comment %} .menu_icon i{
+        line-height: 32px;
+        font-size: 22px;
+        color: rgb(226, 43, 52);
+    } {% endcomment %}
+    
+    .megamenu_link a{
+        text-decoration: none;
+        font-weight: 500;
+        color: black;
+    }.megamenu_link a:hover{
+        color: rgb(226, 43, 52);
+    }.megamenu_link p{
+        font-weight: 400;
+        color: rgb(151, 149, 149);
+    }
+    
+    .dropdown:hover {
+        color: rgb(230, 101, 27);
+        visibility: visible;
+        transition: all 0.3s ease;
+        opacity: 1;
+    }
+    
+    .nav_item:hover .dropdown_icon{
+        transform: rotate(180deg);
+    }
+    
+    .dropdown_link:hover + .megamenu {
+        visibility: visible;
+        opacity: 1;
+        z-index: 999;
+    }
+    
+    
+    @media screen and (max-width: 768px) {
+        .megamenu{
+            justify-content: start;
+            flex-wrap: wrap;
+        }
+    }
+        
 </style>

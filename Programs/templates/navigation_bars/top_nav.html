@@ -17,63 +17,102 @@
 					</a>
 				</li>
 
-				<li class="nav-item dropdown">
-					<a class="nav-link" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-						Admin
+				<li class="nav-item">
+					<a class="nav-link" href="{% url 'accreditations:landing' %}">
+						Accreditation
 					</a>
-					<ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-
-						<li><a class="dropdown-item" href="{% url 'users:landing' %}">
-								User
-							</a>
-						</li>
-
-						<li class="nav-item"><a class="dropdown-item" href="{% url 'accreditations:landing' %}">
-								<small>Accreditation</small>
-							</a>
-						</li>
-
-						<li><a class="dropdown-item" href="task.html">
-								<small>Task</small>
-							</a>
-						</li>
-						
-						<li><a class="dropdown-item" href="documents.html">
-								<small>Documents</small>
-							</a>
-						</li>
-
-					</ul>
 				</li>
 
+			
+				<a class="nav_link dropdown_link" href="#">
+					Admin Setup
+					<i class="bx bxs-chevron-down dropdown_icon"></i>
+				</a>
+			
+				<!--menu-->
+				<div class="megamenu row">
+					<div class="col">
+					<ul class="content">
+						{% comment %} <li class="megamenu_item header_megamenu">Setup Pages</li> {% endcomment %}
+						<li class="megamenu_item">
+							<div class="menu_icon"><i class="fa-solid fa-school fa-2xl" style="color: #b31e1e;"></i>
 
-				<li class="nav-item dropdown"><a class="nav-link" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-						Admin Setup
-					</a>
-					<ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-
-						<li><a class="dropdown-item" href="{% url 'accreditations:type-landing' %}">
-								<small>Accreditation Types</small>
-							</a>
+							</div>
+							<div class="megamenu_link">
+								<a href="{% url 'programs:landing' %}"><strong>Programs</strong>
+									<p class="text-break description-text"><small>The Programs Page allows you to manage your educational programs. 
+															You can create, retrieve, update, delete, and restore programs. </p></small>
+								</a>
+							</div>
+						</li>
+						<li class="megamenu_item">
+							<div class="menu_icon">
+								<i class="fa-solid fa-users-between-lines fa-2xl" style="color: #b31e1e;"></i>
+							</div>
+							<div class="megamenu_link">
+								<a href="{% url 'accreditations:bodies-landing' %}"><strong>Accreditation Bodies</strong>
+									<p class="text-break description-text"><small>The Accrediting Body Page allows you to manage accrediting bodies. 
+															You can create, retrieve, update, delete, and restore accrediting bodies.</p></small>
+								</a>
+							</div>
 						</li>
 
-						<li><a class="dropdown-item" href="{% url 'accreditations:level-landing' %}">
-								<small>Accreditation Levels</small>
-							</a>
+						<li class="megamenu_item">
+							<div class="menu_icon">
+								<i class="fa-solid fa-shapes fa-2xl" style="color: #b31e1e;"></i>
+							</div>
+							<div class="megamenu_link">
+								<a href="{% url 'accreditations:type-landing' %}"><strong>Accreditation type</strong>
+									<p class="text-break description-text"><small>The Accreditation Type Page allows you to manage accreditation types. 
+														You can create, retrieve, update, delete, and restore accreditation types. </p></small>
+								</a>
+							</div>
 						</li>
-
-						<li><a class="dropdown-item" href="{% url 'accreditations:bodies-landing' %}">
-							<small>Accreditation Bodies</small>
-							</a>
-						</li>
-						
-						<li><a class="dropdown-item" href="{% url 'programs:landing' %}">
-								<small>Programs</small>
-							</a>
-						</li>
-
 					</ul>
-				</li>
+				</div>
+
+				<div class="col">
+					<ul class="content">
+						{% comment %} <li class="megamenu_item header_megamenu">Academic</li> {% endcomment %}
+						
+						<li class="megamenu_item">
+							<div class="menu_icon">
+								<i class="fa-solid fa-stairs fa-2xl" style="color: #b31e1e;"></i>
+							</div>
+							<div class="megamenu_link">
+								<a href="{% url 'accreditations:level-landing' %}"><strong>Accreditation Level</strong>
+									<p class="text-break description-text"><small>The Accreditation Level Page allows you to manage accreditation levels. 
+														You can create, retrieve, update, delete, and restore accreditation levels. </p></small>
+								</a>
+							</div>
+						</li>
+
+						<li class="megamenu_item">
+							<div class="menu_icon instrument-icon">
+								<i class="fa-solid fa-clipboard-list fa-2xl" style="color: #b31e1e;"></i>
+							</div>
+							<div class="megamenu_link">
+								<a href="{% url 'accreditations:instrument-landing' %}"><strong>Accreditation Instrument</strong>
+									<p class="text-break description-text"><small>The Accreditation Level Page allows you to manage accreditation instruments. 
+														You can create, retrieve, update, delete, and restore accreditation instruments. </p></small>
+								</a>
+							</div>
+						</li>
+
+						<li class="megamenu_item">
+							<div class="menu_icon">
+								<i class="fa-solid fa-users-gear fa-2xl" style="color: #b31e1e;"></i>
+							</div>
+							<div class="megamenu_link">
+								<a href="{% url 'users:landing' %}"><strong>User</strong>
+									<p class="text-break description-text"><small>The User Page allows you to manage your users. You can create, retrieve, update, deactivate, and reactivate user accounts. 
+														You can also view a list of all users, search for specific users, and filter users by various criteria.</p></small>
+								</a>
+							</div>
+						</li>
+					</ul>
+				</div>
+			
 			</ul>
 
 			<a type="button" class="btn btn-custom" style="color: red;">
@@ -93,7 +132,7 @@
 							style="margin-left: 10px;">
 						</a>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a href="{% url 'users:profile' %}" class="dropdown-item"><i class="fas fa-user-alt pe-2"></i> My Profile</a>
+                            <a href="{% url 'users:profile' %}" class="dropdown-item"><i class="fa-solid fa-user-gear"></i> My Profile</a>
                             <a href="#" class="dropdown-item"><i class="fas fa-cog fa-fw"></i> Settings</a>
                             <div class="dropdown-divider"></div>
                             <a href="{% url 'logout' %}" class="dropdown-item"><i class="fas fa-sign-out-alt fa-fw"></i> Logout</a>
@@ -102,129 +141,6 @@
                 </ul>
 
 			</div>
-
-			<a href="#" class="nav_link dropdown_link">Blog <i class="bx bxs-chevron-down dropdown_icon"></i></a>
-                    
-			<!--menu-->
-				<div class="megamenu">
-					<ul class="content">
-						<li class="megamenu_item header_megamenu">About PUP</li>
-						<li class="megamenu_item">
-							<div class="menu_icon"><i class='bx bxs-extension' ></i>
-
-							</div>
-							<div class="megamenu_link">
-								<a href="#">University Profile</a>
-								<p>Lorem ipsum dolor sit.</p>
-							</div>
-						</li>
-						<li class="megamenu_item">
-							<div class="menu_icon">
-								<i class='bx bxs-extension' ></i>
-							</div>
-							<div class="megamenu_link">
-								<a href="#">Mission and Vision</a>
-								<p>Lorem ipsum dolor sit.</p>
-							</div>
-						</li>
-						<li class="megamenu_item">
-							<div class="menu_icon">
-								<i class='bx bxs-extension' ></i>
-							</div>
-							<div class="megamenu_link">
-								<a href="#">History</a>
-								<p>Lorem ipsum dolor sit.</p>
-							</div>
-						</li>
-						<li class="megamenu_item">
-							<div class="menu_icon">
-								<i class='bx bxs-extension' ></i>
-							</div>
-							<div class="megamenu_link">
-								<a href="#">University Code</a>
-								<p>Lorem ipsum dolor sit.</p>
-							</div>
-						</li>
-					</ul>
-					<ul class="content">
-						<li class="megamenu_item header_megamenu">Academic</li>
-						<li class="megamenu_item">
-							<div class="menu_icon"><i class='bx bxs-extension' ></i>
-
-							</div>
-							<div class="megamenu_link">
-								<a href="#">Academic Programs</a>
-								<p>Lorem ipsum dolor sit.</p>
-							</div>
-						</li>
-						<li class="megamenu_item">
-							<div class="menu_icon">
-								<i class='bx bxs-extension' ></i>
-							</div>
-							<div class="megamenu_link">
-								<a href="#">Open University</a>
-								<p>Lorem ipsum dolor sit.</p>
-							</div>
-						</li>
-						<li class="megamenu_item">
-							<div class="menu_icon">
-								<i class='bx bxs-extension' ></i>
-							</div>
-							<div class="megamenu_link">
-								<a href="#">Colleges</a>
-								<p>Lorem ipsum dolor sit.</p>
-							</div>
-						</li>
-						<li class="megamenu_item">
-							<div class="menu_icon">
-								<i class='bx bxs-extension' ></i>
-							</div>
-							<div class="megamenu_link">
-								<a href="#">Graduate Studies</a>
-								<p>Lorem ipsum dolor sit.</p>
-							</div>
-						</li>
-					</ul>
-					<ul class="content">
-						<li class="megamenu_item header_megamenu">Students</li>
-						<li class="megamenu_item">
-							<div class="menu_icon"><i class='bx bxs-extension' ></i>
-
-							</div>
-							<div class="megamenu_link">
-								<a href="#">Students Services</a>
-								<p>Lorem ipsum dolor sit.</p>
-							</div>
-						</li>
-						<li class="megamenu_item">
-							<div class="menu_icon">
-								<i class='bx bxs-extension' ></i>
-							</div>
-							<div class="megamenu_link">
-								<a href="#">Student Organizations/a>
-								<p>Lorem ipsum dolor sit.</p>
-							</div>
-						</li>
-						<li class="megamenu_item">
-							<div class="menu_icon">
-								<i class='bx bxs-extension' ></i>
-							</div>
-							<div class="megamenu_link">
-								<a href="#">Student Publications</a>
-								<p>Lorem ipsum dolor sit.</p>
-							</div>
-						</li>
-						<li class="megamenu_item">
-							<div class="menu_icon">
-								<i class='bx bxs-extension' ></i>
-							</div>
-							<div class="megamenu_link">
-								<a href="#">Student Handbook</a>
-								<p>Lorem ipsum dolor sit.</p>
-							</div>
-						</li>
-					</ul>
-				</div>
 
 		</div>
 	</div>
