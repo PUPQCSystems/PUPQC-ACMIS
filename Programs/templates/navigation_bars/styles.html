@@ -16,40 +16,21 @@
         list-style: none;
     }
     
-    
-    .toggle_menu, .close_menu {
-        display: none;
+   
+    .hover-nav-link:hover {
+        color: brown;
     }
-    
-    .nav_list {
-        display: flex;
-    }
-    
-    .nav_item {
-        margin: 0 1.5rem;
-        padding: 1.4rem 0;
-    }
-    
-    .nav_link {
-        font-size: 500;
-        color: black;
-        text-decoration: none;
-    }
-    
-    .nav_link:hover {
+
+    .nav-link:hover {
         color: brown;
     }
     
-    .dropdown_link {
+    .custom-dropdown-link {
         display: flex;
         align-items: center;
     }
     
-    .dropdown_icon {
-        font-size: 1rem;
-    }
-    
-    .megamenu {
+    .mega-menu {
         position: absolute;
         {% comment %} width: 100%; {% endcomment %}
         margin-left: 10px ;
@@ -69,8 +50,8 @@
         transition: all 0.3s ease; 
     }
     
-    /* nag add ako ng bagong rule para mahold itong megamenu kasi nawawala sya diba */
-    .megamenu:hover {
+    /* nag add ako ng bagong rule para mahold itong mega-menu kasi nawawala sya diba */
+    .mega-menu:hover {
         visibility: visible;
         opacity: 1;
         z-index: 999;
@@ -85,19 +66,14 @@
         padding: 1rem 1rem;
     }
     
-    .megamenu_item {
+    .mega-menu-item {
         display: flex;
         align-items: center;
         margin-bottom: 1rem;
     }
     
-    .header_megamenu {
-        font-weight: 600;
-        color: brown;
-        margin-bottom: 1rem;
-    }
     
-    .menu_icon {
+    .menu-icon {
         text-align: center;
         margin-right: 1.5rem;
     }
@@ -110,35 +86,20 @@
         font-size: 20px;
         margin-right: 2.1rem;
     }
-    {% comment %} .menu_icon i{
-        line-height: 32px;
-        font-size: 22px;
-        color: rgb(226, 43, 52);
-    } {% endcomment %}
     
-    .megamenu_link a{
+    .mega-menu-link a{
         text-decoration: none;
         font-weight: 500;
         color: black;
-    }.megamenu_link a:hover{
-        color: rgb(226, 43, 52);
-    }.megamenu_link p{
+    }.mega-menu-link a:hover{
+        color: brown;
+    }.mega-menu-link p{
         font-weight: 400;
         color: rgb(151, 149, 149);
     }
     
-    .dropdown:hover {
-        color: rgb(230, 101, 27);
-        visibility: visible;
-        transition: all 0.3s ease;
-        opacity: 1;
-    }
     
-    .nav_item:hover .dropdown_icon{
-        transform: rotate(180deg);
-    }
-    
-    .dropdown_link:hover + .megamenu {
+    .custom-dropdown-link:hover + .mega-menu {
         visibility: visible;
         opacity: 1;
         z-index: 999;
@@ -146,7 +107,7 @@
     
     
     @media screen and (max-width: 768px) {
-        .megamenu{
+        .mega-menu{
             justify-content: start;
             flex-wrap: wrap;
         }

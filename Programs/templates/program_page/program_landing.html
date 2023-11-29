@@ -1,25 +1,27 @@
 {% extends "base.html" %}
-{% block content %}
-    <br>
-    <div class="main-content">
-        <div class="container">
-            <h1> Program Page</h1>
-            <div>
-                <div class="bg-light p-3 mb-5d-grid gap-2 d-md-flex justify-content-md-end bg-body-tertiary rounded">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Create</button>
-                    <a href="{% url 'programs:archive-landing' %}" type="button" class="btn btn-success">
-                        Archive <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
 
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    Program Page
+{% endblock page-title %}
+
+
+<!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
+{% block page-title-actions %}
+    <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search user…"/>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">Create</button>
+    <a href="{% url 'programs:archive-landing' %}" type="button" class="btn btn-success">
+        Archive <i class="fa-solid fa-arrow-right"></i>
+    </a>
+{% endblock page-title-actions %}
+     
+
+<!-- THE CONTENTS -->
+{% block content %}
     <!-- PROGRAM CARDS -->
     {% include "program_page/program_cards.html" %}
     
     <!-- MODALS-->
     {% include "program_page/create_modal.html" %}
-
-
 {% endblock content %}

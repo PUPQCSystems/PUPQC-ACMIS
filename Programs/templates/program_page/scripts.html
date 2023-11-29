@@ -69,30 +69,6 @@
 </script> 
 
 
-<script>
-    $(document).ready(function() {
-        $('.program-card').on('click', function() {
-            var card = $(this);
-            if (card.hasClass('selected')) {
-                card.removeClass('selected');
-            } else {
-                card.addClass('selected');
-            }
-        });
-
-    });
-</script>
-
-<style>
-    .program-card.selected {
-        background-color: #c2e7ff;
-
-    }
-
-    .program-card.selected:hover {
-        background-color: #c2e7ff;
-      }
-</style>
 
 <script>
     $(".archive-button").click(function(event) {
