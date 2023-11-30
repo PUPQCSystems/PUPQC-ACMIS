@@ -1,25 +1,35 @@
 {% load static %}
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Accreditation & Certification Information System</title>
-		{% include "CSS_dependencies.html" %}
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+
+	<title> PUP-ACIS </title>
+
+    <!-- CSS DEPENDENCIES-->
+    {% include "dependencies/CSS_dependencies.html" %} 
+
+  </head>
+  	<body  class=" d-flex flex-column">
+		<script src="{% static 'tabler-template/dist/js/demo-theme.min.js' %}"></script>
+		<div class="page page-center">
+			
+			<!-- TOP NAVIGATION BAR -->
+			{% include "top-nav/top-nav.html" %}
 
 
-	</head>
-
-	<body>
-		{% include "top-nav.html" %}
-
-		<div style= "padding: 30px;"> 
+			<!-- MAIN CONTENTS -->
 			{% block content %}{% endblock content %}
+
+			<!-- FOOTER -->
+			{% include "footer.html" %}
 		</div>
 
-		{% include "JS_dependencies.html" %}
-
+		<!-- JS DEPENDENCIES-->
+		{% include "dependencies/JS_dependencies.html" %}
 	</body>
-
 </html>
+
+

@@ -7,7 +7,7 @@ django-debug-toolbar
 django-crispy-forms
 
 # Crispy Bootstrap5
-django-crispy-bootstrap5
+crispy-boostrap5
 
 # Django CORS Headers
 django-cors-headers
