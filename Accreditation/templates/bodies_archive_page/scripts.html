@@ -32,7 +32,7 @@
 	deleteButtons.forEach((deleteButton) => {
 			deleteButton.addEventListener('click', async () => {
 					const id = event.target.dataset.id; // Get the ID of the button
-					const { value: password } = await Swal.fire({
+					const { value: password, isConfirmed } = await Swal.fire({
 							title: 'Are you sure?',
 							text: "All other records related to this program will also be PERMANENTLY deleted.",
 							icon: 'warning',
@@ -49,32 +49,34 @@
 									autocorrect: 'off'
 							}
 					});
-
-					if (password) {
-							var url = "/accreditation/bodies/archive_page/destroy/"+id+"/";
-							// Send AJAX request to verify password
-							$.ajax({
-									url: url,
-									method: 'POST',
-									data: { password: password,
-											'csrfmiddlewaretoken': '{{ csrf_token }}'},
-									success: function(response) {
-											if (response.success) {
-													window.location.href = response.url_landing;
-											} else {
-													toastr.error(response.error);
-											}
-									},
-									error: function() {
-											toastr.error('Error verifying password');
-									}
-							});
-					} else {
-							Swal.fire({
-								icon: 'error',
-								title: 'Please input a password!',
-								showConfirmButton: true,
-							});
+					if (isConfirmed) 
+					{
+						if (password) {
+								var url = "/accreditation/bodies/archive_page/destroy/"+id+"/";
+								// Send AJAX request to verify password
+								$.ajax({
+										url: url,
+										method: 'POST',
+										data: { password: password,
+												'csrfmiddlewaretoken': '{{ csrf_token }}'},
+										success: function(response) {
+												if (response.success) {
+														window.location.href = response.url_landing;
+												} else {
+														toastr.error(response.error);
+												}
+										},
+										error: function() {
+												toastr.error('Error verifying password');
+										}
+								});
+						} else {
+								Swal.fire({
+									icon: 'error',
+									title: 'Please input a password!',
+									showConfirmButton: true,
+								});
+						}
 					}
 			});
 	});
