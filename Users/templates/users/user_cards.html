@@ -1,59 +1,42 @@
 {% load static %}
-{% comment %} <section class=" pt-4 pb-1">
-    <div class="row"> {% endcomment %}
-     
-<div class="py-5" style="margin-top: 20px; margin-bottom: 50px;">
-    <div class="container">
-        <div class="row hidden-md-up">
-            {% for record, update_form, created_by, modified_by in details  %}
-
-                <div class="col-lg-4 mb-3 d-flex align-items-stretch">
-                    {% comment %} <div class="card program-card" style="width: 19rem;"> {% endcomment %}
-                    <div class="ccard" style="width: 25rem;">
-
-                        <div class="position-relative">
-                            <!-- Add ellipsis button in the upper-right corner -->  
-                            <button class="btn btn-sm position-absolute top-0 end-0 m-2 btn-ellipse" type="button" data-bs-toggle="dropdown" 
-                                data-bs-auto-close="true" aria-expanded="false" data-bs-offset="-50,2" style="color: #000000;">
-                                <li class="fa-solid fa-ellipsis-vertical fa-xl"></li>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button></li>
-                                <li><button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>     <button type="button" class="dropdown-item deactivate-button" data-id={{ record.id }}>Deactivate</button>
-                        
-                                </li>
-                            </ul>
-                            
-                            <div class="card-body">
-                                <div class=" text-center">
-                                    <div class="mt-3 mb-4">
-                                        <img src="{% static 'images/PUPLogo.png' %}" class="rounded-circle img-fluid" style="width: 100px;" />
-                                    </div>
-                                    <h4 class="mb-2">{{ record.last_name }} {{ record.first_name }} {{ record.middle_name }} </h4>
-                                    <p class="text-muted mb-4">Admin <span class="mx-2">|</span> <a href="#!">{{ record.email }}</a></p>
-                                </div>
-                
-                                <hr>
-            
-                                <div>
-                                    <small class="text-muted mb-0 small"><b>Created by:</b> {{ created_by.first_name }} {{ created_by.last_name }}</small><br>
-                                    <small class="text-muted mb-0 small"><b>Register Date:</b> {{ record.created_at }} </small><br>
-                                    <small class="text-muted mb-0 small"><b>Modified by:</b>  {{ modified_by.first_name }} {{ modified_by.last_name }} </small><br>
-                                    <small class="text-muted mb-0 small"><b>Last Modified:</b> {{ record.modified_at }} </small><br>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
+<div class="row row-cards">
+    {% for record, update_form, created_by, modified_by in details  %}
+        <div class="col-md-6 col-lg-3">
+            <div class="card card-link-pop">
+                <div class="card-status-top bg-green"></div>
+                <div class="card-body p-4 text-center">
+                    {% if record.profile_pic %}
+                        <span class="avatar avatar-xl mb-3 rounded" style="background-image: url(./static/avatars/000m.jpg)"></span>
                     
+                    {% else %}
+                        <span class="avatar avatar-xl mb-3 rounded">{{ record.first_name|first|default:'' }} {{ record.last_name|first|default:'' }}</span>
+                    {% endif %}
+
+                    <h3 class="m-0 mb-1"><a href="#">{{ record.first_name }} {{ record.last_name }} </a></h3>
+                    <div class="text-muted">{{ record.email }}</div>
+                    <div class="mt-3">
+                        <span class="badge bg-green-lt">Admin</span>
+                    </div>
                 </div>
-                {% include "users/edit_modal.html" %} 
-                {% include "users/view_modal.html" %} 
-            {% endfor %}
-
-
+                <div class="d-flex">
+                    <a href="#" class="card-btn" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">
+                        View
+                    </a>
+                    <a href="#" class="card-btn edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}" >
+                        Edit
+                    </a>
+                    <a href="#" class="card-btn text-danger deactivate-button" data-id={{ record.id }}>
+                        Deactivate
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
+
+        {% include "users/edit_modal.html" %} 
+        {% include "users/view_modal.html" %} 
+    {% endfor %}
 </div>
+
+
+
+

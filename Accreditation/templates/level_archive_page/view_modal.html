@@ -1,45 +1,61 @@
 <!-- Modal -->
-<div class="modal fade" id="view-modal-{{ record.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal modal-blur fade" id="view-modal-{{ record.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 	<div class="modal-dialog ">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="viewModalLabel">View Modal</h5>
+				<h5 class="modal-title">{{ record.name }} Details</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<!-- Label and data from database -->
-		
-				<div class="row">
-					<div class="col-4 offset-1"><b>Created by</b></div>
-					<div class="col-6">{{ created_by.first_name }} {{ created_by.last_name }} </div>
-				</div>
-				<div class="row">
-					<div class="col-4 offset-1"><b>Created at</b></div>
-					<div class="col-6"> {{record.created_at}} </div>
-				</div>
-				
-				<div class="row">
-					<div class="col-4 offset-1"><b>Archived by</b></div>
-					<div class="col-6"> {{modified_by.first_name}} {{modified_by.last_name}}</div>
-				</div>
-				<div class="row">
-					<div class="col-4 offset-1"><b>Date Archived</b></div>
-					<div class="col-6">{{record.deleted_at}}</div>
-				</div>
+				<ul class="list-unstyled space-y-3">
+					
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Created by</b></div>
+							<div class="col-6 text-break ">{{ created_by.first_name }} {{ created_by.last_name }} </div>
+						</div>
+					</li>
 
-				<div class="row">
-					<div class="col-4 offset-1"><b>Accreditation Type</b></div>
-					<div class="col-6">{{ record.name}}</div>
-				</div>
-				<div class="row">
-					<div class="col-4 offset-1"><b>Description</b></div>
-					<div class="col-6">{{ record.description }}</div>
-				</div>
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Created at</b></div>
+							<div class="col-6 text-break "> {{record.created_at}} </div>
+						</div>
+					</li>
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Deleted by</b></div>
+							<div class="col-6 text-break "> {{modified_by.first_name}} {{modified_by.last_name}}</div>
+						</div>
+					</li>
 
-			</div>
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Date Archived</b></div>
+							<div class="col-6 text-break">{{record.deleted_at}}</div>
+						</div>
+					</li>
+					
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Level Name</b></div>
+							<div class="col-6 text-break">{{ record.name }}</div>
+						</div>
+					</li>
+
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Description</b></div>
+							<div class="col-6  text-break">{{ record.description }}</div>
+						</div>
+					</li>
+				</div>
+			</ul>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
 			</div>
 		</div>
 	</div>
 </div>
+

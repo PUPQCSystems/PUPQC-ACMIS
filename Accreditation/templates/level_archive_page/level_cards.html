@@ -1,47 +1,41 @@
 {% load static %}    
-
-<div class="py-5" style="margin-top: 20px; margin-bottom: 50px;">
-    <div class="container">
-        <div class="row hidden-md-up">
-
-            <!-- For loop here -->
-            {% for record, created_by, modified_by in details %}
-                <div class="col-md-4" style="margin-top: 10px; margin-bottom: 10px;">
-                    <div class="ccard">
-
-                        <div class="position-relative">
-                            <!-- Add ellipsis button in the upper-right corner -->  
-                            <button class="btn btn-sm position-absolute top-0 end-0 m-2 btn-ellipse" type="button" data-bs-toggle="dropdown" 
-                                data-bs-auto-close="true" aria-expanded="false" data-bs-offset="-50,2" style="color: #000000;">
-                                <li class="fa-solid fa-ellipsis-vertical fa-xl"></li>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button></li>
-                                <li><a  href={% url 'accreditations:level-archive-page-restore' pk=record.id %} class="dropdown-item">Restore</a></li>
-                                <li><hr class="dropdown-divider"></li>
-
-                                <li> <button type="button" class="dropdown-item delete-button" id="delete-button" data-id={{ record.id }}>Delete</button></li>
-                            </ul>
-
-                            <div class="card-block">
-                                <h6 class="card-subtitle text-muted">Name</h6>
-                                <h4 class="c-title">{{ record.name }}</h4>
-                                <hr>
-                                <small class="card-text p-y-1 text-muted">Created by: </small><small class="card-text p-y-1">{{ created_by.first_name }} {{ created_by.last_name }}</small><br>
-                                <small class="card-text p-y-1 text-muted">Date Created: </small><small class="card-text p-y-1">{{ record.created_at }}</small><br>
-                                <small class="card-text p-y-1 text-muted">Archived by: </small><small class="card-text p-y-1">{{ modified_by.first_name }} {{ modified_by.last_name }} </small><br>
-                                <small class="card-text p-y-1 text-muted">Date Archived: </small><small class="card-text p-y-1">{{ record.deleted_at }}</small><br>
-                            </div>
+<div class="row row-cards">
+    <!-- For loop here -->
+    {% for record, created_by, modified_by in details %}
+        <div class="col-md-6 col-lg-4">
+            <div class="program-card card card-link-pop">
+                <div class="card-status-top bg-green"></div>
+                <div class="position-relative">
+                
+                        <!-- DROPDOWN-->
+                    <div class="dropdown">
+                        <a href="#" class="btn-action position-absolute top-0 end-0 m-2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
+                            <a  href={% url 'accreditations:level-archive-page-restore' pk=record.id %} class="dropdown-item">Restore</a>
+                             <button type="button" class="dropdown-item text-danger delete-button" id="delete-button" data-id={{ record.id }}>Delete</button>
                         </div>
                     </div>
+
+                    <div class="card-block">
+                        <h6 class="card-subtitle text-muted" style="margin-bottom: 0; margin-top: 5px;">Name</h6>
+                        <h3 class="c-title">{{ record.name }}</h3>
+                        <hr class = "card-divider-line">
+                        <small class="card-text p-y-1 text-muted">Created by: </small><small class="card-text p-y-1">{{ created_by.first_name }} {{ created_by.last_name }}</small><br>
+                        <small class="card-text p-y-1 text-muted">Date Created: </small><small class="card-text p-y-1">{{ record.created_at }}</small><br>
+                        <small class="card-text p-y-1 text-muted">Archived by: </small><small class="card-text p-y-1">{{ modified_by.first_name }} {{ modified_by.last_name }} </small><br>
+                        <small class="card-text p-y-1 text-muted">Date Archived: </small><small class="card-text p-y-1">{{ record.deleted_at }}</small><br>
+                    </div>
                 </div>
-
-                {% include "level_archive_page/view_modal.html" %}
-
-            <!-- END of For Loop -->
-            {% endfor %}
-
+            </div>
         </div>
-    </div>
+
+        {% include "level_archive_page/view_modal.html" %}
+    <!-- END of For Loop -->
+    {% endfor %}
 </div>
+
     

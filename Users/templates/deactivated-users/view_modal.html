@@ -1,42 +1,61 @@
-<!-- Modal -->
-<div class="modal fade" id="view-modal-{{ record.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog ">
+
+  <!-- Modal -->
+  <div class="modal modal-blur fade" id="view-modal-{{ record.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal-dialog ">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="viewModalLabel">View Account</h5>
+				<h5 class="modal-title">Easy View Account</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<!-- Label and data from database -->
-				<div class="row">
-					<div class="col-4 offset-1"><b>Created by</b></div>
-					<div class="col-6">{{ created_by.first_name }} {{ created_by.last_name }} </div>
-				</div>
-				<div class="row">
-					<div class="col-4 offset-1"><b>Created at</b></div>
-					<div class="col-6"> {{record.created_at}} </div>
-				</div>
-				<div class="row">
-					<div class="col-4 offset-1"><b>Modified by</b></div>
-					<div class="col-6"> {{modified_by.first_name}} {{modified_by.last_name}}</div>
-				</div>
-				<div class="row">
-					<div class="col-4 offset-1"><b>Last Modified</b></div>
-					<div class="col-6">{{record.modified_at}}</div>
-				</div>
+				<ul class="list-unstyled space-y-3">
+					
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Created by</b></div>
+							<div class="col-6 text-break ">{{ created_by.first_name }} {{ created_by.last_name }} </div>
+						</div>
+					</li>
 
-				<div class="row">
-					<div class="col-4 offset-1"><b>Account Name</b></div>
-					<div class="col-6">{{ record.first_name }} {{ record.middle_name }} {{ record.last_name }}</div>
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Created at</b></div>
+							<div class="col-6 text-break "> {{record.created_at}} </div>
+						</div>
+					</li>
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Deactivated by</b></div>
+							<div class="col-6 text-break "> {{modified_by.first_name}} {{modified_by.last_name}}</div>
+						</div>
+					</li>
+
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Date Deactivated</b></div>
+							<div class="col-6 text-break">{{record.deactivated_at}}</div>
+						</div>
+					</li>
+					
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Account Name</b></div>
+							<div class="col-6 text-break">{{ record.first_name }} {{ record.middle_name|first|default:'' }}. {{ record.last_name }}</div>
+						</div>
+					</li>
+
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Account Email</b></div>
+							<div class="col-6 text-break ">{{ record.email }}</div>
+						</div>
+					</li>
 				</div>
-				<div class="row">
-					<div class="col-4 offset-1"><b>Account Email</b></div>
-					<div class="col-6">{{ record.email }}</div>
-				</div>
-			</div>
+			</ul>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
 			</div>
 		</div>
 	</div>
-  </div>
+</div>

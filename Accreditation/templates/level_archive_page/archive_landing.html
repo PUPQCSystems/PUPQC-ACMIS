@@ -1,30 +1,27 @@
 {% extends "base.html" %}
-{% block content %}
 
-    <br>
-    <div class="main-content">
-        <div class="container">
-            <h1> Accreditation Level Archive Page</h1>
-            <div>
-                <div class="bg-light p-3 mb-5d-grid gap-2 d-md-flex justify-content-md-end bg-body-tertiary rounded">
-                    <a href="{% url 'accreditations:level-landing' %}" type="button" class="btn btn-primary">
-                        <i class="fa-solid fa-arrow-left"></i> Back
-                    </a>
-            
-                    <button type="button" class="btn btn-success" disabled>Restore</button>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    Accreditation Level Archive Page
+{% endblock page-title %}
+
+
+<!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
+{% block page-title-actions %}
+        <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search archived programs..."/>
+        <a href="{% url 'accreditations:level-landing' %}" type="button" class="btn btn-primary">
+            <i class="fa-solid fa-arrow-left"></i> Back
+        </a>
+        <button type="button" class="btn btn-success" disabled>Restore</button>
+{% endblock page-title-actions %}
+
+
+{% block content %}
 
     <!-- Type CARDS -->
     {% include "level_archive_page/level_cards.html" %}
     
-
     <!-- Scripts -->
-
     {% include "level_archive_page/scripts.html" %}
-
-
 
 {% endblock content %}

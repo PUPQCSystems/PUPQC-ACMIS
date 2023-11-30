@@ -121,9 +121,10 @@ def archive_landing(request):
 
     # Iterate through each record and create an update form for it
     for record in records:
+        update_form = UpdateForm(instance=record)
         created_by = record.created_by  # Get the user who created the record
         modified_by = record.modified_by  # Get the user who modified the record
-        details.append((record, created_by, modified_by))
+        details.append((record,  update_form, created_by, modified_by))
 
     context = {'details': details}   
     return render(request, 'deactivated-users/landing_page.html', context)

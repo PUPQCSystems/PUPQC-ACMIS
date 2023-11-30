@@ -1,29 +1,6 @@
 {% comment %} These are the scripts for the archive landing page. {% endcomment %}
 
 <script>
-		$(document).ready(function() {
-				$('.program-card').on('dblclick', function() {
-						var card = $(this);
-						if (card.hasClass('selected')) {
-								card.removeClass('selected');
-						} else {
-								card.addClass('selected');
-						}
-				});
-
-		});
-
-</script>
-
-<!-- This causes problem to the UI when I clich the ellipse button -->
-<style>
-		.program-card.selected {
-				background-color: #d4ffd5;
-		}
-
-</style>
-
-<script>
 	const deleteButtons = document.querySelectorAll('.delete-button');
 
 	deleteButtons.forEach((deleteButton) => {

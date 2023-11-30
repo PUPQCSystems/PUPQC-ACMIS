@@ -1,19 +1,22 @@
 {% extends "base.html" %}
+
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    Accreditation Bodies
+{% endblock page-title %}
+
+
+<!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
+{% block page-title-actions %}
+        <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search archived programs..."/>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Create</button>
+        <a href="{% url 'accreditations:bodies-archive-page' %}" type="button" class="btn btn-success">
+            Archive <i class="fa-solid fa-arrow-right"></i>
+        </a>
+{% endblock page-title-actions %}
+
+
 {% block content %}
-    <br>
-    <div class="main-content">
-        <div class="container">
-            <h1> Accreditation Bodies</h1>
-            <div>
-                <div class="bg-light p-3 mb-5d-grid gap-2 d-md-flex justify-content-md-end bg-body-tertiary rounded">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Create</button>
-                    <a href="{% url 'accreditations:bodies-archive-page' %}" type="button" class="btn btn-success">
-                        Archive <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- PROGRAM CARDS -->
     {% include "accreditation_bodies/bodies_cards.html" %}
