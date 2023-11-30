@@ -1,0 +1,22 @@
+# requirements.txt
+
+# Debug Toolbar
+django-debug-toolbar
+
+# Django Crispy Forms
+django-crispy-forms
+
+# Crispy Bootstrap5
+django-crispy-bootstrap5
+
+# Django CORS Headers
+django-cors-headers
+
+# Font Awesome
+fontawesomefree
+
+# Django Rest Framework
+djangorestframework
+
+# Psycopg2 (PostgreSQL adapter for Django)
+psycopg2
