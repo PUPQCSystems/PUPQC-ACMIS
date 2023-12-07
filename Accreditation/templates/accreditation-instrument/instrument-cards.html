@@ -1,0 +1,35 @@
+<div class="row row-cards">
+    <!-- For loop here -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card card-link-pop">
+                <div class="card-status-start bg-primary"></div>
+                <div class="position-relative">
+                
+                        <!-- DROPDOWN-->
+                    <div class="dropdown">
+                        <a href="#" class="btn-action position-absolute top-0 end-0 m-2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+
+                            <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal">View</button>
+                            <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal">Edit</button>                                                                                
+                            <form method="POST">
+                                {% csrf_token %}
+                                <button type="button" class="dropdown-item text-danger">Archive</button>
+                            </form>
+                            
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <p class="text-muted" style="margin-bottom: 5px;">Instrument</p>
+                        <h3> BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+    

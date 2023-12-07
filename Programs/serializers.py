@@ -5,4 +5,3 @@ class ProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = Programs
         fields = ('__all__')  
-
