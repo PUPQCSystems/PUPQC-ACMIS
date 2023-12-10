@@ -48,7 +48,7 @@
                 data: serializedData,
                 type: "POST",
                 success: function(response) {
-                    window.location.href = response.url_landing;
+                    location.reload();
                     
                 },
                 error: function(error) {
@@ -75,7 +75,7 @@
         var form = 'archive-form-'+id;      //Attaching the id of the record to this string for identifying the specific form
         Swal.fire({
             title: 'Are you sure?',
-            text: "This will be stored and can be restore in the Program archive page!",
+            text: "This will be stored and can be restore in the accrediting body archive page!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

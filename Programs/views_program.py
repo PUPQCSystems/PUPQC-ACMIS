@@ -72,8 +72,7 @@ def update_program(request, pk):
 
             # Provide a success message as a JSON response
             messages.success(request, f'{program_name} is successfully updated!') 
-            url_landing = "/programs/"
-            return JsonResponse({'url_landing': url_landing}, status=200)
+            return JsonResponse({'status': 'success'}, status=200)
 
 
         else:

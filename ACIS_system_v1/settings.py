@@ -25,6 +25,8 @@ SECRET_KEY = 'django-insecure-3u_ik-u)s!pe@ccyhjhvg%^zk&gozhm6z^$c4(z4adm07ue)on
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+CRISPY_FAIL_SILENTLY = not DEBUG
+
 ALLOWED_HOSTS = []
 
 
@@ -103,7 +105,8 @@ REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
-    )
+    ),
+
 }
 
 # Database
@@ -159,7 +162,6 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    "/var/www/static/",
 ]
 
 # Default primary key field type

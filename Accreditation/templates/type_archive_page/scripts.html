@@ -1,30 +1,41 @@
 {% comment %} These are the scripts for the archive landing page. {% endcomment %}
 
-
-
-
+{% comment %} AJAX FOR UPDATING  {% endcomment %}
 <script>
-    $(document).ready(function() {
-        $('.program-card').on('dblclick', function() {
-            var card = $(this);
-            if (card.hasClass('selected')) {
-                card.removeClass('selected');
-            } else {
-                card.addClass('selected');
-            }
+    $(document).ready(function(){
+        $(".save-changes-button").click(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var serializedData = $("#update-type-form-"+id).serialize();
+            var url = "/accreditation/type/update/"+id+"/";
+
+
+            $.ajax({
+                url: url, 
+                data: serializedData,
+                type: "POST",
+                success: function(response) {
+                    location.reload();
+                    
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
         });
-
     });
+</script> 
 
-</script>
-
-<!-- This causes problem to the UI when I clich the ellipse button -->
-<style>
-    .program-card.selected {
-        background-color: #d4ffd5;
-    }
-
-</style>
 
 <script>
 	const deleteButtons = document.querySelectorAll('.delete-button');

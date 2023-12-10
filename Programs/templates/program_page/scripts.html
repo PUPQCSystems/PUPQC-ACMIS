@@ -49,7 +49,7 @@
                 data: serializedData,
                 type: "POST",
                 success: function(response) {
-                    window.location.href = response.url_landing;
+                    location.reload();
                     
                 },
                 error: function(error) {

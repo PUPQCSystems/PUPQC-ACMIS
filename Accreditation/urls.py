@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views_accreditation, views_level, views_type, views_bodies, views_instrument
+from Accreditation.views_instrument import *
+
 
 
 app_name = 'accreditations'
@@ -35,5 +37,13 @@ urlpatterns = [
     path("bodies/archive_page/restore/<str:pk>/", views_bodies.restore_bodies, name='bodies-archive-page-restore'),
     path("bodies/archive_page/destroy/<str:pk>/", views_bodies.destroy_bodies, name='bodies-archive-page-destroy'),
 
+
+    #API CRUD PATHS FOR INTRUMENT MODULE
     path("instrument/", views_instrument.landing_page, name='instrument-landing'),
+    path("instrument/api/list/", InstrumentList.as_view(), name='instrument-api-list'),
+    path("instrument/update/<int:pk>/", UpdateInstrument.as_view(), name='update-instrument'),
+    path("instrument/archive/<int:pk>/", ArchiveInstrument.as_view(), name='archive-instrument'),
+
+
+    path("check-instrument-name/", views_instrument.check_instru_name, name='check-instru-name'),
 ]

@@ -35,7 +35,10 @@ class accredbodies(models.Model):
     deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
 
-class Instrument(models.Model):
+    def __str__(self):
+        return self.name
+
+class instrument(models.Model):
     name = models.CharField(max_length=250, unique=True)
     description = models.TextField()
     accredbodies = models.ForeignKey(accredbodies, on_delete=models.CASCADE)
@@ -47,7 +50,7 @@ class Instrument(models.Model):
     is_deleted = models.BooleanField(default=False)
 
 class instrument_level(models.Model):
-    instrument = models.ForeignKey(Instrument, on_delete=models.CASCADE)
+    instrument = models.ForeignKey(instrument, on_delete=models.CASCADE)
     level = models.ForeignKey(accredlevel, on_delete=models.CASCADE)
     description = models.TextField()
     created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_instrument_level', null=True, blank=True)
@@ -57,7 +60,7 @@ class instrument_level(models.Model):
     deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
 
-class Area(models.Model):
+class area(models.Model):
     area_number = models.CharField(max_length=15)
     name = models.CharField(max_length=250, unique=True)
     created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_areas', null=True, blank=True)
@@ -68,7 +71,7 @@ class Area(models.Model):
     is_deleted = models.BooleanField(default=False)
 
 class instrument_level_area(models.Model):
-    area = models.ForeignKey(Area, on_delete=models.CASCADE)
+    area = models.ForeignKey(area, on_delete=models.CASCADE)
     instrument_level = models.ForeignKey(instrument_level, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_instrument_level_area', null=True, blank=True)

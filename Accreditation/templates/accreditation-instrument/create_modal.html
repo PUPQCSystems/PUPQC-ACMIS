@@ -1,7 +1,7 @@
 {% load crispy_forms_tags %}
 
 <!-- Modal -->
-<div class="modal modal-blur fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal modal-blur fade" id="create-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       	<div class="modal-content">
         	<div class="modal-header">
@@ -10,7 +10,7 @@
         	</div>
         	<div class="modal-body">
 
-				<form method="POST" autocomplete="off" id="create-instrument-form">
+				<form hx-post="{% url "accreditations:instrument-api-list" %}" hx-trigger="submit" hx-target="#response-message" autocomplete="off" id="create-instrument-form" action = "">
 					{% csrf_token %}
 
 					<div class="mb-3">
@@ -18,17 +18,21 @@
 					</div>
 
 					<div class="mb-3">
+						{{ create_form.accredbodies|as_crispy_field }}
+					</div>
+
+					<div class="mb-3">
 						{{ create_form.description|as_crispy_field }}
 					</div>
 			</div>
-
 					<div class="modal-footer">
 						<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-						<button id="submit" type="button" class="btn btn-primary">Save</button>
+						<button type="submit"id="submit" class="btn btn-primary">Save</button>
 					</div>
 
 				</form>
+
+				
     	</div>
   	</div>
 </div>
-  
