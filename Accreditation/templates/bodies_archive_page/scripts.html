@@ -65,9 +65,9 @@
 								// Send AJAX request to verify password
 								$.ajax({
 										url: url,
-										method: 'POST',
-										data: { password: password,
-												'csrfmiddlewaretoken': '{{ csrf_token }}'},
+										method: 'DELETE',
+										data: { password: password},
+										headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
 										success: function(response) {
 												if (response.success) {
 														window.location.href = response.url_landing;

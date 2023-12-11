@@ -15,4 +15,6 @@ class Programs(models.Model):
     deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
 
-    
+
+    def __str__(self):
+        return '%s %s' % (self.program_name, '(' + self.abbreviation + ')')

@@ -1,6 +1,6 @@
 from django import forms
 from django.urls import reverse_lazy
-from .models import accredtype, accredlevel, accredbodies, instrument
+from .models import accredtype, accredlevel, accredbodies, instrument, Programs
 from .validators import name_validate, description_validate
 
 class Create_Type_Form(forms.ModelForm):
@@ -38,12 +38,14 @@ class Create_Instrument_Form(forms.ModelForm):
         queryset=accredbodies.objects.filter(is_deleted=False), 
         required=True, 
         empty_label="Select Accrediting Body")
+    
+    program = forms.ModelChoiceField(
+        label = "Program", 
+        queryset=Programs.objects.filter(is_deleted=False), 
+        required=True, 
+        empty_label="Select a Program")
 
 
     class Meta:
         model = instrument
-        fields = ('name', 'description', 'accredbodies')
-        widgets = {
-            'description': forms.Textarea(
-            ),
-        }
+        fields = ('name', 'accredbodies', 'program','description' )

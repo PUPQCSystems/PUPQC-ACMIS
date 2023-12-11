@@ -10,20 +10,9 @@
         	</div>
         	<div class="modal-body">
 
-				<form hx-post="{% url "accreditations:instrument-api-list" %}" hx-trigger="submit" hx-target="#response-message" autocomplete="off" id="create-instrument-form" action = "">
+				<form hx-post="{% url "accreditations:instrument-list" %}" hx-trigger="submit" hx-target="#response-message" autocomplete="off" id="create-instrument-form" action = "">
 					{% csrf_token %}
-
-					<div class="mb-3">
-						{{ create_form.name|as_crispy_field }}
-					</div>
-
-					<div class="mb-3">
-						{{ create_form.accredbodies|as_crispy_field }}
-					</div>
-
-					<div class="mb-3">
-						{{ create_form.description|as_crispy_field }}
-					</div>
+					{{ create_form|crispy }}
 			</div>
 					<div class="modal-footer">
 						<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
@@ -34,5 +23,10 @@
 
 				
     	</div>
+
+		<div id="response-message">
+			<!-- Response message display here -->
+		</div>
+
   	</div>
 </div>

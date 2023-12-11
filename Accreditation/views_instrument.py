@@ -1,3 +1,4 @@
+from django.views import View
 from rest_framework import generics, viewsets, status
 from django.shortcuts import render, redirect, render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -12,100 +13,46 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from crispy_forms.templatetags.crispy_forms_filters import as_crispy_field
 
-# This is the API that will return records coming from the database. This Class if for integration purposes
-#This view going to be able to create record for our api
-#This will going to handle the query parameters so we can see all the records
-class InstrumentList(generics.ListCreateAPIView):
-    serializer_class = InstrumentSerializer
-
-    #queryset is the data that is going to be coming from the database
-    def get_queryset(self):
-        queryset = instrument.objects.filter(is_deleted= False) #We will just get the record that are not soft deleted
-        return queryset
-    
-
-    def post(self, request, *args, **kwargs):
-        serializer = InstrumentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-
-class UpdateInstrument(generics.RetrieveUpdateAPIView):
-    queryset = instrument.objects.filter(is_deleted= False) #We will just get the record that are not soft deleted
-    serializer_class = InstrumentSerializer
-
-   
-class CreateInstrument(generics.CreateAPIView):
-    queryset = instrument.objects.filter(is_deleted= False) #We will just get the record that are not soft deleted
-    serializer_class = InstrumentSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = InstrumentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            messages.success(request, f'Data successfully CREATED!') 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-    
-
-class ArchiveInstrument(generics.RetrieveUpdateAPIView):
-    serializer_class = InstrumentSerializer
-    queryset = instrument.objects.filter(is_deleted= False) #We will just get the record that are not soft deleted
-
-
 #This function gets the list of data from the api and then load it to the html file
 # This is a function that gets the data from the api and then show the data in html
-def landing_page(request):
-    records = requests.get('http://127.0.0.1:8000/accreditation/instrument/api/list/').json()
-    create_form = Create_Instrument_Form(request.POST or None)
-    context = {'create_form': create_form, 'records': records}
-    return render(request, 'accreditation-instrument/landing_page.html', context)
+class InstrumentList(View):
+    def get(self, request):
+        #Getting the data from the API
+        create_form = Create_Instrument_Form(request.POST or None)
+        records =instrument.objects.select_related('accredbodies').filter(is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
 
-def update_instrument(request, pk):
-    # Assuming you have a form for updating instruments
-    update_form = Create_Instrument_Form(request.POST or None)
+        # Initialize an empty list to store update forms for each record
+        details = []
 
-    if request.method == 'PUT':
-        # Validate the form
-        if update_form.is_valid():
-            # Get the data from the form
-            data = update_form.cleaned_data
+        # Iterate through each record and create an update form for it
+        for record in records:
+            update_form = Create_Instrument_Form(instance=record)
+            created_by = record.created_by  # Get the user who created the record
+            modified_by = record.modified_by  # Get the user who modified the record
+            details.append((record, update_form, created_by, modified_by))
+            
+        context = { 'records': records, 'create_form': create_form, 'details': details}  #Getting all the data inside the type table and storing it to the context variable
 
-            # Make a PUT request to update the record using the API
-            update_url = f'http://127.0.0.1:8000/accreditation/instrument/api/update/{pk}/'
-            response = requests.put(update_url, data=data)
+        return render(request, 'accreditation-instrument/landing_page.html', context)
+    
+    def post(self, request):
+        create_form = Create_Instrument_Form(request.POST or None)
+        if create_form.is_valid():
+            create_form.instance.created_by = request.user
+            create_form.save()
+            name = create_form.cleaned_data.get('name')
+            messages.success(request, f'{name} accreditation type is successfully created!') 
+            url_landing = "{% url 'accreditations:type' %}"
+            return JsonResponse({'url_landing': url_landing}, status=200)
 
-            if response.status_code == 200:
-                # Successful update, you can redirect to a success page or do something else
-                return redirect('success-page')
-            else:
-                # Handle the case when the update is not successful
-                # You may want to provide error messages or log the error
-                error_message = f"Failed to update the record. Status code: {response.status_code}"
-                print(error_message)
-                # You can include the error message in the context for rendering the form again
-                context = {'update_form': update_form, 'error_message': error_message}
-                return render(request, 'your_template.html', context)
-
-    # Fetch the record data for pre-filling the form
-    record_url = f'http://127.0.0.1:8000/accreditation/instrument/api/update/{pk}/'
-    record = requests.get(record_url).json()
-
-    # Pre-fill the form with the existing record data
-    update_form = Create_Instrument_Form(initial=record)
-
-    context = {'update_form': update_form}
-    return render(request, 'your_template.html', context)
+        else:
+            # Return a validation error using a JSON response
+            return JsonResponse({'errors': create_form.errors}, status=400)
 
 
-#------------------------------------------------------------[ VALIDATION ]------------------------------------------------------------#
-def check_instru_name(request):
-    create_form = Create_Instrument_Form(request.GET)
-    return HttpResponse(as_crispy_field(create_form['name']))
+
+
+
 
 
 
@@ -136,3 +83,35 @@ def check_instru_name(request):
 #                 # Redirect to your desired URL after successful submission
 #                 return response  # Adjust 'your-homepage-url' accordingly
 #             return self.form_invalid(form)
+
+
+# This is the API that will return records coming from the database. This Class if for integration purposes
+#This view going to be able to create record for our api
+#This will going to handle the query parameters so we can see all the records
+# class InstrumentList(generics.ListCreateAPIView):
+#     serializer_class = InstrumentSerializer
+
+#     #queryset is the data that is going to be coming from the database
+#     def get_queryset(self):
+#         queryset = instrument.objects.select_related('accredbodies').filter(is_deleted= False) #We will just get the record that are not soft deleted
+#         print(queryset)
+#         return queryset
+    
+
+#     def post(self, request, *args, **kwargs):
+#         serializer = InstrumentSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             messages.success(request, f'Data successfully CREATED!') 
+#             return redirect('accreditation:instrument-landing', status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+# class UpdateInstrument(generics.RetrieveUpdateAPIView):
+#     queryset = instrument.objects.filter(is_deleted= False) #We will just get the record that are not soft deleted
+#     serializer_class = InstrumentSerializer
+
+    
+# class ArchiveInstrument(generics.RetrieveUpdateAPIView):
+#     serializer_class = InstrumentSerializer
+#     queryset = instrument.objects.filter(is_deleted= False) #We will just get the record that are not soft deleted

@@ -7,6 +7,7 @@ from .serializers import  AccredTypeSerializer
 from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
+from django.http import QueryDict
 
 # Create your views here.
 
@@ -122,8 +123,10 @@ def restore_bodies(request, pk):
 
 @login_required
 def destroy_bodies(request, pk):
-    if request.method == 'POST':
-        entered_password = request.POST.get('password')
+    if request.method == 'DELETE':
+
+        data = QueryDict(request.body.decode('utf-8'))
+        entered_password = data.get('password')
         user = request.user
 
         if user and user.is_authenticated:

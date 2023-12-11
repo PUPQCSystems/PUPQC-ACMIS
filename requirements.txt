@@ -20,3 +20,6 @@ djangorestframework
 
 # Psycopg2 (PostgreSQL adapter for Django)
 psycopg2
+
+# Install Requests
+requests

@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from Programs.models import Programs
 
  # Create your models here.
 
@@ -36,18 +37,23 @@ class accredbodies(models.Model):
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        return '%s %s' % (self.name, '(' + self.abbreviation + ')')
+
+    
 
 class instrument(models.Model):
     name = models.CharField(max_length=250, unique=True)
     description = models.TextField()
-    accredbodies = models.ForeignKey(accredbodies, on_delete=models.CASCADE)
+    accredbodies = models.ForeignKey(accredbodies, on_delete=models.CASCADE, related_name='accredbodies_instrument')
+    program = models.ForeignKey(Programs, on_delete=models.CASCADE, related_name='programs_instrument')
     created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_instrument', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_instrument', null=True, blank=True)
     modified_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
+
+
 
 class instrument_level(models.Model):
     instrument = models.ForeignKey(instrument, on_delete=models.CASCADE)

@@ -10,22 +10,18 @@
         </div>
         <div class="modal-body">
 
-			<form method="POST" autocomplete="off" id="update-type-form-{{ record.id }}">
+			<form hx-post="{% url "accreditations:instrument-list" %}" hx-trigger="submit" hx-target="#response-message" autocomplete="off" id="create-instrument-form" action = "">
 				{% csrf_token %}
-				<div class="mb-3">
-					{{ update_form.name|as_crispy_field }}
-				</div>
 
-				<div class="mb-3">
-					{{ update_form.description|as_crispy_field }}
-				</div> 
-
+				{{ update_form|crispy }}
 		</div>
 				<div class="modal-footer">
 					<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-					<button id="save-changes" data-id={{ record.id }} type="button" class="btn btn-primary save-changes-button">Save Changes</button>
+					<button type="submit"id="submit" class="btn btn-primary">Save</button>
 				</div>
+
 			</form>
+
 		</div>
 	</div>
 </div>
