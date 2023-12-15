@@ -29,7 +29,6 @@
 								<h2 class="page-title">
 								{% block page-title %}{% endblock page-title %}
 								</h2>
-								<div class="text-muted mt-1">1-18 of 413 people</div>
 							</div>
 
 							<!-- Page title actions -->
@@ -46,8 +45,10 @@
 				<!-- Page body -->
 				<div class="page-body">
 					<div class="container-xl">
-						{% block content %} 
-						{% endblock %}
+						<div id="main-contents">
+							{% block content %} 
+							{% endblock %}
+						</div>
 					</div>
 				</div>
 			

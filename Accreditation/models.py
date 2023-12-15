@@ -25,6 +25,9 @@ class accredlevel(models.Model):
     deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
 
+    def __str__(self):
+        return(self.name)
+    
 class accredbodies(models.Model):
     name = models.CharField(max_length=250, unique=True)
     abbreviation = models.CharField(max_length=20, unique=True)
@@ -54,11 +57,10 @@ class instrument(models.Model):
     is_deleted = models.BooleanField(default=False)
 
 
-
 class instrument_level(models.Model):
-    instrument = models.ForeignKey(instrument, on_delete=models.CASCADE)
-    level = models.ForeignKey(accredlevel, on_delete=models.CASCADE)
-    description = models.TextField()
+    instrument = models.ForeignKey(instrument, on_delete=models.CASCADE, related_name='instrument_instrument_level')
+    level = models.ForeignKey(accredlevel, on_delete=models.CASCADE, related_name='level_instrument_level')
+    description = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_instrument_level', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_instrument_level', null=True, blank=True)

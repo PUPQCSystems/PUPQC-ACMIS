@@ -40,6 +40,17 @@ urlpatterns = [
 
     #API CRUD PATHS FOR INTRUMENT MODULE
     path("instrument/", InstrumentList.as_view(), name='instrument-list'),
+    path("instrument/update/<str:pk>/", views_instrument.update, name='instrument-update'),
+    path("instrument/archive/<str:pk>/", views_instrument.archive, name='instrument-archive'),
+
+
+    path("instrument/archive_page/", views_instrument.archive_landing, name='instrument-archive-page'),
+    path("instrument/archive_page/restore/<str:pk>/", views_instrument.restore, name='instrument-restore'),
+    path("instrument/archive_page/destroy/<str:pk>/", views_instrument.destroy, name='instrument-destroy'),
+
+
+
+
 
 
 ]
