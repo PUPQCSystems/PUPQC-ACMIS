@@ -1,0 +1,47 @@
+<div class="row row-cards">
+
+    <!-- For LOOP HERE-->
+    {% for record, update_form, created_by, modified_by in details %}
+
+        <div class="col-sm-6 col-lg-4">
+            <div class="card" onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
+                <div class="card-status-start bg-green"></div>
+      
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+
+                            <div class="subheader">{{ record.accredbodies.abbreviation }}</div>
+
+                            <div class="ms-auto lh-1">
+                                
+                                <div class="dropdown">
+                                    <a class="text-muted" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
+                                        <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
+                                                                                                                                
+                                        <form method="POST" action="{% url 'accreditations:instrument-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
+                                            {% csrf_token %}
+                                            <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <a href="#">
+                            <div class="h3 mb-3">{{ record.name }}</div>
+                        </a>
+                    </div>
+
+            </div>
+        </div>
+
+
+        {% include "accreditation-instrument/main-page/view_modal.html" %}
+        {% include "accreditation-instrument/main-page/edit_modal.html" %}
+    {% endfor %}
+</div>
