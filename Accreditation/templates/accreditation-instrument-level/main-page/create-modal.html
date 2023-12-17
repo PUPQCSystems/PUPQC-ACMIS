@@ -1,0 +1,26 @@
+{% load crispy_forms_tags %}
+
+	<!-- Modal -->
+	<div class="modal modal-blur fade" id="create-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div id='create-modal-dialog' class="modal-dialog modal-lg">
+			<form 
+				autocomplete="off" 
+				id="create-instrument-level-form" 
+				class = "modal-content">
+			{% csrf_token %}
+
+				<div class="modal-header">
+					<h1 class="modal-title">Add instrument's accreditation level</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body" >
+					{{ create_form|crispy }}
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+					<button type="button" id="submit" data-id={{ pk }} class="btn btn-primary">Save</button>
+				</div>
+			</form>
+		</div>
+	</div>

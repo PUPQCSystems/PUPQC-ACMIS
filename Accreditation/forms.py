@@ -1,8 +1,9 @@
 from django import forms
 from django.urls import reverse_lazy
-from .models import accredtype, accredlevel, accredbodies, instrument, Programs, instrument_level
+from .models import *
 from .validators import name_validate, description_validate
 from django.core.validators import RegexValidator
+import re
 
 class Create_Type_Form(forms.ModelForm):
     name = forms.CharField(validators=[name_validate], max_length=20, required=True)
@@ -83,10 +84,39 @@ class Create_InstrumentLevel_Form(forms.ModelForm):
         empty_label="Select a Level")
     
     class Meta:
-        model = instrument
+        model = instrument_level
         fields = ('level', 'description')
 
         widgets = {
             'description': forms.Textarea(attrs={'required': False}),
         }
+
+
+class Create_Area_Form(forms.ModelForm):
+    area_number = forms.CharField(max_length=10, required=True)
+
+    def clean_area_number(self):
+        area_number = self.cleaned_data.get('area_number')
+
+        # Define the regular expression pattern for the allowed formats
+        allowed_formats = re.compile(r'^(Area\s+[IVXLCDM]+|[IVXLCDM]+)$', re.IGNORECASE)
+
+        if not allowed_formats.match(area_number):
+            raise forms.ValidationError('Invalid format. Please only use the "Area" word and Roman numerals (e.g., IV, V) to create an Area. For example "Area IX" or "area ix')
+
+        return area_number
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # Ensure 'area_number' is present before trying to access it
+        if 'area_number' in cleaned_data:
+            cleaned_data['area_number'] = cleaned_data['area_number'].upper()  # Convert to uppercase
+
+        return cleaned_data
+    
+    class Meta:
+        model = area
+        fields = ['area_number']
 

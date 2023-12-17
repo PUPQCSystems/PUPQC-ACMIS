@@ -29,7 +29,9 @@
                             </div>
 
                         </div>
-                        <div class="h3 mb-3">{{ record.name }}</div>
+                        <a href="{% url "accreditations:instrument-level" %}">
+                            <div class="h3 mb-3">{{ record.name }}</div>
+                        </a>
                     </div>
 
             </div>
