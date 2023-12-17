@@ -17,6 +17,27 @@ class Create_Level_Form(forms.ModelForm):
     name = forms.CharField(max_length=20, required=True)
     description = forms.CharField(widget=forms.Textarea(attrs={}), max_length=2000,  required=True)
 
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+
+        # Define the regular expression pattern for the allowed formats
+        allowed_formats = re.compile(r'^(Level\s+[IVXLCDM]+|[IVXLCDM]+)$', re.IGNORECASE)
+
+        if not allowed_formats.match(name):
+            raise forms.ValidationError('Invalid format. Please only use the "Level" word and followed by Roman numerals (e.g., IV, V) to create a Level. For example "Level IX" or "level ix')
+
+        return name
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # Ensure 'name' is present before trying to access it
+        if 'name' in cleaned_data:
+            cleaned_data['name'] = cleaned_data['name'].upper()  # Convert to uppercase
+
+        return cleaned_data
+
     class Meta:
         model = accredlevel
         fields = ('name', 'description')
