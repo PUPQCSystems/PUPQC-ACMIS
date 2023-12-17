@@ -13,13 +13,8 @@
 				<form method="POST" autocomplete="off" id="create-level-form">
 					{% csrf_token %}
 
-					<div class="mb-3">
-						{{ create_form.name|as_crispy_field }}
-					</div>
+						{{ create_form|crispy }}
 
-					<div class="mb-3">
-						{{ create_form.description|as_crispy_field }}
-					</div>
 			</div>
 					<div class="modal-footer">
 						<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>

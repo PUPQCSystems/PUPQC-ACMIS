@@ -17,7 +17,6 @@ class accredtype(models.Model):
 
 class accredlevel(models.Model):
     name = models.CharField(max_length=15, unique=True)
-    description = models.CharField(max_length=2000)
     created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_levels', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_levels', null=True, blank=True)

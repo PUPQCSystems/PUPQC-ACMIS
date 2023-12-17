@@ -13,13 +13,8 @@
 			<form method="POST" autocomplete="off" id="update-level-form-{{ record.id }}">
 				{% csrf_token %}
 				<div class="mb-3">
-					{{ update_form.name|as_crispy_field }}
+					{{ update_form|crispy }}
 				</div>
-
-
-				<div class="mb-3">
-					{{ update_form.description|as_crispy_field }}
-				</div> 
 		</div>
 				<div class="modal-footer">
 					<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>

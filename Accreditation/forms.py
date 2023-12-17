@@ -16,8 +16,6 @@ class Create_Type_Form(forms.ModelForm):
 
 class Create_Level_Form(forms.ModelForm):
     name = forms.CharField(max_length=20, required=True)
-    description = forms.CharField(widget=forms.Textarea(attrs={}), max_length=2000,  required=True)
-
     def clean_name(self):
         name = self.cleaned_data.get('name')
 
@@ -41,7 +39,7 @@ class Create_Level_Form(forms.ModelForm):
 
     class Meta:
         model = accredlevel
-        fields = ('name', 'description')
+        fields = ['name']
 
 
 class Create_Bodies_Form(forms.ModelForm):
