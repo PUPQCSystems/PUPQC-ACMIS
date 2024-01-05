@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -7,7 +8,7 @@ from django.utils import timezone
 class Programs(models.Model):
     program_name = models.CharField(max_length=100, unique=True)
     abbreviation = models.CharField(max_length=10)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_programs')
     created_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_programs', null=True, blank=True)

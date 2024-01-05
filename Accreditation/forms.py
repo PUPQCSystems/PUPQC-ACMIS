@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import modelformset_factory
 from django.urls import reverse_lazy
 from .models import *
 from .validators import name_validate, description_validate
@@ -6,16 +7,28 @@ from django.core.validators import RegexValidator
 import re
 
 class Create_Type_Form(forms.ModelForm):
-    name = forms.CharField(validators=[name_validate], max_length=20, required=True)
-    description = forms.CharField(widget=forms.Textarea(attrs={}), max_length=2000,  required=True)
+    name = forms.CharField( validators=[name_validate], max_length=20, required=True,
+                            error_messages={'required': "Please enter a name before submitting the form."})
+    description = forms.CharField(widget=forms.Textarea(attrs={}), max_length=2000,  required=False)
 
     class Meta:
         model = accredtype
         fields = ('name', 'description')
 
+    def clean(self):
+        cleaned_data = super().clean()
+
+        # Convert 'name' and 'abbreviation' to uppercase
+        if 'name' in cleaned_data:
+            cleaned_data['name'] = cleaned_data['name'].upper()
+
+
+        return cleaned_data
+
 
 class Create_Level_Form(forms.ModelForm):
-    name = forms.CharField(max_length=20, required=True)
+    name = forms.CharField(max_length=20, required=True,
+                           error_messages={'required': "Please enter a name before submitting the form."})
     def clean_name(self):
         name = self.cleaned_data.get('name')
 
@@ -42,56 +55,9 @@ class Create_Level_Form(forms.ModelForm):
         fields = ['name']
 
 
-class Create_Bodies_Form(forms.ModelForm):
-    name = forms.CharField(max_length=250, required=True)
-    description = forms.Textarea()
-    abbreviation = forms.CharField(label="Abbreviation", max_length=20, required=True)
-
-    class Meta:
-        model = accredbodies
-        fields = ('name', 'abbreviation', 'description')
-
-class Create_Instrument_Form(forms.ModelForm):
-    name = forms.CharField(max_length=250, 
-                           min_length = 5,
-                           validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s]*$', message="Only Letters are Allowed!")])
-    description = forms.Textarea()
-    accredbodies = forms.ModelChoiceField(
-        label = "Accrediting Body", 
-        queryset=accredbodies.objects.filter(is_deleted=False), 
-        required=True, 
-        empty_label="Select Accrediting Body")
-    
-    program = forms.ModelChoiceField(
-        label = "Program", 
-        queryset=Programs.objects.filter(is_deleted=False), 
-        required=True, 
-        empty_label="Select a Program")
-
-
-    class Meta:
-        model = instrument
-        fields = ('name', 'accredbodies', 'program','description' )
-
-    
-class Create_InstrumentLevel_Form(forms.ModelForm):
-    level = forms.ModelChoiceField(
-        label = "Level", 
-        queryset=accredlevel.objects.filter(is_deleted=False), 
-        required=True, 
-        empty_label="Select a Level")
-    
-    class Meta:
-        model = instrument_level
-        fields = ('level', 'description')
-
-        widgets = {
-            'description': forms.Textarea(attrs={'required': False}),
-        }
-
-
 class Create_Area_Form(forms.ModelForm):
-    area_number = forms.CharField(max_length=10, required=True)
+    area_number = forms.CharField(max_length=10, required=True,
+                                  error_messages={'required': "Please enter an area number before submitting the form."})
 
     def clean_area_number(self):
         area_number = self.cleaned_data.get('area_number')
@@ -117,4 +83,106 @@ class Create_Area_Form(forms.ModelForm):
     class Meta:
         model = area
         fields = ['area_number']
+
+class Create_Bodies_Form(forms.ModelForm):
+    name = forms.CharField( max_length=250, required=True,
+                            error_messages={'required': "Please enter a name before submitting the form."})
+    description = forms.CharField(widget=forms.Textarea(attrs={}), max_length=2000,  required=False)
+    abbreviation = forms.CharField(label="Abbreviation", max_length=20, required=True,
+                                   error_messages={'required': "Please enter an abbreviation before submitting the form."})
+
+    class Meta:
+        model = accredbodies
+        fields = ('name', 'abbreviation', 'description')
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        # Convert 'program_name' and 'abbreviation' to uppercase
+        if 'name' in cleaned_data:
+            cleaned_data['name'] = cleaned_data['name'].upper()
+
+        if 'abbreviation' in cleaned_data:
+            cleaned_data['abbreviation'] = cleaned_data['abbreviation'].upper()
+
+        return cleaned_data
+    
+
+
+class Create_Instrument_Form(forms.ModelForm):
+    name = forms.CharField(max_length=250, 
+                           min_length = 5,
+                           validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s]*$', message="Only Letters are Allowed!")],
+                            error_messages={'required': "Please enter a name before submitting the form."})
+    description = forms.CharField(widget=forms.Textarea(attrs={}), max_length=5000,  required=False)
+    accredbodies = forms.ModelChoiceField(
+        label = "Accrediting Body", 
+        queryset=accredbodies.objects.filter(is_deleted=False), 
+        required=True, 
+        empty_label="Select Accrediting Body",
+        error_messages={'required': "Please select an accrediting body before submitting the form."})
+    
+    program = forms.ModelChoiceField(
+        label = "Program", 
+        queryset=Programs.objects.filter(is_deleted=False), 
+        required=True, 
+        empty_label="Select a Program",
+        error_messages={'required': "Please select a program before submitting the form."})
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # Ensure 'name' is present before trying to access it
+        if 'name' in cleaned_data:
+            cleaned_data['name'] = cleaned_data['name'].upper()  # Convert to uppercase
+
+        return cleaned_data
+
+    class Meta:
+        model = instrument
+        fields = ('name', 'accredbodies', 'program','description')
+
+        widgets = {
+            'description': forms.Textarea(attrs={'required': False}),
+        }
+
+
+class Create_InstrumentLevel_Form(forms.ModelForm):
+    level = forms.ModelChoiceField(
+        label = "Level", 
+        queryset=accredlevel.objects.filter(is_deleted=False), 
+        required=True, 
+        empty_label="Select a Level",
+        error_messages={'required': "Please select a level before submitting the form."})
+    
+    class Meta:
+        model = instrument_level
+        fields = ('level', 'description')
+
+        widgets = {
+            'description': forms.Textarea(attrs={'required': False}),
+        }
+
+
+class Create_LevelArea_Form(forms.ModelForm):
+    area = forms.ModelChoiceField(
+        label = "Area", 
+        queryset = area.objects.filter(is_deleted=False), 
+        required=True, 
+        empty_label="Select an Area",
+        error_messages={'required': "Please select an area number before submitting the form."})
+    
+    description = forms.Textarea()
+    
+    class Meta:
+        model = instrument_level_area
+        fields = ('area', 'description')
+
+        widgets = {
+            'description': forms.Textarea(attrs={'required': False}),
+        }
+
+LevelAreaFormSet = modelformset_factory(
+    instrument_level_area, form=Create_LevelArea_Form, extra=1
+)
 

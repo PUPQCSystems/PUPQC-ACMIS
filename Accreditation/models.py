@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -40,9 +41,21 @@ class accredbodies(models.Model):
 
     def __str__(self):
         return '%s %s' % (self.name, '(' + self.abbreviation + ')')
-
     
 
+class area(models.Model):
+    area_number = models.CharField(max_length=15, unique=True)
+    created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_areas', null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_areas', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return(self.area_number)
+
+    
 class instrument(models.Model):
     name = models.CharField(max_length=250, unique=True)
     description = models.TextField()
@@ -54,6 +67,9 @@ class instrument(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('accredbodies', 'program')
 
 
 class instrument_level(models.Model):
@@ -69,18 +85,6 @@ class instrument_level(models.Model):
 
     class Meta:
         unique_together = ('instrument', 'level')
-
-class area(models.Model):
-    area_number = models.CharField(max_length=15, unique=True)
-    created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_areas', null=True, blank=True)
-    created_at = models.DateTimeField(default=timezone.now)
-    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_areas', null=True, blank=True)
-    modified_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
-    is_deleted = models.BooleanField(default=False)
-
-    def __str__(self):
-        return(self.area_number)
 
 class instrument_level_area(models.Model):
     area = models.ForeignKey(area, on_delete=models.CASCADE)

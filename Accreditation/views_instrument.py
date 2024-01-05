@@ -91,7 +91,7 @@ def archive(request, pk):
 #------------------------------------------------------------[ ARCHIVE PAGE CODES ]------------------------------------------------------------#
 @login_required
 def archive_landing(request):
-    records =instrument.objects.select_related('accredbodies').filter(is_deleted= True) #Getting all th
+    records = instrument.objects.select_related('accredbodies').filter(is_deleted= True) #Getting all th
 
     details = []
      # Iterate through each record and create an update form for it
