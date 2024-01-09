@@ -84,6 +84,36 @@ class Create_Area_Form(forms.ModelForm):
         model = area
         fields = ['area_number']
 
+class Parameter_Form(forms.ModelForm):
+    name = forms.CharField(max_length=20, required=True,
+                                  error_messages={'required': "Please enter a parameter name before submitting the form."})
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+
+        # Define the regular expression pattern for the allowed formats
+        allowed_formats = re.compile(r'^Parameter [A-Za-z]$', re.IGNORECASE)
+
+        if not allowed_formats.match(name):
+            raise forms.ValidationError('Invalid format. Please only use the "Parameter" word and followed by letter (e.g., A, C, G) to create a Parameter. For example "Parameter A" or "parameter b')
+
+        return name
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # Ensure 'name' is present before trying to access it
+        if 'name' in cleaned_data:
+            cleaned_data['name'] = cleaned_data['name'].upper()  # Convert to uppercase
+
+        return cleaned_data
+    
+    class Meta:
+        model = parameter
+        fields = ['name']
+
+
 class Create_Bodies_Form(forms.ModelForm):
     name = forms.CharField( max_length=250, required=True,
                             error_messages={'required': "Please enter a name before submitting the form."})
@@ -172,17 +202,72 @@ class Create_LevelArea_Form(forms.ModelForm):
         empty_label="Select an Area",
         error_messages={'required': "Please select an area number before submitting the form."})
     
+    label = forms.CharField(
+        max_length=250, 
+        min_length = 5,
+        required=False, 
+        validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+                                    message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are Allowed!")])
+    
     description = forms.Textarea()
     
     class Meta:
         model = instrument_level_area
-        fields = ('area', 'description')
+        fields = ('area', 'label','description')
 
         widgets = {
             'description': forms.Textarea(attrs={'required': False}),
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # Ensure 'label' is present before trying to access it
+        if 'label' in cleaned_data:
+            cleaned_data['label'] = cleaned_data['label'].upper()  # Convert to uppercase
+
+        return cleaned_data
+
 LevelAreaFormSet = modelformset_factory(
     instrument_level_area, form=Create_LevelArea_Form, extra=1
 )
 
+
+
+class AreaParameter_Form(forms.ModelForm):
+    parameter = forms.ModelChoiceField(
+        label = "Parameter", 
+        queryset = parameter.objects.filter(is_deleted=False), 
+        required=True, 
+        empty_label="Select an Area",
+        error_messages={'required': "Please select a parameter before submitting the form."})
+    
+    label = forms.CharField(
+        max_length=250, 
+        min_length = 5,
+        required=False, 
+        validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+                                    message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are Allowed!")])
+    
+    description = forms.Textarea()
+    
+    class Meta:
+        model = instrument_level_area
+        fields = ('parameter', 'label','description')
+
+        widgets = {
+            'description': forms.Textarea(attrs={'required': False}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # Ensure 'label' is present before trying to access it
+        if 'label' in cleaned_data:
+            cleaned_data['label'] = cleaned_data['label'].upper()  # Convert to uppercase
+
+        return cleaned_data
+
+AreaParameterFormSet = modelformset_factory(
+    level_area_parameter, form=AreaParameter_Form, extra=1
+)

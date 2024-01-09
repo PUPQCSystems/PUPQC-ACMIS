@@ -1,11 +1,12 @@
 from django.urls import path
-
 from Accreditation import views_instrument_level
-from . import views_accreditation, views_level, views_type, views_bodies, views_instrument, views_area
+from . import views_accreditation, views_level, views_type, views_bodies, views_instrument, views_area, views_level_area, views_parameter, views_area_parameter
 from Accreditation.views_instrument import *
 from Accreditation.views_instrument_level import *
+from Accreditation.views_level_area import *
 from Accreditation.views_area import *
-
+from Accreditation.views_parameter import *
+from Accreditation.views_area_parameter import *
 
 
 app_name = 'accreditations'
@@ -39,6 +40,13 @@ urlpatterns = [
     path("area/archive-page/restore/<int:pk>/", views_area.restore, name='area-restore'),
     path("area/archive-page/destroy/<int:pk>/", views_area.destroy, name='area-destroy'),
 
+    path("parameter/", ParameterList.as_view(), name='parameter-landing'),
+    path("parameter/update/<int:pk>/", views_parameter.update, name='parameter-update'),
+    path("parameter/archive/<int:pk>/", views_parameter.archive, name='parameter-archive'),
+    path("parameter/archive-page/", views_parameter.archive_landing, name='parameter-archive-page'),
+    path("parameter/archive-page/restore/<int:pk>/", views_parameter.restore, name='parameter-restore'),
+    path("parameter/archive-page/destroy/<int:pk>/", views_parameter.destroy, name='parameter-destroy'),
+
     path("bodies/", views_bodies.landing_page, name='bodies-landing'),
     path("bodies/create/", views_bodies.create_bodies, name='bodies-create'),
     path("bodies/update/<str:pk>/", views_bodies.update_bodies, name='bodies-update'),
@@ -64,17 +72,22 @@ urlpatterns = [
     path("instrument/level/archive-page/destroy/<str:pk>/", views_instrument_level.destroy, name='instrument-level-destroy'),
 
 
-    path("instrument/level/<str:pk>/", InstrumentLevelList.as_view(), name='instrument-level'),
-    path("instrument/level/create/<int:pk>/", InstrumentLevelList.as_view(), name='instrument-level-create'),
-    path("instrument/level/update/<str:pk>/", views_instrument_level.update, name='instrument-level-update'),
-    path("instrument/level/archive/<str:ins_pk>/<str:pk>/", views_instrument_level.archive, name='instrument-level-archive'),
+    path("instrument/level/area/<str:pk>/", LevelAreaList.as_view(), name='instrument-level-area'),
+    path("instrument/level/area/create/<int:pk>/", LevelAreaList.as_view(), name='instrument-level-area-create'),
+    path("instrument/level/area/update/<str:pk>/", views_level_area.update, name='instrument-level-area-update'),
+    path("instrument/level/area/archive/<str:ins_pk>/<str:pk>/", views_level_area.archive, name='instrument-level-area-archive'),
 
-    path("instrument/level/<str:pk>/archive-page/", views_instrument_level.archive_landing, name='instrument-level-archive-page'),
-    path("instrument/level/archive-page/restore/<str:ins_pk>/<str:pk>/", views_instrument_level.restore, name='instrument-level-restore'),
-    path("instrument/level/archive-page/destroy/<str:pk>/", views_instrument_level.destroy, name='instrument-level-destroy'),
+    path("instrument/level/area/<str:pk>/archive-page/", views_level_area.archive_landing, name='instrument-level-area-archive-page'),
+    path("instrument/level/area/archive-page/restore/<str:ins_pk>/<str:pk>/", views_level_area.restore, name='instrument-level-area-restore'),
+    path("instrument/level/area/archive-page/destroy/<str:pk>/", views_level_area.destroy, name='instrument-level-area-destroy'),
 
+    path("instrument/level/area/parameter/<str:pk>/", AreaParameterList.as_view(), name='instrument-level-area-parameter'),
+    path("instrument/level/area/parameter/create/<int:pk>/", AreaParameterList.as_view(), name='instrument-level-area-parameter-create'),
+    path("instrument/level/area/parameter/update/<str:pk>/", views_area_parameter.update, name='instrument-level-area-parameter-update'),
+    path("instrument/level/area/parameter/archive/<str:ins_pk>/<str:pk>/", views_area_parameter.archive, name='instrument-level-area-parameter-archive'),
 
-
-
+    path("instrument/level/area/parameter/<str:pk>/archive-page/", views_area_parameter.archive_landing, name='instrument-level-area-parameter-archive-page'),
+    path("instrument/level/area/parameter/archive-page/restore/<str:ins_pk>/<str:pk>/", views_area_parameter.restore, name='instrument-level-area-parameter-restore'),
+    path("instrument/level/area/parameter/archive-page/destroy/<str:pk>/", views_area_parameter.destroy, name='instrument-level-area-parameter-destroy'),
 
 ]

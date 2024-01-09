@@ -54,6 +54,18 @@ class area(models.Model):
 
     def __str__(self):
         return(self.area_number)
+    
+class parameter(models.Model):
+    name = models.CharField(max_length=20, unique=True)
+    created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_parameters', null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_parameters', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return(self.name)
 
     
 class instrument(models.Model):
@@ -88,8 +100,8 @@ class instrument_level(models.Model):
 
 class instrument_level_area(models.Model):
     area = models.ForeignKey(area, on_delete=models.CASCADE)
+    label = models.CharField(max_length=250, null=True, blank=True)
     instrument_level = models.ForeignKey(instrument_level, on_delete=models.CASCADE)
-    name = models.CharField(max_length=250)
     description = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_instrument_level_area', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
@@ -101,4 +113,19 @@ class instrument_level_area(models.Model):
     class Meta:
         unique_together = ('area', 'instrument_level')
 
+
+class level_area_parameter(models.Model):
+    parameter = models.ForeignKey(parameter, on_delete=models.CASCADE)
+    label = models.CharField(max_length=250, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    instrument_level_area = models.ForeignKey(instrument_level_area, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_level_area_parameter', null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_level_area_parameter', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('parameter', 'instrument_level_area')
 
