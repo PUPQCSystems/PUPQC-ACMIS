@@ -1,0 +1,199 @@
+{% comment %} These are the scripts for the landing page. {% endcomment %}
+
+{% comment %} AJAX FOR CREATING {% endcomment %}
+<script>
+    $(document).ready(function(){
+
+        $("#submit").click(function(event) {
+            var serializedData = $("#multi-step-form").serialize();
+            const form = document.getElementById("multi-step-form")
+            var id = $(this).data('id');
+            var url = "/accreditation/instrument/level/area/create/"+id+"/";
+
+            event.preventDefault();
+
+            $.ajax({
+                url: url,
+                data: serializedData,
+                type: "POST",
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> 
+
+
+{% comment %} AJAX FOR UPDATING  {% endcomment %}
+ <script>
+    $(document).ready(function(){
+        $(".save-changes").click(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var serializedData = $("#update-instrument-level-form-"+id).serialize();
+            var url = "/accreditation/instrument/level/area/update/"+id+"/";
+    
+            $.ajax({
+                url: url, 
+                data: serializedData,
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
+                type: "POST",
+                success: function(response) {
+                    location.reload();
+                    
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> 
+
+
+<script>
+    $(".archive-button").click(function(event) {
+        var id = $(this).data('id');         //Get the Id of the record
+        var form = 'archive-form-'+id;      //Attaching the id of the record to this string for identifying the specific form
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This will be move and can be restore in the Instrument's Levels Archive Page!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, archive it!',
+            cancelButtonText: 'No, cancel!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Delete the file here
+                document.getElementById(form).submit();
+            }
+        })
+    });
+</script>
+
+<script>
+    function addHoverClass(card) {
+        card.classList.add('card-active');
+    }
+
+    function removeHoverClass(card) {
+        card.classList.remove('card-active');
+    }
+</script>
+
+
+
+<script>
+    var currentStep = 1;
+    var updateProgressBar;
+    
+      function displayStep(stepNumber) {
+        if (stepNumber >= 1 && stepNumber <= 3) {
+          $(".step-" + currentStep).hide();
+          $(".step-" + stepNumber).show();
+          currentStep = stepNumber;
+          updateProgressBar();
+        }
+      }
+    
+      $(document).ready(function() {
+        $('#multi-step-form').find('.step').slice(1).hide();
+      
+        $(".next-step").click(function() {
+          if (currentStep < 2) {
+            $(".step-" + currentStep).addClass("animate__animated animate__fadeOutLeft");
+            currentStep++;
+            setTimeout(function() {
+              $(".step").removeClass("animate__animated animate__fadeOutLeft").hide();
+              $(".step-" + currentStep).show().addClass("animate__animated animate__fadeInRight");
+              updateProgressBar();
+            }, 500);
+          }
+        });
+    
+        $(".prev-step").click(function() {
+          if (currentStep > 1) {
+            $(".step-" + currentStep).addClass("animate__animated animate__fadeOutRight");
+            currentStep--;
+            setTimeout(function() {
+              $(".step").removeClass("animate__animated animate__fadeOutRight").hide();
+              $(".step-" + currentStep).show().addClass("animate__animated animate__fadeInLeft");
+              updateProgressBar();
+            }, 500);
+          }
+        });
+    
+        updateProgressBar = function() {
+          var progressPercentage = ((currentStep - 1) / 1) * 100;
+          $(".progress-bar").css("width", progressPercentage + "%");
+        }
+      });
+    
+    
+</script>
+
+
+<script>
+    let container = document.querySelector("#area-form")
+    let addButton = document.querySelector("#add-form")
+    let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+
+    addButton.addEventListener('click', addForm)
+
+    function addForm(e) {
+        e.preventDefault()
+
+        let birdForm = container.querySelector(".level-area-form:last-child")  // Select the last form in the container
+        let newForm = birdForm.cloneNode(true) // Clone the bird form, including scripts
+
+        let formRegex = RegExp(`form-(\\d){1}-`, 'g') // Regex to find all instances of the form number
+        let formNum = container.querySelectorAll(".level-area-form").length  // Get the total number of forms
+
+        formNum++ // Increment the form number
+        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`) // Update the new form to have the correct form number
+
+        // Add a remove button to the new form
+        let removeButton = document.createElement("button")
+        removeButton.type = "button"
+        removeButton.classList.add("btn", "btn-danger", "remove-form")
+        removeButton.textContent = "Remove"
+        removeButton.addEventListener('click', () => removeForm(newForm))
+
+        newForm.appendChild(removeButton)
+
+        container.appendChild(newForm) // Append the new form to the container
+
+        totalForms.setAttribute('value', `${formNum + 1}`) // Increment the number of total forms in the management form
+    }
+
+    function removeForm(form) {
+        form.remove()
+        let formNum = container.querySelectorAll(".level-area-form").length
+        totalForms.setAttribute('value', `${formNum}`)
+    }
+</script> 

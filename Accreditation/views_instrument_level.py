@@ -45,6 +45,7 @@ class InstrumentLevelList(View):
 
             for form in formset:
                 form.instance.instrument_level_id = instrument_level_id
+                form.instance.created_by = request.user
 
             formset.save()  # Save the formset with the assigned foreign keys
 

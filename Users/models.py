@@ -81,4 +81,14 @@ class CustomUser_profile(models.Model):
     barangay = models.CharField(max_length=30, blank=True, null=True)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_profile', null=True, blank=True)
     modified_at = models.DateTimeField(auto_now=True, null=True)
-    
+
+class activity_log(models.Model):
+    acted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='acted_by', null=True, blank=True)
+    module = models.CharField(max_length=250, null=True, blank=True)
+    action = models.CharField(max_length=250, null=True, blank=True)
+    data_entry = models.CharField(max_length=250, null=True, blank=True)
+    datetime_acted = models.DateTimeField(default=timezone.now)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
+
+
