@@ -1,0 +1,25 @@
+{% load crispy_forms_tags %}
+
+<!-- Modal -->
+<div class="modal  modal-blur fade" id="edit-component-modal-{{ component.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+		<form 
+			autocomplete="off" 
+			id="update-component-form-{{ component.id }}"
+			class="modal-content">
+
+			<div class="modal-header">
+				<h1 class="modal-title">Update Component Detail</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				{{ component.component_update_form|crispy }}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+				<button type="button" data-id="{{ component.id }}" class="btn btn-primary save-component-changes">Save</button>
+			</div>
+
+		</form>
+	</div>
+</div>

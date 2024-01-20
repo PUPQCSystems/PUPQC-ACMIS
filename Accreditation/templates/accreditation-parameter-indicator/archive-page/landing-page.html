@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    Archived Area's Parameters
+{% endblock page-title %}
+
+
+<!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
+{% block page-title-actions %}
+        <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search instrument's level..."/>
+        <a href="{% url 'accreditations:instrument-level-area-parameter' pk=pk %}" type="button" class="btn btn-primary">
+            <i class="fa-solid fa-arrow-left"></i> Back
+        </a>
+
+{% endblock page-title-actions %}
+
+{% block content %}
+
+    {% include "accreditation-parameter-indicator/archive-page/indicator-cards.html" %}
+
+    {% include "accreditation-parameter-indicator/archive-page/scripts.html" %}
+   
+{% endblock content %}
+
+
+

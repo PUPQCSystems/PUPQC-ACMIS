@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
+
+from Users.models import activity_log
 from .models import parameter #Import the model for data retieving
 from .forms import Parameter_Form
 from django.contrib import messages
@@ -37,6 +39,21 @@ class ParameterList(View):
             create_form.instance.created_by = request.user
             create_form.save()
             name = create_form.cleaned_data.get('name')
+
+            # Create an instance of the ActivityLog model
+            activity_log_entry = activity_log()
+
+            # Set the attributes of the instance
+            activity_log_entry.module = "ACCREDITATION PARAMETER MODULE"
+            activity_log_entry.action = "Created a record"
+            activity_log_entry.type = "CREATE"
+            activity_log_entry.datetime_acted =  timezone.now()
+            activity_log_entry.acted_by = request.user
+            # Set other attributes as needed
+
+            # Save the instance to the database
+            activity_log_entry.save()
+
             messages.success(request, f'{name} is successfully created!') 
             return JsonResponse({'status': 'success'}, status=200)
         else:
@@ -61,6 +78,20 @@ def update(request, pk):
             update_form.save()  
             name = update_form.cleaned_data.get('name')
 
+            # Create an instance of the ActivityLog model
+            activity_log_entry = activity_log()
+
+            # Set the attributes of the instance
+            activity_log_entry.module = "ACCREDITATION PARAMETER MODULE"
+            activity_log_entry.action = "Modified a record"
+            activity_log_entry.type = "UPDATE"
+            activity_log_entry.datetime_acted =  timezone.now()
+            activity_log_entry.acted_by = request.user
+            # Set other attributes as needed
+
+            # Save the instance to the database
+            activity_log_entry.save()
+
             # Provide a success message as a JSON response
             messages.success(request, f'{name} is successfully updated!') 
             return JsonResponse({'status': 'success'}, status=200)
@@ -81,6 +112,21 @@ def archive(request, pk):
     parameter_record.deleted_at = timezone.now()
     name = parameter_record.name
     parameter_record.save()
+
+    # Create an instance of the ActivityLog model
+    activity_log_entry = activity_log()
+
+    # Set the attributes of the instance
+    activity_log_entry.module = "ACCREDITATION PARAMETER MODULE"
+    activity_log_entry.action = "Archived a record"
+    activity_log_entry.type = "ARCHIVE"
+    activity_log_entry.datetime_acted =  timezone.now()
+    activity_log_entry.acted_by = request.user
+    # Set other attributes as needed
+
+    # Save the instance to the database
+    activity_log_entry.save()
+
     messages.success(request, f'{name} is successfully archived!') 
     return redirect('accreditations:parameter-landing')
 
@@ -114,6 +160,21 @@ def restore(request, pk):
     parameter_record.is_deleted=False
     name = parameter_record.name
     parameter_record.save()
+
+    # Create an instance of the ActivityLog model
+    activity_log_entry = activity_log()
+
+    # Set the attributes of the instance
+    activity_log_entry.module = "ACCREDITATION PARAMETER MODULE"
+    activity_log_entry.action = "Restored a record"
+    activity_log_entry.type = "RESTORE"
+    activity_log_entry.datetime_acted =  timezone.now()
+    activity_log_entry.acted_by = request.user
+    # Set other attributes as needed
+
+    # Save the instance to the database
+    activity_log_entry.save()
+
     messages.success(request, f'{name} parameter is successfully restored!') 
     return redirect('accreditations:parameter-archive-page')
 
@@ -131,6 +192,21 @@ def destroy(request, pk):
 
                 #After getting that record, this code will delete it.
                 parameter_record.delete()
+
+                # Create an instance of the ActivityLog model
+                activity_log_entry = activity_log()
+
+                # Set the attributes of the instance
+                activity_log_entry.module = "ACCREDITATION PARAMETER MODULE"
+                activity_log_entry.action = "Permanently deleted a record"
+                activity_log_entry.type = "DESTROY"
+                activity_log_entry.datetime_acted =  timezone.now()
+                activity_log_entry.acted_by = request.user
+                # Set other attributes as needed
+
+                # Save the instance to the database
+                activity_log_entry.save()
+
                 messages.success(request, f'Parameter is permanently deleted!') 
                 url_landing = "/accreditation/parameter/archive-page/"
                 return JsonResponse({'success': True, 'url_landing': url_landing}, status=200)

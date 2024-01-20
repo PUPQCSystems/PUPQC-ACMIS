@@ -114,6 +114,30 @@ class Parameter_Form(forms.ModelForm):
         fields = ['name']
 
 
+class Component_Form(forms.ModelForm):
+    name = forms.CharField(
+        max_length=100, 
+        min_length = 5,
+        required=True, 
+        error_messages={'required': "Please enter a component name before submitting the form."},
+        validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ0-9\s\'&()/-]*$', 
+                            message="Only Letters, Numbers, Apostrophe, Hyphen, Ampersand, and Parentheses are allowed in the Name Field!")]
+                            )
+    description = forms.CharField(widget=forms.Textarea(attrs={}), max_length=2000,  required=False)
+
+    class Meta:
+        model = components
+        fields = ('name', 'description')
+
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # Ensure 'name' is present before trying to access it
+        if 'name' in cleaned_data:
+            cleaned_data['name'] = cleaned_data['name'].upper()  # Convert to uppercase
+
+        return cleaned_data
+    
 class Create_Bodies_Form(forms.ModelForm):
     name = forms.CharField( max_length=250, required=True,
                             error_messages={'required': "Please enter a name before submitting the form."})
@@ -239,7 +263,7 @@ class AreaParameter_Form(forms.ModelForm):
         label = "Parameter", 
         queryset = parameter.objects.filter(is_deleted=False), 
         required=True, 
-        empty_label="Select an Area",
+        empty_label="Select a Parameter",
         error_messages={'required': "Please select a parameter before submitting the form."})
     
     label = forms.CharField(
@@ -247,7 +271,7 @@ class AreaParameter_Form(forms.ModelForm):
         min_length = 5,
         required=False, 
         validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
-                                    message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are Allowed!")])
+                                    message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Label Field!")])
     
     description = forms.Textarea()
     
@@ -270,4 +294,43 @@ class AreaParameter_Form(forms.ModelForm):
 
 AreaParameterFormSet = modelformset_factory(
     level_area_parameter, form=AreaParameter_Form, extra=1
+)
+
+
+class ParameterComponent_Form(forms.ModelForm):
+    component = forms.ModelChoiceField(
+        label = "Parameter Component", 
+        queryset = components.objects.filter(is_deleted=False), 
+        required=True, 
+        empty_label="Select a Component",
+        error_messages={'required': "Please select a parameter component before submitting the form."})
+    
+    
+    class Meta:
+        model = parameter_components
+        fields = ('component',)
+
+
+ParameterComponentFormSet = modelformset_factory(
+    parameter_components, form=ParameterComponent_Form, extra=1
+)
+
+
+class ComponentIndicator_Form(forms.ModelForm):
+    number = forms.CharField(max_length=100, 
+                           min_length = 1,
+                            error_messages={'required': "Please enter a number before submitting the form."})
+
+    name = forms.CharField(max_length=2000, 
+                           min_length = 5,
+                            error_messages={'required': "Please enter a name before submitting the form."})
+    
+    
+    class Meta:
+        model = parameter_component_indicators
+        fields = ('number', 'name')
+
+
+ComponentIndicatorFormSet = modelformset_factory(
+    parameter_component_indicators, form=ComponentIndicator_Form, extra=1
 )

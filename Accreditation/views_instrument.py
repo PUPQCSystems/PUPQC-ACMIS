@@ -3,6 +3,8 @@ from django.views import View
 from rest_framework import generics, viewsets, status
 from django.shortcuts import render, redirect, render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+
+from Users.models import activity_log
 from .models import instrument, instrument_level #Import the model for data retieving
 from Accreditation.serializers import InstrumentSerializer
 from .forms import Create_Instrument_Form, Create_InstrumentLevel_Form
@@ -39,6 +41,21 @@ class InstrumentList(View):
             instrument_form.instance.created_by = request.user
             instrument_form.save()
             name = instrument_form.cleaned_data.get('name')
+
+        # Create an instance of the ActivityLog model
+            activity_log_entry = activity_log()
+
+            # Set the attributes of the instance
+            activity_log_entry.module = "ACCREDITATION INSTRUMENT MODULE"
+            activity_log_entry.action = "Created a record"
+            activity_log_entry.type = "CREATE"
+            activity_log_entry.datetime_acted =  timezone.now()
+            activity_log_entry.acted_by = request.user
+            # Set other attributes as needed
+
+            # Save the instance to the database
+            activity_log_entry.save()
+
             messages.success(request, f'{name} accreditation instrument is successfully created!') 
             # url_landing = "{% url 'accreditations:type' %}"
             url_landing = "/accreditation/instrument/"
@@ -65,6 +82,22 @@ def update(request, pk):
             update_form.save()  
             name = update_form.cleaned_data.get('name')
 
+
+         # Create an instance of the ActivityLog model
+            activity_log_entry = activity_log()
+
+            # Set the attributes of the instance
+            activity_log_entry.module = "ACCREDITATION INSTRUMENT MODULE"
+            activity_log_entry.action = "Modified a record"
+            activity_log_entry.type = "UPDATE"
+            activity_log_entry.datetime_acted =  timezone.now()
+            activity_log_entry.acted_by = request.user
+            # Set other attributes as needed
+
+            # Save the instance to the database
+            activity_log_entry.save()
+
+
             # Provide a success message as a JSON response
             messages.success(request, f'{name} is successfully updated!') 
             return JsonResponse({'status': 'success'}, status=200)
@@ -85,6 +118,21 @@ def archive(request, pk):
     accreditation_instrument.deleted_at = timezone.now()
     name = accreditation_instrument.name
     accreditation_instrument.save()
+
+ # Create an instance of the ActivityLog model
+    activity_log_entry = activity_log()
+
+    # Set the attributes of the instance
+    activity_log_entry.module = "ACCREDITATION INSTRUMENT MODULE"
+    activity_log_entry.action = "Archived a record"
+    activity_log_entry.type = "ARCHIVE"
+    activity_log_entry.datetime_acted =  timezone.now()
+    activity_log_entry.acted_by = request.user
+    # Set other attributes as needed
+
+    # Save the instance to the database
+    activity_log_entry.save()
+
     messages.success(request, f'{name} accreditation instrument is successfully archived!') 
     return redirect('accreditations:instrument-list')
 
@@ -115,6 +163,21 @@ def restore(request, pk):
     accreditation_instrument.is_deleted=False
     name = accreditation_instrument.name
     accreditation_instrument.save()
+
+  # Create an instance of the ActivityLog model
+    activity_log_entry = activity_log()
+
+    # Set the attributes of the instance
+    activity_log_entry.module = "ACCREDITATION INSTRUMENT MODULE"
+    activity_log_entry.action = "Restored a record"
+    activity_log_entry.type = "RESTORE"
+    activity_log_entry.datetime_acted =  timezone.now()
+    activity_log_entry.acted_by = request.user
+    # Set other attributes as needed
+
+    # Save the instance to the database
+    activity_log_entry.save()
+
     messages.success(request, f'{name} accreditation level is successfully restored!') 
     return redirect('accreditations:instrument-archive-page')
 
@@ -131,6 +194,21 @@ def destroy(request, pk):
 
                 #After getting that record, this code will delete it.
                 accreditation_instrument.delete()
+
+                # Create an instance of the ActivityLog model
+                activity_log_entry = activity_log()
+
+                # Set the attributes of the instance
+                activity_log_entry.module = "ACCREDITATION INSTRUMENT MODULE"
+                activity_log_entry.action = "Permanently deleted a record"
+                activity_log_entry.type = "DESTROY"
+                activity_log_entry.datetime_acted =  timezone.now()
+                activity_log_entry.acted_by = request.user
+                # Set other attributes as needed
+
+                # Save the instance to the database
+                activity_log_entry.save()
+
                 messages.success(request, f'Accreditation Level is permanently deleted!') 
                 url_landing = "/accreditation/instrument/archive_page/"
                 return JsonResponse({'success': True, 'url_landing': url_landing}, status=200)

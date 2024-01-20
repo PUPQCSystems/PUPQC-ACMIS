@@ -1,0 +1,297 @@
+<div class="row row-deck row-cards">
+	{% if component_records %}
+		<ul class="wtree">
+				<!--List-->
+			{% for component, indicators in indicator_details.items %}
+				<li>
+					{% comment %} <span onclick="toggleList(this)"> {{ record.component }}</span> {% endcomment %}
+
+					<span class="col-md-12 col-lg-12 card record-card" onclick="toggleList(this)"> <!--  START OF COMPONENT CARD  -->
+		
+						<div class="card-body row align-items-center">
+							<div class="col-md-8 col-lg-8 ">
+								{{ component.component }} 
+							</div>
+							<div class="col-auto ms-auto d-print-none">
+								<div class="btn-list">
+									<button class="btn btn-green w-20 btn-icon"  data-bs-toggle="modal" data-bs-target="#create-indicator-modal-{{ component.id }}">
+									  <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+									  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg>
+							
+									</button>
+
+									<!-- Button to trigger modal -->
+									<button type="button" class="btn btn-primary w-20 btn-icon" data-bs-toggle="modal" data-bs-target="#edit-component-modal-{{ component.id }}">
+										<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+										<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+										<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+										<path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+										<path d="M16 5l3 3" />
+										</svg>
+									</button>
+
+									<form method="POST" action="{% url 'accreditations:instrument-parameter-component-archive' url_pk=pk record_pk=component.id %}" id="component-archive-form-{{ component.id }}">
+										{% csrf_token %}
+										<button type="button" class="btn w-20 btn-icon btn-danger component-archive-button" data-id={{ component.id }}>
+											<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+												<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+												<path d="M4 7l16 0"></path><path d="M10 11l0 6"></path>
+												<path d="M14 11l0 6"></path><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+												<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+											</svg>
+										</button>
+									</form>
+								
+
+								</div>
+							</div>
+						</div>
+					</span> <!--  END OF COMPONENT CARD  -->
+
+ 					<ul> <!--  START OF COMPONENT INDICATORS -->
+						{% for indicator in indicators %}
+							{% if component.id == indicator.parameter_component_id %}
+								{% if indicator.sub_indicator_id %}
+								
+								
+								{% else %}
+									<li>
+										<span class="col-md-12 col-lg-12 card record-card indicator" onclick="toggleList(this)">
+											<div class="card-body row align-items-center">
+												<div class="col-md-8 col-lg-8 ">
+													{{ indicator.number }}. {{ indicator.name }}
+												</div>
+												<div class="col-auto ms-auto d-print-none">
+													<div class="btn-list">
+														<button class="btn btn-green w-20 btn-icon" data-bs-toggle="modal" data-bs-target="#create-subindicator-modal-{{ indicator.id }}">
+															<!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+															<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="225" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+																<path d="M12 5l0 14"></path><path d="M5 12l14 0"></path>
+															</svg>
+														</button>
+					
+														<!-- Button to trigger modal -->
+														<button type="button" class="btn btn-primary w-20 btn-icon" data-bs-toggle="modal" data-bs-target="#edit-indicator-modal-{{ indicator.id }}">
+															<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+															<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+															<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+															<path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+															<path d="M16 5l3 3" />
+															</svg>
+														</button>
+
+														<form method="POST" action="{% url 'accreditations:instrument-parameter-indicator-archive' url_pk=pk record_pk=indicator.id %}" id="indicator-archive-form-{{ indicator.id }}">
+															{% csrf_token %}
+															<button type="button" class="btn w-20 btn-icon btn-danger indicator-archive-button" data-id={{ indicator.id }}>
+																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																	<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+																	<path d="M4 7l16 0"></path><path d="M10 11l0 6"></path>
+																	<path d="M14 11l0 6"></path><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+																	<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+																</svg>
+															</button>
+														</form>
+													
+
+														<button type="button" class="btn w-20 btn-icon btn-secondary" data-bs-toggle="modal" data-bs-target="#editModal">
+															<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+																<path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+																<path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+															</svg>
+														</button>
+
+													</div>
+												</div>
+											</div>
+										</span>
+							
+										<ul>
+											{% for comp_indicator in indicators %}
+												{% if indicator.id == comp_indicator.sub_indicator_id  %}
+													<li>
+														<span class="col-md-12 col-lg-12 card record-card indicator" onclick="toggleList(this)">
+															<div class="card-body row align-items-center">
+																<div class="col-md-8 col-lg-8 ">
+																	{{ comp_indicator.number }}. {{ comp_indicator.name }}
+																</div>
+																<div class="col-auto ms-auto d-print-none">
+																	<div class="btn-list">
+																		<button class="btn btn-green w-20 btn-icon" data-bs-toggle="modal" data-bs-target="#create-subindicator-modal-{{ comp_indicator.id }}">
+																			<!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+																			<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="225" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																				<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+																				<path d="M12 5l0 14"></path><path d="M5 12l14 0"></path>
+																			</svg>
+																		</button>
+									
+																		<!-- Button to trigger modal -->
+																		<button type="button" class="btn btn-primary w-20 btn-icon" data-bs-toggle="modal" data-bs-target="#edit-indicator-modal-{{ comp_indicator.id }}">
+																			<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																			<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+																			<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+																			<path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+																			<path d="M16 5l3 3" />
+																			</svg>
+																		</button>
+					
+																		<button type="button" class="btn w-20 btn-icon btn-danger" data-bs-toggle="modal" data-bs-target="#editModal">
+																			<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																				<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+																				<path d="M4 7l16 0"></path><path d="M10 11l0 6"></path>
+																				<path d="M14 11l0 6"></path><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+																				<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+																			</svg>
+																		</button>
+					
+																		<button type="button" class="btn w-20 btn-icon btn-secondary" data-bs-toggle="modal" data-bs-target="#editModal">
+																			<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																				<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+																				<path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+																				<path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+																			</svg>
+																		</button>
+					
+																	</div>
+																</div>
+															</div>
+														</span>
+
+
+														<ul>
+															{% for comp_indicator2 in indicators %}
+																{% if comp_indicator.id == comp_indicator2.sub_indicator_id  %}
+																	<li>
+																		<span class="col-md-12 col-lg-12 card record-card indicator" onclick="toggleList(this)">
+																			<div class="card-body row align-items-center">
+																				<div class="col-md-8 col-lg-8 ">
+																					{{ comp_indicator2.number }}. {{ comp_indicator2.name }}
+																				</div>
+																				<div class="col-auto ms-auto d-print-none">
+																					<div class="btn-list">
+													
+																						<!-- Button to trigger modal -->
+																						<button type="button" class="btn btn-primary w-20 btn-icon" data-bs-toggle="modal" data-bs-target="#edit-indicator-modal-{{ comp_indicator2.id }}">
+																							<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																							<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+																							<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+																							<path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+																							<path d="M16 5l3 3" />
+																							</svg>
+																						</button>
+									
+																						<button type="button" class="btn w-20 btn-icon btn-danger" data-bs-toggle="modal" data-bs-target="#editModal">
+																							<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																								<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+																								<path d="M4 7l16 0"></path><path d="M10 11l0 6"></path>
+																								<path d="M14 11l0 6"></path><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+																								<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+																							</svg>
+																						</button>
+									
+																						<button type="button" class="btn w-20 btn-icon btn-secondary" data-bs-toggle="modal" data-bs-target="#editModal">
+																							<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+																								<path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+																								<path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+																							</svg>
+																						</button>
+									
+																					</div>
+																				</div>
+																			</div>
+																		</span>
+																	</li>
+																{% endif %}
+															{% endfor %}
+														</ul>
+
+
+
+
+
+
+
+													</li>
+												{% endif %}
+											{% endfor %}
+										</ul>
+						
+
+									</li>	
+								{% endif %}
+
+								{% include "accreditation-parameter-indicator/main-page/subindicator-create-modal.html" %}
+								{% include "accreditation-parameter-indicator/main-page/indicator-edit-modal.html" %}
+							{% endif %}
+							
+							
+						{% endfor %}
+					</ul> <!--  END OF COMPONENT INDICATORS --> 
+
+				</li>
+				{% include "accreditation-parameter-indicator/main-page/indicator-create-modal.html" %}		
+				{% include "accreditation-parameter-indicator/main-page/indicator-edit-modal.html" %}	
+				{% include "accreditation-parameter-indicator/main-page/component-edit-modal.html" %}
+			{% endfor %}
+
+				{% comment %} <li>
+					<span onclick="toggleList(this)">Parameter B: Faculty</span>
+					<ul>
+						<li>
+							<span onclick="toggleList(this)">Implementation</span>
+						</li>
+
+						<li>
+							<span onclick="toggleList(this)">Outcome/s</span>
+						</li>
+
+						<li>
+							<span onclick="toggleList(this)">Faculty Performance</span>
+						</li>
+
+						<li>
+							<span onclick="toggleList(this)">Organization</span>
+						</li>
+
+						<li>
+							<span onclick="toggleList(this)">Standards</span>
+						</li>
+					</ul>
+				</li>
+			
+				<li>
+					<span onclick="toggleList(this)">Parameter C: BUilding and Everything Nice</span>
+					<ul>
+						<li>
+							<span onclick="toggleList(this)">Sublist of Parameter C</span>
+							<ul>
+								<li>
+									<span onclick="toggleList(this)">Sublist of Parametasdadader C</span>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li> {% endcomment %}
+	
+		</ul>
+
+	{% else %}
+		<div class="empty">
+			<div class="empty-header">0 records</div>
+			<p class="empty-title">Oops… It seems like there are no records in this page. </p>
+			<p class="empty-subtitle text-muted">
+			You can create a record if you like. Just click the 'create' button and save the details.
+			</p>
+			<div class="empty-action">
+				<a href="{% url "dashboards:dashboard-landing" %}" class="btn btn-primary">
+					<!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
+					<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l14 0"></path><path d="M5 12l6 6"></path><path d="M5 12l6 -6"></path></svg>
+					Take me home
+				</a>
+			</div>
+		</div>
+	{% endif %}
+
+  </div>

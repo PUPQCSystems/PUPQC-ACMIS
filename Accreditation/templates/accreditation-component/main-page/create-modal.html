@@ -1,0 +1,29 @@
+{% load crispy_forms_tags %}
+
+<!-- Modal -->
+<div class="modal modal-blur fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      	<div class="modal-content">
+        	<div class="modal-header">
+          		<h1 class="modal-title">Create an Area</h1>
+          		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        	</div>
+        	<div class="modal-body">
+
+				<form method="POST" autocomplete="off" id="create-component-form">
+					{% csrf_token %}
+
+					<div class="mb-3">
+						{{ create_form|crispy }}
+					</div>
+			</div>
+					<div class="modal-footer">
+						<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+						<button id="submit" type="button" class="btn btn-primary">Save</button>
+					</div>
+				</form>
+
+    	</div>
+  	</div>
+</div>
+  

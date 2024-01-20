@@ -3,6 +3,8 @@ from django.views import View
 from rest_framework import generics, viewsets, status
 from django.shortcuts import render, redirect, render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+
+from Users.models import activity_log
 from .models import instrument, instrument_level, instrument_level_area #Import the model for data retieving
 from Accreditation.serializers import InstrumentSerializer
 from .forms import Create_Instrument_Form, Create_InstrumentLevel_Form, Create_LevelArea_Form, LevelAreaFormSet
@@ -41,6 +43,21 @@ class LevelAreaList(View):
         if formset.is_valid():
             formset.save()  # Save the formset with the assigned foreign keys
 
+            # Create an instance of the ActivityLog model
+            activity_log_entry = activity_log()
+
+            # Set the attributes of the instance
+            activity_log_entry.module = "ACCREDITATION LEVEL AREA MODULE"
+            activity_log_entry.action = "Created a record"
+            activity_log_entry.type = "CREATE"
+            activity_log_entry.datetime_acted =  timezone.now()
+            activity_log_entry.acted_by = request.user
+            # Set other attributes as needed
+
+            # Save the instance to the database
+            activity_log_entry.save()
+
+
             messages.success(request, f"Instrument's level areas is successfully created!")
             return JsonResponse({'status': 'success'}, status=200)
         else:
@@ -63,6 +80,21 @@ def update(request, pk):
             name = level_area.area
             update_form.save()  
 
+            
+            # Create an instance of the ActivityLog model
+            activity_log_entry = activity_log()
+
+            # Set the attributes of the instance
+            activity_log_entry.module = "ACCREDITATION LEVEL AREA MODULE"
+            activity_log_entry.action = "Modified a record"
+            activity_log_entry.type = "UPDATE"
+            activity_log_entry.datetime_acted =  timezone.now()
+            activity_log_entry.acted_by = request.user
+            # Set other attributes as needed
+
+            # Save the instance to the database
+            activity_log_entry.save()
+
             # Provide a success message as a JSON response
             messages.success(request, f'{name} is successfully updated!') 
             return JsonResponse({'status': 'success'}, status=200)
@@ -83,6 +115,21 @@ def archive(request, ins_pk, pk):
     level_area.deleted_at = timezone.now()
     name = level_area.area
     level_area.save()
+
+    # Create an instance of the ActivityLog model
+    activity_log_entry = activity_log()
+
+    # Set the attributes of the instance
+    activity_log_entry.module = "ACCREDITATION LEVEL AREA MODULE"
+    activity_log_entry.action = "Archived a record"
+    activity_log_entry.type = "ARCHIVE"
+    activity_log_entry.datetime_acted =  timezone.now()
+    activity_log_entry.acted_by = request.user
+    # Set other attributes as needed
+
+    # Save the instance to the database
+    activity_log_entry.save()
+
     messages.success(request, f'{name} is successfully archived!') 
     return redirect('accreditations:instrument-level-area', pk=ins_pk)
 
@@ -113,6 +160,21 @@ def restore(request, ins_pk, pk):
     level_area.is_deleted=False
     name = level_area.area
     level_area.save()
+
+    # Create an instance of the ActivityLog model
+    activity_log_entry = activity_log()
+
+    # Set the attributes of the instance
+    activity_log_entry.module = "ACCREDITATION LEVEL AREA MODULE"
+    activity_log_entry.action = "Restored a record"
+    activity_log_entry.type = "RESTORE"
+    activity_log_entry.datetime_acted =  timezone.now()
+    activity_log_entry.acted_by = request.user
+    # Set other attributes as needed
+
+    # Save the instance to the database
+    activity_log_entry.save()
+
     messages.success(request, f'{name} is successfully restored!') 
     return redirect('accreditations:instrument-level-area-archive-page', pk=ins_pk)
 
@@ -130,6 +192,22 @@ def destroy(request, pk):
 
                 #After getting that record, this code will delete it.
                 level_area.delete()
+
+              # Create an instance of the ActivityLog model
+                activity_log_entry = activity_log()
+
+                # Set the attributes of the instance
+                activity_log_entry.module = "ACCREDITATION LEVEL AREA MODULE"
+                activity_log_entry.action = "Permanently deleted a record"
+                activity_log_entry.type = "DESTROY"
+                activity_log_entry.datetime_acted =  timezone.now()
+                activity_log_entry.acted_by = request.user
+                # Set other attributes as needed
+
+                # Save the instance to the database
+                activity_log_entry.save()
+
+
                 messages.success(request, f'{name} is permanently deleted!') 
                 return JsonResponse({'success': True}, status=200)
             
