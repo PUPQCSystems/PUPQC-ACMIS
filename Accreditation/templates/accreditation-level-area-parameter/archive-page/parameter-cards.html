@@ -7,7 +7,7 @@
                     <div class="card-status-start bg-red"></div>
                     <div class="card-body">
                         <div class="d-flex align-items-center">
-                            <a href="">
+                            <a href=" {% url "accreditations:instrument-parameter-component" pk=record.id %}">
                                 <div class="h1 mb-1">{{ record.parameter }}</div>  
                             </a>
                             <div class="ms-auto lh-1">
@@ -28,7 +28,7 @@
                             </div>
             
                         </div>
-                        <a href="">
+                        <a href=" {% url "accreditations:instrument-parameter-component" pk=record.id %}">
                             <div class="subheader">{{ record.label }}</div> 
                         </a>    
                         <hr class = "card-divider-line">
