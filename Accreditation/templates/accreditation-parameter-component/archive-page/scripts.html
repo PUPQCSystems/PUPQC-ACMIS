@@ -136,7 +136,7 @@
 
 	deleteButtons.forEach((deleteButton) => {
 			deleteButton.addEventListener('click', async () => {
-					const id = event.target.dataset.id; // Get the ID of the button
+                    const id = deleteButton.dataset.id;
 					const { value: password, isConfirmed } = await Swal.fire({
 							title: 'Are you sure?',
 							text: "All other records related to this component will also be PERMANENTLY deleted.",
@@ -167,7 +167,7 @@
 												'csrfmiddlewaretoken': '{{ csrf_token }}', },
 										success: function(response) {
 												if (response.success) {
-														window.location.href = response.url_landing;
+                                                    location.reload();
 												} else {
 														toastr.error(response.error);
 												}
@@ -193,11 +193,11 @@
 
 
 <script>
-	const deleteButtons = document.querySelectorAll('.delete-upload-bin-button');
+	const deleteUploadButtons = document.querySelectorAll('.delete-upload-button');
 
-	deleteButtons.forEach((deleteButton) => {
-			deleteButton.addEventListener('click', async () => {
-					const id = event.target.dataset.id; // Get the ID of the button
+	deleteUploadButtons.forEach((deleteUploadButton) => {
+			deleteUploadButton.addEventListener('click', async () => {
+                    const id = deleteUploadButton.dataset.id; // Get the ID of the button
 					const { value: password, isConfirmed } = await Swal.fire({
 							title: 'Are you sure?',
 							text: "All other records related to this upload bin will also be PERMANENTLY deleted.",
@@ -228,7 +228,7 @@
 												'csrfmiddlewaretoken': '{{ csrf_token }}', },
 										success: function(response) {
 												if (response.success) {
-														window.location.href = response.url_landing;
+                                                    location.reload();
 												} else {
 														toastr.error(response.error);
 												}

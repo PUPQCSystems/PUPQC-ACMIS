@@ -76,14 +76,9 @@
 							{% if component.id == upload_bin.parameter_component_id %}
 								{% if component.is_deleted == True and upload_bin.is_deleted == False %}
 									<li>
-										<span class="col-md-12 col-lg-12 card record-card indicator" onclick="toggleList(this)">
-
-											{% if upload_bin.is_deleted == True %}
-												<div class="card-status-start bg-red"></div>
-
-											{% else %}
-												<div class="card-status-start bg-green"></div>
-											{% endif %}
+										<span class="col-md-12 col-lg-12 card record-card indicator">
+											<div class="card-status-start bg-green"></div>
+					
 
 											<div class="card-body row align-items-center">
 												<div class="col-md-8 col-lg-8 ">
@@ -91,21 +86,6 @@
 												</div>
 												<div class="col-auto ms-auto d-print-none">
 													<div class="btn-list">
-
-														{% if upload_bin.is_deleted == True %}
-															<a  href={% url 'accreditations:instrument-parameter-uploadBin-restore' upl_pk=upload_bin.id pk=pk %} class="btn btn-green w-20 btn-icon">
-																<!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rotate-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-																<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-																<path d="M15 4.55a8 8 0 0 0 -6 14.9m0 -4.45v5h-5" />
-																<path d="M18.37 7.16l0 .01" />
-																<path d="M13 19.94l0 .01" />
-																<path d="M16.84 18.37l0 .01" />
-																<path d="M19.37 15.1l0 .01" />
-																<path d="M19.94 11l0 .01" />
-																</svg>
-															</a>
-														{% endif %}				
 
 														<!-- Button to trigger UPLOAD BIN modal -->
 														<button type="button" class="btn btn-primary w-20 btn-icon" data-bs-toggle="modal" data-bs-target="#edit-upload-bin-modal-{{ upload_bin.id }}">
@@ -116,20 +96,6 @@
 															<path d="M16 5l3 3" />
 															</svg>
 														</button>
-
-														{% if upload_bin.is_deleted == True %}
-															<button type="button" class="btn w-20 btn-icon btn-danger delete-upload-bin-button" data-id={{ upload_bin.id }}>
-																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-																	<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-																	<path d="M4 7h16" />
-																	<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-																	<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-																	<path d="M10 12l4 4m0 -4l-4 4" />
-																  </svg>	
-															</button>
-
-														{% endif %}
-
 
 														<button type="button" class="btn w-20 btn-icon btn-secondary" data-bs-toggle="modal" data-bs-target="#editModal">
 															<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -189,14 +155,14 @@
 														</button>
 
 														{% if upload_bin.is_deleted == True %}
-															<button type="button" class="btn w-20 btn-icon btn-danger delete-upload-bin-button" data-id={{ upload_bin.id }}>
+															<button type="button" class="btn w-20 btn-icon btn-danger delete-upload-button" data-id={{ upload_bin.id }}>
 																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
 																	<path stroke="none" d="M0 0h24v24H0z" fill="none" />
 																	<path d="M4 7h16" />
 																	<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
 																	<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
 																	<path d="M10 12l4 4m0 -4l-4 4" />
-																</svg>	
+																</svg>
 															</button>
 
 														{% endif %}
