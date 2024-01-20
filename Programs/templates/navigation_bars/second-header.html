@@ -6,7 +6,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'dashboards:dashboard-landing' %}" >
                             <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: #c12525;"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
                             </span>
                             <span class="nav-link-title">
                                 Home
@@ -17,7 +17,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url "accreditations:landing" %}" >
                             <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/checkbox -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 11l3 3l8 -8" /><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: #c12525;"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 11l3 3l8 -8" /><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" /></svg>
                             </span>
                             <span class="nav-link-title">
                                 Accreditation
@@ -27,6 +27,13 @@
 
                     <li class="nav-item">
                         <a class="hover-nav-link custom-dropdown-link nav-link dropdown-toggle"  role="button">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/checkbox -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: #c12525;">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                                    <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                                </svg>
+                            </span>
                             <span class="nav-link-title">
                                 Admin Setup
                             </span>
@@ -60,17 +67,6 @@
                                         </div>
                                     </li>
 
-                                    <li class="mega-menu-item">
-                                        <div class="menu-icon">
-                                            <i class="fa-solid fa-shapes fa-2xl" style="color: #b31e1e;"></i>
-                                        </div>
-                                        <div class="mega-menu-link">
-                                            <a href="{% url 'accreditations:type-landing' %}"><strong>Accreditation type</strong>
-                                                <p class="text-break description-text"><small>The Accreditation Type Page allows you to manage accreditation types. 
-                                                                    You can create, retrieve, update, delete, and restore accreditation types. </p></small>
-                                            </a>
-                                        </div>
-                                    </li>
 
                                     <li class="mega-menu-item">
                                         <div class="menu-icon instrument-icon">
@@ -80,6 +76,18 @@
                                             <a href="{% url 'accreditations:area-landing' %}"><strong>Accreditation Area</strong>
                                                 <p class="text-break description-text"><small>The Accreditation Area Page allows you to manage accreditation areas. 
                                                                     You can create, retrieve, update, delete, and restore accreditation areas. </p></small>
+                                            </a>
+                                        </div>
+                                    </li>
+
+                                    <li class="mega-menu-item">
+                                        <div class="menu-icon instrument-icon">
+                                            <i class="fa-solid fa-clipboard-list fa-2xl" style="color: #b31e1e;"></i>
+                                        </div>
+                                        <div class="mega-menu-link">
+                                            <a href="{% url 'accreditations:component-landing' %}"><strong>Parameter Components</strong>
+                                                <p class="text-break description-text"><small>The Parameter Components Page allows you to manage parameter's components. 
+                                                                    You can create, retrieve, update, delete, and restore components in this page. </p></small>
                                             </a>
                                         </div>
                                     </li>
@@ -142,6 +150,18 @@
                             </div>    
                         </div>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "users:admin-activity-log" %}" >
+                            <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/checkbox -->
+                                <i class="fa-solid fa-bars" style="color: #c12525;"></i>
+                            </span>
+                            <span class="nav-link-title">
+                                Activity Logs
+                            </span>
+                        </a>
+                    </li> 
+
                 </ul>
 
                 <div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last">

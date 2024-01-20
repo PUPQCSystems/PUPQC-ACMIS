@@ -7,7 +7,7 @@
                     <div class="card-status-start bg-green"></div>
                     <div class="card-body">
                         <div class="d-flex align-items-center">
-                            <a href="">
+                            <a href=" {% url "accreditations:instrument-parameter-indicator" pk=record.id %}">
                                 <div class="h1 mb-1">{{ record.parameter }}</div>  
                             </a>
                             <div class="ms-auto lh-1">
@@ -22,7 +22,7 @@
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
                                         <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
                                                                                     
-                                        <form method="POST" action="{% url 'accreditations:instrument-level-archive' ins_pk=pk pk=record.id %}" id="archive-form-{{ record.id }}">
+                                        <form method="POST" action="{% url 'accreditations:instrument-level-area-parameter-archive' ins_pk=pk pk=record.id %}" id="archive-form-{{ record.id }}">
                                             {% csrf_token %}
                                             <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
                                         </form>

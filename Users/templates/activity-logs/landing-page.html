@@ -1,0 +1,92 @@
+
+
+{% extends "base.html" %}
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    Activity Logs
+{% endblock page-title %}
+
+
+<!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
+{% block page-title-actions %}
+        <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search..."/>
+{% endblock page-title-actions %}
+
+{% block content %}
+    <!-- Page body -->
+{% if records %}
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="divide-y">
+
+                        <!-- For LOOP HERE-->
+                        {% for record in records %}
+                            <div>
+                                <div class="row">
+                                    <div class="col-auto">
+
+                                        {% if record.acted_by.profile_pic %}
+                                            <span class="avatar" style="background-image: url(./static/avatars/000m.jpg)"></span>
+                                        
+                                        {% else %}
+                                            <span class="avatar">{{ record.acted_by.first_name|first|default:'' }} {{ record.acted_by.last_name|first|default:'' }}</span>
+                                        {% endif %}
+                    
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-truncate">
+                                            <strong>{{ record.acted_by.first_name}} {{ record.acted_by.last_name}}</strong> {{ record.action}} <strong> in {{ record.module }}</strong>.
+                                        </div>
+                                        <div class="text-muted">{{ record.datetime_acted|date:"F j, Y g:i A" }} </div>
+                                    </div>
+                                    <div class="col-auto align-self-center">
+
+                                    <!-- Conditional statement for the color badge per record -->
+                                    {% if record.type == "CREATE"  %}
+                                        <div class="badge bg-green"></div>
+
+                                    {% elif record.type == "UPDATE"  %}
+                                        <div class="badge bg-blue"></div>
+
+                                    {% elif record.type == "ARCHIVE"  %}
+                                        <div class="badge bg-orange"></div>
+
+                                    {% elif record.type == "RESTORE"  %}
+                                        <div class="badge bg-purple"></div>
+
+                                    {% elif record.type == "DESTROY"  %}
+                                         <div class="badge bg-red"></div>
+                                
+                                    {% endif %}
+
+                      
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% else %}
+    <div class="empty">
+        <div class="empty-header">0 activities</div>
+        <p class="empty-title">Oops… It seems like there are no activities. </p>
+        <p class="empty-subtitle text-muted">
+            You can see all the users' activities in this page.
+        </p>
+        <div class="empty-action">
+            <a href="{% url "dashboards:dashboard-landing" %}" class="btn btn-primary">
+                <!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l14 0"></path><path d="M5 12l6 6"></path><path d="M5 12l6 -6"></path></svg>
+                Take me home
+            </a>
+        </div>
+    </div>
+{% endif %}
+{% endblock content %}

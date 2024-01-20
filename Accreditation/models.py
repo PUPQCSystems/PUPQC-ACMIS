@@ -129,3 +129,57 @@ class level_area_parameter(models.Model):
     class Meta:
         unique_together = ('parameter', 'instrument_level_area')
 
+class components(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True, unique=True)
+    description = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_components', null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_components', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return(self.name)
+    
+class parameter_components(models.Model):
+    component = models.ForeignKey(components, on_delete=models.CASCADE, null=True, blank=True)
+    area_parameter = models.ForeignKey(level_area_parameter, on_delete=models.CASCADE, null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_parameter_components', null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_parameter_components', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('component', 'area_parameter')
+
+    #I add this code so that the parameter_components object can accept additional field. This code fixes the error
+    # parameter_components() got unexpected keyword arguments: 'component_update_form'
+    def __init__(self, *args, **kwargs):
+        component_update_form = kwargs.pop('component_update_form', None)
+        super(parameter_components, self).__init__(*args, **kwargs)
+        self.component_update_form = component_update_form
+    
+class component_upload_bin(models.Model):
+    parameter_component = models.ForeignKey(parameter_components, on_delete=models.CASCADE)
+    title = models.CharField(max_length=500, null=True, blank=True)
+    description = models.CharField(max_length=5000, null=True, blank=True)
+    status  = models.CharField(max_length=50, null=True, blank=True)
+    remarks =  models.CharField(max_length=2000, null=True, blank=True)
+    reviewed_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='reviewed_upload_bin', null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_upload_bin', null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_upload_bin', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return(self.title)
+    
+
+
+

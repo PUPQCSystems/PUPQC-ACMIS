@@ -41,7 +41,7 @@ class InstrumentLevelList(View):
             instrumentlevel_form.instance.instrument_id = pk
             instrumentlevel = instrumentlevel_form.save()  # Save and capture the instance
 
-            instrument_level_id = instrumentlevel.id  # Get the ID
+            instrument_level_id = instrumentlevel.id  # Get the ID 
 
             for form in formset:
                 form.instance.instrument_level_id = instrument_level_id
