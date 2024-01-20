@@ -319,18 +319,9 @@ ParameterComponentFormSet = modelformset_factory(
 class UploadBin_Form(forms.ModelForm):
     title = forms.CharField(max_length=500, 
                            min_length = 5, 
-                            validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
-                            message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Title Field!")],
+                            validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&0-9]*$', 
+                            message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Description Field!")],
                             error_messages={'required': "Please enter a number before submitting the form."})
-
-    # description = forms.CharField(max_length=2000, 
-    #                         min_length = 5,
-    #                         required=False,
-    #                         validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
-    #                         message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Description Field!")],
-    #                         error_messages={'required': "Please enter a name before submitting the form."})
-    
-    
     class Meta:
         model = component_upload_bin
         fields = ('title', 'description')
@@ -339,7 +330,7 @@ class UploadBin_Form(forms.ModelForm):
             'description': forms.Textarea(attrs={'required': False,
                                                  'max_length': 2000,
                                                  'min_length': 5,
-                                                 'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+                                                 'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&0-9]*$', 
                                                     message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Description Field!")]
                                                     }),
         }
