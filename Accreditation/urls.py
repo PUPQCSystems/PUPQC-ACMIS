@@ -1,8 +1,8 @@
 from django.urls import path
-from Accreditation import views_instrument_level, views_component_indicator
+from Accreditation import views_instrument_level, views_parameter_component
 from Accreditation import views_component
 from Accreditation.views_component import ComponentList
-from Accreditation.views_component_indicator import ParameterIndicatorList
+from Accreditation.views_parameter_component import ParameterIndicatorList
 from . import views_accreditation, views_level, views_type, views_bodies, views_instrument, views_area, views_level_area, views_parameter, views_area_parameter
 from Accreditation.views_instrument import *
 from Accreditation.views_instrument_level import *
@@ -10,7 +10,7 @@ from Accreditation.views_level_area import *
 from Accreditation.views_area import *
 from Accreditation.views_parameter import *
 from Accreditation.views_area_parameter import *
-from Accreditation.views_component_indicator import *
+from Accreditation.views_parameter_component import *
 
 
 app_name = 'accreditations'
@@ -98,16 +98,20 @@ urlpatterns = [
     path("instrument/level/area/parameter/archive-page/destroy/<str:pk>/", views_area_parameter.destroy, name='instrument-level-area-parameter-destroy'),
 
     path("instrument/level/area/parameter/upload/<str:pk>/", ParameterIndicatorList.as_view(), name='instrument-parameter-component'),
-    path("instrument/level/area/parameter/upload/create-component/<int:pk>/", views_component_indicator.create_component, name='instrument-parameter-component-create'),
-    path("instrument/level/area/parameter/upload/update-component/<str:pk>/", views_component_indicator.update_component, name='instrument-parameter-component-update'),
-    path("instrument/level/area/parameter/upload/archive-component/<str:url_pk>/<str:record_pk>/", views_component_indicator.archive_component, name='instrument-parameter-component-archive'),
+    path("instrument/level/area/parameter/upload/create-component/<int:pk>/", views_parameter_component.create_component, name='instrument-parameter-component-create'),
+    path("instrument/level/area/parameter/upload/update-component/<str:pk>/", views_parameter_component.update_component, name='instrument-parameter-component-update'),
+    path("instrument/level/area/parameter/upload/archive-component/<str:url_pk>/<str:record_pk>/", views_parameter_component.archive_component, name='instrument-parameter-component-archive'),
+    path("instrument/level/area/parameter/upload/archive-page/restore-component/<str:comp_pk>/<str:pk>/", views_parameter_component.restore_component, name='instrument-parameter-component-restore'),
+    path("instrument/level/area/parameter/upload/archive-page/destroy-component/<str:pk>/", views_parameter_component.destroy_component, name='instrument-parameter-component-destroy'),
   
-    path("instrument/level/area/parameter/upload/create-upload-bin/<int:pk>/", views_component_indicator.create_uploadBin, name='instrument-parameter-uploadBin-create'),
-    path("instrument/level/area/parameter/upload/update-upload-bin/<str:pk>/", views_component_indicator.update_uploadBin, name='instrument-parameter-uploadBin-update'),
-    path("instrument/level/area/parameter/upload/archive-upload-bin/<str:url_pk>/<str:record_pk>/", views_component_indicator.archive_uploadBin, name='instrument-parameter-uploadBin-archive'),
+    path("instrument/level/area/parameter/upload/create-upload-bin/<int:pk>/", views_parameter_component.create_uploadBin, name='instrument-parameter-uploadBin-create'),
+    path("instrument/level/area/parameter/upload/update-upload-bin/<str:pk>/", views_parameter_component.update_uploadBin, name='instrument-parameter-uploadBin-update'),
+    path("instrument/level/area/parameter/upload/archive-upload-bin/<str:url_pk>/<str:record_pk>/", views_parameter_component.archive_uploadBin, name='instrument-parameter-uploadBin-archive'),
+    path("instrument/level/area/parameter/upload/archive-page/destroy-upload-bin/<str:pk>/", views_parameter_component.destroy_uploadBin, name='instrument-parameter-uploadBin-destroy'),
+    path("instrument/level/area/parameter/upload/archive-page/restore-upload-bin/<str:upl_pk>/<str:pk>/", views_parameter_component.restore_uploadBin, name='instrument-parameter-uploadBin-restore'),
 
-    path("instrument/level/area/parameter/upload/<str:pk>/archive-page/", views_component_indicator.archive_landing, name='instrument-parameter-indicator-archive-page'),
-    path("instrument/level/area/parameter/upload/archive-page/restore/<str:ins_pk>/<str:pk>/", views_component_indicator.restore, name='instrument-parameter-indicator-restore'),
-    path("instrument/level/area/parameter/upload/archive-page/destroy/<str:pk>/", views_component_indicator.destroy, name='instrument-parameter-indicator-destroy'),
+    path("instrument/level/area/parameter/upload/<str:pk>/archive-page/", views_parameter_component.archive_landing, name='instrument-parameter-component-archive-page'),
+
+
 
 ]

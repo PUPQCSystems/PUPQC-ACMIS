@@ -1,0 +1,249 @@
+<div class="row row-deck row-cards">
+	{% if component_records %}
+		<ul class="wtree">
+				<!--List-->
+			{% for component, upload_bins in indicator_details.items %}
+				<li>
+					{% comment %} <span onclick="toggleList(this)"> {{ record.component }}</span> {% endcomment %}
+
+					<span class="col-md-12 col-lg-12 card record-card" onclick="toggleList(this)"> <!--  START OF COMPONENT CARD  -->
+						{% if component.is_deleted == True %}
+							<div class="card-status-start bg-red"></div>
+
+						{% else %}
+							<div class="card-status-start bg-blue"></div>
+
+						{% endif %}
+		
+						<div class="card-body row align-items-center">
+							<div class="col-md-8 col-lg-8 ">
+								{{ component.component }} 
+							</div>
+							<div class="col-auto ms-auto d-print-none">
+								<div class="btn-list">
+
+									{% if component.is_deleted == True %}
+
+
+										<a  href={% url 'accreditations:instrument-parameter-component-restore' comp_pk=component.id pk=pk %} class="btn btn-green w-20 btn-icon">
+											<!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+											<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rotate-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+											<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+											<path d="M15 4.55a8 8 0 0 0 -6 14.9m0 -4.45v5h-5" />
+											<path d="M18.37 7.16l0 .01" />
+											<path d="M13 19.94l0 .01" />
+											<path d="M16.84 18.37l0 .01" />
+											<path d="M19.37 15.1l0 .01" />
+											<path d="M19.94 11l0 .01" />
+											</svg>
+										</a>
+									
+									{% endif %}
+
+
+									<!-- Button to trigger modal -->
+									<button type="button" class="btn btn-primary w-20 btn-icon" data-bs-toggle="modal" data-bs-target="#edit-component-modal-{{ component.id }}">
+										<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+										<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+										<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+										<path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+										<path d="M16 5l3 3" />
+										</svg>
+									</button>
+
+									{% if component.is_deleted == True %}
+									
+											<button type="button" class="btn w-20 btn-icon btn-danger delete-component-button" data-id={{ component.id }}>
+												<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+													<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+													<path d="M4 7h16" />
+													<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+													<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+													<path d="M10 12l4 4m0 -4l-4 4" />
+												  </svg>
+											</button>
+
+									{% endif %}
+								
+
+								</div>
+							</div>
+						</div>
+					</span> <!--  END OF COMPONENT CARD  -->
+
+ 					<ul> <!--  START OF COMPONENT INDICATORS -->
+						{% for upload_bin in upload_bins %}
+							{% if component.id == upload_bin.parameter_component_id %}
+								{% if component.is_deleted == True and upload_bin.is_deleted == False %}
+									<li>
+										<span class="col-md-12 col-lg-12 card record-card indicator" onclick="toggleList(this)">
+
+											{% if upload_bin.is_deleted == True %}
+												<div class="card-status-start bg-red"></div>
+
+											{% else %}
+												<div class="card-status-start bg-green"></div>
+											{% endif %}
+
+											<div class="card-body row align-items-center">
+												<div class="col-md-8 col-lg-8 ">
+													{{ upload_bin.title }}
+												</div>
+												<div class="col-auto ms-auto d-print-none">
+													<div class="btn-list">
+
+														{% if upload_bin.is_deleted == True %}
+															<a  href={% url 'accreditations:instrument-parameter-uploadBin-restore' upl_pk=upload_bin.id pk=pk %} class="btn btn-green w-20 btn-icon">
+																<!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rotate-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+																<path d="M15 4.55a8 8 0 0 0 -6 14.9m0 -4.45v5h-5" />
+																<path d="M18.37 7.16l0 .01" />
+																<path d="M13 19.94l0 .01" />
+																<path d="M16.84 18.37l0 .01" />
+																<path d="M19.37 15.1l0 .01" />
+																<path d="M19.94 11l0 .01" />
+																</svg>
+															</a>
+														{% endif %}				
+
+														<!-- Button to trigger UPLOAD BIN modal -->
+														<button type="button" class="btn btn-primary w-20 btn-icon" data-bs-toggle="modal" data-bs-target="#edit-upload-bin-modal-{{ upload_bin.id }}">
+															<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+															<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+															<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+															<path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+															<path d="M16 5l3 3" />
+															</svg>
+														</button>
+
+														{% if upload_bin.is_deleted == True %}
+															<button type="button" class="btn w-20 btn-icon btn-danger delete-upload-bin-button" data-id={{ upload_bin.id }}>
+																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																	<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+																	<path d="M4 7h16" />
+																	<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+																	<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+																	<path d="M10 12l4 4m0 -4l-4 4" />
+																  </svg>	
+															</button>
+
+														{% endif %}
+
+
+														<button type="button" class="btn w-20 btn-icon btn-secondary" data-bs-toggle="modal" data-bs-target="#editModal">
+															<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+																<path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+																<path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+															</svg>
+														</button>
+
+													</div>
+												</div>
+											</div>
+										</span>
+									</li>	
+
+								{% elif component.id == True or upload_bin.is_deleted == True %}
+									<li>
+										<span class="col-md-12 col-lg-12 card record-card indicator" onclick="toggleList(this)">
+
+											{% if upload_bin.is_deleted == True %}
+												<div class="card-status-start bg-red"></div>
+
+											{% else %}
+												<div class="card-status-start bg-green"></div>
+											{% endif %}
+
+											<div class="card-body row align-items-center">
+												<div class="col-md-8 col-lg-8 ">
+													{{ upload_bin.title }}
+												</div>
+												<div class="col-auto ms-auto d-print-none">
+													<div class="btn-list">
+
+														{% if upload_bin.is_deleted == True %}
+															<a  href={% url 'accreditations:instrument-parameter-uploadBin-restore' upl_pk=upload_bin.id pk=pk %} class="btn btn-green w-20 btn-icon">
+																<!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rotate-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+																<path d="M15 4.55a8 8 0 0 0 -6 14.9m0 -4.45v5h-5" />
+																<path d="M18.37 7.16l0 .01" />
+																<path d="M13 19.94l0 .01" />
+																<path d="M16.84 18.37l0 .01" />
+																<path d="M19.37 15.1l0 .01" />
+																<path d="M19.94 11l0 .01" />
+																</svg>
+															</a>
+														{% endif %}				
+
+														<!-- Button to trigger UPLOAD BIN modal -->
+														<button type="button" class="btn btn-primary w-20 btn-icon" data-bs-toggle="modal" data-bs-target="#edit-upload-bin-modal-{{ upload_bin.id }}">
+															<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+															<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+															<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+															<path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+															<path d="M16 5l3 3" />
+															</svg>
+														</button>
+
+														{% if upload_bin.is_deleted == True %}
+															<button type="button" class="btn w-20 btn-icon btn-danger delete-upload-bin-button" data-id={{ upload_bin.id }}>
+																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																	<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+																	<path d="M4 7h16" />
+																	<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+																	<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+																	<path d="M10 12l4 4m0 -4l-4 4" />
+																</svg>	
+															</button>
+
+														{% endif %}
+
+
+														<button type="button" class="btn w-20 btn-icon btn-secondary" data-bs-toggle="modal" data-bs-target="#editModal">
+															<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+																<path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+																<path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+															</svg>
+														</button>
+
+													</div>
+												</div>
+											</div>
+										</span>
+									</li>	
+								{% endif %}
+								{% include "accreditation-parameter-component/main-page/uploadBin-edit-modal.html" %}
+							{% endif %}
+							
+							
+						{% endfor %}
+					</ul> <!--  END OF COMPONENT INDICATORS --> 
+
+				</li>		
+				{% include "accreditation-parameter-component/main-page/component-edit-modal.html" %}
+			{% endfor %}
+	
+		</ul>
+
+	{% else %}
+		<div class="empty">
+			<div class="empty-header">0 records</div>
+			<p class="empty-title">Oops… It seems like there are no records in this page. </p>
+			<p class="empty-subtitle text-muted">
+			You can create a record if you like. Just click the 'create' button and save the details.
+			</p>
+			<div class="empty-action">
+				<a href="{% url "dashboards:dashboard-landing" %}" class="btn btn-primary">
+					<!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
+					<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l14 0"></path><path d="M5 12l6 6"></path><path d="M5 12l6 -6"></path></svg>
+					Take me home
+				</a>
+			</div>
+		</div>
+	{% endif %}
+
+  </div>

@@ -7,6 +7,7 @@
 					{% comment %} <span onclick="toggleList(this)"> {{ record.component }}</span> {% endcomment %}
 
 					<span class="col-md-12 col-lg-12 card record-card" onclick="toggleList(this)"> <!--  START OF COMPONENT CARD  -->
+						<div class="card-status-start bg-blue"></div>
 		
 						<div class="card-body row align-items-center">
 							<div class="col-md-8 col-lg-8 ">
@@ -53,6 +54,7 @@
 							{% if component.id == upload_bin.parameter_component_id %}
 									<li>
 										<span class="col-md-12 col-lg-12 card record-card indicator" onclick="toggleList(this)">
+											<div class="card-status-start bg-green"></div>
 											<div class="card-body row align-items-center">
 												<div class="col-md-8 col-lg-8 ">
 													{{ upload_bin.title }}

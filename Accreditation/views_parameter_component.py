@@ -263,31 +263,58 @@ def archive_component(request, url_pk, record_pk):
 
 #------------------------------------------------------------[ ARCHIVE PAGE CODES ]------------------------------------------------------------#
 @login_required
-def archive_landing(request):
-    records = parameter_components.objects.filter(is_deleted= True) #Getting all th
+def archive_landing(request, pk):
+    component_records = parameter_components.objects.select_related('area_parameter').filter(area_parameter=pk)
 
-    details = []
-     # Iterate through each record and create an update form for it
-    for record in records:
-        update_form = ParameterComponent_Form(instance=record)
-        created_by = record.created_by  # Get the user who created the record
-        modified_by = record.modified_by  # Get the user who modified the record
-        details.append((record, update_form,created_by, modified_by))
+    indicator_details = {}
 
-    context = { 'details': details, 'records': records }#Getting all the data inside the type table and storing it to the context variable
+    for component_record in component_records.values():
+        records = []
+        #Convert the component_record dictionary into object or queryset
+        component = parameter_components(**component_record)
+
+        component_update_form = ParameterComponent_Form(instance=component)
+
+        #Adding the component_update_form key and value into the component_record dictionary
+        component_record['component_update_form'] = component_update_form
+
+        #Convert the component_record dictionary back into object or queryset
+        component_record = parameter_components(**component_record)
+
+        indicator_records = component_upload_bin.objects.select_related('parameter_component').filter(parameter_component=component_record.id)
+        if indicator_records:
+            for indicator_record in  indicator_records.values():
+                # Convert the dictionary back to a model instance
+                indicator_instance = component_upload_bin(**indicator_record)
+                
+                # Now you can use the instance with the form
+                uploadBin_update_form = UploadBin_Form(instance=indicator_instance)
+                indicator_record['uploadBin_update_form'] = uploadBin_update_form
+                records.append(indicator_record)
+        
+        indicator_details[component_record] = records
+
+    print(indicator_details)
+
+    #Getting all the data inside the Program table and storing it to the context variable      
+        
+    context = { 'component_records': component_records
+                , 'pk':pk
+                , 'indicator_details': indicator_details
+                
+                }  #Getting all the data inside the type table and storing it to the context variable
     return render(request, 'accreditation-parameter-component/archive-page/landing-page.html', context)
 
 
 @login_required
-def restore(request, pk):
+def restore_component(request, comp_pk, pk):
     # Gets the records who have this ID
-    component_record =  parameter_components.objects.get(id=pk)
+    component_record =  parameter_components.objects.get(id=comp_pk)
 
     #After getting that record, this code will restore it.
     component_record.modified_by = request.user
     component_record.deleted_at = None
     component_record.is_deleted=False
-    name = component_record.name
     component_record.save()
 
     # Create an instance of the ActivityLog model
@@ -304,12 +331,40 @@ def restore(request, pk):
     # Save the instance to the database
     activity_log_entry.save()
 
-    messages.success(request, f'{name} parameter is successfully restored!') 
-    return redirect('accreditations:instrument-parameter-indicator-archive-page')
+    messages.success(request, f'Component is successfully restored!') 
+    return redirect('accreditations:instrument-parameter-component-archive-page', pk=pk)
+
+@login_required
+def restore_uploadBin(request, upl_pk, pk):
+    # Gets the records who have this ID
+    uploadBin_record =  component_upload_bin.objects.get(id=upl_pk)
+
+    #After getting that record, this code will restore it.
+    uploadBin_record.modified_by = request.user
+    uploadBin_record.deleted_at = None
+    uploadBin_record.is_deleted=False
+    uploadBin_record.save()
+
+    # Create an instance of the ActivityLog model
+    activity_log_entry = activity_log()
+
+    # Set the attributes of the instance
+    activity_log_entry.module = "PARAMETER MODULE"
+    activity_log_entry.action = "Restored a record"
+    activity_log_entry.type = "RESTORE"
+    activity_log_entry.datetime_acted =  timezone.now()
+    activity_log_entry.acted_by = request.user
+    # Set other attributes as needed
+
+    # Save the instance to the database
+    activity_log_entry.save()
+
+    messages.success(request, f'Component is successfully restored!') 
+    return redirect('accreditations:instrument-parameter-component-archive-page', pk=pk)
 
 
 @login_required
-def destroy(request, pk):
+def destroy_component(request, pk):
     if request.method == 'POST':
         entered_password = request.POST.get('password')
         user = request.user
@@ -336,7 +391,45 @@ def destroy(request, pk):
                 # Save the instance to the database
                 activity_log_entry.save()
 
-                messages.success(request, f'Parameter is permanently deleted!') 
+                messages.success(request, f'Component is permanently deleted!') 
+                return JsonResponse({'success': True}, status=200)
+            
+            else:
+                return JsonResponse({'success': False, 'error': 'Incorrect password'})
+        else:
+            return JsonResponse({'success': False, 'error': 'User not logged in'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+@login_required
+def destroy_uploadBin(request, pk):
+    if request.method == 'POST':
+        entered_password = request.POST.get('password')
+        user = request.user
+
+        if user and user.is_authenticated:
+            if authenticate(email=user.email, password=entered_password):
+                # Gets the records who have this ID
+                uploadBin_record = component_upload_bin.objects.get(id=pk)
+
+                #After getting that record, this code will delete it.
+                uploadBin_record.delete()
+
+                # Create an instance of the ActivityLog model
+                activity_log_entry = activity_log()
+
+                # Set the attributes of the instance
+                activity_log_entry.module = "PARAMETER MODULE"
+                activity_log_entry.action = "Permanently deleted a record"
+                activity_log_entry.type = "DESTROY"
+                activity_log_entry.datetime_acted =  timezone.now()
+                activity_log_entry.acted_by = request.user
+                # Set other attributes as needed
+
+                # Save the instance to the database
+                activity_log_entry.save()
+
+                messages.success(request, f'Upload bin is permanently deleted!') 
                 return JsonResponse({'success': True}, status=200)
             
             else:
