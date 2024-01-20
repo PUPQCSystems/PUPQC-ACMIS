@@ -42,7 +42,7 @@
             event.preventDefault();
             event.stopPropagation();
             var serializedData = $("#update-component-form-"+id).serialize();
-            var url = "/accreditation/components/update/"+id+"/";
+            var url = "/accreditation/component/update/"+id+"/";
 
             $.ajax({
                 url: url, 

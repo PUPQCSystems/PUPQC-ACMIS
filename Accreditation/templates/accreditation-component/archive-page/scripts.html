@@ -8,7 +8,7 @@
             event.preventDefault();
             event.stopPropagation();
             var serializedData = $("#update-component-form-"+id).serialize();
-            var url = "/accreditation/components/update/"+id+"/";
+            var url = "/accreditation/component/update/"+id+"/";
 
 
             $.ajax({
@@ -65,7 +65,7 @@
 					if (isConfirmed) 
 					{
 						if (password) {
-								var url = "/accreditation/components/archive-page/destroy/"+id+"/";
+								var url = "/accreditation/component/archive-page/destroy/"+id+"/";
 								// Send AJAX request to verify password
 								$.ajax({
 										url: url,

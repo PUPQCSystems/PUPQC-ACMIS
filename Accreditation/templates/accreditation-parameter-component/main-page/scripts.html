@@ -48,11 +48,11 @@
 <script>
     $(document).ready(function(){
 
-        $(".submit-indicator").click(function(event) {
+        $(".submit-upload-bin").click(function(event) {
             var component_id = $(this).data('component-id');
-            var serializedData = $("#create-indicator-form-"+component_id).serialize();
-            const form = document.getElementById('create-indicator-form-'+component_id)
-            var url = "/accreditation/instrument/level/area/parameter/indicator/create-indicator/"+component_id+"/"
+            var serializedData = $("#create-upload-bin-form-"+component_id).serialize();
+            const form = document.getElementById('create-upload-bin-form-'+component_id)
+            var url = "/accreditation/instrument/level/area/parameter/upload/create-upload-bin/"+component_id+"/"
             event.preventDefault();
 
             $.ajax({
@@ -85,46 +85,6 @@
     });
 </script> 
 
-<script>
-    $(document).ready(function(){
-
-        $(".submit-subindicator").click(function(event) {
-            var component_id = $(this).data('component-id');
-            var indicator_id = $(this).data('indicator-id');
-            var serializedData = $("#create-subindicator-form-"+indicator_id).serialize();
-            const form = document.getElementById('create-subindicator-form-'+indicator_id)
-            var url = "/accreditation/instrument/level/area/parameter/indicator/create-subindicator/"+component_id+"/"+indicator_id+"/";
-            event.preventDefault();
-
-            $.ajax({
-                url: url,
-                data: serializedData,
-                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
-                type: "POST",
-                success: function(response) {
-                    location.reload();
-                },
-                error: function(error) {
-
-                    if (error.responseJSON && error.responseJSON.error) {
-                        // Handle the IntegrityError message
-                        toastr.error(error.responseJSON.error);
-                    }
-                    // Check for the errors field in the JSON response
-                    else if (error.responseJSON && error.responseJSON.errors) {
-                        // Iterate over the errors field and display the validation errors to the user
-                        for (var field in error.responseJSON.errors) {
-                            toastr.error(error.responseJSON.errors[field]);
-                        }
-                    } else {
-                        toastr.error('Something went wrong. Please try again later.');
-                    }
-                }
-
-            });
-        });
-    });
-</script> 
 
 
 
@@ -132,12 +92,12 @@
 {% comment %} AJAX FOR UPDATING  {% endcomment %}
  <script>
     $(document).ready(function(){
-        $(".save-indicator-changes").click(function(event) {
+        $(".save-upload-bin-changes").click(function(event) {
             var id = $(this).data('id');
             event.preventDefault();
             event.stopPropagation();
-            var serializedData = $("#update-indicator-form-"+id).serialize();
-            var url = "/accreditation/instrument/level/area/parameter/indicator/update/"+id+"/";
+            var serializedData = $("#update-upload-bin-form-"+id).serialize();
+            var url = "/accreditation/instrument/level/area/parameter/upload/update-upload-bin/"+id+"/";
     
             $.ajax({
                 url: url, 
@@ -179,7 +139,7 @@
             event.preventDefault();
             event.stopPropagation();
             var serializedData = $("#update-component-form-"+id).serialize();
-            var url = "/accreditation/instrument/level/area/parameter/indicator/update-component/"+id+"/";
+            var url = "/accreditation/instrument/level/area/parameter/upload/update-component/"+id+"/";
     
             $.ajax({
                 url: url, 
@@ -215,9 +175,9 @@
 
 
 <script>
-    $(".indicator-archive-button").click(function(event) {
+    $(".upload-bin-archive-button").click(function(event) {
         var id = $(this).data('id');         //Get the Id of the record
-        var form = 'indicator-archive-form-'+id;      //Attaching the id of the record to this string for identifying the specific form
+        var form = 'upload-bin-archive-form-'+id;      //Attaching the id of the record to this string for identifying the specific form
         Swal.fire({
             title: 'Are you sure?',
             text: "This will be move and can be restore in the Archive Page!",

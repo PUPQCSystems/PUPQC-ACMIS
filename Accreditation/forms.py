@@ -316,21 +316,35 @@ ParameterComponentFormSet = modelformset_factory(
 )
 
 
-class ComponentIndicator_Form(forms.ModelForm):
-    number = forms.CharField(max_length=100, 
-                           min_length = 1,
+class UploadBin_Form(forms.ModelForm):
+    title = forms.CharField(max_length=500, 
+                           min_length = 5, 
+                            validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+                            message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Title Field!")],
                             error_messages={'required': "Please enter a number before submitting the form."})
 
-    name = forms.CharField(max_length=2000, 
-                           min_length = 5,
-                            error_messages={'required': "Please enter a name before submitting the form."})
+    # description = forms.CharField(max_length=2000, 
+    #                         min_length = 5,
+    #                         required=False,
+    #                         validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+    #                         message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Description Field!")],
+    #                         error_messages={'required': "Please enter a name before submitting the form."})
     
     
     class Meta:
-        model = parameter_component_indicators
-        fields = ('number', 'name')
+        model = component_upload_bin
+        fields = ('title', 'description')
+
+        widgets = {
+            'description': forms.Textarea(attrs={'required': False,
+                                                 'max_length': 2000,
+                                                 'min_length': 5,
+                                                 'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+                                                    message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Description Field!")]
+                                                    }),
+        }
 
 
 ComponentIndicatorFormSet = modelformset_factory(
-    parameter_component_indicators, form=ComponentIndicator_Form, extra=1
+    component_upload_bin, form=UploadBin_Form, extra=1
 )

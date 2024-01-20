@@ -177,7 +177,7 @@ def restore(request, pk):
     # Save the instance to the database
     activity_log_entry.save()
 
-    messages.success(request, f'{name} parameter is successfully restored!') 
+    messages.success(request, f'{name} Component is successfully restored!') 
     return redirect('accreditations:component-archive-page')
 
 

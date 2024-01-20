@@ -1,11 +1,11 @@
 {% load crispy_forms_tags %}
 
 <!-- Modal -->
-<div class="modal  modal-blur fade" id="edit-indicator-modal-{{ indicator.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal  modal-blur fade" id="edit-upload-bin-modal-{{ upload_bin.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
 		<form 
 			autocomplete="off" 
-			id="update-indicator-form-{{ indicator.id }}"
+			id="update-upload-bin-form-{{ upload_bin.id }}"
 			class="modal-content">
 
 			<div class="modal-header">
@@ -13,13 +13,12 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				{{ indicator.indicator_update_form|crispy }}
+				{{ upload_bin.uploadBin_update_form|crispy }}
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-				<button type="button" data-id="{{ indicator.id }}" class="btn btn-primary save-indicator-changes">Save</button>
+				<button type="button" data-id="{{ upload_bin.id }}" class="btn btn-primary save-upload-bin-changes">Save</button>
 			</div>
-
 		</form>
 	</div>
 </div>

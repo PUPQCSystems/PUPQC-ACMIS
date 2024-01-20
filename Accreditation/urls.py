@@ -97,16 +97,17 @@ urlpatterns = [
     path("instrument/level/area/parameter/archive-page/restore/<str:ins_pk>/<str:pk>/", views_area_parameter.restore, name='instrument-level-area-parameter-restore'),
     path("instrument/level/area/parameter/archive-page/destroy/<str:pk>/", views_area_parameter.destroy, name='instrument-level-area-parameter-destroy'),
 
-    path("instrument/level/area/parameter/indicator/<str:pk>/", ParameterIndicatorList.as_view(), name='instrument-parameter-indicator'),
-    path("instrument/level/area/parameter/indicator/create-component/<int:pk>/", views_component_indicator.create_component, name='instrument-parameter-component-create'),
-    path("instrument/level/area/parameter/indicator/create-indicator/<int:pk>/", views_component_indicator.create_indicator, name='instrument-parameter-indicator-create'),
-    path("instrument/level/area/parameter/indicator/create-subindicator/<int:comp_pk>/<int:ind_pk>/", views_component_indicator.create_subindicator, name='instrument-parameter-subindicator-create'),
-    path("instrument/level/area/parameter/indicator/update/<str:pk>/", views_component_indicator.update_indicator, name='instrument-parameter-indicator-update'),
-    path("instrument/level/area/parameter/indicator/update-component/<str:pk>/", views_component_indicator.update_component, name='instrument-parameter-component-update'),
-    path("instrument/level/area/parameter/indicator/archive-indicator/<str:url_pk>/<str:record_pk>/", views_component_indicator.archive_indicator, name='instrument-parameter-indicator-archive'),
-    path("instrument/level/area/parameter/indicator/archive-component/<str:url_pk>/<str:record_pk>/", views_component_indicator.archive_component, name='instrument-parameter-component-archive'),
-    path("instrument/level/area/parameter/indicator/<str:pk>/archive-page/", views_component_indicator.archive_landing, name='instrument-parameter-indicator-archive-page'),
-    path("instrument/level/area/parameter/indicator/archive-page/restore/<str:ins_pk>/<str:pk>/", views_component_indicator.restore, name='instrument-parameter-indicator-restore'),
-    path("instrument/level/area/parameter/indicator/archive-page/destroy/<str:pk>/", views_component_indicator.destroy, name='instrument-parameter-indicator-destroy'),
+    path("instrument/level/area/parameter/upload/<str:pk>/", ParameterIndicatorList.as_view(), name='instrument-parameter-component'),
+    path("instrument/level/area/parameter/upload/create-component/<int:pk>/", views_component_indicator.create_component, name='instrument-parameter-component-create'),
+    path("instrument/level/area/parameter/upload/update-component/<str:pk>/", views_component_indicator.update_component, name='instrument-parameter-component-update'),
+    path("instrument/level/area/parameter/upload/archive-component/<str:url_pk>/<str:record_pk>/", views_component_indicator.archive_component, name='instrument-parameter-component-archive'),
+  
+    path("instrument/level/area/parameter/upload/create-upload-bin/<int:pk>/", views_component_indicator.create_uploadBin, name='instrument-parameter-uploadBin-create'),
+    path("instrument/level/area/parameter/upload/update-upload-bin/<str:pk>/", views_component_indicator.update_uploadBin, name='instrument-parameter-uploadBin-update'),
+    path("instrument/level/area/parameter/upload/archive-upload-bin/<str:url_pk>/<str:record_pk>/", views_component_indicator.archive_uploadBin, name='instrument-parameter-uploadBin-archive'),
+
+    path("instrument/level/area/parameter/upload/<str:pk>/archive-page/", views_component_indicator.archive_landing, name='instrument-parameter-indicator-archive-page'),
+    path("instrument/level/area/parameter/upload/archive-page/restore/<str:ins_pk>/<str:pk>/", views_component_indicator.restore, name='instrument-parameter-indicator-restore'),
+    path("instrument/level/area/parameter/upload/archive-page/destroy/<str:pk>/", views_component_indicator.destroy, name='instrument-parameter-indicator-destroy'),
 
 ]

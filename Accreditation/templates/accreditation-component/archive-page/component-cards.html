@@ -20,7 +20,7 @@
                                     <div class="dropdown-menu dropdown-menu-end">
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
                                         <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
-                                        <a  href={% url 'accreditations:parameter-restore' pk=record.id %} class="dropdown-item">Restore</a>
+                                        <a  href={% url 'accreditations:component-restore' pk=record.id %} class="dropdown-item">Restore</a>
                                         <button type="button" class="dropdown-item text-danger delete-button" id="delete-button" data-id={{ record.id }}>Delete</button>
 
                                     </div>

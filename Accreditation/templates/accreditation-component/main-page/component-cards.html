@@ -21,7 +21,7 @@
                                     <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
                                     <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
                                                                                 
-                                    <form method="POST" action="{% url 'accreditations:parameter-component-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
+                                    <form method="POST" action="{% url 'accreditations:component-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
                                         {% csrf_token %}
                                         <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
                                     </form>

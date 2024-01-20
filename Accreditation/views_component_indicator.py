@@ -4,8 +4,8 @@ from django.http import JsonResponse
 from django.views import View
 
 from Users.models import activity_log
-from .models import parameter_component_indicators, parameter_components #Import the model for data retieving
-from .forms import ComponentIndicator_Form, ParameterComponent_Form
+from .models import component_upload_bin, parameter_components #Import the model for data retieving
+from .forms import UploadBin_Form, ParameterComponent_Form
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
@@ -16,7 +16,7 @@ class ParameterIndicatorList(View):
     def get(self, request, pk):
         #Getting the data from the API
         component_form = ParameterComponent_Form(request.POST or None)
-        indicator_form = ComponentIndicator_Form(request.POST or None)
+        uploadBin_form = UploadBin_Form(request.POST or None)
         component_records = parameter_components.objects.select_related('area_parameter').filter(area_parameter=pk, is_deleted = False)
        
         indicator_details = {}
@@ -34,15 +34,15 @@ class ParameterIndicatorList(View):
             #Convert the component_record dictionary back into object or queryset
             component_record = parameter_components(**component_record)
 
-            indicator_records = parameter_component_indicators.objects.select_related('parameter_component').filter(parameter_component=component_record.id, is_deleted = False)
+            indicator_records = component_upload_bin.objects.select_related('parameter_component').filter(parameter_component=component_record.id, is_deleted = False)
             if indicator_records:
                 for indicator_record in  indicator_records.values():
                     # Convert the dictionary back to a model instance
-                    indicator_instance = parameter_component_indicators(**indicator_record)
+                    indicator_instance = component_upload_bin(**indicator_record)
                     
                     # Now you can use the instance with the form
-                    indicator_update_form = ComponentIndicator_Form(instance=indicator_instance)
-                    indicator_record['indicator_update_form'] = indicator_update_form
+                    uploadBin_update_form = UploadBin_Form(instance=indicator_instance)
+                    indicator_record['uploadBin_update_form'] = uploadBin_update_form
                     records.append(indicator_record)
             
             indicator_details[component_record] = records
@@ -53,13 +53,13 @@ class ParameterIndicatorList(View):
             
         context = { 'component_records': component_records
                    , 'component_form': component_form
-                   , 'indicator_form': indicator_form
+                   , 'uploadBin_form': uploadBin_form
                    , 'pk':pk
                    , 'indicator_details': indicator_details
                    
                    }  #Getting all the data inside the type table and storing it to the context variable
 
-        return render(request, 'accreditation-parameter-indicator/main-page/landing-page.html', context)
+        return render(request, 'accreditation-parameter-component/main-page/landing-page.html', context)
 
     
 def create_component(request, pk):
@@ -74,7 +74,7 @@ def create_component(request, pk):
             activity_log_entry = activity_log()
 
             # Set the attributes of the instance
-            activity_log_entry.module = "PARAMETER INDICATOR MODULE"
+            activity_log_entry.module = "PARAMETER MODULE"
             activity_log_entry.action = "Created a record"
             activity_log_entry.type = "CREATE"
             activity_log_entry.datetime_acted =  timezone.now()
@@ -94,8 +94,8 @@ def create_component(request, pk):
         return JsonResponse({'error': 'Error: There might be a selected component that is already exists. Please make sure that the selected component is different and no component is repeatedly selected.'}, status=400)
 
 
-def create_indicator(request,pk):
-    indicator_form = ComponentIndicator_Form(request.POST or None)
+def create_uploadBin(request,pk):
+    indicator_form = UploadBin_Form(request.POST or None)
 
     if indicator_form.is_valid():
         indicator_form.instance.parameter_component_id = pk
@@ -106,7 +106,7 @@ def create_indicator(request,pk):
         activity_log_entry = activity_log()
 
         # Set the attributes of the instance
-        activity_log_entry.module = "PARAMETER INDICATOR MODULE"
+        activity_log_entry.module = "PARAMETER MODULE"
         activity_log_entry.action = "Created a record"
         activity_log_entry.type = "CREATE"
         activity_log_entry.datetime_acted =  timezone.now()
@@ -117,53 +117,24 @@ def create_indicator(request,pk):
         activity_log_entry.save()
 
         
-        messages.success(request, f'Indicator is successfully created!') 
+        messages.success(request, f'Parameter Upload Bin is successfully created!') 
         return JsonResponse({'status': 'success'}, status=200)
     else:
         # Return a validation error using a JSON response
         return JsonResponse({'errors': indicator_form.errors}, status=400)
     
-def create_subindicator(request,comp_pk, ind_pk):
-    indicator_form = ComponentIndicator_Form(request.POST or None)
-
-    if indicator_form.is_valid():
-        indicator_form.instance.parameter_component_id = comp_pk
-        indicator_form.instance.sub_indicator_id = ind_pk
-        indicator_form.instance.created_by = request.user
-        indicator_form.save()
-
-        # Create an instance of the ActivityLog model
-        activity_log_entry = activity_log()
-
-        # Set the attributes of the instance
-        activity_log_entry.module = "PARAMETER INDICATOR MODULE"
-        activity_log_entry.action = "Created a record"
-        activity_log_entry.type = "CREATE"
-        activity_log_entry.datetime_acted =  timezone.now()
-        activity_log_entry.acted_by = request.user
-        # Set other attributes as needed
-
-        # Save the instance to the database
-        activity_log_entry.save()
-
-        
-        messages.success(request, f' Indicator is successfully created!') 
-        return JsonResponse({'status': 'success'}, status=200)
-    else:
-        # Return a validation error using a JSON response
-        return JsonResponse({'errors': indicator_form.errors}, status=400)
 
 @login_required
-def update_indicator(request, pk):
+def update_uploadBin(request, pk):
 # Retrieve the type object with the given primary key (pk)
     try:
-        indicator_record = parameter_component_indicators.objects.get(id=pk)
-    except parameter_component_indicators.DoesNotExist:
-        return JsonResponse({'errors': 'Indicator not found'}, status=404)
+        indicator_record = component_upload_bin.objects.get(id=pk)
+    except component_upload_bin.DoesNotExist:
+        return JsonResponse({'errors': 'Upload bin not found'}, status=404)
 
     if request.method == 'POST':
         # Process the form submission with updated data
-        update_form = ComponentIndicator_Form(request.POST or None, instance=indicator_record)
+        update_form = UploadBin_Form(request.POST or None, instance=indicator_record)
         if update_form.is_valid():
             # Save the updated data to the database
             update_form.instance.modified_by = request.user
@@ -173,7 +144,7 @@ def update_indicator(request, pk):
             activity_log_entry = activity_log()
 
             # Set the attributes of the instance
-            activity_log_entry.module = "PARAMETER INDICATOR MODULE"
+            activity_log_entry.module = "PARAMETER MODULE"
             activity_log_entry.action = "Modified a record"
             activity_log_entry.type = "UPDATE"
             activity_log_entry.datetime_acted =  timezone.now()
@@ -184,7 +155,7 @@ def update_indicator(request, pk):
             activity_log_entry.save()
 
             # Provide a success message as a JSON response
-            messages.success(request, f'Indicator is successfully updated!') 
+            messages.success(request, f'Upload bin is successfully updated!') 
             return JsonResponse({'status': 'success'}, status=200)
 
 
@@ -212,7 +183,7 @@ def update_component(request, pk):
             activity_log_entry = activity_log()
 
             # Set the attributes of the instance
-            activity_log_entry.module = "PARAMETER INDICATOR MODULE"
+            activity_log_entry.module = "PARAMETER MODULE"
             activity_log_entry.action = "Modified a record"
             activity_log_entry.type = "UPDATE"
             activity_log_entry.datetime_acted =  timezone.now()
@@ -233,21 +204,21 @@ def update_component(request, pk):
         
         
 @login_required
-def archive_indicator(request, url_pk, record_pk):
+def archive_uploadBin(request, url_pk, record_pk):
     # Gets the records who have this ID
-    indicator_record = parameter_component_indicators.objects.get(id=record_pk)
+    uploadBin_record = component_upload_bin.objects.get(id=record_pk)
 
     #After getting that record, this code will delete it.
-    indicator_record.modified_by = request.user
-    indicator_record.is_deleted=True
-    indicator_record.deleted_at = timezone.now()
-    indicator_record.save()
+    uploadBin_record.modified_by = request.user
+    uploadBin_record.is_deleted=True
+    uploadBin_record.deleted_at = timezone.now()
+    uploadBin_record.save()
 
     # Create an instance of the ActivityLog model
     activity_log_entry = activity_log()
 
     # Set the attributes of the instance
-    activity_log_entry.module = "PARAMETER INDICATOR MODULE"
+    activity_log_entry.module = "PARAMETER MODULE"
     activity_log_entry.action = "Archived a record"
     activity_log_entry.type = "ARCHIVE"
     activity_log_entry.datetime_acted =  timezone.now()
@@ -257,8 +228,8 @@ def archive_indicator(request, url_pk, record_pk):
     # Save the instance to the database
     activity_log_entry.save()
 
-    messages.success(request, f'Indicator is successfully archived!') 
-    return redirect('accreditations:instrument-parameter-indicator', pk=url_pk)
+    messages.success(request, f'Upload bin is successfully archived!') 
+    return redirect('accreditations:instrument-parameter-component', pk=url_pk)
 
 @login_required
 def archive_component(request, url_pk, record_pk):
@@ -275,7 +246,7 @@ def archive_component(request, url_pk, record_pk):
     activity_log_entry = activity_log()
 
     # Set the attributes of the instance
-    activity_log_entry.module = "PARAMETER INDICATOR MODULE"
+    activity_log_entry.module = "PARAMETER MODULE"
     activity_log_entry.action = "Archived a record"
     activity_log_entry.type = "ARCHIVE"
     activity_log_entry.datetime_acted =  timezone.now()
@@ -286,7 +257,7 @@ def archive_component(request, url_pk, record_pk):
     activity_log_entry.save()
 
     messages.success(request, f'Component is successfully archived!') 
-    return redirect('accreditations:instrument-parameter-indicator', pk=url_pk)
+    return redirect('accreditations:instrument-parameter-component', pk=url_pk)
 
 
 
@@ -323,7 +294,7 @@ def restore(request, pk):
     activity_log_entry = activity_log()
 
     # Set the attributes of the instance
-    activity_log_entry.module = "PARAMETER INDICATOR MODULE"
+    activity_log_entry.module = "PARAMETER MODULE"
     activity_log_entry.action = "Restored a record"
     activity_log_entry.type = "RESTORE"
     activity_log_entry.datetime_acted =  timezone.now()
@@ -355,7 +326,7 @@ def destroy(request, pk):
                 activity_log_entry = activity_log()
 
                 # Set the attributes of the instance
-                activity_log_entry.module = "PARAMETER INDICATOR MODULE"
+                activity_log_entry.module = "PARAMETER MODULE"
                 activity_log_entry.action = "Permanently deleted a record"
                 activity_log_entry.type = "DESTROY"
                 activity_log_entry.datetime_acted =  timezone.now()

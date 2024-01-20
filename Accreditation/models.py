@@ -163,19 +163,22 @@ class parameter_components(models.Model):
         self.component_update_form = component_update_form
     
 class component_upload_bin(models.Model):
-    tite = models.CharField(max_length=2000, null=True, blank=True, unique=True)
-    description
     parameter_component = models.ForeignKey(parameter_components, on_delete=models.CASCADE)
-    sub_indicator = models.ForeignKey('self', null=True, blank=True ,on_delete=models.CASCADE, related_name='sub_indicators',)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_parameter_indicators', null=True, blank=True)
+    title = models.CharField(max_length=500, null=True, blank=True)
+    description = models.CharField(max_length=5000, null=True, blank=True)
+    status  = models.CharField(max_length=50, null=True, blank=True)
+    remarks =  models.CharField(max_length=2000, null=True, blank=True)
+    reviewed_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='reviewed_upload_bin', null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_upload_bin', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
-    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_parameter_indicators', null=True, blank=True)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_upload_bin', null=True, blank=True)
     modified_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return '%s %s' % (self.number, '. ' + self.name)
+        return(self.title)
     
 
 
