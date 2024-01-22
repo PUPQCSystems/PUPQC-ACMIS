@@ -5,7 +5,7 @@
     <div class="modal-dialog modal-lg">
       	<div class="modal-content">
         	<div class="modal-header">
-          		<h1 class="modal-title">Create new instrument</h1>
+          		<h1 class="modal-title">Carry out Accreditation for a Program</h1>
           		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         	</div>
         	<div class="modal-body">
@@ -13,13 +13,13 @@
 				<form method="POST" autocomplete="off" id="create-instrument-form">
 					{% csrf_token %}
 
-					<div class="mb-3">
+					{% comment %} <div class="mb-3">
 						{{ create_form.name|as_crispy_field }}
 					</div>
 
 					<div class="mb-3">
 						{{ create_form.description|as_crispy_field }}
-					</div>
+					</div> {% endcomment %}
 			</div>
 
 					<div class="modal-footer">

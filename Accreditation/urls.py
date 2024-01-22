@@ -16,6 +16,7 @@ from Accreditation.views_parameter_component import *
 app_name = 'accreditations'
 
 urlpatterns = [
+    # Filepond URLS
 
     path("", views_accreditation.landing_page, name='landing'),
 

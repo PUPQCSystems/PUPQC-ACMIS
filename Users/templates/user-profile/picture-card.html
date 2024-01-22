@@ -1,15 +1,32 @@
+{% load crispy_forms_tags %}
+{% load static %}
+
 <div class="card mb-3">
     <div class="card-header">
         Profile Picture
     </div>
-    <div class="card-body text-center">
-        <img src="https://scontent.fmnl4-5.fna.fbcdn.net/v/t1.6435-9/136373951_3826670017378476_7611335110754363190_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=7a1959&_nc_eui2=AeE7Oc7Z6V7U5Dv6JcCVh_NI7wi2jVT9VJbvCLaNVP1UlmmJskMr5P2xXpg7a7OvkW6kUdbxFj2psDRJ-6tIGVUN&_nc_ohc=mVTouHHYBiUAX_4Za-x&_nc_ht=scontent.fmnl4-5.fna&oh=00_AfCwG70TerLU0N8QNS2T2_6Xmsi58IfdtdJ3uxl3QGoxoA&oe=658B9EBC" 
-        class="img-fluid img-thumbnail" alt="Profile Picture" 
-        style=" width: 150px;
-                        height: 150px;
-                        object-fit: cover; /* Maintain aspect ratio and cover the container */
-                        border-radius: 50%; /* Ensure a circular shape */">
-    </div>
+    {% if user.profile_pic %}
+        <div class="card-body text-center">
+            <img src="{{ user.profile_pic }}" 
+            class="img-fluid img-thumbnail" 
+            style=" width: 150px;
+                            height: 150px;
+                            object-fit: cover; /* Maintain aspect ratio and cover the container */
+                            border-radius: 50%; /* Ensure a circular shape */">
+        </div>
+            
+
+    {% else %}
+        <form method="POST" class=" card-body" enctype="multipart/form-data" action={% url "users:profile-upload-pic" %}>
+            {% csrf_token %}
+                {{ upload_form.profile_pic|as_crispy_field }}
+                <button id="submit"type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        
+    {% endif %}
+
+
+
 
     <div class="text-center">
         <h5 class="font-size-20">{{ user.first_name}} {{ user.last_name}}</h5>

@@ -322,6 +322,7 @@ class UploadBin_Form(forms.ModelForm):
                             validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&0-9]*$', 
                             message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Description Field!")],
                             error_messages={'required': "Please enter a number before submitting the form."})
+
     class Meta:
         model = component_upload_bin
         fields = ('title', 'description')

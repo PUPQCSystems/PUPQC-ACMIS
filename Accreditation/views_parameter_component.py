@@ -100,6 +100,9 @@ def create_uploadBin(request,pk):
     if indicator_form.is_valid():
         indicator_form.instance.parameter_component_id = pk
         indicator_form.instance.created_by = request.user
+        indicator_form.instance.accepted_file_type = request.POST.getlist('accepted_file_type')
+        indicator_form.instance.accepted_file_count = request.POST.get('accepted_file_count')
+        indicator_form.instance.accepted_file_size = request.POST.get('accepted_file_size')
         indicator_form.save()
 
         # Create an instance of the ActivityLog model
@@ -138,6 +141,9 @@ def update_uploadBin(request, pk):
         if update_form.is_valid():
             # Save the updated data to the database
             update_form.instance.modified_by = request.user
+            update_form.instance.accepted_file_type = request.POST.getlist('accepted_file_type')
+            update_form.instance.accepted_file_count = request.POST.get('accepted_file_count')
+            update_form.instance.accepted_file_size = request.POST.get('accepted_file_size')
             update_form.save()  
 
             # Create an instance of the ActivityLog model

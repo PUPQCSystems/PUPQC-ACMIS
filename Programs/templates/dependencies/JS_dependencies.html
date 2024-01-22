@@ -5,19 +5,35 @@
 
 
 {% comment %}--------------------------[ TABLER JS ]--------------------------{% endcomment %}
-<script src="{% static 'tabler-template/dist/js/demo.min.js' %}" defer></script>
 <!-- Libs JS -->
 <script src="{% static 'tabler-template/dist/libs/apexcharts/dist/apexcharts.min.js' %}" defer></script>
-<script src="{% static 'tabler-template/dist/libs/jsvectormap/dist/js/jsvectormap.min.j' %}s" defer></script>
+<script src="{% static 'tabler-template/dist/libs/jsvectormap/dist/js/jsvectormap.min.js' %}" defer></script>
 <script src="{% static 'tabler-template/dist/libs/jsvectormap/dist/maps/world.js' %}" defer></script>
 <script src="{% static 'tabler-template/dist/libs/jsvectormap/dist/maps/world-merc.js' %}" defer></script>
+
+<!-- Libs JS -->
+<script src="{% static 'tabler-template/dist/libs/nouislider/dist/nouislider.min.js' %}" defer></script>
+<script src="{% static 'tabler-template/dist/libs/litepicker/dist/litepicker.js' %}" defer></script>
+<script src="{% static 'tabler-template/dist/libs/tom-select/dist/js/tom-select.base.min.js' %}" defer></script>
 
 <!-- Tabler Core -->
 <script src="{% static 'tabler-template/dist/js/tabler.min.js' %}" defer></script>
 <script src="{% static 'tabler-template/dist/js/demo.min.js' %}" defer></script>
 
 
-
 <!-- FOR VALIDATION FOR FORMS JS-->
 <script src="{% static 'custom-assets/js/validation.js' %}"></script>
 <script src="{% static 'custom-assets/js/htmx.js' %}"></script>
+
+{% comment %}-----------------------------[ FILEPOND Dependencies ]---------------------------{% endcomment %}
+<script src="{% static 'vendor/filepond/filepond.js' %} "></script>
+
+
+<script>
+    // Get a reference to the file input element
+    document.addEventListener('DOMContentLoaded', function(){
+        const inputElement = document.querySelector('input[type="file"]');
+        const pond = FilePond.create(inputElement);
+    })
+
+</script>
