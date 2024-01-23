@@ -1,5 +1,5 @@
 from django import forms
-from Users.models import CustomUser
+from Users.models import CustomUser, CustomUser_profile
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 class CreateUserForm(UserCreationForm):
@@ -78,3 +78,10 @@ class UpdateForm(forms.ModelForm):
                 pass
 
         return new_email
+
+
+class ProfilePicForm(forms.ModelForm):
+
+    class Meta:
+        model = CustomUser
+        fields = ('profile_pic',)

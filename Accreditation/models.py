@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from Programs.models import Programs
+from django.contrib.postgres.fields import ArrayField
 
  # Create your models here.
 
@@ -166,6 +167,9 @@ class component_upload_bin(models.Model):
     parameter_component = models.ForeignKey(parameter_components, on_delete=models.CASCADE)
     title = models.CharField(max_length=500, null=True, blank=True)
     description = models.CharField(max_length=5000, null=True, blank=True)
+    accepted_file_type = ArrayField(models.CharField(max_length=250), null=True ,blank=True, default =list)
+    accepted_file_size = models.PositiveSmallIntegerField(blank=True, null=True)
+    accepted_file_count = models.PositiveSmallIntegerField(blank=True, null=True)
     status  = models.CharField(max_length=50, null=True, blank=True)
     remarks =  models.CharField(max_length=2000, null=True, blank=True)
     reviewed_at = models.DateTimeField(auto_now=False, null=True, blank=True)
@@ -177,9 +181,39 @@ class component_upload_bin(models.Model):
     deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
 
+
     def __str__(self):
         return(self.title)
     
 
+class uploaded_evidences(models.Model):
+    upload_bin = models.ForeignKey(component_upload_bin, on_delete=models.CASCADE)
+    file_path = models.FileField(upload_to = 'uploaded-evidences/')
+    file_name = models.CharField(max_length=100, null=True, blank=True)
+    file_type = models.CharField(max_length=10, null=True, blank=True)
+    uploaded_at = models.DateTimeField(default=timezone.now)
+    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_upload_evidences', null=True, blank=True)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_upload_evidences', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return(self.file_name)
+    
+
+
+class program_accreditation(models.Model):
+    program = models.ForeignKey(Programs, on_delete=models.CASCADE, null=True, blank=True)
+    instrument_level = models.ForeignKey(instrument_level, on_delete=models.CASCADE, null=True, blank=True)
+    description = models.CharField(max_length=5000, null=True, blank=True)
+    due_date = models.DateTimeField(auto_now=False, null=True, blank=True)
+    suervey_visit_date = models.DateTimeField(auto_now=False, null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_program_accreditation', null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_program_accreditation', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
 
 

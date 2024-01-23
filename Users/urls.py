@@ -17,9 +17,9 @@ urlpatterns = [
 
     path('profile/<str:pk>/', views.deactivate_account, name="profile-user"),
     path('profile/', views_profile.landing_page, name="profile"),
+    path('profile/upload-pic', views_profile.upload_profile_pic, name="profile-upload-pic"),
 
     path('activities/', views_activities.admin_activities, name="admin-activity-log"),
-
     path('activities/', views_activities.user_activities, name="user-activity-log"),
 
 

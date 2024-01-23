@@ -45,7 +45,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         'about'), max_length=500, blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    profile_pic = models.TextField(blank=True)
+    profile_pic = models.ImageField(upload_to='profile_pictures/')
     created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_customuser', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_customuser', null=True, blank=True)

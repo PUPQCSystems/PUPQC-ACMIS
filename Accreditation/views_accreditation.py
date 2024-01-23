@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def landing_page(request):
-    return render(request, 'accreditation_page/landing_page.html')
+    return render(request, 'accreditation-page/program-accreditation/main-page/landing-page.html')
 
 
 

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    Program Accreditations
+{% endblock page-title %}
+
+
+<!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
+{% block page-title-actions %}
+        <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search program..."/>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Create</button>
+        <a href="#" class="btn btn-success" type="button">
+            Archive <i class="fa-solid fa-arrow-right"></i>
+        </a> 
+{% endblock page-title-actions %}
+
+{% block content %}
+
+    {% include "accreditation-page/program-accreditation/main-page/accreditation-cards.html" %}
+
+    {% include "accreditation-page/program-accreditation/main-page/create-modal.html" %}
+
+    {% include "accreditation-page/program-accreditation/main-page/scripts.html" %}
+
+    {% include "accreditation-page/program-accreditation/main-page/styles.html" %}
+
+
+{% comment %} 
+        <!-- Cards with tabs component -->
+        <div class="card-tabs">
+          <!-- Cards navigation -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" role="presentation"><a href="#tab-top-1" class="nav-link" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1">Tab 1</a></li>
+            <li class="nav-item" role="presentation"><a href="#tab-top-2" class="nav-link" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1">Tab 2</a></li>
+            <li class="nav-item" role="presentation"><a href="#tab-top-3" class="nav-link" data-bs-toggle="tab" aria-selected="false" role="tab" tabindex="-1">Tab 3</a></li>
+            <li class="nav-item" role="presentation"><a href="#tab-top-4" class="nav-link active" data-bs-toggle="tab" aria-selected="true" role="tab">Tab 4</a></li>
+          </ul>
+          <div class="tab-content">
+            <!-- Content of card #1 -->
+            <div id="tab-top-1" class="card tab-pane" role="tabpanel">
+              <div class="card-body">
+                <div class="card-title">Content of tab #1</div>
+                <p class="text-muted">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, alias aliquid distinctio dolorem expedita, fugiat hic magni molestiae molestias odit.
+                </p>
+              </div>
+            </div>
+            <!-- Content of card #2 -->
+            <div id="tab-top-2" class="card tab-pane" role="tabpanel">
+              <div class="card-body">
+                <div class="card-title">Content of tab #2</div>
+                <p class="text-muted">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, alias aliquid distinctio dolorem expedita, fugiat hic magni molestiae molestias odit.
+                </p>
+              </div>
+            </div>
+            <!-- Content of card #3 -->
+            <div id="tab-top-3" class="card tab-pane" role="tabpanel">
+              <div class="card-body">
+                <div class="card-title">Content of tab #3</div>
+                <p class="text-muted">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, alias aliquid distinctio dolorem expedita, fugiat hic magni molestiae molestias odit.
+                </p>
+              </div>
+            </div>
+            <!-- Content of card #4 -->
+            <div id="tab-top-4" class="card tab-pane active show" role="tabpanel">
+              <div class="card-body">
+                <div class="card-title">Content of tab #4</div>
+                <p class="text-muted">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, alias aliquid distinctio dolorem expedita, fugiat hic magni molestiae molestias odit.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div> {% endcomment %}
+
+   
+{% endblock content %}
+
+
+

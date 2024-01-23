@@ -1,0 +1,28 @@
+{% load crispy_forms_tags %}
+
+<!-- Modal -->
+<div class="modal  modal-blur fade" id="configure-modal-{{ upload_bin.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+		<form 
+			autocomplete="off" 
+			id="update-component-form-{{ upload_bin.id }}"
+			class="modal-content">
+
+			<div class="modal-header">
+				<h1 class="modal-title">Configure Upload Bin</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+		
+
+
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+				<button type="button" data-id="{{ upload_bin.id }}" class="btn btn-primary save-component-changes">Save</button>
+			</div>
+
+		</form>
+	</div>
+</div>

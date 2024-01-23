@@ -4,11 +4,16 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+	{% if form.errors %}
+		<script>
+			toastr.error("Please enter a correct email address and password. Note that both fields may be case-sensitive.");
+		</script>
+	{% endif %}
+
 	<div class="container container-tight py-4">
 		<div class="text-center mb-4">
 			<a href="." class="navbar-brand navbar-brand-autodark"><img src="./static/logo.svg" height="36" alt=""></a>
 		</div>
-
 		<div class="card card-md">
 			<div class="card-body">
 				<h2 class="h2 text-center mb-4">Login to your account</h2>
@@ -32,6 +37,7 @@
 							<span class="form-check-label">Remember me on this device</span>
 						</label>
 					</div>
+					<div class="g-recaptcha" data-sitekey="6LdrVFgpAAAAAEEV4M1nnonALFH00nHgiSHpGgFu"></div>
 					<div class="form-footer">
 						<button type="submit" class="btn btn-primary w-100">Sign in</button>
 					</div>

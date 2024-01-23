@@ -1,7 +1,7 @@
 {% load crispy_forms_tags %}
 
 <!-- Modal -->
-<div class="modal  modal-blur fade" id="edit-upload-bin-modal-{{ upload_bin.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal update-upload-bin-modal-{{ upload_bin.id }} modal-blur fade" id="edit-upload-bin-modal-{{ upload_bin.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
 		<form 
 			autocomplete="off" 
@@ -13,7 +13,50 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				{{ upload_bin.uploadBin_update_form|crispy }}
+				<div class="mb-3">
+					<label class="form-label required">Title</label>
+					<input type="text" class="form-control" name="title" placeholder="Input Title" required
+					value="{{ upload_bin.title }}"
+					maxlength="500"
+					minlength="5">
+				</div>
+
+				  <div class="mb-3 row">
+					<div class="col">
+						<label class="form-label required">File Size in mb</label>
+						<input type="number" class="form-control" name="accepted_file_size" placeholder="Input the max number of file size in mb.." required
+						value="{{ upload_bin.accepted_file_size }}">
+					</div>
+
+					<div class="col">
+						<label class="form-label required">File Count</label>
+						<input type="number" class="form-control" name="accepted_file_count" placeholder="Input the max number files to be submitted.." required
+						value="{{ upload_bin.accepted_file_count }}">
+					</div>
+				</div>
+
+					<div class="mb-3">
+						<div class="form-label">Select accepted file types</div>
+						<select type="text" class="form-select select-text" name="accepted_file_type" id="select-update-states-{{ upload_bin.id }}" value="" multiple>
+							<option value="pdf" selected>PDF</option>
+							<option value="doc/docx" selected>Word (DOC/DOCX)</option>
+							<option value="xls/xlsx"selected>Excel (XLS/XLSX)</option>
+							<option value="ppt/pptx" selected>PowerPoint (PPT/PPTX)</option>
+							<option value="txt">Text (TXT)</option>
+							<option value="jpg/jpeg">JPEG Image (JPG/JPEG)</option>
+							<option value="png">PNG Image</option>
+							<option value="gif">GIF Image</option>
+							<option value="mp3">MP3 Audio</option>
+							<option value="mp4">MP4 Video</option>
+							<option value="zip">ZIP Archive</option>
+							<option value="rar">RAR Archive</option>
+						</select>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Description</label>
+						<textarea class="form-control" id="description" name="description" placeholder="Input upload bin description" data-bs-toggle="autosize">{{ upload_bin.description }}</textarea>
+					  </div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
