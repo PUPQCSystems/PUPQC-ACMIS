@@ -56,6 +56,20 @@ class area(models.Model):
     def __str__(self):
         return(self.area_number)
     
+    
+class components(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True, unique=True)
+    description = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_components', null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_components', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return(self.name)
+    
 class parameter(models.Model):
     name = models.CharField(max_length=20, unique=True)
     created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_parameters', null=True, blank=True)
@@ -125,6 +139,7 @@ class level_area_parameter(models.Model):
     parameter = models.ForeignKey(parameter, on_delete=models.CASCADE)
     label = models.CharField(max_length=250, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
+    status  = models.CharField(max_length=50, null=True, blank=True)
     instrument_level_area = models.ForeignKey(instrument_level_area, on_delete=models.CASCADE)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_level_area_parameter', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
@@ -135,23 +150,11 @@ class level_area_parameter(models.Model):
 
     class Meta:
         unique_together = ('parameter', 'instrument_level_area')
-
-class components(models.Model):
-    name = models.CharField(max_length=100, null=True, blank=True, unique=True)
-    description = models.TextField(null=True, blank=True)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_components', null=True, blank=True)
-    created_at = models.DateTimeField(default=timezone.now)
-    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_components', null=True, blank=True)
-    modified_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
-    is_deleted = models.BooleanField(default=False)
-
-    def __str__(self):
-        return(self.name)
     
 class parameter_components(models.Model):
     component = models.ForeignKey(components, on_delete=models.CASCADE, null=True, blank=True)
     area_parameter = models.ForeignKey(level_area_parameter, on_delete=models.CASCADE, null=True, blank=True)
+    status  = models.CharField(max_length=50, null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_parameter_components', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_parameter_components', null=True, blank=True)
@@ -213,9 +216,9 @@ class program_accreditation(models.Model):
     program = models.ForeignKey(Programs, on_delete=models.CASCADE, null=True, blank=True)
     instrument_level = models.ForeignKey(instrument_level, on_delete=models.CASCADE, null=True, blank=True)
     description = models.CharField(max_length=5000, null=True, blank=True)
+    status = models.CharField(max_length=20, null=True, blank=True)
     due_date = models.DateTimeField(auto_now=False, null=True, blank=True)
     survey_visit_date = models.DateTimeField(auto_now=False, null=True, blank=True)
-    status = models.CharField(max_length=20, null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_program_accreditation', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_program_accreditation', null=True, blank=True)
@@ -225,4 +228,21 @@ class program_accreditation(models.Model):
 
     class Meta:
         unique_together = ('program', 'instrument_level')
+
+class accreditation_records(models.Model):
+    accredited_program = models.ForeignKey(program_accreditation, related_name='accredited_program', on_delete=models.CASCADE, null=True, blank=True)
+    accreditation_level = models.ForeignKey(accredlevel, related_name='program_accreditation_level' ,on_delete=models.CASCADE, null=True, blank=True)
+    description = models.CharField(max_length=5000, null=True, blank=True)
+    status = models.CharField(max_length=20, null=True, blank=True)
+    remarks =  models.CharField(max_length=500, null=True, blank=True)
+    validity_date_from = models.DateTimeField(auto_now=False, null=True, blank=True)
+    validity_date_to = models.DateTimeField(auto_now=False, null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_accreditation_records', null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_accreditation_records', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
+
+        
 

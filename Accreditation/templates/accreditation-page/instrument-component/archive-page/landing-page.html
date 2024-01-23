@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    Archived Instrument Component
+{% endblock page-title %}
+
+
+<!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
+{% block page-title-actions %}
+    <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search..."/>
+    <a href="{% url 'accreditations:program-accreditation-component' pk=pk %}" type="button" class="btn btn-primary">
+        <i class="fa-solid fa-arrow-left"></i> Back
+    </a>
+
+{% endblock page-title-actions %}
+
+{% block content %}
+
+    {% include "accreditation-page/instrument-component/archive-page/parameter-component-cards.html" %}
+
+    {% include "accreditation-page/instrument-component/archive-page/scripts.html" %}
+
+    {% include "accreditation-page/instrument-component/archive-page/styles.html" %}
+
+
+{% endblock content %}
+
+
+

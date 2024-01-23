@@ -1,0 +1,25 @@
+{% load crispy_forms_tags %}
+
+<!-- Modal -->
+<div class="modal  modal-blur fade" id="edit-modal-{{ record.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+		<form 
+			autocomplete="off" 
+			id="update-area-parameter-form-{{ record.id }}"
+			class="modal-content">
+
+			<div class="modal-header">
+				<h1 class="modal-title">Update {{ record.name }} Instrument Level</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				{{ update_form|crispy }}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+				<button type="button" data-id="{{ record.id }}" class="btn btn-primary save-changes">Save</button>
+			</div>
+
+		</form>
+	</div>
+</div>

@@ -3,7 +3,7 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">{{ record.area }} Details</h5>
+				<h5 class="modal-title">{{ record.name }} Details</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -37,23 +37,25 @@
 						</div>
 					</li>
 
+					
 					<li>
 						<div class="row">
-							<div class="col-4 offset-1"><b>Date Archived</b></div>
-							<div class="col-6 text-break">{{record.modified_at}}</div>
+							<div class="col-4 offset-1"><b>Parameter</b></div>
+							<div class="col-6 text-break">{{ record.parameter}} ({{ record.instrument_level_area.area}})</div>
+						</div>
+					</li>
+
+
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Label</b></div>
+							<div class="col-6  text-break">{{ record.label }}</div>
 						</div>
 					</li>
 
 					<li>
 						<div class="row">
-							<div class="col-4 offset-1"><b>Area Number</b></div>
-							<div class="col-6  text-break"><b>{{ record.area }}</b>: {{ record.label }}</div>
-						</div>
-					</li>
-
-					<li>
-						<div class="row">
-							<div class="col-4 offset-1"><b>Area Description</b></div>
+							<div class="col-4 offset-1"><b>Description</b></div>
 							<div class="col-6  text-break">{{ record.description }}</div>
 						</div>
 					</li>

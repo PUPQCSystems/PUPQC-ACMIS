@@ -459,3 +459,29 @@ class ProgramAccreditation_UpdateForm(forms.ModelForm):
                 raise ValidationError("Due date should be set in the future. ")
 
         return cleaned_data
+    
+
+# ---------------------------- [ REVIEW UPLOAD BIN FORM ] ---------------------------- #
+class ReviewUploadBin_Form(forms.ModelForm):
+    STATUS_CHOICES = [
+            ('approve', 'Approve'), 
+            ('rfr', 'Request for Resubmission')
+        ]   
+    
+    status = forms.ChoiceField(
+        label = "Status", 
+        choices = STATUS_CHOICES,
+        required = True, 
+        error_messages={'required': "Please select a status before submitting the form."},
+        widget=forms.Select(attrs={'class': 'form-control form-select select'}))
+
+
+    
+    class Meta:
+        model = component_upload_bin
+        fields = ('status', 'remarks')
+
+    widgets = {
+        'remarks': forms.Textarea(attrs={'required': False}),
+        }
+

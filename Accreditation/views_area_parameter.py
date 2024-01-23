@@ -79,6 +79,7 @@ class CreataAreaParameter(View):
 @login_required
 def update(request, pk):
 # Retrieve the type object with the given primary key (pk)
+    
     try:
         area_parameter = level_area_parameter.objects.get(id=pk)
     except level_area_parameter.DoesNotExist:

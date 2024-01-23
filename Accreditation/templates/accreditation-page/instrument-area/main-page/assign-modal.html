@@ -1,0 +1,134 @@
+{% load crispy_forms_tags %}
+
+ <!-- Modal -->
+	<div class="modal modal-blur fade" id="assign-modal-{{ record.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div id='assign-modal-dialog' class="modal-dialog modal-xl">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<h1 class="modal-title">Assign a User to Area</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+
+				<div class="modal-body">
+					<div class="card">
+						<div class="card-header">
+							<label class="form-label">Chairman</label>
+						</div>
+						<div class="card-status-top bg-blue"></div>
+						<div class="card-body">
+							<div class="row">
+
+								<div class="col-xl-4">
+									<div class="mb-3">
+										<div class="form-selectgroup form-selectgroup-boxes d-flex flex-column">
+											<label class="form-selectgroup-item flex-fill">
+												<input type="radio" name="form-project-manager[]" value="1" class="form-selectgroup-input">
+												<div class="form-selectgroup-label d-flex align-items-center p-3">
+													<div class="me-3">
+														<span class="form-selectgroup-check"></span>
+													</div>
+													<div class="form-selectgroup-label-content d-flex align-items-center">
+														<span class="avatar me-3" style="background-image: url(./static/avatars/000m.jpg)"></span>
+														<div>
+														<div class="font-weight-medium">Paweł Kuna</div>
+														<div class="text-muted">UI Designer</div>
+														</div>
+													</div>
+												</div>
+											</label>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-xl-4">
+									<div class="mb-3">
+										<div class="form-selectgroup form-selectgroup-boxes d-flex flex-column">
+											<label class="form-selectgroup-item flex-fill">
+												<input type="radio" name="form-project-manager[]" value="1" class="form-selectgroup-input">
+												<div class="form-selectgroup-label d-flex align-items-center p-3">
+													<div class="me-3">
+														<span class="form-selectgroup-check"></span>
+													</div>
+													<div class="form-selectgroup-label-content d-flex align-items-center">
+														<span class="avatar me-3" style="background-image: url(./static/avatars/000m.jpg)"></span>
+														<div>
+														<div class="font-weight-medium">Paweł Kuna</div>
+														<div class="text-muted">UI Designer</div>
+														</div>
+													</div>
+												</div>
+											</label>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+					<br>
+					<div class="card">
+						<div class="card-header">
+							<label class="form-label">Area Members</label>
+						</div>
+						<div class="card-status-top bg-blue"></div>
+						<div class="card-body">
+							<div class="row">
+
+								<div class="col-xl-4">
+									<div class="mb-3">
+										<div class="form-selectgroup form-selectgroup-boxes d-flex flex-column">
+											<label class="form-selectgroup-item flex-fill">
+												<input type="checkbox" name="form-project-manager[]" value="1" class="form-selectgroup-input">
+												<div class="form-selectgroup-label d-flex align-items-center p-3">
+													<div class="me-3">
+														<span class="form-selectgroup-check"></span>
+													</div>
+													<div class="form-selectgroup-label-content d-flex align-items-center">
+														<span class="avatar me-3" style="background-image: url(./static/avatars/000m.jpg)"></span>
+														<div>
+														<div class="font-weight-medium">Paweł Kuna</div>
+														<div class="text-muted">UI Designer</div>
+														</div>
+													</div>
+												</div>
+											</label>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-xl-4">
+									<div class="mb-3">
+										<div class="form-selectgroup form-selectgroup-boxes d-flex flex-column">
+											<label class="form-selectgroup-item flex-fill">
+												<input type="checkbox" name="form-project-manager[]" value="1" class="form-selectgroup-input">
+												<div class="form-selectgroup-label d-flex align-items-center p-3">
+													<div class="me-3">
+														<span class="form-selectgroup-check"></span>
+													</div>
+													<div class="form-selectgroup-label-content d-flex align-items-center">
+														<span class="avatar me-3" style="background-image: url(./static/avatars/000m.jpg)"></span>
+														<div>
+														<div class="font-weight-medium">Paweł Kuna</div>
+														<div class="text-muted">UI Designer</div>
+														</div>
+													</div>
+												</div>
+											</label>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+					<button type="button" data-id="{{ record.id }}" class="btn btn-primary save-changes">Save</button>
+				</div>
+	
+			</div>
+		</div>
+	</div> 

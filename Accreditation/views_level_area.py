@@ -1,13 +1,14 @@
+from django.db import IntegrityError
 from django.utils import timezone
 from django.views import View
 from rest_framework import generics, viewsets, status
 from django.shortcuts import render, redirect, render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import  JsonResponse
 
 from Users.models import activity_log
-from .models import instrument, instrument_level, instrument_level_area #Import the model for data retieving
+from .models import instrument, instrument_level_area #Import the model for data retieving
 from Accreditation.serializers import InstrumentSerializer
-from .forms import Create_Instrument_Form, Create_InstrumentLevel_Form, Create_LevelArea_Form, LevelAreaFormSet
+from .forms import Create_LevelArea_Form, LevelAreaFormSet
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
@@ -67,42 +68,47 @@ class LevelAreaList(View):
 def update(request, pk):
 # Retrieve the type object with the given primary key (pk)
     try:
-        level_area = instrument_level_area.objects.get(id=pk)
-    except instrument.DoesNotExist:
-        return JsonResponse({'errors': 'instrument level not found'}, status=404)
+        try:
+            level_area = instrument_level_area.objects.get(id=pk)
+        except instrument.DoesNotExist:
+            return JsonResponse({'errors': 'instrument level not found'}, status=404)
 
-    if request.method == 'POST':
-        # Process the form submission with updated data
-        update_form =  Create_LevelArea_Form(request.POST or None, instance = level_area)
-        if update_form.is_valid():
-            # Save the updated data to the database
-            update_form.instance.modified_by = request.user
-            name = level_area.area
-            update_form.save()  
+        if request.method == 'POST':
+            # Process the form submission with updated data
+            update_form =  Create_LevelArea_Form(request.POST or None, instance = level_area)
+            if update_form.is_valid():
+                # Save the updated data to the database
+                update_form.instance.modified_by = request.user
+                name = level_area.area
+                update_form.save()  
 
+                
+                # Create an instance of the ActivityLog model
+                activity_log_entry = activity_log()
+
+                # Set the attributes of the instance
+                activity_log_entry.module = "ACCREDITATION LEVEL AREA MODULE"
+                activity_log_entry.action = "Modified a record"
+                activity_log_entry.type = "UPDATE"
+                activity_log_entry.datetime_acted =  timezone.now()
+                activity_log_entry.acted_by = request.user
+                # Set other attributes as needed
+
+                # Save the instance to the database
+                activity_log_entry.save()
+
+                # Provide a success message as a JSON response
+                messages.success(request, f'{name} is successfully updated!') 
+                return JsonResponse({'status': 'success'}, status=200)
+
+
+            else:
+                # Return a validation error as a JSON response
+                return JsonResponse({'errors': update_form.errors}, status=400)
             
-            # Create an instance of the ActivityLog model
-            activity_log_entry = activity_log()
-
-            # Set the attributes of the instance
-            activity_log_entry.module = "ACCREDITATION LEVEL AREA MODULE"
-            activity_log_entry.action = "Modified a record"
-            activity_log_entry.type = "UPDATE"
-            activity_log_entry.datetime_acted =  timezone.now()
-            activity_log_entry.acted_by = request.user
-            # Set other attributes as needed
-
-            # Save the instance to the database
-            activity_log_entry.save()
-
-            # Provide a success message as a JSON response
-            messages.success(request, f'{name} is successfully updated!') 
-            return JsonResponse({'status': 'success'}, status=200)
-
-
-        else:
-            # Return a validation error as a JSON response
-            return JsonResponse({'errors': update_form.errors}, status=400)
+    except IntegrityError as e:
+        # Handle the IntegrityError here
+        return JsonResponse({'error': 'Error: There might be a selected area that is already exists. Please make sure that the selected area is not existing.'}, status=400)
         
 @login_required
 def archive(request, ins_pk, pk):
