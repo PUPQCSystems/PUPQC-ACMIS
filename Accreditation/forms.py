@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import modelformset_factory
+from django.forms import ValidationError, modelformset_factory
 from django.urls import reverse_lazy
 from .models import *
 from .validators import name_validate, description_validate
@@ -340,3 +340,122 @@ class UploadBin_Form(forms.ModelForm):
 ComponentIndicatorFormSet = modelformset_factory(
     component_upload_bin, form=UploadBin_Form, extra=1
 )
+
+
+# ---------------------------- [ PROGRAM ACCREDITATION FORM] ----------------------------
+class ProgramAccreditation_Form(forms.ModelForm):
+    program = forms.ModelChoiceField(
+        label = "Program", 
+        queryset= Programs.objects.filter(is_deleted=False), 
+        required=True, 
+        empty_label="Select a Program",
+        error_messages={'required': "Please select a level before submitting the form."},
+        widget=forms.Select(attrs={'class': 'form-control form-select select'}))
+    
+    instrument_level = forms.ModelChoiceField(
+        label = "Instrument Level", 
+        queryset= instrument_level.objects.filter(is_deleted=False), 
+        required=True, 
+        empty_label="Select an Instrument Level",
+        error_messages={'required': "Please select an Instrument Level before submitting the form."},
+        widget=forms.Select(attrs={'class': 'form-control form-select select'}))
+    
+    due_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}),
+                                                                       required=True,
+                                                                        error_messages={'required': "Please set the due date submitting the form."})
+    survey_visit_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}), 
+                                                                     required=True,
+                                                                      error_messages={'required': "Please set the survey visit date before submitting the form."})
+
+    class Meta:
+        model = program_accreditation
+        fields = ('program', 'instrument_level', 'due_date', 'survey_visit_date', 'description')
+
+        widgets = {
+            'description': forms.Textarea(attrs={'required': False, 'class': 'form-control'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        due_date = cleaned_data.get('due_date')
+        survey_visit_date = cleaned_data.get('survey_visit_date')
+
+        if not survey_visit_date:
+            raise ValidationError("Please set the survey visit date before submitting the form. ")
+
+        if due_date and survey_visit_date:
+            # Check if due_date is equal to survey_visit_date
+            if due_date == survey_visit_date:
+                raise ValidationError("Due date cannot be equal to the survey visit date. ")
+
+            # Check if due_date is after survey_visit_date
+            if due_date > survey_visit_date:
+                raise ValidationError("Due date cannot be after the survey visit date. ")
+
+            # Check if due_date is before the current date
+            if due_date < timezone.now():
+                raise ValidationError("Due date should be set in the future. ")
+
+        return cleaned_data
+    
+
+class ProgramAccreditation_UpdateForm(forms.ModelForm):
+    program = forms.ModelChoiceField(
+        label = "Program", 
+        queryset= Programs.objects.filter(is_deleted=False), 
+        required=True, 
+        empty_label="Select a Program",
+        error_messages={'required': "Please select a level before submitting the form."},
+        widget=forms.Select(attrs={'class': 'form-control form-select select edit-select-button',
+                               'id': 'id_program_update'}))
+    
+    instrument_level = forms.ModelChoiceField(
+        label = "Instrument Level", 
+        queryset= instrument_level.objects.filter(is_deleted=False), 
+        required=True, 
+        empty_label="Select an Instrument Level",
+        error_messages={'required': "Please select an Instrument Level before submitting the form."},
+        widget=forms.Select(attrs={'class': 'form-control form-select select edit-instrument-button',
+                                    'id': 'id_instrument_level_update'}))
+    
+    due_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}),
+                                                                       required=True,
+                                                                        error_messages={'required': "Please set the due date submitting the form."})
+    survey_visit_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}), 
+                                                                     required=True,
+                                                                      error_messages={'required': "Please set the survey visit date before submitting the form."})
+
+    class Meta:
+        model = program_accreditation
+        fields = ('program', 'instrument_level', 'due_date', 'survey_visit_date', 'description')
+
+        widgets = {
+            'description': forms.Textarea(attrs={'required': False, 'class': 'form-control'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        due_date = cleaned_data.get('due_date')
+        survey_visit_date = cleaned_data.get('survey_visit_date')
+
+        if not survey_visit_date:
+            raise ValidationError("Please set the survey visit date before submitting the form. ")
+
+        if due_date and survey_visit_date:
+            # Check if due_date is equal to survey_visit_date
+            if due_date == survey_visit_date:
+                raise ValidationError("Due date cannot be equal to the survey visit date. ")
+
+            # Check if due_date is after survey_visit_date
+            if due_date > survey_visit_date:
+                raise ValidationError("Due date cannot be after the survey visit date. ")
+
+            # Check if due_date is before the current date
+            if due_date < timezone.now():
+                raise ValidationError("Due date should be set in the future. ")
+
+        return cleaned_data

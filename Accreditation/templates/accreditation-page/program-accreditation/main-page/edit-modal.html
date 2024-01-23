@@ -10,16 +10,34 @@
         </div>
         <div class="modal-body">
 
-			<form method="POST" autocomplete="off" id="update-type-form-{{ record.id }}">
+			<form method="POST" autocomplete="off" id="update-accreditation-form-{{ record.id }}">
 				{% csrf_token %}
 				<div class="mb-3">
-					{{ update_form.name|as_crispy_field }}
+					<label class="form-label required">{{ update_form.program.label }}</label>
+					{{ update_form.program }}
 				</div>
 
 				<div class="mb-3">
-					{{ update_form.description|as_crispy_field }}
-				</div> 
+					<label class="form-label required">{{ update_form.instrument_level.label }}</label>
+					{{ update_form.instrument_level }}
+				</div>
 
+				<div class="mb-3 row">
+					<div class="col">
+						<label class="form-label required">{{ update_form.due_date.label }}</label>
+						{{ update_form.due_date }}
+					</div>
+
+					<div class="col">
+						<label class="form-label required">{{ update_form.survey_visit_date.label }}</label>
+						{{ update_form.survey_visit_date }}
+					</div>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label">{{ update_form.description.label }}</label>
+					{{ update_form.description }}
+				</div>
 		</div>
 				<div class="modal-footer">
 					<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>

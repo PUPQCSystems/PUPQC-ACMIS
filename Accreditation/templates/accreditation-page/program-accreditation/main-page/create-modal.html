@@ -1,25 +1,45 @@
 {% load crispy_forms_tags %}
 
 <!-- Modal -->
-<div class="modal modal-blur fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal modal-blur fade" id="create-accreditation-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       	<div class="modal-content">
         	<div class="modal-header">
           		<h1 class="modal-title">Carry out Accreditation for a Program</h1>
           		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         	</div>
+	
         	<div class="modal-body">
 
-				<form method="POST" autocomplete="off" id="create-instrument-form">
+				<form method="POST" autocomplete="off" id="create-accreditation-form">
 					{% csrf_token %}
 
-					{% comment %} <div class="mb-3">
-						{{ create_form.name|as_crispy_field }}
+					<div class="mb-3">
+						<label class="form-label required">{{ create_form.program.label }}</label>
+						{{ create_form.program }}
 					</div>
 
 					<div class="mb-3">
-						{{ create_form.description|as_crispy_field }}
-					</div> {% endcomment %}
+						<label class="form-label required">{{ create_form.instrument_level.label }}</label>
+						{{ create_form.instrument_level }}
+					</div>
+
+					<div class="mb-3 row">
+						<div class="col">
+							<label class="form-label required">{{ create_form.due_date.label }}</label>
+							{{ create_form.due_date }}
+						</div>
+	
+						<div class="col">
+							<label class="form-label required">{{ create_form.survey_visit_date.label }}</label>
+							{{ create_form.survey_visit_date }}
+						</div>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">{{ create_form.description.label }}</label>
+						{{ create_form.description }}
+					</div>
 			</div>
 
 					<div class="modal-footer">

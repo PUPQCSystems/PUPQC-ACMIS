@@ -3421,9 +3421,9 @@ textarea.form-control-lg {
 }
 
 .form-select:focus {
-  border-color: #90b5e2;
+  border-color: #a30909;
   outline: 0;
-  box-shadow: 0 0 transparent, 0 0 0 .25rem rgba(32, 107, 196, .25)
+  box-shadow: 0 0 transparent, 0 0 0 .25rem rgba(196, 35, 35, 0.25)
 }
 
 .form-select[multiple],

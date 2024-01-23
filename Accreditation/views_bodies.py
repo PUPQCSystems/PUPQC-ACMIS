@@ -26,7 +26,7 @@ def landing_page(request):
         created_by = record.created_by  # Get the user who created the record
         modified_by = record.modified_by  # Get the user who modified the record
         update_forms.append((record, update_form, created_by, modified_by))
-
+    
     context = { 'records': records, 'create_form': create_form, 'update_forms': update_forms}  #Getting all the data inside the type table and storing it to the context variable
     return render(request, 'accreditation_bodies/landing_page.html', context)
     

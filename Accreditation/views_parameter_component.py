@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
+
  
 
 class ParameterIndicatorList(View):

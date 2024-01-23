@@ -84,6 +84,9 @@ class instrument(models.Model):
     class Meta:
         unique_together = ('accredbodies', 'program')
 
+    def __str__(self):
+        return(self.name)
+
 
 class instrument_level(models.Model):
     instrument = models.ForeignKey(instrument, on_delete=models.CASCADE, related_name='instrument_instrument_level')
@@ -98,6 +101,9 @@ class instrument_level(models.Model):
 
     class Meta:
         unique_together = ('instrument', 'level')
+
+    def __str__(self):
+            return f"{self.level.name} - {self.instrument.name}"
 
 class instrument_level_area(models.Model):
     area = models.ForeignKey(area, on_delete=models.CASCADE)
@@ -208,7 +214,8 @@ class program_accreditation(models.Model):
     instrument_level = models.ForeignKey(instrument_level, on_delete=models.CASCADE, null=True, blank=True)
     description = models.CharField(max_length=5000, null=True, blank=True)
     due_date = models.DateTimeField(auto_now=False, null=True, blank=True)
-    suervey_visit_date = models.DateTimeField(auto_now=False, null=True, blank=True)
+    survey_visit_date = models.DateTimeField(auto_now=False, null=True, blank=True)
+    status = models.CharField(max_length=20, null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_program_accreditation', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_program_accreditation', null=True, blank=True)
@@ -216,4 +223,6 @@ class program_accreditation(models.Model):
     deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = ('program', 'instrument_level')
 

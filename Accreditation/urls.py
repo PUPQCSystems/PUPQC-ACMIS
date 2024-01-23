@@ -16,9 +16,16 @@ from Accreditation.views_parameter_component import *
 app_name = 'accreditations'
 
 urlpatterns = [
-    # Filepond URLS
+
+    path("filter-instrument-option/", views_accreditation.filter_instrument, name='filter-instument-option'),
 
     path("", views_accreditation.landing_page, name='landing'),
+    path("create/", views_accreditation.create, name='accreditation-create'),
+    path("update/<str:pk>/", views_accreditation.update, name='accreditation-update'),
+    path("archive/<str:pk>/", views_accreditation.archive, name='accreditation-archive'),
+    path("archive-page/", views_accreditation.archive_landing, name='accreditation-archive-page'),
+    path("archive-page/restore/<str:pk>/", views_accreditation.restore, name='accreditation-restore'),
+    path("archive-page/destroy/<str:pk>/", views_accreditation.destroy, name='accreditation-destroy'),
 
     path("type/", views_type.landing_page, name='type-landing'),
     path("type/create/", views_type.create_type, name='type-create'),
@@ -110,8 +117,16 @@ urlpatterns = [
     path("instrument/level/area/parameter/upload/archive-upload-bin/<str:url_pk>/<str:record_pk>/", views_parameter_component.archive_uploadBin, name='instrument-parameter-uploadBin-archive'),
     path("instrument/level/area/parameter/upload/archive-page/destroy-upload-bin/<str:pk>/", views_parameter_component.destroy_uploadBin, name='instrument-parameter-uploadBin-destroy'),
     path("instrument/level/area/parameter/upload/archive-page/restore-upload-bin/<str:upl_pk>/<str:pk>/", views_parameter_component.restore_uploadBin, name='instrument-parameter-uploadBin-restore'),
-
     path("instrument/level/area/parameter/upload/<str:pk>/archive-page/", views_parameter_component.archive_landing, name='instrument-parameter-component-archive-page'),
+
+
+    path("program-accreditation/area/<str:pk>/", LevelAreaList.as_view(), name='program-accreditation-area'),
+    path("program-accreditation/area/create/<int:pk>/", LevelAreaList.as_view(), name='program-accreditation-area-create'),
+    path("program-accreditation/area/update/<str:pk>/", views_level_area.update, name='program-accreditation-area-update'),
+    path("program-accreditation/area/archive/<str:ins_pk>/<str:pk>/", views_level_area.archive, name='program-accreditation-area-archive'),
+    path("program-accreditation/area/<str:pk>/archive-page/", views_level_area.archive_landing, name='program-accreditation-area-archive-page'),
+    path("program-accreditation/area/archive-page/restore/<str:ins_pk>/<str:pk>/", views_level_area.restore, name='program-accreditation-area-restore'),
+    path("program-accreditation/area/archive-page/destroy/<str:pk>/", views_level_area.destroy, name='program-accreditation-area-destroy'),
 
 
 

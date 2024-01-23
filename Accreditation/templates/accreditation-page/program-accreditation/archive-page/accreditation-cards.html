@@ -3,8 +3,8 @@
     <!-- For LOOP HERE-->
     {% for record, update_form, created_by, modified_by in details  %}
         <div class="col-sm-6 col-lg-4">
-            <div class="card"  onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
-                <div class="card-status-start bg-primary"></div>
+            <div class="card" onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
+                <div class="card-status-start bg-red"></div>
                 <div class="card-body">
                     <div class="d-flex align-items-center">
 
@@ -18,20 +18,15 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
-                                    <button class="dropdown-item edit-button"  data-id={{ record.id }} data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
-                                                                                
-                                    <form method="POST" action="{% url 'accreditations:accreditation-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
-                                        {% csrf_token %}
-                                        <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
-                                    </form>
+                                    <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
+                                    <a  href={% url 'accreditations:accreditation-restore' pk=record.id %} class="dropdown-item">Restore</a>
+                                    <button type="button" class="dropdown-item text-danger delete-button" id="delete-button" data-id={{ record.id }}>Delete</button>
                                 </div>
                             </div>
                         </div>
 
                     </div>
 
-
-                    
                     <a href="#">
                         <div class="h3 mb-3">{{ record.program.program_name }}</div>
                     </a>
