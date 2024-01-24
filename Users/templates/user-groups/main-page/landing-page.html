@@ -10,8 +10,11 @@
 <!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
 {% block page-title-actions %}
         <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search program…"/>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">Create</button>
-        <a href="{% url 'programs:archive-landing' %}" type="button" class="btn btn-success">
+        <a  href="{% url 'users:user-groups-create' %}" type="button" class="btn btn-primary">
+            Create <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+        <a href="{% url 'users:user-groups-archive-page' %}" type="button" class="btn btn-success">
             Archive <i class="fa-solid fa-arrow-right"></i>
         </a>
 {% endblock page-title-actions %}
@@ -19,8 +22,9 @@
 
 {% block content %}
 	
-HASHASHASHSAH
+        {% include "user-groups/main-page/group-cards.html" %}
 
+        {% include "user-groups/main-page/scripts.html" %}
 
 {% endblock content %}
 

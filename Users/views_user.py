@@ -1,17 +1,19 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from .forms import UpdateForm, CreateUserForm
-from Users.models import CustomUser
+from Users.models import CustomUser, auth_group_info
 from django.http import JsonResponse
 from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group, Permission
 
 @login_required
 def landing_page(request):
     # Getting all the data inside the Program table and storing it in the context variable
     register_form = CreateUserForm()
     records = CustomUser.objects.filter(deactivated_at=None, is_active=True)
+    auth_groups = auth_group_info.objects.select_related('auth_group').filter(is_deleted=False)
 
     # Initialize an empty list to store update forms for each record
     details = []
@@ -23,25 +25,37 @@ def landing_page(request):
         modified_by = record.modified_by  # Get the user who modified the record
         details.append((record, update_form, created_by, modified_by))
 
-    context = {'register_form': register_form, 'details': details}   
+    context = {'register_form': register_form, 'details': details, 'auth_groups': auth_groups}   
     return render(request, 'users/landing_page.html', context)
 
 
 @login_required
-def register_account(request):
+def register(request):
     register_form = CreateUserForm(request.POST)
+    auth_group_id = request.POST.get('selected_group')
 
-    if register_form.is_valid():
-        register_form.instance.created_by = request.user
-        register_form.save()
-        messages.success(request, 'Account was successfully created.')
-        url_landing = "/user/"
-        return JsonResponse({'url_landing': url_landing}, status=200)
-    
+    if auth_group_id:
+        if register_form.is_valid():
+            # Create a new group
+            group = Group.objects.get(id=auth_group_id)
+            register_form.instance.created_by = request.user
+            user_record = register_form.save()
+            user_id = user_record.id
+
+            # Add a user to the group
+            user = CustomUser.objects.get(id=user_id)
+            user.groups.add(group)
+
+            messages.success(request, 'Account was successfully created.')
+            return JsonResponse({'success': True}, status=200)
+        
+        else:
+            # Return a validation error using a JSON response
+            return JsonResponse({'errors': register_form.errors}, status=400)
     else:
         # Return a validation error using a JSON response
-        return JsonResponse({'errors': register_form.errors}, status=400)
-    
+        return JsonResponse({'error': 'Please make sure that you assigned a Role to the user account before submitting the form.'}, status=400)
+
     
     #This is the function for updating the record
 @login_required

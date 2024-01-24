@@ -1,26 +1,71 @@
 from django import forms
 from Users.models import CustomUser, CustomUser_profile
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.models import Group, Permission
+from django.core.validators import RegexValidator
 
 class CreateUserForm(UserCreationForm):
-    email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'id': 'validationCustom01'})
-    )
-
-    first_name = forms.CharField(
-        max_length=150, required=True,
-        widget=forms.TextInput(attrs={'id': 'validationCustom02'})
-    )
-    last_name = forms.CharField(
-        max_length=150, required=True,
-        widget=forms.TextInput(attrs={'id': 'validationCustom03'})
-    )
-
-    middle_name = forms.CharField(max_length=150, required=False)
 
     class Meta:
         model = CustomUser
         fields = ('email' ,'password1', 'password2','first_name', 'last_name', 'middle_name')
+
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control textinput',
+                                    'id': 'reg_first_name_id',
+                                    'max_length':150, 
+                                    'min_length' : 5,
+                                    'required':True, 
+                                    'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+                                                                message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the first name Field!")],
+                                    'error_messages': {'required': "Please enter a name before submitting the form."}}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control textinput',
+                                    'id': 'reg_last_name_id',
+                                    'max_length':50, 
+                                    'min_length' : 5,
+                                    'required':True, 
+                                    'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+                                                                message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the last name Field!")],
+                                    'error_messages': {'required': "Please enter a name before submitting the form."}}),
+
+            'middle_name': forms.TextInput(attrs={'class': 'form-control textinput',
+                                    'id': 'reg_middle_name_id',
+                                    'max_length':150, 
+                                    'min_length' : 5,
+                                    'required':False, 
+                                    'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+                                                                message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the middle name Field!")],
+                                   }),
+
+            'password1': forms.PasswordInput(attrs={'class': 'form-control',
+                                                     'id': 'reg_password1_id',
+                                                'max_length':50, 
+                                                'min_length' : 5,
+                                                'required':True, 
+                                                'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+                                                                            message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Label Field!")],
+                                               }),
+
+
+            'password1': forms.PasswordInput(attrs={'class': 'form-control',
+                                                     'id': 'reg_password1_id',
+                                                'max_length':50, 
+                                                'min_length' : 5,
+                                                'required':True, 
+                                                'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+                                                                            message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Label Field!")],
+                                                }),
+
+            'email': forms.EmailInput(attrs={'class': 'form-control',
+                                                     'id': 'reg_email_id',
+                                                'max_length':50, 
+                                                'min_length' : 5,
+                                                'required':True, 
+                                                'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+                                                                            message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Label Field!")],
+                                                }),
+
+            }
 
 # This is a form validation for the registration form
     def clean_email(self):
@@ -46,24 +91,37 @@ class CreateUserForm(UserCreationForm):
         )
 
 class UpdateForm(forms.ModelForm):
-    email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'id': 'validationCustom01'})
-    )
-
-    first_name = forms.CharField(
-        max_length=150, required=True,
-        widget=forms.TextInput(attrs={'id': 'validationCustom02'})
-    )
-    last_name = forms.CharField(
-        max_length=150, required=True,
-        widget=forms.TextInput(attrs={'id': 'validationCustom03'})
-    )
-
-    middle_name = forms.CharField(max_length=150, required=False)
-
     class Meta:
         model = CustomUser
         fields = ('email','first_name', 'last_name', 'middle_name')
+
+        widgets = {
+                    'first_name': forms.TextInput(attrs={'class': 'form-control textinput',
+                                            'id': 'first_name_id',
+                                            'max_length':150, 
+                                            'min_length' : 5,
+                                            'required':True, 
+                                            'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+                                                                        message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the first name Field!")],
+                                            'error_messages': {'required': "Please enter a name before submitting the form."}}),
+                    'last_name': forms.TextInput(attrs={'class': 'form-control textinput',
+                                            'id': 'last_name_id',
+                                            'max_length':50, 
+                                            'min_length' : 5,
+                                            'required':True, 
+                                            'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+                                                                        message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the last name Field!")],
+                                            'error_messages': {'required': "Please enter a name before submitting the form."}}),
+
+                    'middle_name': forms.TextInput(attrs={'class': 'form-control textinput',
+                                            'id': 'middle_name_id',
+                                            'max_length':150, 
+                                            'min_length' : 5,
+                                            'required':False, 
+                                            'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+                                                                        message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the middle name Field!")],
+                                            }),
+                            }
 
     def clean_email(self):
         current_email = self.instance.email
@@ -85,3 +143,20 @@ class ProfilePicForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ('profile_pic',)
+
+
+class AuthGroup_Form(forms.ModelForm):
+    
+    class Meta:
+        model = Group
+        fields = ('name', )
+
+        widgets = {
+        'name': forms.TextInput(attrs={'class': 'form-control textinput',
+                                'max_length':50, 
+                                'min_length' : 5,
+                                'required':True, 
+                                'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+                                                            message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Label Field!")],
+                                'error_messages': {'required': "Please enter a name before submitting the form."}}),
+        }

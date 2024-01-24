@@ -1,23 +1,41 @@
 
 
  <script>
-  $(document).ready(function(){
+    $(document).ready(function() {
+        // Trigger the AJAX post request when Enter key is pressed
+        $('#register-user-form').keypress(function(e) {
+            if (e.which === 13) { // 13 is the keycode for Enter key
+                e.preventDefault(); // Prevent the default form submission
+                submitForm();
+            }
+        });
 
-      $("#submit").click(function(event) {
-          var serializedData = $("#register-user-form").serialize();
-          const form = document.getElementById('register-user-form')
-          event.preventDefault();
+        // Trigger the AJAX post request when the submit button is clicked
+        $('.submit').click(function() {
+            submitForm();
+        });
 
-          $.ajax({
-              url: "{% url 'users:create_user' %}", 
-              data: serializedData,
-              type: "POST",
-              success: function(response) {
-                  window.location.href = response.url_landing;
-              },
-              error: function(error) {
+        // Function to handle the AJAX post request
+        function submitForm() {
+            var serializedData = $("#register-user-form").serialize();
+            const form = document.getElementById('register-user-form')
+            event.preventDefault();
+  
+            $.ajax({
+                url: "{% url 'users:create_user' %}", 
+                data: serializedData,
+                type: "POST",
+                success: function(response) {
+                      location.reload();
+                },
+                error: function(error) {
+  
+                  if (error.responseJSON && error.responseJSON.error) {
+                      // Handle the IntegrityError message
+                      toastr.error(error.responseJSON.error);
+                  }
                   // Check for the errors field in the JSON response
-                  if (error.responseJSON && error.responseJSON.errors) {
+                  else if (error.responseJSON && error.responseJSON.errors) {
                       // Iterate over the errors field and display the validation errors to the user
                       for (var field in error.responseJSON.errors) {
                           toastr.error(error.responseJSON.errors[field]);
@@ -26,15 +44,21 @@
                       toastr.error('Something went wrong. Please try again later.');
                   }
               }
+  
+            });
+        }
+    });
+</script>
 
-          });
-      });
-  });
+
+
+
+
 </script> 
 
 {% comment %} AJAX FOR UPDATING  {% endcomment %}
 <script>
-    $(document).ready(function(){
+  $(document).ready(function(){
         $(".save-changes-button").click(function(event) {
             var id = $(this).data('id');
             event.preventDefault();
@@ -45,9 +69,11 @@
             $.ajax({
                 url: url, 
                 data: serializedData, 
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
                 type: "POST",
                 success: function(response) {
                     window.location.href = response.url_landing;
+
                     
                 },
                 error: function(error) {
@@ -64,7 +90,8 @@
 
             });
         });
-    });
+    }); 
+
 </script> 
 
 <script>
@@ -125,5 +152,6 @@
 			});
 	});
 	 
-		
 </script>
+
+

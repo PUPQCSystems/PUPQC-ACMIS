@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager, Group
 
 
 class CustomAccountManager(BaseUserManager):
@@ -91,4 +91,18 @@ class activity_log(models.Model):
     deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
 
+# For storing the information of the created user groups. We must don't alter the auth_group model. Just add model related to that model
+class auth_group_info(models.Model):
+    auth_group =  models.OneToOneField(Group, on_delete=models.CASCADE, related_name="auth_group_info")
+    created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_group_info')
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_group_info', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = [("auth_group",)]
+
+    def __str__(self):
+        return self.auth_group.name

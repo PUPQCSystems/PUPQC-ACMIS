@@ -41,7 +41,11 @@
 					<li>
 						<div class="row">
 							<div class="col-4 offset-1"><b>Account Name</b></div>
-							<div class="col-6 text-break">{{ record.first_name }} {{ record.middle_name|first|default:'' }}. {{ record.last_name }}</div>
+							<div class="col-6 text-break">{{ record.first_name }} 
+								{% if record.middle_name %}
+									{{ record.middle_name|first|default:'' }}.
+								{% endif %}
+								 {{ record.last_name }}</div>
 						</div>
 					</li>
 
@@ -51,6 +55,7 @@
 							<div class="col-6 text-break ">{{ record.email }}</div>
 						</div>
 					</li>
+
 				</div>
 			</ul>
 			<div class="modal-footer">

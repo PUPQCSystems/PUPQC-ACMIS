@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    Create User Groups
+{% endblock page-title %}
+
+{% block content %}
+
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <form class="card"
+                    id="create-group-form">
+
+                <div class="card-status-top bg-blue"></div>
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Form
+                    </h3>
+                </div>
+                <div class="card-body p-5">
+
+                        <div class="mb-3">
+                            <label class="form-label required">{{ group_form.name.label }}</label>
+                            {{ group_form.name }}
+                            {% comment %} <input type="text" name="name" maxlength="50" minlength="5" class="textinput form-control" required="" id="id_name"> {% endcomment %}
+
+                        </div>
+
+                        <br>
+                    <div class="mb-3">
+                        <div class="row">
+
+                            <div class="col-md-10 form-label required">
+                                Please Add Permissions
+                            </div>
+
+                            <div class="col-auto">
+                                <label class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox"  id="check-all">
+                                    <span class="form-check-label">Select All</span>
+                                  </label>
+                            </div>
+
+                        </div>
+                        
+                        <select type="text" class="form-select form-control select-text" name="selected_permissions" 
+                        id="select-states" multiple>
+                                <!-- Images -->
+                                {% for permission in permissions %}
+                                    <option value="{{ permission.id }}">{{permission.name}}</option>
+                                {% endfor %}
+                    
+                        </select>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <a href="{% url 'users:user-groups' %}" type="button" class="btn btn-success">
+                        <i class="fa-solid fa-arrow-left"></i> Back
+                    </a>
+                    <button type="button" id="submit" class="btn btn-primary">Submit</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% comment %} SCRIPTS {% endcomment %}
+    <script>
+   
+        document.addEventListener("DOMContentLoaded", function () {
+            var el;
+            window.TomSelect && (new TomSelect(el = document.getElementById('select-states'), {
+                copyClassesToDropdown: false,
+                dropdownParent: document.querySelector('.create-upload-bin-modal-{{ component.id }} form-control'),
+                controlInput: '<input>',
+                render: {
+                    item: function(data, escape) {
+                        if (data.customProperties) {
+                            return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+                        }
+                        return '<div>' + escape(data.text) + '</div>';
+                    },
+                    option: function(data, escape) {
+                        if (data.customProperties) {
+                            return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+                        }
+                        return '<div>' + escape(data.text) + '</div>';
+                    },
+                },
+            }));
+        });
+
+
+    </script> 
+
+    <script>
+        $(document).ready(function(){
+    
+            $("#submit").click(function(event) {
+                var serializedData = $("#create-group-form").serialize();
+                const form = document.getElementById('create-group-form')
+                event.preventDefault();
+    
+                $.ajax({
+                    url: "{% url 'users:user-groups-create' %}", 
+                    data: serializedData,
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
+                    type: "POST",
+                    success: function(response) {
+                        location.reload();
+                    },
+                    error: function(error) {
+
+                        if (error.responseJSON && error.responseJSON.error) {
+                            // Handle the IntegrityError message
+                            toastr.error(error.responseJSON.error);
+                        }
+                        // Check for the errors field in the JSON response
+                        else if (error.responseJSON && error.responseJSON.errors) {
+                            // Iterate over the errors field and display the validation errors to the user
+                            for (var field in error.responseJSON.errors) {
+                                toastr.error(error.responseJSON.errors[field]);
+                            }
+                        } else {
+                            toastr.error('Something went wrong. Please try again later.');
+                        }
+                    }
+    
+                });
+            });
+        });
+    </script> 
+
+  
+{% endblock content %}
+
+

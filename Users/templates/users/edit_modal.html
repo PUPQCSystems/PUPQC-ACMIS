@@ -13,20 +13,46 @@
 			autocomplete="off" id="update-user-form-{{ record.id }}">
 			{% csrf_token %}
 
-				<div class="mb-3">
+			<div class="row">
+				
+				<div class=" col">
 					{{ update_form.first_name|as_crispy_field }}
 				</div>
 
-				<div class="mb-3">
+
+				<div class=" col">
 					{{ update_form.middle_name|as_crispy_field }}
 				</div>
 
-				<div class="mb-3">
+				<div class=" col">
 					{{ update_form.last_name|as_crispy_field }}
 				</div>
 
-				<div class="mb-3">
+			</div>
+
+			<div class="row">
+				<div class=" col">
 					{{ update_form.email|as_crispy_field }}
+				</div>
+
+				<div class="col">
+					<label class="form-label required">Select a User Role</label>
+					<select type="text" name="select_role" id="id_select_role" class="form-select form-control" id="select-groups" value="">
+						{% if auth_groups %}
+							{% for group in auth_groups %}
+								{% if update_form.id == group.id%}
+									<option value="{{ group.auth_group.id }}" selected>{{ group.auth_group.name}}</option>
+								{% endif %}
+								<option value="{{ group.auth_group.id }}">{{ group.auth_group.name}}</option>
+							{% endfor %} 
+						
+						{% else %}
+							<option value="" selected disable>No Groups</option>
+
+						{% endif %}
+
+					</select>
+					</div>
 				</div>
 
 				Forgot Password Button Here
