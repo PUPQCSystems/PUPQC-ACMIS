@@ -1,3 +1,4 @@
+{% load static %}
 <div class="row row-deck row-cards">
 	{% if component_records %}
 		<ul class="wtree">
@@ -101,7 +102,8 @@
 										},
 									}));
 								});
-							</script>
+							</script>						
+
 							{% if component.id == upload_bin.parameter_component_id %}
 									<li>
 										<span class="col-md-12 col-lg-12 card record-card indicator" onclick="toggleList(this)">
@@ -164,7 +166,6 @@
 													  </div>
 													</div>
 												  </div>
-
 					
 											</div>
 										</span>
@@ -173,8 +174,9 @@
 								{% include "accreditation-page/instrument-component/main-page/uploadBin-review-modal.html" %}
 								{% include "accreditation-page/instrument-component/main-page/upload-file-modal.html" %}
 							{% endif %}
-							
-							
+
+
+
 						{% endfor %}
 					</ul> <!--  END OF COMPONENT INDICATORS --> 
 

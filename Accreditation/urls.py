@@ -142,6 +142,7 @@ urlpatterns = [
     path("program-accreditation/area/parameter/upload/<str:pk>/archive-page/", views_instrument_component.archive_landing, name='program-accreditation-component-archive-page'),
 
     path("program-accreditation/area/parameter/review-upload/<str:pk>/", views_instrument_component.create_review, name='review-upload-bin'),
+    path("program-accreditation/area/parameter/evidence-upload/<int:pk>/", views_instrument_component.upload_file, name='upload-evidence'),
 
 
 

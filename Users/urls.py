@@ -1,6 +1,6 @@
 from django.urls import path
 
-from Users import views_activities
+from Users import views_activities, views_user_groups
 # from .views import UserRegistration
 from . import views, views_profile
 
@@ -21,6 +21,11 @@ urlpatterns = [
 
     path('activities/', views_activities.admin_activities, name="admin-activity-log"),
     path('activities/', views_activities.user_activities, name="user-activity-log"),
+
+    path('groups/', views_user_groups.landing, name="user-groups"),
+
+
+
 
 
 

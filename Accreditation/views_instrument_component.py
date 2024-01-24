@@ -1,3 +1,4 @@
+import os
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -5,7 +6,7 @@ from django.views import View
 
 from Users.models import activity_log
 from .models import component_upload_bin, parameter_components, uploaded_evidences #Import the model for data retieving
-from .forms import ReviewUploadBin_Form, UploadBin_Form, ParameterComponent_Form
+from .forms import FileUpload_Form, ReviewUploadBin_Form, UploadBin_Form, ParameterComponent_Form
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
@@ -18,8 +19,38 @@ def landing_page(request, pk):
     component_form = ParameterComponent_Form(request.POST or None)
     review_form = ReviewUploadBin_Form(request.POST or None)
     uploadBin_form = UploadBin_Form(request.POST or None)
+    upload_file_form =  FileUpload_Form(request.POST or None)
     component_records = parameter_components.objects.select_related('area_parameter').filter(area_parameter=pk, is_deleted = False)
     uploaded_records = uploaded_evidences.objects.select_related('upload_bin', 'uploaded_by').filter(is_deleted = False)
+
+# This is for the accepted_file_type mapping. This is for making the file types more presentable
+    file_type_mapping = {
+        'image/jpeg': 'JPEG',
+        'image/png': 'PNG',
+        'image/gif': 'GIF',
+        'image/bmp': 'BMP',
+        'image/svg+xml': 'SVG',
+        'image/webp': 'WebP',
+        'application/pdf': 'PDF',
+        'application/msword': 'Microsoft Word (DOC)',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'Microsoft Word (DOCX)',
+        'application/vnd.ms-excel': 'Microsoft Excel (XLS)',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'Microsoft Excel (XLSX)',
+        'application/vnd.ms-powerpoint': 'Microsoft PowerPoint (PPT)',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'Microsoft PowerPoint (PPTX)',
+        'text/plain': 'Plain Text (TXT)',
+        'audio/mp3': 'MP3',
+        'video/mp4': 'MP4',
+        'audio/ogg': 'Ogg',
+        'video/webm': 'WebM',
+        'application/zip': 'ZIP',
+        'application/x-rar-compressed': 'RAR',
+        'text/csv': 'CSV',
+        'text/html': 'HTML',
+        'text/css': 'CSS',
+        'application/javascript': 'JavaScript',
+    }
+
     
     indicator_details = {}
 
@@ -60,6 +91,8 @@ def landing_page(request, pk):
                 , 'pk':pk
                 , 'indicator_details': indicator_details
                 , 'uploaded_records': uploaded_records
+                , 'upload_file_form':  upload_file_form
+                , 'file_type_mapping': file_type_mapping
                 
                 }  #Getting all the data inside the type table and storing it to the context variable
 
@@ -254,3 +287,42 @@ def create_review(request, pk):
         else:
             # Return a validation error as a JSON response
             return JsonResponse({'errors': review_form.errors}, status=400)
+        
+# ---------------------------------- [ UPLOAD FILE CODES ] -----------------------------#
+@login_required
+def upload_file(request, pk):
+    try:
+        upload_bin = component_upload_bin.objects.get(id=pk)
+    except component_upload_bin.DoesNotExist:
+        return JsonResponse({'errors': 'Upload Bin not found'}, status=404)
+
+
+    if request.method == 'POST':
+        length = request.POST.get('length')
+
+        print('Length value: ',length)
+        
+        if length != 0:
+            upload_bin.status = "ur"
+            upload_bin.save()
+
+            if length == upload_bin.accepted_file_count:
+                for file_num in range(0, int(length)):
+                    print('File:', request.FILES.get(f'files{file_num}'))
+                    uploaded_evidences.objects.create(
+                        upload_bin_id = pk ,
+                        uploaded_by = request.user,
+                        file_name =  request.FILES.get(f'files{file_num}'), 
+                        file_path=request.FILES.get(f'files{file_num}')
+                        
+                    )
+
+                messages.success(request, f'Files Uploaded successfully!') 
+                return JsonResponse({'status': 'success'}, status=200)
+            
+            else:
+                return JsonResponse({'error': 'Please make sure to submit ' +str(upload_bin.accepted_file_count)+ ' file/s only.'}, status=400)
+    
+        else:
+            return JsonResponse({'error': 'Please attach a file before submitting the form.'}, status=400)
+    

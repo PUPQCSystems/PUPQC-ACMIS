@@ -26,17 +26,13 @@
 <script src="{% static 'custom-assets/js/htmx.js' %}"></script>
 
 {% comment %}-----------------------------[ FILEPOND Dependencies ]---------------------------{% endcomment %}
+  <!-- Minified and Compressed jQuery for Production-->
 <script src="{% static 'vendor/filepond/filepond.js' %} "></script>
+<script src=" {% static 'vendor/filepond/filepond-plugin-file-validate-type.js' %}"></script>
+<script src=" {% static 'vendor/filepond/filepond-plugin-file-validate-size.js' %}"></script>
+<script src=" {% static 'vendor/filepond/filepond-plugin-image-preview.js' %}"></script>
 
 
-<script>
-    // Get a reference to the file input element
-    document.addEventListener('DOMContentLoaded', function(){
-        const inputElement = document.querySelector('input[type="file"]');
-        const pond = FilePond.create(inputElement);
-    })
-
-</script>
 
 <script>
     function addHoverClass(card) {

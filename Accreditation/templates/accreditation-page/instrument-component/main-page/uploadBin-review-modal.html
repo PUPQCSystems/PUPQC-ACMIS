@@ -1,7 +1,7 @@
 {% load crispy_forms_tags %}
 
 <!-- Modal -->
-<div class="modal  modal-blur fade" id="review-modal-{{ upload_bin.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal modal-blur fade" id="review-modal-{{ upload_bin.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
 		<form 
 			autocomplete="off" 
@@ -38,7 +38,12 @@
 												</div>
 												<div class="col">
 													<div class="text-truncate">
-													<strong>{{ uploaded_record.uploaded_by.first_name }} {{ uploaded_record.uploaded_by.last_name }}</strong> submitted <a href="">{{ uploaded_record.file_name }}.{{ uploaded_record.file_type }}</a>
+													<strong>{{ uploaded_record.uploaded_by.first_name }} {{ uploaded_record.uploaded_by.last_name }}</strong> submitted 
+													
+													<a href="#" class="btn btn-ghost-primary" 
+						>								
+															{{ uploaded_record.file_name }}
+													</a>
 													</div>
 													<div class="text-muted">{{ uploaded_record.uploaded_at|date:"F j, Y g:i A" }}</div>
 												</div>
@@ -47,6 +52,7 @@
 												</div>
 												</div>
 											</div>
+											{% include "accreditation-page/instrument-component/main-page/file-view-modal.html" %}
 										{% endif %}
 										
 									{% endfor %}

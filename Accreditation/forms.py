@@ -485,3 +485,13 @@ class ReviewUploadBin_Form(forms.ModelForm):
         'remarks': forms.Textarea(attrs={'required': False}),
         }
 
+
+# ---------------------------- [ File Upload FORM ] ---------------------------- #
+class FileUpload_Form(forms.ModelForm):
+   class Meta:
+        model = uploaded_evidences
+        fields = ('file_path',)
+        widgets = {
+            'file_path': forms.FileInput(attrs={'id': 'file-path-{{ upload_bin.id }}'}),
+        }
+

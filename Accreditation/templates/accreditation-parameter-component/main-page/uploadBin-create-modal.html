@@ -34,18 +34,41 @@
 						<div class="form-label">Select accepted file types</div>
 						<select type="text" class="form-select form-control select-text" name="accepted_file_type" 
 						id="select-states-{{ component.id }}" multiple>
-							<option value="pdf" selected>PDF</option>
-							<option value="doc/docx" selected>Word (DOC/DOCX)</option>
-							<option value="xls/xlsx"selected>Excel (XLS/XLSX)</option>
-							<option value="ppt/pptx" selected>PowerPoint (PPT/PPTX)</option>
-							<option value="txt">Text (TXT)</option>
-							<option value="jpg/jpeg">JPEG Image (JPG/JPEG)</option>
-							<option value="png">PNG Image</option>
-							<option value="gif">GIF Image</option>
-							<option value="mp3">MP3 Audio</option>
-							<option value="mp4">MP4 Video</option>
-							<option value="zip">ZIP Archive</option>
-							<option value="rar">RAR Archive</option>
+							<!-- Images -->
+							<option value="image/jpeg" selected>JPEG</option>
+							<option value="image/png">PNG</option>
+							<option value="image/gif">GIF</option>
+							<option value="image/bmp">BMP</option>
+							<option value="image/svg+xml">SVG</option>
+							<option value="image/webp">WebP</option>
+
+							<!-- Documents -->
+							<option value="application/pdf" selected>PDF</option>
+							<option value="application/msword" selected>Microsoft Word (DOC)</option>
+							<option value="application/vnd.openxmlformats-officedocument.wordprocessingml.document" selected>Microsoft Word (DOCX)</option>
+							<option value="application/vnd.ms-excel" selected>Microsoft Excel (XLS)</option>
+							<option value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">Microsoft Excel (XLSX)</option>
+							<option value="application/vnd.ms-powerpoint" selected>Microsoft PowerPoint (PPT)</option>
+							<option value="application/vnd.openxmlformats-officedocument.presentationml.presentation">Microsoft PowerPoint (PPTX)</option>
+							<option value="text/plain">Plain Text (TXT)</option>
+
+							<!-- Audio/Video -->
+							<option value="audio/mp3">MP3</option>
+							<option value="video/mp4">MP4</option>
+							<option value="audio/ogg">Ogg</option>
+							<option value="video/webm">WebM</option>
+
+							<!-- Archives -->
+							<option value="application/zip">ZIP</option>
+							<option value="application/x-rar-compressed">RAR</option>
+
+							<!-- CSV -->
+							<option value="text/csv">CSV</option>
+
+							<!-- HTML, CSS, JavaScript -->
+							<option value="text/html">HTML</option>
+							<option value="text/css">CSS</option>
+							<option value="application/javascript">JavaScript</option>
 						</select>
 					</div>
 

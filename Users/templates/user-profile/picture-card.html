@@ -20,6 +20,7 @@
         <form method="POST" class=" card-body" enctype="multipart/form-data" action={% url "users:profile-upload-pic" %}>
             {% csrf_token %}
                 {{ upload_form.profile_pic|as_crispy_field }}
+
                 <button id="submit"type="submit" class="btn btn-primary">Submit</button>
         </form>
         
@@ -34,3 +35,34 @@
     </div>
     <br>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var files = []
+        FilePond.registerPlugin(FilePondPluginFileValidateSize);    //Register plugin to validate file size
+        FilePond.registerPlugin(FilePondPluginFileValidateType);    //Register plugin to validate file type
+        FilePond.setOptions({
+            allowMultiple:true,
+            maxFiles:4,             //It sets the max file counts
+            maxFileSize: '3MB'      //It sets the accepted max storage size
+        })
+        const inputElement = document.querySelector('input[type="file"]');  //Convert input types that are file types into filepond
+        const pond = FilePond.create( inputElement, {
+            acceptedFileTypes:['image/png', 'image/jpeg', 'docs'], // The lists are the accepted file types
+            onaddfile: (err, fileItem) => {
+                if (!err) {
+                files.push(fileItem.file)
+                }
+                console.log(files)
+            },
+            onremovefile: (err, fileItem) => {
+                const index = files.indexOf(fileItem.file)
+                if (index > -1) {
+                    files.splice(index, 1)
+                }
+                console.log(files)
+            }
+        } );
+
+      
+    })
+</script>
