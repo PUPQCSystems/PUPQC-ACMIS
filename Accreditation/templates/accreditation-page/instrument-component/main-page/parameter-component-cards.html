@@ -41,45 +41,58 @@
 							<div class="col-md-8 col-lg-8 ">
 								{{ component.component }} 
 							</div>
+			
+
+
 							<div class="col-auto ms-auto d-print-none">
-								<div class="btn-list">
+								<div class="dropdown">
+									<a href="" class="btn-action" data-bs-toggle="dropdown" aria-expanded="false">
+										<!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
+										<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path></svg>
+									</a>
+									<div class="dropdown-menu dropdown-menu-end" style="">
 
-									{% if perms.Accreditation.add_component_upload_bin %}
-										<button class="btn btn-green w-20 btn-icon"  data-bs-toggle="modal" data-bs-target="#create-upload-bin-modal-{{ component.id }}">
-											<!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-											<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg>
-										</button>
-									{% endif %}
+										{% if perms.Accreditation.add_component_upload_bin %}
+											<a class="dropdown-item text-green"  data-bs-toggle="modal" data-bs-target="#create-upload-bin-modal-{{ component.id }}">
+												<!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+												<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg>
+												Create
+											</a>
+										{% endif %}
 
-									{% if perms.Accreditation.change_parameter_components %}
-										<!-- Button to trigger modal -->
-										<button type="button" class="btn btn-primary w-20 btn-icon" data-bs-toggle="modal" data-bs-target="#edit-component-modal-{{ component.id }}">
-											<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-											<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-											<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-											<path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-											<path d="M16 5l3 3" />
-											</svg>
-										</button>
-									{% endif %}
-
-									{% if perms.Accreditation.delete_parameter_components %}
-										<form method="POST" action="{% url 'accreditations:instrument-parameter-component-archive' url_pk=pk record_pk=component.id %}" id="component-archive-form-{{ component.id }}">
-											{% csrf_token %}
-											<button type="button" class="btn w-20 btn-icon btn-danger component-archive-button" data-id={{ component.id }}>
-												<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-													<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-													<path d="M4 7l16 0"></path><path d="M10 11l0 6"></path>
-													<path d="M14 11l0 6"></path><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
-													<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+										{% if perms.Accreditation.change_parameter_components %}
+											<!-- Button to trigger modal -->
+											<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit-component-modal-{{ component.id }}">
+												<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+												<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+												<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+												<path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+												<path d="M16 5l3 3" />
 												</svg>
-											</button>
-										</form>
-									{% endif %}
-									
+												Edit
+											</a>
+										{% endif %}
 
+										{% if perms.Accreditation.delete_parameter_components %}
+											<form method="POST" action="{% url 'accreditations:program-accreditation-component-archive' url_pk=pk record_pk=component.id %}" id="component-archive-form-{{ component.id }}">
+												{% csrf_token %}
+												<a class="dropdown-item text-danger component-archive-button" data-id={{ component.id }}>
+													<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+														<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+														<path d="M4 7l16 0"></path><path d="M10 11l0 6"></path>
+														<path d="M14 11l0 6"></path><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+														<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+													</svg>
+													Archive
+												</a>
+											</form>
+										{% endif %}
+									
+									</div>
 								</div>
 							</div>
+
+
 						</div>
 					</span> <!--  END OF COMPONENT CARD  -->
 
@@ -141,7 +154,7 @@
 														{% endif %}
 
 														{% if perms.Accreditation.add_uploaded_evidences %}
-															<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#upload-file-modal-{{ upload_bin.id }}">
+															<a href="{% url "accreditations:file-upload-page" pk=upload_bin.id comp_pk=pk %}" class="dropdown-item">
 																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-upload" width="48" height="48" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
 																	<path stroke="none" d="M0 0h24v24H0z" fill="none" />
 																	<path d="M14 3v4a1 1 0 0 0 1 1h4" />
@@ -167,7 +180,7 @@
 
 
 														{% if perms.Accreditation.delete_component_upload_bin %}
-															<form method="POST" action="{% url 'accreditations:instrument-parameter-uploadBin-archive' url_pk=pk record_pk=upload_bin.id %}" id="upload-bin-archive-form-{{ upload_bin.id }}">
+															<form method="POST" action="{% url 'accreditations:program-accreditation-uploadBin-archive' url_pk=pk record_pk=upload_bin.id %}" id="upload-bin-archive-form-{{ upload_bin.id }}">
 																{% csrf_token %}
 																<a class="dropdown-item text-danger upload-bin-archive-button" data-id={{ upload_bin.id }}>
 																	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -182,7 +195,7 @@
 														{% endif %}
 													  </div>
 													</div>
-												  </div>
+												</div>
 					
 											</div>
 										</span>
