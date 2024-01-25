@@ -12,13 +12,18 @@
         <a href={% url 'programs:landing' %} type="button" class="btn btn-primary">
             <i class="fa-solid fa-arrow-left"></i> Back
         </a>
-        <button type="button" class="btn btn-success" disabled>Restore</button>
 {% endblock page-title-actions %}
-
 
 
 {% block content %}
     <!-- PROGRAM CARDS -->
-    {% include "archive_page/program_cards.html" %}
+
+    {% if perms.Programs.view_programs %}
+        {% include "archive_page/program_cards.html" %}
+        
+        {% include "archive_page/scripts.html" %} 
+    {% endif %}
+
+
 
 {% endblock content %}

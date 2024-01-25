@@ -37,12 +37,9 @@
 
 				<div class="col">
 					<label class="form-label required">Select a User Role</label>
-					<select type="text" name="select_role" id="id_select_role" class="form-select form-control" id="select-groups" value="">
+					<select type="text" name="selected_group" id="id_select_role" class="form-select form-control" id="select-groups" value="">
 						{% if auth_groups %}
 							{% for group in auth_groups %}
-								{% if update_form.id == group.id%}
-									<option value="{{ group.auth_group.id }}" selected>{{ group.auth_group.name}}</option>
-								{% endif %}
 								<option value="{{ group.auth_group.id }}">{{ group.auth_group.name}}</option>
 							{% endfor %} 
 						

@@ -72,15 +72,26 @@ def update_account(request, pk):
         update_form = UpdateForm(request.POST or None, instance=account)
 
         if update_form.is_valid():
-            # Save the updated data to the database
-            update_form.instance.modified_by = request.user
-            update_form.save()
-            email = update_form.cleaned_data.get('email')
+            auth_group_id = request.POST.get('selected_group')
 
-            # Provide a success message as a JSON response
-            messages.success(request, f'The account is successfully updated!') 
-            url_landing = "/user/"
-            return JsonResponse({'url_landing': url_landing}, status=200)
+            if auth_group_id:
+              # Assuming you have a user instance and a group instance
+                group = Group.objects.get(pk=auth_group_id)  # Replace new_group_id with the desired group ID
+
+                # Clear existing groups and set the new group
+                account.groups.set([group])
+                # Save the updated data to the database
+                update_form.instance.modified_by = request.user
+                update_form.save()
+                email = update_form.cleaned_data.get('email')
+
+                # Provide a success message as a JSON response
+                messages.success(request, f'The account is successfully updated!') 
+                url_landing = "/user/"
+                return JsonResponse({'url_landing': url_landing}, status=200)
+            else:
+                # Return a validation error using a JSON response
+                return JsonResponse({'error': 'Please make sure that you assigned a Role to the user account before submitting the form.'}, status=400)
 
         else:
             # Return a validation error as a JSON response

@@ -6,9 +6,8 @@ from django.contrib import messages
 from .models import Programs
 from django.utils import timezone
 from .serializers import ProgramSerializer
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
-# Create your views here.
 
 @login_required
 def landing_page(request):
@@ -32,6 +31,7 @@ def landing_page(request):
 
 #This is the function for creating the record
 @login_required
+@permission_required("Programs.add_programs", raise_exception=True)
 def create_program(request):
     create_form = CreateForm(request.POST or None)
     
@@ -52,6 +52,7 @@ def create_program(request):
 
 #This is the function for updating the record
 @login_required
+@permission_required("Programs.change_programs", raise_exception=True)
 def update_program(request, pk):
     # Retrieve the program object with the given primary key (pk)
     try:
@@ -80,6 +81,7 @@ def update_program(request, pk):
             return JsonResponse({'errors': update_form.errors}, status=400)
 
 @login_required
+@permission_required("Programs.delete_programs", raise_exception=True)
 def archive_program(request, pk):
     # Gets the records who have this ID
     program = Programs.objects.get(id=pk)

@@ -1,45 +1,3 @@
-
-    
-
-            <!-- For loop here -->
-    {% comment %} 
-                    <div class="col-md-4" style="margin-top: 10px; margin-bottom: 10px;">
-                        <div class="ccard">
-
-                            <div class="position-relative">
-                                <!-- Add ellipsis button in the upper-right corner -->  
-                                <button class="btn btn-sm position-absolute top-0 end-0 m-2 btn-ellipse" type="button" data-bs-toggle="dropdown" 
-                                    data-bs-auto-close="true" aria-expanded="false" data-bs-offset="-50,2" style="color: #000000;">
-                                    <li class="fa-solid fa-ellipsis-vertical fa-xl"></li>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button></li>
-                                    <li><a  href={% url 'programs:restore' pk=record.id %} class="dropdown-item">Restore</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-
-                                    <li> <button type="button" class="dropdown-item delete-button" id="delete-button" data-id={{ record.id }}>Delete</button></li>
-                                </ul>
-
-                                <div class="card-block">
-                                    <h1 class="c-title">{{ record.abbreviation }}</h1>
-                                    <h6 class="card-subtitle text-muted">{{ record.program_name }}</h6>
-                                    <hr>
-                                    <small class="card-text p-y-1 text-muted">Created by: </small><small class="card-text p-y-1">{{ created_by.first_name }} {{ created_by.last_name }}</small><br>
-                                    <small class="card-text p-y-1 text-muted">Date Created: </small><small class="card-text p-y-1">{{ record.created_at }}</small><br>
-                                    <small class="card-text p-y-1 text-muted">Archived by: </small><small class="card-text p-y-1">{{ modified_by.first_name }} {{ modified_by.last_name }} </small><br>
-                                    <small class="card-text p-y-1 text-muted">Date Archived: </small><small class="card-text p-y-1">{{ record.deleted_at }}</small><br>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-    
-
-    {% endcomment %}
-
-
 {% load static %}
 <div class="row row-cards">
 
@@ -60,9 +18,17 @@
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-end">
                                             <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
-                                            <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
-                                            <a  href={% url 'programs:restore' pk=record.id %} class="dropdown-item">Restore</a>
-                                            <button type="button" class="dropdown-item text-danger delete-button" id="delete-button" data-id={{ record.id }}>Delete</button>
+                                            {% if perms.Programs.change_programs %}
+                                                <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
+                                            {% endif %}
+
+                                            {% if perms.Programs.change_programs or perms.Programs.delete_programs %}
+                                                <a  href={% url 'programs:restore' pk=record.id %} class="dropdown-item">Restore</a>
+                                            {% endif %}
+
+                                            {% if perms.Programs.change_programs %}
+                                                <button type="button" class="dropdown-item text-danger delete-button" id="delete-button" data-id={{ record.id }}>Delete</button>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
@@ -79,11 +45,14 @@
                 </div>
 
                 {% include "archive_page/view_modal.html" %}
-                {% include "program_page/edit_modal.html" %}
+
+                {% if perms.Programs.change_programs %}
+                    {% include "program_page/edit_modal.html" %}
+                {% endif %}
+                
             <!-- END of For Loop -->
             {% endfor %}
     </div>
-    {% include "archive_page/scripts.html" %} 
 
 
 

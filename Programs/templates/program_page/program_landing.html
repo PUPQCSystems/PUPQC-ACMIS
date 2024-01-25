@@ -9,18 +9,30 @@
 <!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
 {% block page-title-actions %}
         <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search program…"/>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">Create</button>
-        <a href="{% url 'programs:archive-landing' %}" type="button" class="btn btn-success">
-            Archive <i class="fa-solid fa-arrow-right"></i>
-        </a>
+        {% if perms.Programs.add_programs %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">Create</button>
+        {% endif %}
+
+        {% if perms.Programs.delete_programs %}
+            <a href="{% url 'programs:archive-landing' %}" type="button" class="btn btn-success">
+                Archive <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        {% endif %}
 {% endblock page-title-actions %}
      
 
 <!-- THE CONTENTS -->
 {% block content %}
     <!-- PROGRAM CARDS -->
-    {% include "program_page/program_cards.html" %}
-    
-    <!-- MODALS-->
-    {% include "program_page/create_modal.html" %}
+    {% if perms.Programs.view_programs or perms.Programs.change_programs or perms.Programs.add_programs or perms.Programs.delete_programs%}
+        {% include "program_page/program_cards.html" %}
+    {% endif %}
+
+    {% if perms.Programs.add_programs %}
+        <!-- MODALS-->
+        {% include "program_page/create_modal.html" %}
+    {% endif %}
+
 {% endblock content %}
+
+

@@ -1,72 +1,81 @@
 {% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+{% if user.is_authenticated %}
+	<!doctype html>
+	<html lang="en">
 
-	<title> PUP-ACIS </title>
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+		<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
 
-    <!-- CSS DEPENDENCIES-->
-    {% include "dependencies/CSS_dependencies.html" %} 
+		<title> PUP-ACIS </title>
 
-  </head>
-	<body>
-		<script src="{% static 'tabler-template/dist/js/demo-theme.min.js' %}"></script>
-		<div class="page">
-			
-			<!-- TOP NAVIGATION BAR -->
-			{% include "navigation_bars/top_nav.html" %}
+		<!-- CSS DEPENDENCIES-->
+		{% include "dependencies/CSS_dependencies.html" %} 
 
-			<div class="page-wrapper">
+	</head>
+		<body>
+			<script src="{% static 'tabler-template/dist/js/demo-theme.min.js' %}"></script>
+			<div class="page">
+				
+				<!-- TOP NAVIGATION BAR -->
+				{% include "navigation_bars/top_nav.html" %}
 
-				<!-- Page header -->
-				<div class="page-header d-print-none">
-					<div class="container-xl">
-						<div class="row g-2 align-items-center">
-							<div class="col">
-								<h2 class="page-title">
-								{% block page-title %}{% endblock page-title %}
-								</h2>
-							</div>
+				<div class="page-wrapper">
 
-							<!-- Page title actions -->
-							<div class="col-auto ms-auto d-print-none">
-								<div class="d-flex gap-2">
-									{% block page-title-actions %}{% endblock page-title-actions %}
+					<!-- Page header -->
+					<div class="page-header d-print-none">
+						<div class="container-xl">
+							<div class="row g-2 align-items-center">
+								<div class="col">
+									<h2 class="page-title">
+									{% block page-title %}{% endblock page-title %}
+									</h2>
 								</div>
+
+								<!-- Page title actions -->
+								<div class="col-auto ms-auto d-print-none">
+									<div class="d-flex gap-2">
+										{% block page-title-actions %}{% endblock page-title-actions %}
+									</div>
+								</div>
+
 							</div>
-
 						</div>
 					</div>
-				</div>
 
-				<!-- Page body -->
-				<div class="page-body">
-					<div class="container-xl">
-						<div id="main-contents">
-							{% block content %} 
-							{% endblock %}
+					<!-- Page body -->
+					<div class="page-body">
+						<div class="container-xl">
+							<div id="main-contents">
+								{% block content %} 
+								{% endblock %}
+							</div>
 						</div>
 					</div>
-				</div>
-			
-				<!-- FOOTER -->
-				{% include "footer.html" %}
+				
+					<!-- FOOTER -->
+					{% include "footer.html" %}
 
+				</div>
+
+				<!-- JS DEPENDENCIES-->
+				{% include "dependencies/JS_dependencies.html" %}
+
+				{% for message in messages %}
+					<script>toastr.success("{{ message }}") </script>
+				{% endfor %}
+
+				<div id="alert-container"></div>
 			</div>
+		</body>
+	</html>
 
-			<!-- JS DEPENDENCIES-->
-			{% include "dependencies/JS_dependencies.html" %}
+{% else %}
 
-			{% for message in messages %}
-				<script>toastr.success("{{ message }}") </script>
-			{% endfor %}
+   {% include "error-pages/not-authenticated.html" %}
 
-			<div id="alert-container"></div>
-		</div>
-	</body>
-</html>
+{% endif %}
+
 
 
