@@ -10,10 +10,11 @@ from .forms import FileUpload_Form, ReviewUploadBin_Form, UploadBin_Form, Parame
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 
 @login_required
+@permission_required("Accreditation.view_parameter_components", raise_exception=True)
 def landing_page(request, pk):
     #Getting the data from the API
     component_form = ParameterComponent_Form(request.POST or None)
@@ -101,6 +102,7 @@ def landing_page(request, pk):
         
         
 @login_required
+@permission_required("Accreditation.delete_component_upload_bin", raise_exception=True)
 def archive_uploadBin(request, url_pk, record_pk):
     # Gets the records who have this ID
     uploadBin_record = component_upload_bin.objects.get(id=record_pk)
@@ -129,6 +131,7 @@ def archive_uploadBin(request, url_pk, record_pk):
     return redirect('accreditations:program-accreditation-component', pk=url_pk)
 
 @login_required
+@permission_required("Accreditation.delete_parameter_components", raise_exception=True)
 def archive_component(request, url_pk, record_pk):
     # Gets the records who have this ID
     component_record = parameter_components.objects.get(id=record_pk)
@@ -160,6 +163,7 @@ def archive_component(request, url_pk, record_pk):
 
 #------------------------------------------------------------[ ARCHIVE PAGE CODES ]------------------------------------------------------------#
 @login_required
+@permission_required("Accreditation.delete_parameter_components", raise_exception=True)
 def archive_landing(request, pk):
     component_records = parameter_components.objects.select_related('area_parameter').filter(area_parameter=pk)
     review_form = ReviewUploadBin_Form(request.POST or None)
@@ -203,6 +207,7 @@ def archive_landing(request, pk):
 
 
 @login_required
+@permission_required("Accreditation.delete_parameter_components", raise_exception=True)
 def restore_component(request, comp_pk, pk):
     # Gets the records who have this ID
     component_record =  parameter_components.objects.get(id=comp_pk)
@@ -231,6 +236,7 @@ def restore_component(request, comp_pk, pk):
     return redirect('accreditations:program-accreditation-component-archive', pk=pk)
 
 @login_required
+@permission_required("Accreditation.delete_component_upload_bin", raise_exception=True)
 def restore_uploadBin(request, upl_pk, pk):
     # Gets the records who have this ID
     uploadBin_record =  component_upload_bin.objects.get(id=upl_pk)
@@ -259,8 +265,11 @@ def restore_uploadBin(request, upl_pk, pk):
     return redirect('accreditations:program-accreditation-component-archive', pk=pk)
 
 
+
+
 # ---------------------------------- [REVIEW FUNCTIONALITY CODE] -----------------------------#
 @login_required
+
 def create_review(request, pk):
 # Retrieve the type object with the given primary key (pk)
     try:
@@ -290,6 +299,7 @@ def create_review(request, pk):
         
 # ---------------------------------- [ UPLOAD FILE CODES ] -----------------------------#
 @login_required
+@permission_required("Accreditation.add_component_upload_bin", raise_exception=True)
 def upload_file(request, pk):
     try:
         upload_bin = component_upload_bin.objects.get(id=pk)

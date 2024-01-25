@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,7 +30,8 @@ DEBUG = True
 
 CRISPY_FAIL_SILENTLY = not DEBUG
 
-ALLOWED_HOSTS = []
+# I added '*' to the allowed so that it can allow ALL host
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -115,15 +118,23 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         'NAME': 'ACIS-Database',
+#         'USER': 'ACIS',
+#         'PASSWORD': 'acis' ,
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
+
+
+# Database settings for render deployment
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        'NAME': 'ACIS-Database',
-        'USER': 'ACIS',
-        'PASSWORD': 'acis' ,
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
-    }
+    'default': dj_database_url.config(
+        default='postgres://acis_database_user:pxH4rLwHUXeUbSurrnwzo1iVjpU41MiK@dpg-cmp1oj6g1b2c73f83co0-a.singapore-postgres.render.com/acis_database',
+    )
 }
 
 
