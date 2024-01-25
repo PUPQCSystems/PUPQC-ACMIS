@@ -174,13 +174,18 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static",
+# ]
 
 MEDIA_URL = '/file-storage/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'file-storage')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_root/')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static_root/')
+
+
+#Edited for
+STATIC_ROOT = BASE_DIR / 'static'
+STATICFILES_DIRS = [BASE_DIR / 'ACIS_system_v1/static']
 
 
 # Default primary key field type
