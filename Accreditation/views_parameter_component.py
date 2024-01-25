@@ -64,7 +64,8 @@ class ParameterComponentList(View):
                    }  #Getting all the data inside the type table and storing it to the context variable
 
         return render(request, 'accreditation-parameter-component/main-page/landing-page.html', context)
-
+    
+@login_required
 @permission_required("Accreditation.add_parameter_components", raise_exception=True)
 def create_component(request, pk):
     component_form = ParameterComponent_Form(request.POST or None)

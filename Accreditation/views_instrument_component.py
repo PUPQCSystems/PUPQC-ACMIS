@@ -269,7 +269,6 @@ def restore_uploadBin(request, upl_pk, pk):
 
 # ---------------------------------- [REVIEW FUNCTIONALITY CODE] -----------------------------#
 @login_required
-
 def create_review(request, pk):
 # Retrieve the type object with the given primary key (pk)
     try:
