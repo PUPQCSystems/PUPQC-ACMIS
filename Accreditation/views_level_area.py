@@ -17,15 +17,8 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 class LevelAreaList(PermissionRequiredMixin, View):
     # Permission for GET requests
-    permission_required = "Accreditation.view_instrument_level_area"
-
-    def get_permission_required(self):
-        # Dynamic permission for POST requests
-        if self.request.method == "POST":
-            return "Accreditation.add_instrument_level_area"
-        return super().get_permission_required()
+    permission_required = ["Accreditation.view_instrument_level_area", "Accreditation.add_instrument_level_area"]
     
-
     def get(self, request, pk):
         #Getting the data from the API
         formset  = LevelAreaFormSet(queryset=instrument_level_area.objects.none())
@@ -69,7 +62,6 @@ class LevelAreaList(PermissionRequiredMixin, View):
 
             # Save the instance to the database
             activity_log_entry.save()
-
 
             messages.success(request, f"Instrument's level areas is successfully created!")
             return JsonResponse({'status': 'success'}, status=200)

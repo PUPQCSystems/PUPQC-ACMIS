@@ -269,6 +269,7 @@ def restore_uploadBin(request, upl_pk, pk):
 
 # ---------------------------------- [REVIEW FUNCTIONALITY CODE] -----------------------------#
 @login_required
+@permission_required("Accreditation.change_component_upload_bin", raise_exception=True)
 def create_review(request, pk):
 # Retrieve the type object with the given primary key (pk)
     try:
@@ -298,7 +299,7 @@ def create_review(request, pk):
         
 # ---------------------------------- [ UPLOAD FILE CODES ] -----------------------------#
 @login_required
-@permission_required("Accreditation.add_component_upload_bin", raise_exception=True)
+@permission_required("Accreditation.add_uploaded_evidences", raise_exception=True)
 def upload_file(request, pk):
     try:
         upload_bin = component_upload_bin.objects.get(id=pk)
@@ -308,14 +309,13 @@ def upload_file(request, pk):
 
     if request.method == 'POST':
         length = request.POST.get('length')
+        length = int(length)
 
-        print('Length value: ',length)
-        
         if length != 0:
-            upload_bin.status = "ur"
-            upload_bin.save()
-
-            if length == upload_bin.accepted_file_count:
+            if length <= upload_bin.accepted_file_count:
+                upload_bin.status = "ur"
+                upload_bin.save()
+                print(upload_bin.accepted_file_count)
                 for file_num in range(0, int(length)):
                     print('File:', request.FILES.get(f'files{file_num}'))
                     uploaded_evidences.objects.create(

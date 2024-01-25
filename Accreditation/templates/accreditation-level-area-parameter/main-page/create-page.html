@@ -126,8 +126,12 @@
                 data: serializedData,
                 type: "POST",
                 success: function(response) {
-                    location.reload();
-                },
+					// Check if the server response contains a 'redirect_url' field
+					if (response.redirect_url) {
+						// Redirect to the specified URL
+						window.location.href = response.redirect_url;
+					}
+				},
                 error: function(error) {
 
 					if (error.responseJSON && error.responseJSON.error) {

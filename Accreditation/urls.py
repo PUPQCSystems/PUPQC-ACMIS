@@ -98,7 +98,7 @@ urlpatterns = [
     path("instrument/level/area/archive-page/destroy/<str:pk>/", views_level_area.destroy, name='instrument-level-area-destroy'),
 
     path("instrument/level/area/parameter/<str:pk>/", AreaParameterList.as_view(), name='instrument-level-area-parameter'),
-    path("instrument/level/area/parameter/create/<int:pk>/", CreataAreaParameter.as_view(), name='instrument-level-area-parameter-create'),
+    path("instrument/level/area/parameter/create/<int:pk>/", CreatAreaParameter.as_view(), name='instrument-level-area-parameter-create'),
     path("instrument/level/area/parameter/update/<str:pk>/", views_area_parameter.update, name='instrument-level-area-parameter-update'),
     path("instrument/level/area/parameter/archive/<str:ins_pk>/<str:pk>/", views_area_parameter.archive, name='instrument-level-area-parameter-archive'),
     path("instrument/level/area/parameter/<str:pk>/archive-page/", views_area_parameter.archive_landing, name='instrument-level-area-parameter-archive-page'),
