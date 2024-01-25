@@ -105,7 +105,7 @@ urlpatterns = [
     path("instrument/level/area/parameter/archive-page/restore/<str:ins_pk>/<str:pk>/", views_area_parameter.restore, name='instrument-level-area-parameter-restore'),
     path("instrument/level/area/parameter/archive-page/destroy/<str:pk>/", views_area_parameter.destroy, name='instrument-level-area-parameter-destroy'),
 
-    path("instrument/level/area/parameter/upload/<str:pk>/", ParameterIndicatorList.as_view(), name='instrument-parameter-component'),
+    path("instrument/level/area/parameter/upload/<str:pk>/", ParameterComponentList.as_view(), name='instrument-parameter-component'),
     path("instrument/level/area/parameter/upload/create-component/<int:pk>/", views_parameter_component.create_component, name='instrument-parameter-component-create'),
     path("instrument/level/area/parameter/upload/update-component/<str:pk>/", views_parameter_component.update_component, name='instrument-parameter-component-update'),
     path("instrument/level/area/parameter/upload/archive-component/<str:url_pk>/<str:record_pk>/", views_parameter_component.archive_component, name='instrument-parameter-component-archive'),

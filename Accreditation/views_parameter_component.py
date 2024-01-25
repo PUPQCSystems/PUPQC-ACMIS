@@ -9,10 +9,14 @@ from .forms import UploadBin_Form, ParameterComponent_Form
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
  
 
-class ParameterIndicatorList(View):
+class ParameterComponentList(View):
+
+   # Permission for GET requests
+    permission_required = "Accreditation.view_parameter_components"
+
     def get(self, request, pk):
         #Getting the data from the API
         component_form = ParameterComponent_Form(request.POST or None)
@@ -61,7 +65,7 @@ class ParameterIndicatorList(View):
 
         return render(request, 'accreditation-parameter-component/main-page/landing-page.html', context)
 
-    
+@permission_required("Accreditation.add_parameter_components", raise_exception=True)
 def create_component(request, pk):
     component_form = ParameterComponent_Form(request.POST or None)
     try:
@@ -93,7 +97,8 @@ def create_component(request, pk):
         # Handle the IntegrityError here
         return JsonResponse({'error': 'Error: There might be a selected component that is already exists. Please make sure that the selected component is different and no component is repeatedly selected.'}, status=400)
 
-
+@login_required
+@permission_required("Accreditation.add_component_upload_bin", raise_exception=True)
 def create_uploadBin(request,pk):
     indicator_form = UploadBin_Form(request.POST or None)
 
@@ -128,6 +133,7 @@ def create_uploadBin(request,pk):
     
 
 @login_required
+@permission_required("Accreditation.change_component_upload_bin", raise_exception=True)
 def update_uploadBin(request, pk):
 # Retrieve the type object with the given primary key (pk)
     try:
@@ -170,6 +176,7 @@ def update_uploadBin(request, pk):
             return JsonResponse({'errors': update_form.errors}, status=400)
         
 @login_required
+@permission_required("Accreditation.change_parameter_components", raise_exception=True)
 def update_component(request, pk):
 # Retrieve the type object with the given primary key (pk)
     try:
@@ -210,6 +217,7 @@ def update_component(request, pk):
         
         
 @login_required
+@permission_required("Accreditation.delete_component_upload_bin", raise_exception=True)
 def archive_uploadBin(request, url_pk, record_pk):
     # Gets the records who have this ID
     uploadBin_record = component_upload_bin.objects.get(id=record_pk)
@@ -238,6 +246,7 @@ def archive_uploadBin(request, url_pk, record_pk):
     return redirect('accreditations:instrument-parameter-component', pk=url_pk)
 
 @login_required
+@permission_required("Accreditation.delete_parameter_components", raise_exception=True)
 def archive_component(request, url_pk, record_pk):
     # Gets the records who have this ID
     component_record = parameter_components.objects.get(id=record_pk)
@@ -269,6 +278,7 @@ def archive_component(request, url_pk, record_pk):
 
 #------------------------------------------------------------[ ARCHIVE PAGE CODES ]------------------------------------------------------------#
 @login_required
+@permission_required("Accreditation.delete_parameter_components", raise_exception=True)
 def archive_landing(request, pk):
     component_records = parameter_components.objects.select_related('area_parameter').filter(area_parameter=pk)
 
@@ -313,6 +323,7 @@ def archive_landing(request, pk):
 
 
 @login_required
+@permission_required("Accreditation.delete_parameter_components", raise_exception=True)
 def restore_component(request, comp_pk, pk):
     # Gets the records who have this ID
     component_record =  parameter_components.objects.get(id=comp_pk)
@@ -341,6 +352,7 @@ def restore_component(request, comp_pk, pk):
     return redirect('accreditations:instrument-parameter-component-archive-page', pk=pk)
 
 @login_required
+@permission_required("Accreditation.delete_component_upload_bin", raise_exception=True)
 def restore_uploadBin(request, upl_pk, pk):
     # Gets the records who have this ID
     uploadBin_record =  component_upload_bin.objects.get(id=upl_pk)
@@ -370,6 +382,7 @@ def restore_uploadBin(request, upl_pk, pk):
 
 
 @login_required
+@permission_required("Accreditation.delete_parameter_components", raise_exception=True)
 def destroy_component(request, pk):
     if request.method == 'POST':
         entered_password = request.POST.get('password')
@@ -408,6 +421,7 @@ def destroy_component(request, pk):
     return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 @login_required
+@permission_required("Accreditation.delete_component_upload_bin", raise_exception=True)
 def destroy_uploadBin(request, pk):
     if request.method == 'POST':
         entered_password = request.POST.get('password')
