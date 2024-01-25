@@ -2,7 +2,7 @@ from django.urls import path
 from Accreditation import views_instrument_area, views_instrument_component, views_instrument_level, views_instrument_parameter, views_parameter_component
 from Accreditation import views_component
 from Accreditation.views_component import ComponentList
-from Accreditation.views_parameter_component import ParameterIndicatorList
+from Accreditation.views_parameter_component import ParameterComponentList
 from . import views_accreditation, views_level, views_type, views_bodies, views_instrument, views_area, views_level_area, views_parameter, views_area_parameter
 from Accreditation.views_instrument import *
 from Accreditation.views_instrument_level import *

@@ -12,6 +12,7 @@ fontawesomefree = "*"
 psycopg2 = "*"
 django-debug-toolbar = "*"
 crispy-bootstrap5 = "*"
+dj-database-url = "*"
 
 [dev-packages]
 
