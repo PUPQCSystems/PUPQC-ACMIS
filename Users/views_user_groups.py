@@ -85,9 +85,10 @@ class CreateUserGroups(View):
                 # Code to save the records. This will create a new record in the auth_group_permissions table
                     print('The permission id:', permission)
                     new_group.permissions.add(permission)
-                    
+                
+                redirect_url = '/user/groups/'
                 messages.success(request, f' The User Group is successfully created!') 
-                return JsonResponse({'status': 'success'}, status=200)
+                return JsonResponse({'status': 'success', 'redirect_url': redirect_url}, status=200)
 
             else:
                 # Return a validation error using a JSON response
