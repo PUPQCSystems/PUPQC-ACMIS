@@ -90,9 +90,10 @@
                     
                                                         <div class="datagrid-content">
                                                             {% for file_type, display_name in file_type_mapping.items %}
-                                                            {% if file_type in upload_bin.accepted_file_type %}
-                                                            {% endif %}
-                                                                {{ display_name }},
+                                                                {% if file_type in upload_bin.accepted_file_type %}
+                                                                    {{ display_name }},
+                                                                {% endif %}
+                                                         
                                                             {% endfor %}
                                                         
                                                         </div>
