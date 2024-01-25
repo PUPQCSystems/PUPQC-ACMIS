@@ -146,20 +146,30 @@
                     </div>
 
                     <div class="col-4">
-                        <div class="card p-4" style= "height:20rem; margin-top: 20px" >
-                        {% comment %} <div class="card"  >
-                            <div class="card-body" > {% endcomment %}
-                                <input type="file" name="file_path" id="file-path" required="" multiple>
+                        <div class="card p-4" style= "margin-top: 20px" >
+                            <div class="card-status-top bg-green"></div>
+                            <div class = "divide-y overflow-auto">
+                                <div class="row">
+                                    <input type="file" name="file_path" id="file-path" required="" multiple>
+                                </div>
 
-                            {% comment %} </div>
-                        </div> {% endcomment %}
+                                {% for file in uploaded_files %}
+                                    <div class="row">
+                                    <a href="#"class="text-muted"> {{ file.file_name }}
+                                    </a>
+                         
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+               
                         </div>
                     </div>	
                 </div>
             </div>	
 
             <div class="card-footer">
-                <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                <a href="{% url "accreditations:program-accreditation-component" pk=comp_pk %}" class="btn me-auto">Cancel</a>
                 <button type="button" class="btn btn-primary upload-button" id="upload-button">Submit</button>
             </div>
 

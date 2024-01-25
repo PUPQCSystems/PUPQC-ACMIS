@@ -342,6 +342,7 @@ class FileUpload(PermissionRequiredMixin, View):
 
     def get(self, request, pk, comp_pk):
         upload_bin = component_upload_bin.objects.select_related('parameter_component').get(id=pk, is_deleted = False)
+        uploaded_files = uploaded_evidences.objects.select_related('upload_bin').filter(upload_bin_id=upload_bin.id)
         # This is for the accepted_file_type mapping. This is for making the file types more presentable
         file_type_mapping = {
             'image/jpeg': 'JPEG',
@@ -377,6 +378,7 @@ class FileUpload(PermissionRequiredMixin, View):
                         , 'pk':pk
                         , 'comp_pk': comp_pk
                         , 'file_type_mapping': file_type_mapping
+                        , 'uploaded_files': uploaded_files
                         
                         }  #Getting all the data inside the type table and storing it to the context variable
 
