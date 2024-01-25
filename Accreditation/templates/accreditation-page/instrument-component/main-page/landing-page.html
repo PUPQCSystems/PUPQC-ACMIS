@@ -9,16 +9,21 @@
 <!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
 {% block page-title-actions %}
         <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search levels..."/>
-        <a href="{% url "accreditations:program-accreditation-component-archive-page" pk=pk%}" class="btn btn-success" type="button">
-            Archive <i class="fa-solid fa-arrow-right"></i>
-        </a> 
+
+        {% if perms.Accreditation.delete_parameter_components %}
+            <a href="{% url "accreditations:program-accreditation-component-archive-page" pk=pk%}" class="btn btn-success" type="button">
+                Archive <i class="fa-solid fa-arrow-right"></i>
+            </a> 
+        {% endif %}
+
+
 {% endblock page-title-actions %}
 
 {% block content %}
 
 
     {% include "accreditation-page/instrument-component/main-page/parameter-component-cards.html" %}
-
+    
     {% include "accreditation-page/instrument-component/main-page/scripts.html" %}
 
     {% include "accreditation-page/instrument-component/main-page/styles.html" %}
