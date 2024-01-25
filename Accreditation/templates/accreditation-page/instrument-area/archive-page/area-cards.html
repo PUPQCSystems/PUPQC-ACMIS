@@ -21,8 +21,15 @@
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end">
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
-                                        <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
-                                        <a  href={% url 'accreditations:program-accreditation-area-restore' ins_pk=pk pk=record.id %} class="dropdown-item">Restore</a>
+
+                                        {% if perms.Accreditation.change_level_area_parameter %}
+                                            <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
+                                        {% endif %}
+
+                                        {% if perms.Accreditation.delete_level_area_parameter %}
+                                            <a  href={% url 'accreditations:program-accreditation-area-restore' ins_pk=pk pk=record.id %} class="dropdown-item">Restore</a>
+                                        {% endif %}
+
                                     </div>
                                 </div>
                             </div>
@@ -82,7 +89,11 @@
             </div>
 
             {% include "accreditation-page/instrument-area/main-page/view-modal.html" %}
-            {% include "accreditation-page/instrument-area/main-page/edit-modal.html" %}
+
+            {% if perms.Accreditation.change_level_area_parameter %}
+                {% include "accreditation-page/instrument-area/main-page/edit-modal.html" %}
+            {% endif %}
+            
             {% include "accreditation-page/instrument-area/main-page/assign-modal.html" %}
         {% endfor %}
 

@@ -17,10 +17,7 @@
                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-end">
-                                            {% if perms.Programs.view_programs %}
                                                 <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
-                                            {% endif %}
-
                                             {% if perms.Programs.change_programs %}
                                                 <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
                                             {% endif %}
@@ -49,10 +46,7 @@
                     </div>
                 </div>
 
-                {% if perms.Programs.change_programs %}
                     {% include "program_page/view_modal.html" %}
-                {% endif %}
-
                 {% if perms.Programs.change_programs %}
                     {% include "program_page/edit_modal.html" %}
                 {% endif %}
@@ -60,7 +54,9 @@
             <!-- END of For Loop -->
             {% endfor %}
     </div>
-{% include "program_page/scripts.html" %} 
+    {% if perms.Programs.change_programs or perms.Programs.delete_programs or perms.Programs.add_programs %}
+        {% include "program_page/scripts.html" %} 
+    {% endif %}
 
 
 

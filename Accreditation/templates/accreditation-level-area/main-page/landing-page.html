@@ -8,22 +8,35 @@
 <!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
 {% block page-title-actions %}
         <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search levels..."/>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">Create</button>
-        <a href="{% url "accreditations:instrument-level-area-archive-page" pk=pk%}" class="btn btn-success" type="button">
-            Archive <i class="fa-solid fa-arrow-right"></i>
-        </a> 
+        {% if perms.Accreditation.add_instrument_level_area %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">Create</button>
+        {% endif %}
+
+        {% if perms.Accreditation.delete_instrument_level_area %}
+            <a href="{% url "accreditations:instrument-level-area-archive-page" pk=pk%}" class="btn btn-success" type="button">
+                Archive <i class="fa-solid fa-arrow-right"></i>
+            </a> 
+        {% endif %}
+
+
 {% endblock page-title-actions %}
 
 {% block content %}
 
-    {% include "accreditation-level-area/main-page/area-cards.html" %}
+    {% if perms.Accreditation.view_instrument_level_area %}
+        {% include "accreditation-level-area/main-page/area-cards.html" %}
+    {% endif %}
 
-    {% include "accreditation-level-area/main-page/create-modal.html" %}
+    {% if perms.Accreditation.add_instrument_level_area %}
+        {% include "accreditation-level-area/main-page/create-modal.html" %}
+    {% endif %}
 
-    {% include "accreditation-level-area/main-page/scripts.html" %}
+    {% if perms.Accreditation.add_instrument_level_area or perms.Accreditation.change_instrument_level_area or perms.Accreditation.delete_instrument_level_area %}
+        {% include "accreditation-level-area/main-page/scripts.html" %}
 
-    {% include "accreditation-level-area/main-page/styles.html" %}
-   
+        {% include "accreditation-level-area/main-page/styles.html" %}
+    {% endif %}
+
 {% endblock content %}
 
 

@@ -16,9 +16,11 @@
 
 {% block content %}
 
-    {% include "accreditation-level-area/archive-page/area-cards.html" %}
+        {% include "accreditation-level-area/archive-page/area-cards.html" %}
 
-    {% include "accreditation-level-area/archive-page/scripts.html" %}
+        {% if perms.Accreditation.delete_instrument_level_area or if perms.Accreditation.change_instrument_level_area %}
+            {% include "accreditation-level-area/archive-page/scripts.html" %}
+        {% endif %}
    
 {% endblock content %}
 

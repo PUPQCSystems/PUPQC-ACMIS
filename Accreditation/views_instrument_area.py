@@ -11,9 +11,10 @@ from Accreditation.serializers import InstrumentSerializer
 from .forms import Create_Instrument_Form, Create_InstrumentLevel_Form, Create_LevelArea_Form, LevelAreaFormSet
 from django.contrib import messages
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 @login_required
+@permission_required("Accreditation.view_instrument_level_area", raise_exception=True)
 def landing_page(request, pk):
     #Getting the data from the API
   
@@ -35,6 +36,7 @@ def landing_page(request, pk):
 
     
 @login_required
+@permission_required("Accreditation.delete_instrument_level_area", raise_exception=True)
 def archive(request, ins_pk, pk):
     # Gets the records who have this ID
     level_area = instrument_level_area.objects.get(id=pk)
@@ -65,6 +67,7 @@ def archive(request, ins_pk, pk):
 
 #------------------------------------------------------------[ ARCHIVE PAGE CODES ]------------------------------------------------------------#
 @login_required
+@permission_required("Accreditation.delete_instrument_level_area", raise_exception=True)
 def archive_landing(request, pk):
     records = instrument_level_area.objects.select_related('instrument_level').select_related('area').filter(instrument_level=pk, is_deleted= True) #Getting all the data inside the Program table and storing it to the context variable
 
@@ -80,6 +83,7 @@ def archive_landing(request, pk):
     return render(request, 'accreditation-page/instrument-area/archive-page/landing-page.html', context)
 
 @login_required
+@permission_required("Accreditation.delete_instrument_level_area", raise_exception=True)
 def restore(request, ins_pk, pk):
     # Gets the records who have this ID
     level_area = instrument_level_area.objects.get(id=pk)

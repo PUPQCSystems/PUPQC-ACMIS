@@ -18,9 +18,9 @@
 {% block content %}
     <!-- PROGRAM CARDS -->
 
-    {% if perms.Programs.view_programs %}
+    {% if perms.Programs.delete_programs %}
         {% include "archive_page/program_cards.html" %}
-        
+
         {% include "archive_page/scripts.html" %} 
     {% endif %}
 

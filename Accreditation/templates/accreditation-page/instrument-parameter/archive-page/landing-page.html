@@ -18,7 +18,9 @@
 
     {% include "accreditation-page/instrument-parameter/archive-page/parameter-cards.html" %}
 
-    {% include "accreditation-page/instrument-parameter/archive-page/scripts.html" %}
+    {% if perms.Accreditation.change_level_area_parameter or perms.Accreditation.delete_level_area_parameter %}
+        {% include "accreditation-page/instrument-parameter/archive-page/scripts.html" %}
+    {% endif %}
    
 {% endblock content %}
 

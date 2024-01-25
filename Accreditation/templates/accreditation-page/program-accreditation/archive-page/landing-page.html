@@ -14,10 +14,11 @@
 {% endblock page-title-actions %}
 
 {% block content %}
+    {% if perms.Accreditation.delete_program_accreditation %}
+        {% include "accreditation-page/program-accreditation/archive-page/accreditation-cards.html" %}
 
-    {% include "accreditation-page/program-accreditation/archive-page/accreditation-cards.html" %}
-
-    {% include "accreditation-page/program-accreditation/archive-page/scripts.html" %}
+        {% include "accreditation-page/program-accreditation/archive-page/scripts.html" %}
+    {% endif %}
    
 {% endblock content %}
 

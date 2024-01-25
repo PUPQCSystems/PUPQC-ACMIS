@@ -18,9 +18,14 @@
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end">
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
-                                        <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
-                                        <a  href={% url 'accreditations:instrument-level-restore' ins_pk=pk pk=record.id %} class="dropdown-item">Restore</a>
-                                        <button type="button" class="dropdown-item text-danger delete-button" id="delete-button" data-id={{ record.id }}>Delete</button>
+                                        {% if perms.Accreditation.change_instrument_level %}
+                                            <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
+                                        {% endif %}
+
+                                        {% if perms.Accreditation.delete_instrument_level %}
+                                            <a  href={% url 'accreditations:instrument-level-restore' ins_pk=pk pk=record.id %} class="dropdown-item">Restore</a>
+                                            <button type="button" class="dropdown-item text-danger delete-button" id="delete-button" data-id={{ record.id }}>Delete</button>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -36,9 +41,14 @@
                     </div>
                 </div>
             </div>
+            {% if perms.Accreditation.view_instrument_level %}
+                {% include "accreditation-instrument-level/archive-page/view-modal.html" %}
+            {% endif %}
 
-            {% include "accreditation-instrument-level/archive-page/view-modal.html" %}
-            {% include "accreditation-instrument-level/main-page/edit-modal.html" %}
+            {% if perms.Accreditation.change_instrument_level %}
+                {% include "accreditation-instrument-level/main-page/edit-modal.html" %}
+            {% endif %}
+
         {% endfor %}
 
 

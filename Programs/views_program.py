@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 
 @login_required
+@permission_required("Programs.view_programs", raise_exception=True)
 def landing_page(request):
   #Getting all the data inside the Program table and storing it to the context variable
     create_form = CreateForm(request.POST or None)

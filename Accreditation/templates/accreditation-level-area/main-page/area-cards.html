@@ -20,12 +20,18 @@
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end">
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
-                                        <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
-                                                                                    
-                                        <form method="POST" action="{% url 'accreditations:instrument-level-area-archive' ins_pk=pk pk=record.id %}" id="archive-form-{{ record.id }}">
-                                            {% csrf_token %}
-                                            <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
-                                        </form>
+                                        
+                                        {% if perms.Accreditation.change_instrument_level_area %}
+                                            <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
+                                        {% endif %}
+
+                                        {% if perms.Accreditation.delete_instrument_level_area %}  
+                                            <form method="POST" action="{% url 'accreditations:instrument-level-area-archive' ins_pk=pk pk=record.id %}" id="archive-form-{{ record.id }}">
+                                                {% csrf_token %}
+                                                <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
+                                            </form>
+                                        {% endif %} 
+
                                     </div>
                                 </div>
                             </div>
@@ -43,7 +49,10 @@
             </div>
 
             {% include "accreditation-level-area/main-page/view-modal.html" %}
-            {% include "accreditation-level-area/main-page/edit-modal.html" %}
+
+            {% if perms.Accreditation.change_instrument_level_area %}
+                {% include "accreditation-level-area/main-page/edit-modal.html" %}
+            {% endif %}
         {% endfor %}
 
 

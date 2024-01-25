@@ -5,12 +5,13 @@ from .forms import CreateForm
 from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here.
 
 #-----------------------------[Archive Page Functions]----------------------------#
 @login_required
+@permission_required("Programs.change_programs | Programs.delete_programs", raise_exception=True)
 def landing_page(request):
     records = Programs.objects.filter(is_deleted=True)
 
@@ -26,6 +27,7 @@ def landing_page(request):
     return render(request, 'archive_page/archive_landing.html', context)
 
 @login_required
+@permission_required("Programs.delete_programs", raise_exception=True)
 def restore_program(request, pk):
     # Gets the records who have this ID
     program = Programs.objects.get(id=pk)
@@ -39,6 +41,7 @@ def restore_program(request, pk):
     return redirect('programs:archive-landing')
 
 @login_required
+@permission_required("Programs.delete_programs", raise_exception=True)
 def destroy_program(request, pk):
     if request.method == 'POST':
         entered_password = request.POST.get('password')

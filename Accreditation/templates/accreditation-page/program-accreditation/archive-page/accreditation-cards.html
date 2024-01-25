@@ -17,11 +17,19 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
-                                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
-                                    <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
-                                    <a  href={% url 'accreditations:accreditation-restore' pk=record.id %} class="dropdown-item">Restore</a>
-                                    <button type="button" class="dropdown-item text-danger delete-button" id="delete-button" data-id={{ record.id }}>Delete</button>
-                                </div>
+                                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
+                                    {% if perms.Accreditation.change_program_accreditation %}
+                                        <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
+                                    {% endif %}
+
+                                    {% if perms.Accreditation.delete_program_accreditation %}
+                                        <a  href={% url 'accreditations:accreditation-restore' pk=record.id %} class="dropdown-item">Restore</a>
+                                    {% endif %}
+
+                                    {% if perms.Accreditation.delete_program_accreditation %}
+                                        <button type="button" class="dropdown-item text-danger delete-button" id="delete-button" data-id={{ record.id }}>Delete</button>
+                                    {% endif %}
+                                    </div>
                             </div>
                         </div>
 
@@ -47,7 +55,10 @@
         </div>
 
         {% include "accreditation-page/program-accreditation/main-page/view-modal.html" %}
-        {% include "accreditation-page/program-accreditation/main-page/edit-modal.html" %}
+
+        {% if perms.Accreditation.change_program_accreditation %}
+            {% include "accreditation-page/program-accreditation/main-page/edit-modal.html" %}
+        {% endif %}
 
     {% endfor %}
 </div>

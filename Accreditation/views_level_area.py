@@ -11,9 +11,21 @@ from Accreditation.serializers import InstrumentSerializer
 from .forms import Create_LevelArea_Form, LevelAreaFormSet
 from django.contrib import messages
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
-class LevelAreaList(View):
+
+class LevelAreaList(PermissionRequiredMixin, View):
+    # Permission for GET requests
+    permission_required = "Accreditation.view_instrument_level_area"
+
+    def get_permission_required(self):
+        # Dynamic permission for POST requests
+        if self.request.method == "POST":
+            return "Accreditation.add_instrument_level_area"
+        return super().get_permission_required()
+    
+
     def get(self, request, pk):
         #Getting the data from the API
         formset  = LevelAreaFormSet(queryset=instrument_level_area.objects.none())
@@ -65,6 +77,7 @@ class LevelAreaList(View):
             return JsonResponse({'formset_errors': formset.errors}, status=400)
 
 @login_required
+@permission_required("Accreditation.change_instrument_level_area", raise_exception=True)
 def update(request, pk):
 # Retrieve the type object with the given primary key (pk)
     try:
@@ -111,6 +124,7 @@ def update(request, pk):
         return JsonResponse({'error': 'Error: There might be a selected area that is already exists. Please make sure that the selected area is not existing.'}, status=400)
         
 @login_required
+@permission_required("Accreditation.delete_instrument_level_area", raise_exception=True)
 def archive(request, ins_pk, pk):
     # Gets the records who have this ID
     level_area = instrument_level_area.objects.get(id=pk)
@@ -141,6 +155,7 @@ def archive(request, ins_pk, pk):
 
 #------------------------------------------------------------[ ARCHIVE PAGE CODES ]------------------------------------------------------------#
 @login_required
+@permission_required("Accreditation.delete_instrument_level_area", raise_exception=True)
 def archive_landing(request, pk):
     records = instrument_level_area.objects.select_related('instrument_level').select_related('area').filter(instrument_level=pk, is_deleted= True) #Getting all the data inside the Program table and storing it to the context variable
 
@@ -156,6 +171,7 @@ def archive_landing(request, pk):
     return render(request, 'accreditation-level-area/archive-page/landing-page.html', context)
 
 @login_required
+@permission_required("Accreditation.delete_instrument_level_area", raise_exception=True)
 def restore(request, ins_pk, pk):
     # Gets the records who have this ID
     level_area = instrument_level_area.objects.get(id=pk)
@@ -185,6 +201,7 @@ def restore(request, ins_pk, pk):
     return redirect('accreditations:instrument-level-area-archive-page', pk=ins_pk)
 
 @login_required
+@permission_required("Accreditation.delete_instrument_level_area", raise_exception=True)
 def destroy(request, pk):
     if request.method == 'POST':
         entered_password = request.POST.get('password')

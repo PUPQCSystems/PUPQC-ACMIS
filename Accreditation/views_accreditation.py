@@ -2,7 +2,7 @@ from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, QueryDict
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from Accreditation.forms import ProgramAccreditation_Form, ProgramAccreditation_UpdateForm
 from Accreditation.models import instrument, instrument_level, program_accreditation
 from django.core.serializers import serialize
@@ -11,6 +11,7 @@ from django.contrib.auth import authenticate
 # Create your views here.
 
 @login_required
+@permission_required("Accreditation.view_program_accreditation", raise_exception=True)
 def landing_page(request):
     #Getting the data from the API
     create_form = ProgramAccreditation_Form(request.POST or None)
@@ -31,6 +32,7 @@ def landing_page(request):
     return render(request, 'accreditation-page/program-accreditation/main-page/landing-page.html', context)
 
 @login_required
+@permission_required("Accreditation.add_program_accreditation", raise_exception=True)
 def create(request):
     create_form = ProgramAccreditation_Form(request.POST or None)
     if create_form.is_valid():
@@ -70,6 +72,7 @@ def filter_instrument(request):
         return JsonResponse({'instrument_levels': options})
 
 @login_required
+@permission_required("Accreditation.change_program_accreditation", raise_exception=True)
 def update(request, pk):
     # Retrieve the type object with the given primary key (pk)
     try:
@@ -99,6 +102,7 @@ def update(request, pk):
  
  
 @login_required
+@permission_required("Accreditation.delete_program_accreditation", raise_exception=True)
 def archive(request, pk):
     # Gets the records who have this ID
     accreditation_record = program_accreditation.objects.get(id=pk)
@@ -115,6 +119,7 @@ def archive(request, pk):
 # --------------------------------- [ARCHIVE PAGE] --------------------------------- #
 
 @login_required
+@permission_required("Accreditation.delete_program_accreditation", raise_exception=True)
 def archive_landing(request):
     #Getting the data from the API
     records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted= True) #Getting all the data inside the Program table and storing it to the context variable
@@ -135,6 +140,7 @@ def archive_landing(request):
 
 
 @login_required
+@permission_required("Accreditation.delete_program_accreditation", raise_exception=True)
 def restore(request, pk):
     # Gets the records who have this ID
     accreditation_record = program_accreditation.objects.get(id=pk)
@@ -148,6 +154,7 @@ def restore(request, pk):
     return redirect('accreditations:accreditation-archive-page')
 
 @login_required
+@permission_required("Accreditation.delete_program_accreditation", raise_exception=True)
 def destroy(request, pk):
     if request.method == 'DELETE':
 

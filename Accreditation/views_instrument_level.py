@@ -1,16 +1,25 @@
 from django.utils import timezone
 from django.views import View
-from rest_framework import generics, viewsets, status
 from django.shortcuts import render, redirect, render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import JsonResponse
 from .models import instrument, instrument_level, instrument_level_area #Import the model for data retieving
-from Accreditation.serializers import InstrumentSerializer
-from .forms import Create_Instrument_Form, Create_InstrumentLevel_Form, Create_LevelArea_Form, LevelAreaFormSet
+from .forms import Create_InstrumentLevel_Form, Create_LevelArea_Form, LevelAreaFormSet
 from django.contrib import messages
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
-class InstrumentLevelList(View):
+class InstrumentLevelList(PermissionRequiredMixin, View):
+    
+    # Permission for GET requests
+    permission_required = "Accreditation.view_instrument_level"
+
+    def get_permission_required(self):
+        # Dynamic permission for POST requests
+        if self.request.method == "POST":
+            return "Accreditation.add_instrument_level"
+        return super().get_permission_required()
+
     def get(self, request, pk):
         #Getting the data from the API
         instrumentlevel_form = Create_InstrumentLevel_Form(request.POST or None)
@@ -55,6 +64,7 @@ class InstrumentLevelList(View):
             return JsonResponse({'instrumentlevel_errors': instrumentlevel_form.errors, 'formset_errors': formset.errors}, status=400)
 
 @login_required
+@permission_required("Accreditation.change_instrument_level", raise_exception=True)
 def update(request, pk):
 # Retrieve the type object with the given primary key (pk)
     try:
@@ -81,6 +91,7 @@ def update(request, pk):
             return JsonResponse({'errors': update_form.errors}, status=400)
         
 @login_required
+@permission_required("Accreditation.delete_instrument_level", raise_exception=True)
 def archive(request, ins_pk, pk):
     # Gets the records who have this ID
     accreditation_instrument = instrument_level.objects.get(id=pk)
@@ -96,6 +107,7 @@ def archive(request, ins_pk, pk):
 
 #------------------------------------------------------------[ ARCHIVE PAGE CODES ]------------------------------------------------------------#
 @login_required
+@permission_required("Accreditation.delete_instrument_level", raise_exception=True)
 def archive_landing(request, pk):
     records = instrument_level.objects.select_related('instrument').filter(instrument=pk, is_deleted= True)
 
@@ -111,6 +123,7 @@ def archive_landing(request, pk):
     return render(request, 'accreditation-instrument-level/archive-page/landing-page.html', context)
 
 @login_required
+@permission_required("Accreditation.delete_instrument_level", raise_exception=True)
 def restore(request, ins_pk, pk):
     # Gets the records who have this ID
     accreditation_instrumentlevel = instrument_level.objects.get(id=pk)
@@ -125,6 +138,7 @@ def restore(request, ins_pk, pk):
     return redirect('accreditations:instrument-level-archive-page', pk=ins_pk)
 
 @login_required
+@permission_required("Accreditation.delete_instrument_level", raise_exception=True)
 def destroy(request, pk):
     if request.method == 'POST':
         entered_password = request.POST.get('password')

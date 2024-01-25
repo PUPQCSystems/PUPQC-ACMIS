@@ -18,15 +18,15 @@
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-end">
                                             <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
-                                            {% if perms.Programs.change_programs %}
+                                            {% if perms.Programs.change_programs%}
                                                 <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
                                             {% endif %}
 
-                                            {% if perms.Programs.change_programs or perms.Programs.delete_programs %}
+                                            {% if perms.Programs.delete_programs %}
                                                 <a  href={% url 'programs:restore' pk=record.id %} class="dropdown-item">Restore</a>
                                             {% endif %}
 
-                                            {% if perms.Programs.change_programs %}
+                                            {% if perms.Programs.delete_programs %}
                                                 <button type="button" class="dropdown-item text-danger delete-button" id="delete-button" data-id={{ record.id }}>Delete</button>
                                             {% endif %}
                                         </div>
@@ -46,10 +46,10 @@
 
                 {% include "archive_page/view_modal.html" %}
 
-                {% if perms.Programs.change_programs %}
+                {% if perms.Programs.change_programs  %}
                     {% include "program_page/edit_modal.html" %}
                 {% endif %}
-                
+
             <!-- END of For Loop -->
             {% endfor %}
     </div>

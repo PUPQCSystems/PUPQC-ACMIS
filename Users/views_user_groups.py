@@ -174,7 +174,7 @@ def destroy(request, pk):
             if authenticate(email=user.email, password=entered_password):
                 # Gets the records who have this ID
                 group_info = auth_group_info.objects.get(id=pk)
-                auth_group_id = group_info.auth_group.id
+                auth_group_id = group_info.auth_group_id
                 auth_group = Group.objects.get(id=auth_group_id)
 
                 #After getting that record, this code will delete it.

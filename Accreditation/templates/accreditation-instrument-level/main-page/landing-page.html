@@ -1,29 +1,37 @@
 {% extends "base.html" %}
 <!-- PAGE TITLE FOR THIS PAGE -->
 {% block page-title %}
-    {{ record.instrument.name }}
+    Accreditation Instrument's Level
 {% endblock page-title %}
 
 
 <!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
 {% block page-title-actions %}
         <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search levels..."/>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">Create</button>
-        <a href="{% url "accreditations:instrument-level-archive-page" pk=pk%}" class="btn btn-success" type="button">
-            Archive <i class="fa-solid fa-arrow-right"></i>
-        </a> 
+        {% if perms.Accreditation.add_instrument_level %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">Create</button>
+        {% endif %}
+        {% if perms.Accreditation.delete_instrument_level %}
+            <a href="{% url "accreditations:instrument-level-archive-page" pk=pk%}" class="btn btn-success" type="button">
+                Archive <i class="fa-solid fa-arrow-right"></i>
+            </a> 
+        {% endif %}
 {% endblock page-title-actions %}
 
 {% block content %}
 
-    {% include "accreditation-instrument-level/main-page/instrument-level-cards.html" %}
+    {% if perms.Accreditation.view_instrument_level %}
+        {% include "accreditation-instrument-level/main-page/instrument-level-cards.html" %}
+    {% endif %}
 
-    {% include "accreditation-instrument-level/main-page/create-modal.html" %}
+    {% if perms.Accreditation.add_instrument_level %}
+        {% include "accreditation-instrument-level/main-page/create-modal.html" %}
+    {% endif %}
 
-    {% include "accreditation-instrument-level/main-page/scripts.html" %}
-
-    {% include "accreditation-instrument-level/main-page/styles.html" %}
-   
+    {% if perms.Accreditation.add_instrument_level  or  perms.Accreditation.change_instrument_level  or  perms.Accreditation.delete_instrument_level %}
+        {% include "accreditation-instrument-level/main-page/scripts.html" %}
+        {% include "accreditation-instrument-level/main-page/styles.html" %}
+    {% endif %}
 {% endblock content %}
 
 

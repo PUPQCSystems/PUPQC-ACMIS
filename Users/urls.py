@@ -25,9 +25,9 @@ urlpatterns = [
 
     path('groups/', views_user_groups.landing, name="user-groups"),
     path('groups/create/', views_user_groups.CreateUserGroups.as_view(), name="user-groups-create"),
-    path('groups/archive/<str:pk>', views_user_groups.archive, name="user-groups-archive"),
-    path('groups/restore/<str:pk>', views_user_groups.restore, name="user-groups-restore"),
-    path('groups/destroy/<str:pk>', views_user_groups.destroy, name="user-groups-destroy"),
+    path('groups/archive/<str:pk>/', views_user_groups.archive, name="user-groups-archive"),
+    path('groups/restore/<str:pk>/', views_user_groups.restore, name="user-groups-restore"),
+    path('groups/destroy/<str:pk>/', views_user_groups.destroy, name="user-groups-destroy"),
     path('groups/archive-page/', views_user_groups.archive_landing, name="user-groups-archive-page"),
 
 

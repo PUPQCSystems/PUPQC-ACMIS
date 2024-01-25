@@ -76,7 +76,7 @@
 												'csrfmiddlewaretoken': '{{ csrf_token }}', },
 										success: function(response) {
 												if (response.success) {
-														window.location.href = response.url_landing;
+														location.reload();
 												} else {
 														toastr.error(response.error);
 												}

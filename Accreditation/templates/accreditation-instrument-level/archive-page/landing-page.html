@@ -18,8 +18,9 @@
 
     {% include "accreditation-instrument-level/archive-page/instrument-level-cards.html" %}
 
-    {% include "accreditation-instrument-level/archive-page/scripts.html" %}
-   
+    {% if perms.Accreditation.delete_instrument_level or perms.Accreditation.change_instrument_level %}
+        {% include "accreditation-instrument-level/archive-page/scripts.html" %}
+    {% endif %}
 {% endblock content %}
 
 
