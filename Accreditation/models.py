@@ -165,6 +165,10 @@ class parameter_components(models.Model):
     class Meta:
         unique_together = ('component', 'area_parameter')
 
+
+    def __str__(self):
+            return f"{self.component.name}"
+
     #I add this code so that the parameter_components object can accept additional field. This code fixes the error
     # parameter_components() got unexpected keyword arguments: 'component_update_form'
     def __init__(self, *args, **kwargs):

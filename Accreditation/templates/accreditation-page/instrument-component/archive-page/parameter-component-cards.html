@@ -19,53 +19,70 @@
 							<div class="col-md-8 col-lg-8 ">
 								{{ component.component }} 
 							</div>
+
 							<div class="col-auto ms-auto d-print-none">
-								<div class="btn-list">
+								<div class="dropdown">
+									<a href="" class="btn-action" data-bs-toggle="dropdown" aria-expanded="false">
+										<!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
+										<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path></svg>
+									</a>
+									<div class="dropdown-menu dropdown-menu-end" style="">
 
-									{% if component.is_deleted == True %}
+										{% if perms.Accreditation.delete_parameter_components %}
+											{% if component.is_deleted == True %}
+												<a  href={% url 'accreditations:program-accreditation-component-restore' comp_pk=component.id pk=pk %} class="dropdown-item text-green" >
+													<!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+													<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rotate-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+													<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+													<path d="M15 4.55a8 8 0 0 0 -6 14.9m0 -4.45v5h-5" />
+													<path d="M18.37 7.16l0 .01" />
+													<path d="M13 19.94l0 .01" />
+													<path d="M16.84 18.37l0 .01" />
+													<path d="M19.37 15.1l0 .01" />
+													<path d="M19.94 11l0 .01" />
+													</svg>
+													Restore
+												</a>
+											{% endif %}
+										{% endif %}
 
 
-										<a  href={% url 'accreditations:instrument-parameter-component-restore' comp_pk=component.id pk=pk %} class="btn btn-green w-20 btn-icon">
-											<!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-											<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rotate-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-											<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-											<path d="M15 4.55a8 8 0 0 0 -6 14.9m0 -4.45v5h-5" />
-											<path d="M18.37 7.16l0 .01" />
-											<path d="M13 19.94l0 .01" />
-											<path d="M16.84 18.37l0 .01" />
-											<path d="M19.37 15.1l0 .01" />
-											<path d="M19.94 11l0 .01" />
-											</svg>
-										</a>
-									
-									{% endif %}
-
-
-									<!-- Button to trigger modal -->
-									<button type="button" class="btn btn-primary w-20 btn-icon" data-bs-toggle="modal" data-bs-target="#edit-component-modal-{{ component.id }}">
-										<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-										<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-										<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-										<path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-										<path d="M16 5l3 3" />
-										</svg>
-									</button>
-
-									{% if component.is_deleted == True %}
-										<button type="button" class="btn w-20 btn-icon btn-danger delete-component-button" data-id={{ component.id }}>
-											<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-												<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-												<path d="M4 7h16" />
-												<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-												<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-												<path d="M10 12l4 4m0 -4l-4 4" />
+										{% if perms.Accreditation.change_parameter_components %}
+											<!-- Button to trigger modal -->
+											<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit-component-modal-{{ component.id }}">
+												<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+												<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+												<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+												<path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+												<path d="M16 5l3 3" />
 												</svg>
-										</button>
-									{% endif %}
-								
+												Edit
+											</a>
+										{% endif %}
+	
 
+										{% if perms.Accreditation.delete_parameter_components %}
+											{% if component.is_deleted == True %}
+												<a class="dropdown-item text-danger delete-component-button" data-id={{ component.id }}>
+													<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+														<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+														<path d="M4 7h16" />
+														<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+														<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+														<path d="M10 12l4 4m0 -4l-4 4" />
+													</svg>
+													Delete
+												</a>
+								
+											{% endif %}
+
+										{% endif %}
+
+										
+									</div>
 								</div>
 							</div>
+
 						</div>
 					</span> <!--  END OF COMPONENT CARD  -->
 
@@ -82,41 +99,61 @@
 												<div class="col-md-8 col-lg-8 ">
 													{{ upload_bin.title }}
 												</div>
+
 												<div class="col-auto ms-auto d-print-none">
-													<div class="btn-list">
+													<div class="dropdown">
+													  <a href="" class="btn-action" data-bs-toggle="dropdown" aria-expanded="false">
+														<!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
+														<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path></svg>
+													  </a>
+													  <div class="dropdown-menu dropdown-menu-end" style="">
 
-														<!-- Button to trigger UPLOAD BIN modal -->
-														<button type="button" class="btn btn-primary w-20 btn-icon" data-bs-toggle="modal" data-bs-target="#edit-upload-bin-modal-{{ upload_bin.id }}">
-															<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-															<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-															<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-															<path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-															<path d="M16 5l3 3" />
-															</svg>
-														</button>
+														{% if perms.Accreditation.change_component_upload_bin %}
+															<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#review-modal-{{ upload_bin.id }}">
+																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																	<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+																	<path d="M14 3v4a1 1 0 0 0 1 1h4" />
+																	<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+																	<path d="M9 15l2 2l4 -4" />
+																	</svg>
+																Review
+															</a>
+														{% endif %}
 
-														<button type="button" class="btn w-20 btn-icon btn-secondary" data-bs-toggle="modal" data-bs-target="#editModal">
-															<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-settings" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-																<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-																<path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-																<path d="M12 10.5v1.5" />
-																<path d="M12 16v1.5" />
-																<path d="M15.031 12.25l-1.299 .75" />
-																<path d="M10.268 15l-1.3 .75" />
-																<path d="M15 15.803l-1.285 -.773" />
-																<path d="M10.285 12.97l-1.285 -.773" />
-																<path d="M14 3v4a1 1 0 0 0 1 1h4" />
-																<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-															  </svg>
-														</button>
+														{% if perms.Accreditation.add_uploaded_evidences %}
+															<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#upload-file-modal-{{ upload_bin.id }}">
+																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-upload" width="48" height="48" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																	<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+																	<path d="M14 3v4a1 1 0 0 0 1 1h4" />
+																	<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+																	<path d="M12 11v6" />
+																	<path d="M9.5 13.5l2.5 -2.5l2.5 2.5" />
+																</svg>
+																Upload
+															</a>
+														{% endif %}
+															
+														{% if perms.Accreditation.change_component_upload_bin %}
+															<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit-upload-bin-modal-{{ upload_bin.id }}">
+																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																	<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+																	<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+																	<path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+																	<path d="M16 5l3 3" />
+																</svg>
+																Edit
+															</a>
+														{% endif %}
 
+													  </div>
 													</div>
 												</div>
+
 											</div>
 										</span>
 									</li>	
 
-								{% elif component.id == True or upload_bin.is_deleted == True %}
+								{% elif component.is_deleted == True or upload_bin.is_deleted == True %}
 									<li>
 										<span class="col-md-12 col-lg-12 card record-card indicator" onclick="toggleList(this)">
 
@@ -134,82 +171,104 @@
 
 												<div class="col-auto ms-auto d-print-none">
 													<div class="dropdown">
-													  <a href="" class="btn-action" data-bs-toggle="dropdown" aria-expanded="false">
-														<!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
-														<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path></svg>
-													  </a>
-													  <div class="dropdown-menu dropdown-menu-end" style="">
-															<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#configure-modal-{{ upload_bin.id }}">
-																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-																	<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-																	<path d="M14 3v4a1 1 0 0 0 1 1h4" />
-																	<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-																	<path d="M9 15l2 2l4 -4" />
-																	</svg>
-																Review
-															</a>
-
-															<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit-upload-bin-modal-{{ upload_bin.id }}">
-																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-upload" width="48" height="48" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-																	<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-																	<path d="M14 3v4a1 1 0 0 0 1 1h4" />
-																	<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-																	<path d="M12 11v6" />
-																	<path d="M9.5 13.5l2.5 -2.5l2.5 2.5" />
-																</svg>
-																Upload
-															</a>
-															
-														<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit-upload-bin-modal-{{ upload_bin.id }}">
-															<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-																<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-																<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-																<path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-																<path d="M16 5l3 3" />
-															</svg>
-															Edit
+														<a href="" class="btn-action" data-bs-toggle="dropdown" aria-expanded="false">
+															<!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
+															<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"></path></svg>
 														</a>
+														<div class="dropdown-menu dropdown-menu-end" style="">
 
-														{% if upload_bin.is_deleted == True %}
-															<a  href={% url 'accreditations:instrument-parameter-uploadBin-restore' upl_pk=upload_bin.id pk=pk %} class="dropdown-item text-green">
-																<!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rotate-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-																<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-																<path d="M15 4.55a8 8 0 0 0 -6 14.9m0 -4.45v5h-5" />
-																<path d="M18.37 7.16l0 .01" />
-																<path d="M13 19.94l0 .01" />
-																<path d="M16.84 18.37l0 .01" />
-																<path d="M19.37 15.1l0 .01" />
-																<path d="M19.94 11l0 .01" />
-																</svg>
-																Restore
-															</a>
-														{% endif %}			
+															{% if perms.Accreditation.change_component_upload_bin %}
+																<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#review-modal-{{ upload_bin.id }}">
+																	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																		<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+																		<path d="M14 3v4a1 1 0 0 0 1 1h4" />
+																		<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+																		<path d="M9 15l2 2l4 -4" />
+																		</svg>
+																	Review
+																</a>
+															{% endif %}
 
-														{% if upload_bin.is_deleted == True %}
-															<a  class="dropdown-item text-danger delete-upload-button" data-id={{ upload_bin.id }}>
-																<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-																	<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-																	<path d="M4 7h16" />
-																	<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-																	<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-																	<path d="M10 12l4 4m0 -4l-4 4" />
-																</svg>
-																Delete
-															</a>
-														{% endif %}
+															{% if perms.Accreditation.add_uploaded_evidences %}
+																<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#upload-file-modal-{{ upload_bin.id }}">
+																	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-upload" width="48" height="48" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																		<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+																		<path d="M14 3v4a1 1 0 0 0 1 1h4" />
+																		<path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+																		<path d="M12 11v6" />
+																		<path d="M9.5 13.5l2.5 -2.5l2.5 2.5" />
+																	</svg>
+																	Upload
+																</a>
+															{% endif %}
+																
+															{% if perms.Accreditation.change_component_upload_bin %}
+																<a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit-upload-bin-modal-{{ upload_bin.id }}">
+																	<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																		<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+																		<path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+																		<path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+																		<path d="M16 5l3 3" />
+																	</svg>
+																	Edit
+																</a>
+															{% endif %}
 
-													  </div>
+															
+															{% if perms.Accreditation.delete_component_upload_bin %}
+																{% if upload_bin.is_deleted == True %}
+																	<a  href={% url 'accreditations:program-accreditation-uploadBin-restore' upl_pk=upload_bin.id pk=pk %} class="dropdown-item text-green" >
+																		<!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+																		<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rotate-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																		<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+																		<path d="M15 4.55a8 8 0 0 0 -6 14.9m0 -4.45v5h-5" />
+																		<path d="M18.37 7.16l0 .01" />
+																		<path d="M13 19.94l0 .01" />
+																		<path d="M16.84 18.37l0 .01" />
+																		<path d="M19.37 15.1l0 .01" />
+																		<path d="M19.94 11l0 .01" />
+																		</svg>
+																		Restore
+																	</a>
+														
+																{% endif %}			
+															{% endif %}			
+
+															{% if perms.Accreditation.delete_component_upload_bin %}
+																{% if upload_bin.is_deleted == True %}
+																	<a class="dropdown-item delete-upload-button text-danger" data-id={{ upload_bin.id }}>
+																		<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-x" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+																			<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+																			<path d="M4 7h16" />
+																			<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+																			<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+																			<path d="M10 12l4 4m0 -4l-4 4" />
+																		</svg>
+																		Delete
+																	</a>
+				
+																{% endif %}
+															{% endif %}
+
+														</div>
 													</div>
-												  </div>
-
-											</div>
-
+												</div>
 											</div>
 										</span>
 									</li>	
+									
 								{% endif %}
-								{% include "accreditation-parameter-component/main-page/uploadBin-edit-modal.html" %}
+	
+								{% if perms.Accreditation.change_component_upload_bin %}
+									{% include "accreditation-parameter-component/main-page/uploadBin-edit-modal.html" %}
+									{% include "accreditation-page/instrument-component/main-page/uploadBin-review-modal.html" %}
+								{% endif %}
+
+								{% if perms.Accreditation.add_uploaded_evidences %}
+									{% include "accreditation-page/instrument-component/main-page/upload-file-modal.html" %}
+								{% endif %}
+
+
 							{% endif %}
 							
 							

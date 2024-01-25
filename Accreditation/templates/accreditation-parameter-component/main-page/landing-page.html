@@ -8,15 +8,24 @@
 <!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
 {% block page-title-actions %}
         <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search levels..."/>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-component-modal">Create</button>
-        <a href="{% url "accreditations:instrument-parameter-component-archive-page" pk=pk%}" class="btn btn-success" type="button">
-            Archive <i class="fa-solid fa-arrow-right"></i>
-        </a> 
+        {% if perms.Accreditation.add_parameter_components %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-component-modal">Create</button>
+        {% endif %}
+
+        {% if perms.Accreditation.delete_parameter_components %}
+            <a href="{% url "accreditations:instrument-parameter-component-archive-page" pk=pk%}" class="btn btn-success" type="button">
+                Archive <i class="fa-solid fa-arrow-right"></i>
+            </a> 
+        {% endif %}
+
 {% endblock page-title-actions %}
 
 {% block content %}
-    {% include "accreditation-parameter-component/main-page/component-create-modal.html" %}
 
+    {% if perms.Accreditation.add_parameter_components %}
+        {% include "accreditation-parameter-component/main-page/component-create-modal.html" %}
+    {% endif %}
+    
     {% include "accreditation-parameter-component/main-page/parameter-component-cards.html" %}
 
     {% include "accreditation-parameter-component/main-page/scripts.html" %}

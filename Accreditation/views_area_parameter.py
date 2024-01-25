@@ -33,7 +33,7 @@ class AreaParameterList(View):
 
         return render(request, 'accreditation-level-area-parameter/main-page/landing-page.html', context)        
 
-class CreataAreaParameter(View):
+class CreatAreaParameter(View):
     def get(self, request, pk):
         #Getting the data from the API
         formset  = AreaParameterFormSet(queryset=level_area_parameter.objects.none())
@@ -66,9 +66,9 @@ class CreataAreaParameter(View):
 
                 # Save the instance to the database
                 activity_log_entry.save()
-
+                redirect_url= f'/accreditation/instrument/level/area/parameter/{pk}/'
                 messages.success(request, f"Parameters are successfully created!")
-                return JsonResponse({'status': 'success'}, status=200)
+                return JsonResponse({'status': 'success', 'redirect_url': redirect_url}, status=200)
             else:
                 return JsonResponse({'errors': formset.errors}, status=400)
             

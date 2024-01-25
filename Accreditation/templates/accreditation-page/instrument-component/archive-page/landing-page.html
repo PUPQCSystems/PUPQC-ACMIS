@@ -16,7 +16,9 @@
 
 {% block content %}
 
-    {% include "accreditation-page/instrument-component/archive-page/parameter-component-cards.html" %}
+    {% if perms.Accreditation.delete_parameter_components %}
+        {% include "accreditation-page/instrument-component/archive-page/parameter-component-cards.html" %}
+    {% endif %}
 
     {% include "accreditation-page/instrument-component/archive-page/scripts.html" %}
 

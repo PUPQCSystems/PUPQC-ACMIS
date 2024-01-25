@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 @login_required
@@ -233,7 +234,7 @@ def restore_component(request, comp_pk, pk):
     activity_log_entry.save()
 
     messages.success(request, f'Component is successfully restored!') 
-    return redirect('accreditations:program-accreditation-component-archive', pk=pk)
+    return redirect('accreditations:program-accreditation-component-archive-page', pk=pk)
 
 @login_required
 @permission_required("Accreditation.delete_component_upload_bin", raise_exception=True)
@@ -262,14 +263,14 @@ def restore_uploadBin(request, upl_pk, pk):
     activity_log_entry.save()
 
     messages.success(request, f'Component is successfully restored!') 
-    return redirect('accreditations:program-accreditation-component-archive', pk=pk)
+    return redirect('accreditations:program-accreditation-component-archive-page', pk=pk)
 
 
 
 
 # ---------------------------------- [REVIEW FUNCTIONALITY CODE] -----------------------------#
 @login_required
-
+@permission_required("Accreditation.change_component_upload_bin", raise_exception=True)
 def create_review(request, pk):
 # Retrieve the type object with the given primary key (pk)
     try:
@@ -299,7 +300,7 @@ def create_review(request, pk):
         
 # ---------------------------------- [ UPLOAD FILE CODES ] -----------------------------#
 @login_required
-@permission_required("Accreditation.add_component_upload_bin", raise_exception=True)
+@permission_required("Accreditation.add_uploaded_evidences", raise_exception=True)
 def upload_file(request, pk):
     try:
         upload_bin = component_upload_bin.objects.get(id=pk)
@@ -309,14 +310,13 @@ def upload_file(request, pk):
 
     if request.method == 'POST':
         length = request.POST.get('length')
+        length = int(length)
 
-        print('Length value: ',length)
-        
         if length != 0:
-            upload_bin.status = "ur"
-            upload_bin.save()
-
-            if length == upload_bin.accepted_file_count:
+            if length <= upload_bin.accepted_file_count:
+                upload_bin.status = "ur"
+                upload_bin.save()
+                print(upload_bin.accepted_file_count)
                 for file_num in range(0, int(length)):
                     print('File:', request.FILES.get(f'files{file_num}'))
                     uploaded_evidences.objects.create(
@@ -335,4 +335,85 @@ def upload_file(request, pk):
     
         else:
             return JsonResponse({'error': 'Please attach a file before submitting the form.'}, status=400)
+        
+class FileUpload(PermissionRequiredMixin, View):
     
+    permission_required = ["Accreditation.add_uploaded_evidences", "Accreditation.view_uploaded_evidences"]
+
+    def get(self, request, pk, comp_pk):
+        upload_bin = component_upload_bin.objects.select_related('parameter_component').get(id=pk, is_deleted = False)
+        # This is for the accepted_file_type mapping. This is for making the file types more presentable
+        file_type_mapping = {
+            'image/jpeg': 'JPEG',
+            'image/png': 'PNG',
+            'image/gif': 'GIF',
+            'image/bmp': 'BMP',
+            'image/svg+xml': 'SVG',
+            'image/webp': 'WebP',
+            'application/pdf': 'PDF',
+            'application/msword': 'Microsoft Word (DOC)',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'Microsoft Word (DOCX)',
+            'application/vnd.ms-excel': 'Microsoft Excel (XLS)',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'Microsoft Excel (XLSX)',
+            'application/vnd.ms-powerpoint': 'Microsoft PowerPoint (PPT)',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'Microsoft PowerPoint (PPTX)',
+            'text/plain': 'Plain Text (TXT)',
+            'audio/mp3': 'MP3',
+            'video/mp4': 'MP4',
+            'audio/ogg': 'Ogg',
+            'video/webm': 'WebM',
+            'application/zip': 'ZIP',
+            'application/x-rar-compressed': 'RAR',
+            'text/csv': 'CSV',
+            'text/html': 'HTML',
+            'text/css': 'CSS',
+            'application/javascript': 'JavaScript',
+        }
+
+        print(pk)
+      
+
+        context = {     'upload_bin': upload_bin
+                        , 'pk':pk
+                        , 'comp_pk': comp_pk
+                        , 'file_type_mapping': file_type_mapping
+                        
+                        }  #Getting all the data inside the type table and storing it to the context variable
+
+        return render(request, 'accreditation-page/instrument-component/main-page/upload-file-page.html', context)
+    
+    def post(self, request, pk, comp_pk):
+        try:
+            upload_bin = component_upload_bin.objects.get(id=pk)
+        except component_upload_bin.DoesNotExist:
+            return JsonResponse({'errors': 'Upload Bin not found'}, status=404)
+
+
+        if request.method == 'POST':
+            length = request.POST.get('length')
+            length = int(length)
+
+            if length != 0:
+                if length <= upload_bin.accepted_file_count:
+                    upload_bin.status = "ur"
+                    upload_bin.save()
+                    print(upload_bin.accepted_file_count)
+                    for file_num in range(0, int(length)):
+                        print('File:', request.FILES.get(f'files{file_num}'))
+                        uploaded_evidences.objects.create(
+                            upload_bin_id = pk ,
+                            uploaded_by = request.user,
+                            file_name =  request.FILES.get(f'files{file_num}'), 
+                            file_path=request.FILES.get(f'files{file_num}')
+                            
+                        )
+
+                    messages.success(request, f'Files Uploaded successfully!') 
+                    redirect_url = f"/accreditation/program-accreditation/area/parameter/upload/{comp_pk}"
+                    return JsonResponse({'status': 'success', 'redirect_url': redirect_url}, status=200)
+                
+                else:
+                    return JsonResponse({'error': 'Please make sure to submit ' +str(upload_bin.accepted_file_count)+ ' file/s only.'}, status=400)
+        
+            else:
+                return JsonResponse({'error': 'Please attach a file before submitting the form.'}, status=400)

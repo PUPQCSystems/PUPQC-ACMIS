@@ -11,14 +11,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 class InstrumentLevelList(PermissionRequiredMixin, View):
     
-    # Permission for GET requests
-    permission_required = "Accreditation.view_instrument_level"
-
-    def get_permission_required(self):
-        # Dynamic permission for POST requests
-        if self.request.method == "POST":
-            return "Accreditation.add_instrument_level"
-        return super().get_permission_required()
+    permission_required = ["Accreditation.view_instrument_level", "Accreditation.add_instrument_level"]
 
     def get(self, request, pk):
         #Getting the data from the API
