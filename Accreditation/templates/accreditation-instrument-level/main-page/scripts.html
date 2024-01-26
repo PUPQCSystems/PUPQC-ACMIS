@@ -20,8 +20,13 @@
                     location.reload();
                 },
                 error: function(error) {
+
+                    if (error.responseJSON && error.responseJSON.error) {
+                        // Handle the IntegrityError message
+                        toastr.error(error.responseJSON.error);
+                    }
                     // Check for the errors field in the JSON response
-                    if (error.responseJSON && error.responseJSON.errors) {
+                    else if (error.responseJSON && error.responseJSON.errors) {
                         // Iterate over the errors field and display the validation errors to the user
                         for (var field in error.responseJSON.errors) {
                             toastr.error(error.responseJSON.errors[field]);

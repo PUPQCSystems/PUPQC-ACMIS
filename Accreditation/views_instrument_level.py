@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.utils import timezone
 from django.views import View
 from django.shortcuts import render, redirect, render, get_object_or_404
@@ -35,26 +36,37 @@ class InstrumentLevelList(PermissionRequiredMixin, View):
         return render(request, 'accreditation-instrument-level/main-page/landing-page.html', context)
     
     def post(self, request, pk):
+    
+
         instrumentlevel_form = Create_InstrumentLevel_Form(request.POST or None)
         formset = LevelAreaFormSet(data=self.request.POST)
 
-        if instrumentlevel_form.is_valid() and formset.is_valid():
-            instrumentlevel_form.instance.created_by = request.user
-            instrumentlevel_form.instance.instrument_id = pk
-            instrumentlevel = instrumentlevel_form.save()  # Save and capture the instance
+        try:
 
-            instrument_level_id = instrumentlevel.id  # Get the ID 
+            if instrumentlevel_form.is_valid() and formset.is_valid():
+                instrumentlevel_form.instance.created_by = request.user
+                instrumentlevel_form.instance.instrument_id = pk
+                instrumentlevel = instrumentlevel_form.save()  # Save and capture the instance
 
-            for form in formset:
-                form.instance.instrument_level_id = instrument_level_id
-                form.instance.created_by = request.user
+                instrument_level_id = instrumentlevel.id  # Get the ID 
 
-            formset.save()  # Save the formset with the assigned foreign keys
+                for form in formset:
+                    form.instance.instrument_level_id = instrument_level_id
+                    form.instance.created_by = request.user
 
-            messages.success(request, f"Accreditation instrument's level is successfully created!")
-            return JsonResponse({'status': 'success'}, status=200)
-        else:
-            return JsonResponse({'instrumentlevel_errors': instrumentlevel_form.errors, 'formset_errors': formset.errors}, status=400)
+                formset.save()  # Save the formset with the assigned foreign keys
+
+                messages.success(request, f"Accreditation instrument's level is successfully created!")
+                return JsonResponse({'status': 'success'}, status=200)
+            else:
+                return JsonResponse({'instrumentlevel_errors': instrumentlevel_form.errors, 'formset_errors': formset.errors}, status=400)
+            
+        except IntegrityError as e:
+            # Handle the IntegrityError here
+            return JsonResponse({'error': 'Error: Duplicate or conflicting instrument levels or areas selected. Please choose a unique option.'}, status=400)
+
+
+
 
 @login_required
 @permission_required("Accreditation.change_instrument_level", raise_exception=True)
