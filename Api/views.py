@@ -1,7 +1,13 @@
 from rest_framework import generics, serializers
 from Accreditation.models import accreditation_records, program_accreditation
-from .serializers import AccreditationRecordSerializer
+from Users.models import faculty_certificates
+from .serializers import AccreditationRecordSerializer, FacultyCertificateSerializer
 
-class ItemListCreateView(generics.ListAPIView):
-    queryset = program_accreditation.objects.select_related('program','instrument_level').filter(is_deleted=False)
+class AccreditationRecords(generics.ListAPIView):
+    queryset = accreditation_records.objects.select_related().filter(is_deleted=False)
     serializer_class = AccreditationRecordSerializer
+
+
+class FacultyCertificateRecords(generics.ListAPIView):
+    queryset = faculty_certificates.objects.filter(is_deleted=False)
+    serializer_class = FacultyCertificateSerializer

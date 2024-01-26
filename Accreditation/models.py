@@ -232,6 +232,8 @@ class program_accreditation(models.Model):
     class Meta:
         unique_together = ('program', 'instrument_level')
 
+    
+
 class accreditation_records(models.Model):
     accredited_program = models.ForeignKey(program_accreditation, related_name='accredited_program', on_delete=models.CASCADE, null=True, blank=True)
     accreditation_level = models.ForeignKey(accredlevel, related_name='program_accreditation_level' ,on_delete=models.CASCADE, null=True, blank=True)
@@ -249,3 +251,5 @@ class accreditation_records(models.Model):
 
         
 
+    def __str__(self):
+        return(self.accredited_program.program)

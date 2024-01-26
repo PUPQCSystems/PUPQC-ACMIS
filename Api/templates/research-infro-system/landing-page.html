@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    PUPQC's Research Informations
+{% endblock page-title %}
+
+{% block content %}
+    <div class="card ">
+        <div class="card-header ">
+            <h2 class="card-title">Researches</h2>
+        </div>
+        <div class="card-body">
+            <div class="tbl-container">
+                <table id="myTable" class="">
+                    <thead>
+                        <tr>
+                            <th>Research Title</th>
+                            <th>Researchers</th>
+                            <th>Research Adviser</th>
+                            <th>Date Published</th>          
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for record in research_records %}
+                            <tr>
+                                <td>
+                                    {{ record.Title}}
+                                </td>
+
+                                <td>        
+                                    {% for researcher in  record.Researchers%}
+                                        {{ researcher.Name }} ({{ researcher.Student Number }}),
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {{ records.Projects.Title }}
+                                    
+                                </td>
+                                <td>
+                                    PUP Publication Office
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                    
+                        
+                        <!-- Add the remaining rows as per your data -->
+                        <!-- ... (additional rows) ... -->
+                    </tbody>
+                </table>
+                </div>
+        </div>
+    </div>
+
+
+
+
+
+
+{% endblock content %}
+

@@ -106,3 +106,18 @@ class auth_group_info(models.Model):
 
     def __str__(self):
         return self.auth_group.name
+
+
+class faculty_certificates(models.Model):
+    first_name = models.CharField(max_length=150, null=False)
+    last_name = models.CharField(max_length=150, null=True, blank=True, unique=True)
+    middle_name = models.CharField(max_length=150, null=True, blank=True, unique=True)
+    award_recieved = models.CharField(max_length=200, null=True, blank=True, unique=True)
+    certifying_body = models.CharField(max_length=200, null=True, blank=True, unique=True)
+    date =  models.DateTimeField(auto_now=False, null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_faculty', null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_faculty', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
