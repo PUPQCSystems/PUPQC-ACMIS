@@ -2,11 +2,12 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from .forms import UpdateForm, CreateUserForm
 from Users.models import CustomUser, auth_group_info
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, Permission
+from django.contrib import auth
 
 @login_required
 def landing_page(request):
@@ -128,10 +129,6 @@ def deactivate_account(request, pk):
 
 
 
-    #After getting that record, this code will delete it.
-
-    return redirect('programs:landing')
-
         
 
 #----------------------------------------[ ARCHIVE PAGE FUNCTIONS ]----------------------------------------#
@@ -184,4 +181,9 @@ def reactivate_account(request, pk):
 
 
 
+@login_required
+def logout_view(request):
+  auth.logout(request)
+  # Redirect to a success page.
+  return HttpResponseRedirect("/accounts/login/")
 

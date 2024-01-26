@@ -8,6 +8,8 @@ from . import views_profile, views_user
 app_name = 'users'
 
 urlpatterns = [
+
+    path('logout/user/', views_user.logout_view, name="logout-user"),
     path('', views_user.landing_page, name='landing'),
     path('register/', views_user.register, name="create_user"),
     path('update/<str:pk>/', views_user.update_account, name="update-account"),
@@ -29,6 +31,8 @@ urlpatterns = [
     path('groups/restore/<str:pk>/', views_user_groups.restore, name="user-groups-restore"),
     path('groups/destroy/<str:pk>/', views_user_groups.destroy, name="user-groups-destroy"),
     path('groups/archive-page/', views_user_groups.archive_landing, name="user-groups-archive-page"),
+
+
 
 
 
