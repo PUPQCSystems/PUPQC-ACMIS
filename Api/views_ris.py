@@ -14,6 +14,7 @@ def research_info(request):
 
     headers = {
         'Authorization': bearer_token,
+                          
         'Content-Type': 'application/json',
     }
 
