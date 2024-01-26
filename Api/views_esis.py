@@ -13,5 +13,5 @@ def extension_info(request):
 
 
 
-    return render(request, 'extension-services-info-system/landing-page.html', {'records':records})
+    return render(request, 'extension-services-info-system/landing-page.html', {'data':records})
 

@@ -12,51 +12,40 @@
             <h2 class="card-title">Extensions</h2>
         </div>
         <div class="card-body">
-            <div class="tbl-container">
-                <table id="myTable" class="">
-                    <thead>
-                        <tr>
-                            <th>Extension Name</th>
-                            <th>Program</th>
-                            <th>Projects</th>
-                            <th>Project Title</th>
-                            <th>Implementer</th>
-                            <th>Dates</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                {% for item in data %}
+                <h2>{{ item.Name }}</h2>
+                <p>Program: {{ item.Program.Name }} ({{ item.Program.CourseCode }})</p>
+        
+                {% if item.Projects %}
+                    <h3>Projects:</h3>
+                    <ul>
+                        {% for project in item.Projects %}
+                            <li>
+                                <strong>{{ project.Title }}</strong>
+                                <p>Implementer: {{ project.Implementer }}</p>
 
-                        {% for record in records %}
-                            <tr>
-                                <td>
-                                    {{ record.Name }}
-                                </td>
+                                <ul>
+                                    Member: 
+                                    {% for key, value in project.ProjectTeam.items %}
+                                         <li>{{ value }}</li>
+                                    {% endfor %}
 
-                                <td>        
-                                    {{ records.Program.Name }} ({{ records.Program.CourseCode }})
-                                </td>
-                                <td>
-                                    {{ records.Projects.Title }}
-                                    
-                                </td>
-                                <td>
-                                    PUP Publication Office
-                                </td>
-                                <td>
-                                    Scopus
-                                </td>
-                                <td>Faculty</td>
-                            </tr>
+                                    <p>Target Group: {{ project.TargetGroup }}</p>
+                                    <p>Project Type: {{ project.ProjectType }}</p>
+                                    <p>Start Date: {{ project.StartDate }}</p>
+                                    <p>End DATE: {{ project.EndDate }}</p>
+                                    <p>Impact Statement: {{ project.ImpactStatement }}</p>
+                                    <p>Objectives: {{ project.Objectives }}</p>
+                                
+                                    <p>Image: {{ project.ImageUrl }}</p>
+                                </ul> 
+                                <!-- Add more project details as needed -->
+                            </li>
                         {% endfor %}
-
-                    
-                        
-                        <!-- Add the remaining rows as per your data -->
-                        <!-- ... (additional rows) ... -->
-                    </tbody>
-                </table>
-                </div>
-        </div>
+                    </ul>
+                {% endif %}
+            {% endfor %}
+    
     </div>
 
 
