@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-3u_ik-u)s!pe@ccyhjhvg%^zk&gozhm6z^$c4(z4adm07ue)on'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 CRISPY_FAIL_SILENTLY = not DEBUG
 
@@ -122,24 +122,24 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        'NAME': 'ACIS-Database',
-        'USER': 'ACIS',
-        'PASSWORD': 'acis' ,
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         'NAME': 'ACIS-Database',
+#         'USER': 'ACIS',
+#         'PASSWORD': 'acis' ,
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
 
 
 # Database settings for render deployment
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         default='postgres://acis_database_user:pxH4rLwHUXeUbSurrnwzo1iVjpU41MiK@dpg-cmp1oj6g1b2c73f83co0-a.singapore-postgres.render.com/acis_database',
-#     )
-# }
+DATABASES = {
+    'default': dj_database_url.config(
+        default='postgres://acis_database_user:pxH4rLwHUXeUbSurrnwzo1iVjpU41MiK@dpg-cmp1oj6g1b2c73f83co0-a.singapore-postgres.render.com/acis_database',
+    )
+}
 
 
 # Password validation
