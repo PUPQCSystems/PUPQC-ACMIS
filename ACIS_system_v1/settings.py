@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'Dashboard',
     'Accreditation',
     'LandingPage',
+    'Api',
 
 
 ]

@@ -26,7 +26,7 @@
                                                     <path d="M5 18h14" />
                                                     <path d="M5 15h14" />
                                                 </svg>
-                                            {{ upload_bin.parameter_component}} EVIDENCES {{ upload_bin.id }}
+                                            {{ upload_bin.parameter_component}} EVIDENCES
                                         </span>
                                         </h1>
                                         <div class="text-muted mt-1"> 
@@ -35,7 +35,7 @@
                                                 <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
                                                 <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
                                                 </svg>
-                                            {{ component.created_by.first_name }} {{ component.created_by.last_name }} - Last modified ({{ component.modified_at|date:"F j, Y g:i A" }})</div>
+                                            {{ upload_bin.created_by.first_name }} {{ upload_bin.created_by.last_name }} - Last modified ({{ upload_bin.modified_at|date:"F j, Y g:i A" }})</div>
                                     </div>
                                 </div>
 

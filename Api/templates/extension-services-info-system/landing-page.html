@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    Research Informations
+{% endblock page-title %}
+
+{% block content %}
+    <div class="card ">
+        <div class="card-header ">
+            <h2 class="card-title">Extensions</h2>
+        </div>
+        <div class="card-body">
+            <div class="tbl-container">
+                <table id="myTable" class="display">
+                    <thead>
+                        <tr>
+                            <th>Extension Name</th>
+                            <th>Program</th>
+                            <th>Projects</th>
+                            <th>Project Title</th>
+                            <th>Implementer</th>
+                            <th>Dates</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            {{ records }}
+                        {% for record in records %}
+                            <tr>
+                                <td>
+                                    {{ records}}
+                                </td>
+
+                                <td>        
+                                    {{ records.Program.Name }} ({{ records.Program.CourseCode }})
+                                </td>
+                                <td>
+                                    {{ records.Projects.Title }}
+                                    
+                                </td>
+                                <td>
+                                    PUP Publication Office
+                                </td>
+                                <td>
+                                    Scopus
+                                </td>
+                                <td>Faculty</td>
+                            </tr>
+                        {% endfor %}
+
+                    
+                        
+                        <!-- Add the remaining rows as per your data -->
+                        <!-- ... (additional rows) ... -->
+                    </tbody>
+                </table>
+                </div>
+        </div>
+    </div>
+
+
+
+
+
+
+{% endblock content %}
+
