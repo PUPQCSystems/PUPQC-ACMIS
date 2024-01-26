@@ -52,7 +52,7 @@ class Create_Level_Form(forms.ModelForm):
 
     class Meta:
         model = accredlevel
-        fields = ['name']
+        fields = ('name',)
 
 
 class Create_Area_Form(forms.ModelForm):
