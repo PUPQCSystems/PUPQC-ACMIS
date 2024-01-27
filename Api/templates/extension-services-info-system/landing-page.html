@@ -8,50 +8,102 @@
 
 {% block content %}
     <div class="card ">
+        <div class="card-status-top bg-danger"></div>
         <div class="card-header ">
             <h2 class="card-title">Extensions</h2>
         </div>
         <div class="card-body">
+            <div class="accordion" id="accordion-example">
                 {% for item in data %}
-                <h2>{{ item.Name }}</h2>
-                <p>Program: {{ item.Program.Name }} ({{ item.Program.CourseCode }})</p>
-        
-                {% if item.Projects %}
-                    <h3>Projects:</h3>
-                    <ul>
-                        {% for project in item.Projects %}
-                            <li>
-                                <strong>{{ project.Title }}</strong>
-                                <p>Implementer: {{ project.Implementer }}</p>
+                    {% if forloop.counter == 1 %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading-{{ forloop.counter }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ forloop.counter }}" aria-expanded="true">
+                                <h2 class="text-muted">{{ item.Name }}</h2>
+                            </button>
+                            </h2>
+                            <div id="collapse-{{ forloop.counter }}" class="accordion-collapse collapse show" data-bs-parent="#accordion-example">
+                            <div class="accordion-body pt-0">
+                                <p class="text-danger">{{ item.Program.Name }} ({{ item.Program.CourseCode }})</p>
+                                {% if item.Projects %}
+                                    <h3>Projects:</h3>
+                                    <ul>
+                                        {% for project in item.Projects %}
+                                            <li>
+                                                <strong>{{ project.Title }}</strong>
+                                                <p>Implementer: {{ project.Implementer }}</p>
+            
+                                                <ul>
+                                                    Member: 
+                                                    {% for key, value in project.ProjectTeam.items %}
+                                                        <li>{{ value }}</li>
+                                                    {% endfor %}
+            
+                                                    <p>Target Group: {{ project.TargetGroup }}</p>
+                                                    <p>Project Type: {{ project.ProjectType }}</p>
+                                                    <p>Start Date: {{ project.StartDate }}</p>
+                                                    <p>End DATE: {{ project.EndDate }}</p>
+                                                    <p>Impact Statement: {{ project.ImpactStatement }}</p>
+                                                    <p>Objectives: {{ project.Objectives }}</p>
+                                                
+                                                    <p>Image: {{ project.ImageUrl }}</p>
+                                                </ul> 
+                                                <!-- Add more project details as needed -->
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
 
-                                <ul>
-                                    Member: 
-                                    {% for key, value in project.ProjectTeam.items %}
-                                         <li>{{ value }}</li>
-                                    {% endfor %}
+                            </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading-{{ forloop.counter }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ forloop.counter }}" aria-expanded="false">
+                                <h2>{{ item.Name }}</h2>
+                                <div class="text-muted">{{ item.Program.Name }} ({{ item.Program.CourseCode }})</div>
+                            </button>
+                            </h2>
+                            <div id="collapse-{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#accordion-example">
+                            <div class="accordion-body pt-0">
+                                {% if item.Projects %}
+                                    <h3>Projects:</h3>
+                                    <ul>
+                                        {% for project in item.Projects %}
+                                            <li>
+                                                <strong>{{ project.Title }}</strong>
+                                                <p>Implementer: {{ project.Implementer }}</p>
+            
+                                                <ul>
+                                                    Member: 
+                                                    {% for key, value in project.ProjectTeam.items %}
+                                                        <li>{{ value }}</li>
+                                                    {% endfor %}
+            
+                                                    <p>Target Group: {{ project.TargetGroup }}</p>
+                                                    <p>Project Type: {{ project.ProjectType }}</p>
+                                                    <p>Start Date: {{ project.StartDate }}</p>
+                                                    <p>End DATE: {{ project.EndDate }}</p>
+                                                    <p>Impact Statement: {{ project.ImpactStatement }}</p>
+                                                    <p>Objectives: {{ project.Objectives }}</p>
+                                                
+                                                    <p>Image: {{ project.ImageUrl }}</p>
+                                                </ul> 
+                                                <!-- Add more project details as needed -->
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
 
-                                    <p>Target Group: {{ project.TargetGroup }}</p>
-                                    <p>Project Type: {{ project.ProjectType }}</p>
-                                    <p>Start Date: {{ project.StartDate }}</p>
-                                    <p>End DATE: {{ project.EndDate }}</p>
-                                    <p>Impact Statement: {{ project.ImpactStatement }}</p>
-                                    <p>Objectives: {{ project.Objectives }}</p>
-                                
-                                    <p>Image: {{ project.ImageUrl }}</p>
-                                </ul> 
-                                <!-- Add more project details as needed -->
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endfor %}
+                            </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
     
+        </div>
     </div>
-
-
-
-
-
-
 {% endblock content %}
 

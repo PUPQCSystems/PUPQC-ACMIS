@@ -216,8 +216,8 @@ class uploaded_evidences(models.Model):
 
 
 class program_accreditation(models.Model):
-    program = models.ForeignKey(Programs, on_delete=models.CASCADE, null=True, blank=True)
-    instrument_level = models.ForeignKey(instrument_level, on_delete=models.CASCADE, null=True, blank=True)
+    program = models.ForeignKey(Programs, on_delete=models.CASCADE, null=True, blank=True, related_name='program_relation')
+    instrument_level = models.ForeignKey(instrument_level, on_delete=models.CASCADE, null=True, blank=True, related_name='instrument_level_relation')
     description = models.CharField(max_length=5000, null=True, blank=True)
     status = models.CharField(max_length=20, null=True, blank=True)
     due_date = models.DateTimeField(auto_now=False, null=True, blank=True)

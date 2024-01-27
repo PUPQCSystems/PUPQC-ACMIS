@@ -1,11 +1,12 @@
 from django.urls import path
 from Api import views_ris, views_esis
-from .views import AccreditationRecords, CreateCategory, FacultyCertificateRecords, SeminarRecords
+from .views import AccreditationRecords, CreateCategory, FacultyCertificateRecords, ProgramAccreditation, SeminarRecords
 from .views_esis import *
 from Api import views
 
 urlpatterns = [
     path('accreditation-records/', AccreditationRecords.as_view(), name='item-list-create'),
+    path('program-accreditation-records/', ProgramAccreditation.as_view(), name='program-accreditaion'),
 
     path('esis/extension/records/', views_esis.extension_info, name='extension-info'),
     path('ris/research/records/', views_ris.research_info, name='research-info'),

@@ -1,11 +1,17 @@
 from rest_framework import generics, serializers
 from Accreditation.models import accreditation_records, program_accreditation
 from Users.models import category_training, faculty_certificates, seminar_workshop_training
-from .serializers import AccreditationRecordSerializer, CategorySerializer, FacultyCertificateSerializer, WorkshopsSerializer
+from .serializers import AccreditationRecordSerializer, CategorySerializer, FacultyCertificateSerializer, ProgramAccreditationSerializer, WorkshopsSerializer
 
 class AccreditationRecords(generics.ListAPIView):
     queryset = accreditation_records.objects.select_related().filter(is_deleted=False)
     serializer_class = AccreditationRecordSerializer
+
+
+class AccreditationRecords(generics.ListAPIView):
+    queryset = accreditation_records.objects.select_related().filter(is_deleted=False)
+    serializer_class = AccreditationRecordSerializer
+
 
 
 class FacultyCertificateRecords(generics.ListCreateAPIView):
@@ -20,3 +26,8 @@ class SeminarRecords(generics.ListCreateAPIView):
 class CreateCategory(generics.ListCreateAPIView):
     queryset = category_training.objects.filter(is_deleted=False)
     serializer_class = CategorySerializer
+
+
+class ProgramAccreditation(generics.ListCreateAPIView):
+    queryset = program_accreditation.objects.select_related('program', 'instrument_level').filter(is_deleted=False)
+    serializer_class = ProgramAccreditationSerializer
