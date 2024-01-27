@@ -3,7 +3,7 @@
 
 <!-- PAGE TITLE FOR THIS PAGE -->
 {% block page-title %}
-    Research Informations
+    Extension Informations
 {% endblock page-title %}
 
 {% block content %}
@@ -13,7 +13,7 @@
             <h2 class="card-title">Extensions</h2>
         </div>
         <div class="card-body">
-            <div class="accordion" id="accordion-example">
+            {% comment %} <div class="accordion" id="accordion-example">
                 {% for item in data %}
                     {% if forloop.counter == 1 %}
                         <div class="accordion-item">
@@ -101,7 +101,32 @@
                         </div>
                     {% endif %}
                 {% endfor %}
-            </div>
+            </div> {% endcomment %}
+            <div class="row row-cards">
+            {% for item in data %}
+        
+                    <div class="col-sm-6 col-lg-6">
+                        <div class="card  card-link-pop">
+                            <div class="card-status-start bg-danger"></div>
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="h1 mb-1">{{ item.Name }}</div>
+                                </div>
+
+                                <div class="subheader">{{ item.Program.Name }} ({{ item.Program.CourseCode }})</div> 
+                                <hr class = "card-divider-line">
+                                <div>
+
+
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+             
+            {% endfor %}
+        </div>
     
         </div>
     </div>

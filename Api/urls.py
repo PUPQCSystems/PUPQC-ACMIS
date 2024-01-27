@@ -4,6 +4,8 @@ from .views import AccreditationRecords, CreateCategory, FacultyCertificateRecor
 from .views_esis import *
 from Api import views
 
+app_name = 'apis'
+
 urlpatterns = [
     path('accreditation-records/', AccreditationRecords.as_view(), name='item-list-create'),
     path('program-accreditation-records/', ProgramAccreditation.as_view(), name='program-accreditaion'),
