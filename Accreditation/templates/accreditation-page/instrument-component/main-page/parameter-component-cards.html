@@ -40,10 +40,21 @@
 						<div class="card-body row align-items-center">
 							<div class="col-md-8 col-lg-8 ">
 								{{ component.component }} 
+								
+								{% if component.progress_percentage == 100 %}
+									<span class="badge bg-green">Completed</span>
+
+								{% elif component.progress_percentage >= 1 or  component.progress_percentage <= 100 %}
+									<span class="badge bg-red">Incomplete</span>
+
+								{% else %}
+									<span class="badge bg-blue">Ongoing</span>
+								{% endif %}
+
+
+					
 							</div>
 			
-
-
 							<div class="col-auto ms-auto d-print-none">
 								<div class="dropdown">
 									<a href="" class="btn-action" data-bs-toggle="dropdown" aria-expanded="false">
@@ -130,7 +141,20 @@
 											<div class="card-body row align-items-center">
 												<div class="col-md-8 col-lg-8 ">
 													{{ upload_bin.title }}
-												</div>
+
+													{% if upload_bin.status == "ur"  %}
+														<span class="badge badge-outline text-azure">Under Review</span>
+			
+													{% elif   upload_bin.status == "rfr" %}
+														<span class="badge badge-outline text-red">Requesting for Resubmission</span>
+
+													{% elif   upload_bin.status == "approve" %}
+														<span class="badge badge-outline text-green">Approved</span>
+													{% else %}
+														<span class="badge badge-outline text-red">No uploads yet</span>
+													{% endif %}
+														
+													</div>
 
 												<div class="col-auto ms-auto d-print-none">
 

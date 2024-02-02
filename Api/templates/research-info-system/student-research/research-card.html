@@ -1,0 +1,59 @@
+<div class="row row-cards">
+    <div class="card ">
+        <div class="card-header ">
+            <h2 class="card-title">Researches</h2>
+        </div>
+        <div class="card-body">
+            <div class="tbl-container">
+                <table id="myTable" class="">
+                    <thead>
+                        <tr>
+                            <th style="width: 15rem">Research Title</th>
+                            <th>Date Published</th>
+                            <th>Researchers</th>
+                            <th>Course</th>
+                            <th>Research Advicer</th>       
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for record in records %}
+                            <tr>
+                                <td>
+                                    {{ record.Title}}
+                                </td>   
+
+                                <td>
+                                    {{ record.Date }}
+                                </td>
+
+                                <td>        
+                                    <ul>
+                                    {% for researcher in record.Researchers %}
+                                        <li> <strong>{{ researcher.Name }}</strong> </li>
+                                        <li> {{ researcher.StudentNumber }} </li>
+                                        <br>
+                                    {% endfor %}
+                                    </ul>
+                                </td>
+
+                                <td>
+                                    {% for course in record.Courses %}
+                                        {{ course }}
+                                    {% endfor %}
+                                </td>
+
+                                <td>        
+                                    {{ record.ResearchAdvicer }}
+                                </td>
+                                
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table> 
+
+
+                </div>
+        </div>
+    </div>
+</div>

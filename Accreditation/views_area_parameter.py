@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 class AreaParameterList(View):
     def get(self, request, pk):
         #Getting the data from the API
+        area_detail = instrument_level_area.objects.get(id=pk)
         records = level_area_parameter.objects.select_related('instrument_level_area').select_related('parameter').filter(instrument_level_area=pk, is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
 
         # Initialize an empty list to store update forms for each record
@@ -29,7 +30,7 @@ class AreaParameterList(View):
             modified_by = record.modified_by  # Get the user who modified the record
             details.append((record, update_form, created_by, modified_by))
 
-        context = { 'records': records,'details': details, 'pk': pk}  #Getting all the data inside the type table and storing it to the context variable
+        context = { 'records': records,'details': details, 'pk': pk, 'area_detail': area_detail}  #Getting all the data inside the type table and storing it to the context variable
 
         return render(request, 'accreditation-level-area-parameter/main-page/landing-page.html', context)        
 

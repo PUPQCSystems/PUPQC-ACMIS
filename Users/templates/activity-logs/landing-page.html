@@ -45,23 +45,23 @@
 
                                     <!-- Conditional statement for the color badge per record -->
                                     {% if record.type == "CREATE"  %}
-                                        <div class="badge bg-green"></div>
+                                        <span class="badge badge-outline text-green">CREATE</span>
 
                                     {% elif record.type == "UPDATE"  %}
-                                        <div class="badge bg-blue"></div>
+                                        <span class="badge badge-outline text-blue">UPDATE</span>
 
                                     {% elif record.type == "ARCHIVE"  %}
-                                        <div class="badge bg-orange"></div>
+                                        <span class="badge badge-outline text-yellow">ARCHIVE</span>
 
                                     {% elif record.type == "RESTORE"  %}
-                                        <div class="badge bg-purple"></div>
+                                        <span class="badge badge-outline text-purple">RESTORE</span>
 
                                     {% elif record.type == "DESTROY"  %}
-                                         <div class="badge bg-red"></div>
+                                        <span class="badge badge-outline text-red">DESTROY</span>
                                 
                                     {% endif %}
 
-                      
+                                        
                                     </div>
                                 </div>
                             </div>

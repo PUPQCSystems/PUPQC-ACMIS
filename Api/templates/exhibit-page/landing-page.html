@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    Exhibits Page
+{% endblock page-title %}
+
+{% block content %}
+
+<div class="row g-4 row-cards">
+    {% include "exhibit-page/navigation-card.html" %}
+
+    {% include "research-info-system/faculty-research/research-card.html" %}
+</div>
+
+{% endblock content %}
+

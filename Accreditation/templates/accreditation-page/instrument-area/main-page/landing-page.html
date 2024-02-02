@@ -10,7 +10,7 @@
         <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search areas..."/>
 
         {% if perms.Accreditation.add_instrument_level_area %}
-            <button type="button" class= "btn btn-primary"> Create </button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">Create</button>
         {% endif %}
 
         {% if perms.Accreditation.delete_instrument_level_area %}
@@ -23,13 +23,30 @@
 
 {% block content %}
 
-    {% include "accreditation-page/instrument-area/main-page/area-cards.html" %}
+<div class="row g-4 row-cards">
+        <div class="col-2">
+                <div class="subheader mb-2">Navigations</div>
+                <div class="list-group list-group-transparent mb-2">
+                    <a class="list-group-item d-flex align-items-center" href="{% url "apis:exhibit-page" %}">
+                        Exhibits
+                    </a>
+                </div>
+        </div>
+
+        {% include "accreditation-page/instrument-area/main-page/area-cards.html" %}
+    </div>
+
+
+    {% if perms.Accreditation.add_instrument_level_area %}
+        {% include "accreditation-level-area/main-page/create-modal.html" %}
+    {% endif %}
 
     {% if perms.Accreditation.change_instrument_level_area or  perms.Accreditation.delete_instrument_level_area %}
         {% include "accreditation-page/instrument-area/main-page/scripts.html" %}
     {% endif %}
 
     {% include "accreditation-page/instrument-area/main-page/styles.html" %}
+
    
 {% endblock content %}
 

@@ -1,0 +1,40 @@
+<div class="card ">
+    <div class="card-header ">
+        <h2 class="card-title">Student's Awards</h2>
+    </div>
+    <div class="card-body">
+        <div class="tbl-container">
+            <table id="myTable" class="">
+                <thead>
+                    <tr>
+                        <th>Student Number</th>
+                        <th>Student Name</th>
+                        <th>Batch</th>
+                        <th>Class Name</th>
+                        <th>Lister</th>
+                        <th>Semester</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for item in records.result %}
+
+                        <tr>
+                            <td>{{ item.StudentNumber }}</td>
+                            <td>{{ item.StudentName }}</td>
+                            <td>{{ item.Batch }}</td>
+                            <td>{{ item.ClassName }}</td>
+                            <td>{{ item.Lister }}</td>
+                            <td>{{ item.Semester }}</td>
+
+                        </tr>
+
+                    {% endfor %}
+        
+                </tbody>
+            </table> 
+
+
+            </div>
+    </div>
+</div>

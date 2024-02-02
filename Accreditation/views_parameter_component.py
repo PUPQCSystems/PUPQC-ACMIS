@@ -103,12 +103,24 @@ def create_component(request, pk):
 def create_uploadBin(request,pk):
     indicator_form = UploadBin_Form(request.POST or None)
 
+
+    all_file_types = ['image/jpeg', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+                      'application/vnd.ms-excel', 'application/vnd.ms-powerpoint', 'image/png', 'image/gif', 'image/bmp', 'image/svg+xml', 'image/webp', 
+                      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 
+                      'text/plain', 'audio/mp3', 'video/mp4', 'audio/ogg', 'video/webm', 'application/zip', 'application/x-rar-compressed', 'text/csv', 'text/html', 'text/css', 
+                      'application/javascript']
+    
     if indicator_form.is_valid():
         indicator_form.instance.parameter_component_id = pk
         indicator_form.instance.created_by = request.user
-        indicator_form.instance.accepted_file_type = request.POST.getlist('accepted_file_type')
-        indicator_form.instance.accepted_file_count = request.POST.get('accepted_file_count')
-        indicator_form.instance.accepted_file_size = request.POST.get('accepted_file_size')
+        # indicator_form.instance.accepted_file_type = request.POST.getlist('accepted_file_type')
+        indicator_form.instance.accepted_file_type = all_file_types
+
+        print(request.POST.getlist('accepted_file_type'))
+        # indicator_form.instance.accepted_file_count = request.POST.get('accepted_file_count')
+        indicator_form.instance.accepted_file_count = 10
+        # indicator_form.instance.accepted_file_size = request.POST.get('accepted_file_size')
+        indicator_form.instance.accepted_file_size = 1000
         indicator_form.save()
 
         # Create an instance of the ActivityLog model

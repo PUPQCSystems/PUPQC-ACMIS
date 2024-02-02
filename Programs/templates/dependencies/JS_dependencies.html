@@ -26,11 +26,7 @@
 <script src="{% static 'custom-assets/js/htmx.js' %}"></script>
 
 {% comment %}-----------------------------[ FILEPOND Dependencies ]---------------------------{% endcomment %}
-  <!-- Minified and Compressed jQuery for Production-->
-<script src="{% static 'vendor/filepond/filepond.js' %} "></script>
-<script src=" {% static 'vendor/filepond/filepond-plugin-file-validate-type.js' %}"></script>
-<script src=" {% static 'vendor/filepond/filepond-plugin-file-validate-size.js' %}"></script>
-<script src=" {% static 'vendor/filepond/filepond-plugin-image-preview.js' %}"></script>
+
 
 
 
@@ -44,9 +40,13 @@
     }
 </script>
 
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+<script src="{% static 'vendor/DataTables/jquery.dataTables.js' %} "></script>
 <script>
     $(document).ready(function () {
         $('#myTable').DataTable();
     });
 </script>
+
+
+
+

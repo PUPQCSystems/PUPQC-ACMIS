@@ -41,11 +41,18 @@
                         <a href=" {% url "accreditations:program-accreditation-component" pk=record.id %}">
                             <div class="subheader">{{ record.label }}</div> 
                         </a>    
-                        <hr class = "card-divider-line">
-                        <small class="card-text p-y-1 text-muted">Created by: </small><small class="card-text p-y-1">{{ created_by.first_name }} {{ created_by.last_name }}</small><br>
-                        <small class="card-text p-y-1 text-muted">Date Created: </small><small class="card-text p-y-1">{{ record.created_at }}</small><br>
-                        <small class="card-text p-y-1 text-muted">Modified by: </small><small class="card-text p-y-1">{{ modified_by.first_name }} {{ modified_by.last_name }} </small><br>
-                        <small class="card-text p-y-1 text-muted">Last Modified: </small><small class="card-text p-y-1">{{ record.modified_at }}</small><br>   
+                        <div class="d-flex">
+                            <div class="subheader">Parameter Progress</div>
+                            <div class="ms-auto">
+                                <span class="text-green d-inline-flex align-items-center lh-1 subheader">
+                                    15% Done
+                            </div>
+                        </div>
+                        <div class="progress progress-sm">
+                            <div class="progress-bar bg-primary" style="width: 15%" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" aria-label="15% Complete">
+                                <span class="visually-hidden">15% Complete</span>
+                            </div>
+                        </div> 
                     
                     </div>
                 </div>

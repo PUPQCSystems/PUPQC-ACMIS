@@ -121,14 +121,14 @@ urlpatterns = [
 
 
     path("program-accreditation/area/<str:pk>/", views_instrument_area.landing_page, name='program-accreditation-area'),
-    # path("program-accreditation/area/update/<str:pk>/", views_instrument_area.update, name='program-accreditation-area-update'),
+    # path("program-accreditation/area/create/<int:pk>/",views_instrument_area.create_area, name='program-accreditation-area-create'),
     path("program-accreditation/area/archive/<str:ins_pk>/<str:pk>/", views_instrument_area.archive, name='program-accreditation-area-archive'),
     path("program-accreditation/area/<str:pk>/archive-page/", views_instrument_area.archive_landing, name='program-accreditation-area-archive-page'),
     path("program-accreditation/area/archive-page/restore/<str:ins_pk>/<str:pk>/", views_instrument_area.restore, name='program-accreditation-area-restore'),
 
 
     path("program-accreditation/area/parameter/<str:pk>/", views_instrument_parameter.landing_page, name='program-accreditation-parameter'),
-    # path("program-accreditation/area/parameter/update/<str:pk>/", views_instrument_parameter.update, name='program-accreditation-parameter-update'),
+    path("program-accreditation/area/parameter/create/<int:pk>/", views_instrument_parameter.create, name='program-accreditation-parameter-create'),
     path("program-accreditation/area/parameter/archive/<str:ins_pk>/<str:pk>/", views_instrument_parameter.archive, name='program-accreditation-parameter-archive'),
     path("program-accreditation/area/parameter/<str:pk>/archive-page/", views_instrument_parameter.archive_landing, name='program-accreditation-parameter-archive-page'),
     path("program-accreditation/area/parameter/archive-page/restore/<str:ins_pk>/<str:pk>/", views_instrument_parameter.restore, name='program-accreditation-parameter-restore'),

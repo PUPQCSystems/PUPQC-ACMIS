@@ -9,6 +9,10 @@
 {% block page-title-actions %}
         <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search levels..."/>
 
+        {% if perms.Accreditation.add_level_area_parameter %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-modal">Create</button>
+        {% endif %}
+
         {% if perms.Accreditation.delete_level_area_parameter %}
             <a href="{% url "accreditations:program-accreditation-parameter-archive-page" pk=pk%}" class="btn btn-success" type="button">
                 Archive <i class="fa-solid fa-arrow-right"></i>
@@ -20,9 +24,14 @@
 
     {% include "accreditation-page/instrument-parameter/main-page/parameter-cards.html" %}
 
+    {% if perms.Accreditation.add_level_area_parameter %}
+        {% include "accreditation-page/instrument-parameter/main-page/create-modal.html" %}
+    {% endif %}
+
     {% if perms.Accreditation.delete_level_area_parameter or perms.Accreditation.add_level_area_parameter  or perms.Accreditation.change_level_area_parameter %}
         {% include "accreditation-page/instrument-parameter/main-page/scripts.html" %}
     {% endif %}
+
     {% include "accreditation-page/instrument-parameter/main-page/styles.html" %}
    
 {% endblock content %}

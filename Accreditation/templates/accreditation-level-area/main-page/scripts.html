@@ -20,15 +20,21 @@
                     location.reload();
                 },
                 error: function(error) {
-                    // Check for the errors field in the JSON response
-                    if (error.responseJSON && error.responseJSON.errors) {
-                        // Iterate over the errors field and display the validation errors to the user
-                        for (var field in error.responseJSON.errors) {
-                            toastr.error(error.responseJSON.errors[field]);
-                        }
-                    } else {
-                        toastr.error('Something went wrong. Please try again later.');
+					if (error.responseJSON && error.responseJSON.error) {
+                        // Handle the IntegrityError message
+                        toastr.error(error.responseJSON.error);
                     }
+                       // Check for the formset_errors field in the JSON response
+                	else if (error.responseJSON && error.responseJSON.errors) {
+                    // Iterate over the formset_errors field and display the validation errors to the user
+                    error.responseJSON.errors.forEach(function(formError) {
+                        for (var field in formError) {
+                            toastr.error(`${formError[field]}`);
+                        }
+                    });
+                } else {
+                    toastr.error('Something went wrong. Please try again later.');
+                }
                 }
 
             });

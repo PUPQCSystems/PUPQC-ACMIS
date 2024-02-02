@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 @permission_required("Accreditation.view_instrument_level_area", raise_exception=True)
 def landing_page(request, pk):
     #Getting the data from the API
-  
+    formset  = LevelAreaFormSet(queryset=instrument_level_area.objects.none())
     records = instrument_level_area.objects.select_related('instrument_level').select_related('area').filter(instrument_level=pk, is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
 
     # Initialize an empty list to store update forms for each record
@@ -30,11 +30,10 @@ def landing_page(request, pk):
         modified_by = record.modified_by  # Get the user who modified the record
         details.append((record, update_form, created_by, modified_by))
 
-    context = { 'records': records,'details': details, 'pk': pk}  #Getting all the data inside the type table and storing it to the context variable
+    context = { 'records': records,'details': details, 'pk': pk, 'area_formset': formset}  #Getting all the data inside the type table and storing it to the context variable
 
     return render(request, 'accreditation-page/instrument-area/main-page/landing-page.html', context)
 
-    
 @login_required
 @permission_required("Accreditation.delete_instrument_level_area", raise_exception=True)
 def archive(request, ins_pk, pk):

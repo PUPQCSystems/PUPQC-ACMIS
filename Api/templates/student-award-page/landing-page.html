@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    Student Awards
+{% endblock page-title %}
+
+{% block content %}
+
+    <div class="row g-4 row-cards">
+        {% include "exhibit-page/navigation-card.html" %}
+
+
+        <div class="row row-cards">
+            {% include "student-award-page/analytics-card.html" %}
+            
+            <br>
+            {% include "student-award-page/awards-card.html" %}
+        </div>
+    </div>
+
+    {% include "student-award-page/scripts.html" %}
+
+{% endblock content %}
+

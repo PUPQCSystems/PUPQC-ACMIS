@@ -278,6 +278,7 @@ def create_review(request, pk):
     except component_upload_bin.DoesNotExist:
         return JsonResponse({'errors': 'Upload Bin not found'}, status=404)
 
+   
     if request.method == 'POST':
         # Process the form submission with updated data
         review_form = ReviewUploadBin_Form(request.POST or None, instance=upload_bin)
@@ -287,6 +288,28 @@ def create_review(request, pk):
             review_form.instance.reviewed_by = request.user
             review_form.instance.reviewed_at = timezone.now()
             review_form.save()  
+
+            component_id = upload_bin.parameter_component_id
+            component_record = parameter_components.objects.get(id=component_id)
+            upload_bins = component_upload_bin.objects.filter(parameter_component_id=component_id )
+  
+            approved_counter = 0
+            bin_counter = 0
+
+            for bin in upload_bins:
+                print("Francis paku")
+                if component_record.id == bin.parameter_component_id:
+                    if bin.status == "approve":
+                        approved_counter =+ 1
+                        print("Progress:", approved_counter)
+                    bin_counter =+ 1
+            if bin_counter != 0:
+                progress = (approved_counter / bin_counter) * 100
+                component_record.progress_percentage = progress
+                component_record.save()
+
+
+
 
 
             # Provide a success message as a JSON response

@@ -106,6 +106,7 @@ class instrument_level(models.Model):
     instrument = models.ForeignKey(instrument, on_delete=models.CASCADE, related_name='instrument_instrument_level')
     level = models.ForeignKey(accredlevel, on_delete=models.CASCADE, related_name='level_instrument_level')
     description = models.TextField(null=True, blank=True)
+    progress_percentage  = models.SmallIntegerField(null=True, blank=True)
     created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_instrument_level', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_instrument_level', null=True, blank=True)
@@ -123,7 +124,9 @@ class instrument_level_area(models.Model):
     area = models.ForeignKey(area, on_delete=models.CASCADE)
     label = models.CharField(max_length=250, null=True, blank=True)
     instrument_level = models.ForeignKey(instrument_level, on_delete=models.CASCADE)
+    due_date = models.DateTimeField(auto_now=False, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
+    progress_percentage  = models.SmallIntegerField(null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_instrument_level_area', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_instrument_level_area', null=True, blank=True)
@@ -139,7 +142,7 @@ class level_area_parameter(models.Model):
     parameter = models.ForeignKey(parameter, on_delete=models.CASCADE)
     label = models.CharField(max_length=250, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-    status  = models.CharField(max_length=50, null=True, blank=True)
+    progress_percentage  = models.SmallIntegerField(null=True, blank=True)
     instrument_level_area = models.ForeignKey(instrument_level_area, on_delete=models.CASCADE)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_level_area_parameter', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
@@ -154,7 +157,7 @@ class level_area_parameter(models.Model):
 class parameter_components(models.Model):
     component = models.ForeignKey(components, on_delete=models.CASCADE, null=True, blank=True)
     area_parameter = models.ForeignKey(level_area_parameter, on_delete=models.CASCADE, null=True, blank=True)
-    status  = models.CharField(max_length=50, null=True, blank=True)
+    progress_percentage  = models.SmallIntegerField(null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_parameter_components', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_parameter_components', null=True, blank=True)
@@ -180,7 +183,7 @@ class component_upload_bin(models.Model):
     parameter_component = models.ForeignKey(parameter_components, on_delete=models.CASCADE)
     title = models.CharField(max_length=500, null=True, blank=True)
     description = models.CharField(max_length=5000, null=True, blank=True)
-    accepted_file_type = models.CharField(max_length=250, null=True ,blank=True)
+    accepted_file_type = models.CharField(max_length=1000, null=True ,blank=True)
     accepted_file_size = models.PositiveSmallIntegerField(blank=True, null=True)
     accepted_file_count = models.PositiveSmallIntegerField(blank=True, null=True)
     status  = models.CharField(max_length=50, null=True, blank=True)
@@ -220,7 +223,6 @@ class program_accreditation(models.Model):
     instrument_level = models.ForeignKey(instrument_level, on_delete=models.CASCADE, null=True, blank=True, related_name='instrument_level_relation')
     description = models.CharField(max_length=5000, null=True, blank=True)
     status = models.CharField(max_length=20, null=True, blank=True)
-    due_date = models.DateTimeField(auto_now=False, null=True, blank=True)
     survey_visit_date = models.DateTimeField(auto_now=False, null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_program_accreditation', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
@@ -232,7 +234,6 @@ class program_accreditation(models.Model):
     class Meta:
         unique_together = ('program', 'instrument_level')
 
-    
 
 class accreditation_records(models.Model):
     accredited_program = models.ForeignKey(program_accreditation, related_name='accredited_program', on_delete=models.CASCADE, null=True, blank=True)
@@ -249,7 +250,6 @@ class accreditation_records(models.Model):
     deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
 
-        
 
     def __str__(self):
         return(self.accredited_program.program)

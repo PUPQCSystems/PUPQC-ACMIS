@@ -233,11 +233,16 @@ class Create_LevelArea_Form(forms.ModelForm):
         validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
                                     message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are Allowed!")])
     
+    due_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}),
+                                                                       required=True,
+                                                                        error_messages={'required': "Please set the due date before submitting the form."})
+    
     description = forms.Textarea()
     
     class Meta:
         model = instrument_level_area
-        fields = ('area', 'label','description')
+        fields = ('area', 'label','due_date', 'description')
 
         widgets = {
             'description': forms.Textarea(attrs={'required': False}),
@@ -276,7 +281,7 @@ class AreaParameter_Form(forms.ModelForm):
     description = forms.Textarea()
     
     class Meta:
-        model = instrument_level_area
+        model = level_area_parameter
         fields = ('parameter', 'label','description')
 
         widgets = {
@@ -319,6 +324,7 @@ ParameterComponentFormSet = modelformset_factory(
 class UploadBin_Form(forms.ModelForm):
     title = forms.CharField(max_length=500, 
                            min_length = 5, 
+                           required=False,
                             validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&0-9]*$', 
                             message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Description Field!")],
                             error_messages={'required': "Please enter a number before submitting the form."})
@@ -360,10 +366,6 @@ class ProgramAccreditation_Form(forms.ModelForm):
         error_messages={'required': "Please select an Instrument Level before submitting the form."},
         widget=forms.Select(attrs={'class': 'form-control form-select select'}))
     
-    due_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
-                                                                     'class': 'form-control'}),
-                                                                       required=True,
-                                                                        error_messages={'required': "Please set the due date submitting the form."})
     survey_visit_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
                                                                      'class': 'form-control'}), 
                                                                      required=True,
@@ -371,7 +373,7 @@ class ProgramAccreditation_Form(forms.ModelForm):
 
     class Meta:
         model = program_accreditation
-        fields = ('program', 'instrument_level', 'due_date', 'survey_visit_date', 'description')
+        fields = ('program', 'instrument_level', 'survey_visit_date', 'description')
 
         widgets = {
             'description': forms.Textarea(attrs={'required': False, 'class': 'form-control'}),

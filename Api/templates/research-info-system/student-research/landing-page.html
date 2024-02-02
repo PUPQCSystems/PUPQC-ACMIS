@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    PUPQC's Research Informations
+{% endblock page-title %}
+
+{% block content %}
+
+    <div class="row g-4 row-cards">
+        {% include "exhibit-page/navigation-card.html" %}
+
+        {% include "research-info-system/student-research/research-card.html" %}
+    </div>
+    
+    {% comment %} {% include "research-info-system/student-research/analytics-card.html" %}
+
+    <br> {% endcomment %}
+
+{% endblock content %}
+

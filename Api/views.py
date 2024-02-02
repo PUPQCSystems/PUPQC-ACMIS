@@ -1,7 +1,11 @@
+import requests
 from rest_framework import generics, serializers
 from Accreditation.models import accreditation_records, program_accreditation
 from Users.models import category_training, faculty_certificates, seminar_workshop_training
 from .serializers import AccreditationRecordSerializer, CategorySerializer, FacultyCertificateSerializer, ProgramAccreditationSerializer, WorkshopsSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
 
 class AccreditationRecords(generics.ListAPIView):
     queryset = accreditation_records.objects.select_related().filter(is_deleted=False)
@@ -31,3 +35,5 @@ class CreateCategory(generics.ListCreateAPIView):
 class ProgramAccreditation(generics.ListCreateAPIView):
     queryset = program_accreditation.objects.select_related('program', 'instrument_level').filter(is_deleted=False)
     serializer_class = ProgramAccreditationSerializer
+
+
