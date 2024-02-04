@@ -155,6 +155,7 @@ def create_uploadBin(request,pk):
 
         print("Component Progress:", progress)
 
+        #----------------[ Codes for calculating program percentage for the component ]----------------#
         # Get the parameter record
         parameter_record = level_area_parameter.objects.get(id=component_record.area_parameter_id)
 
