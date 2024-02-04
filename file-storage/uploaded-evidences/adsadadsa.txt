@@ -1,0 +1,14 @@
+keys:
+
+Author
+Research Title
+Publication Year
+Publisher
+Category
+Author Type
+
+
+INSIGHTS OR ANALYTICS
+1. How many Research that are published every year
+2. How many research does a specific publisher published
+3. How many research that an author published?

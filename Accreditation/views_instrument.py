@@ -58,13 +58,39 @@ class InstrumentList(View):
 
             messages.success(request, f'{name} accreditation instrument is successfully created!') 
             # url_landing = "{% url 'accreditations:type' %}"
-            url_landing = "/accreditation/instrument/"
-            return JsonResponse({'url_landing': url_landing}, status=201)
+            return JsonResponse({'status': True}, status=201)
         else:
             # Return a validation error using a JSON response
-            return JsonResponse({'errors': instrument_form.errors}, status=400)
-        
-   
+            return JsonResponse({'errors':instrument_form.errors}, status=400)
+            
+    # def post(self, request):
+    #     instrument_form = Create_Instrument_Form(request.POST or None)
+    #     if instrument_form.is_valid():
+    #         instrument_form.instance.created_by = request.user
+    #         instrument_form.save()
+    #         name = instrument_form.cleaned_data.get('name')
+
+    #     # Create an instance of the ActivityLog model
+    #         activity_log_entry = activity_log()
+
+    #         # Set the attributes of the instance
+    #         activity_log_entry.module = "ACCREDITATION INSTRUMENT MODULE"
+    #         activity_log_entry.action = "Created a record"
+    #         activity_log_entry.type = "CREATE"
+    #         activity_log_entry.datetime_acted =  timezone.now()
+    #         activity_log_entry.acted_by = request.user
+    #         # Set other attributes as needed
+
+    #         # Save the instance to the database
+    #         activity_log_entry.save()
+
+    #         messages.success(request, f'{name} accreditation instrument is successfully created!') 
+    #         # url_landing = "{% url 'accreditations:type' %}"
+    #         return JsonResponse({'status': True}, status=201)
+    #     else:
+    #         # Return a validation error using a JSON response
+    #         return JsonResponse({'errors': instrument_form.errors}, status=400)
+           
 @login_required
 def update(request, pk):
 # Retrieve the type object with the given primary key (pk)

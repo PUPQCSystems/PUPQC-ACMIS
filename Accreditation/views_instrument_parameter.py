@@ -28,6 +28,7 @@ def landing_page(request, pk):
         modified_by = record.modified_by  # Get the user who modified the record
         details.append((record, update_form, created_by, modified_by))
 
+
     context = { 'records': records,'details': details, 'pk': pk, 'create_form': create_form}  #Getting all the data inside the type table and storing it to the context variable
 
     return render(request, 'accreditation-page/instrument-parameter/main-page/landing-page.html', context)   
@@ -60,7 +61,6 @@ def create(request,pk):
             messages.success(request, f'Area Parameter is successfully created!') 
             return JsonResponse({'status': True}, status=201)
         else:
-            print("The error: ",create_form.errors)
             # Return a validation error using a JSON response
             return JsonResponse({'errors': create_form.errors}, status=400)
     except IntegrityError as e:

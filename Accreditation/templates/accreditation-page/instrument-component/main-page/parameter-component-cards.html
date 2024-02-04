@@ -41,15 +41,30 @@
 							<div class="col-md-8 col-lg-8 ">
 								{{ component.component }} 
 								
-								{% if component.progress_percentage == 100 %}
+							 {% if component.progress_percentage == 100 %}
 									<span class="badge bg-green">Completed</span>
 
-								{% elif component.progress_percentage >= 1 or  component.progress_percentage <= 100 %}
+								{% elif component.progress_percentage >= 1 or  component.progress_percentage <= 99 %}
 									<span class="badge bg-red">Incomplete</span>
 
 								{% else %}
 									<span class="badge bg-blue">Ongoing</span>
-								{% endif %}
+								{% endif %} 
+
+
+								{% comment %} {% if component.progress_percentage is not None %}
+									{% if component.progress_percentage == 100 %}
+										<span class="badge bg-green">Completed</span>
+									{% elif component.progress_percentage >= 1 or component.progress_percentage <= 99 %}
+										<span class="badge bg-red">Incomplete</span>
+										
+									{% elif component.progress_percentage >= 1 or component.progress_percentage <= 99 %}
+										<span class="badge bg-red">Incomplete</span>
+								
+									{% endif %}
+								{% else %}
+									<span class="badge bg-blue">Ongoing</span>
+								{% endif %} {% endcomment %}
 
 
 					

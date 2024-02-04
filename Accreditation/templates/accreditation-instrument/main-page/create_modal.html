@@ -5,7 +5,7 @@
 		<div id='create-modal-dialog' class="modal-dialog modal-lg">
 			<form 
 				autocomplete="off" 
-				id="parameter-form" 
+				id="create-instrument-form" 
 				class = "modal-content">
 			{% csrf_token %}
 
@@ -19,7 +19,7 @@
 
 				<div class="modal-footer">
 					<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-					<button type="button" id="submit" class="btn btn-primary">Save</button>
+					<button type="submit" id="submit" class="btn btn-primary">Save</button>
 				</div>
 			</form>
 		</div>

@@ -12,9 +12,10 @@
             $.ajax({
                 url: "{% url 'accreditations:instrument-list' %}", 
                 data: serializedData,
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
                 type: "POST",
                 success: function(response) {
-                    window.location.href = response.url_landing;
+                    location.reload();
                 },
                 error: function(error) {
                     // Check for the errors field in the JSON response
@@ -31,7 +32,8 @@
             });
         });
     });
-</script> 
+</script>
+
 
 
 {% comment %} AJAX FOR UPDATING  {% endcomment %}

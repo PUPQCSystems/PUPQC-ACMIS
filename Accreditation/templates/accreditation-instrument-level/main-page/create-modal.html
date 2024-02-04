@@ -50,6 +50,7 @@
 									{% for form in area_formset %}
 										<div class="level-area-form">
 											{{form.area|as_crispy_field}}
+											{{form.due_date|as_crispy_field}}
 									
 										</div>
 									{% endfor %}

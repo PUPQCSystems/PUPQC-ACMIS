@@ -156,7 +156,7 @@ def restore(request, pk):
 @login_required
 @permission_required("Accreditation.delete_program_accreditation", raise_exception=True)
 def destroy(request, pk):
-    if request.method == 'DELETE':
+    if request.method == 'POST':
 
         data = QueryDict(request.body.decode('utf-8'))
         entered_password = data.get('password')
