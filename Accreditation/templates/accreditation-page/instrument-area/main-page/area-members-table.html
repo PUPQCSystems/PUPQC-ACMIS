@@ -1,0 +1,29 @@
+
+<div class="tbl-container">
+    <table id="member-Table-{{ record.id }}" class="">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for user_record in user_records %}
+                <tr>
+                    <td>{{ user_record.first_name }} {{ user_record.last_name }}</td>
+                    <td>{{ user_record.email }}</td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table> 
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#member-Table-{{ record.id }}').DataTable();
+    });
+</script>
+

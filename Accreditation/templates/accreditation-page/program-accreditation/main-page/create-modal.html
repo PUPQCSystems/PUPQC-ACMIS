@@ -24,9 +24,17 @@
 						{{ create_form.instrument_level }}
 					</div>
 
-					<div class="mb-3">
+					<div class="mb-3 row">
+
+						<div class="col">
+							<label class="form-label required">Mock Accreditation Date</label>
+							{{ create_form.mock_accred_date }}
+						</div>
+
+						<div class="col">
 							<label class="form-label required">{{ create_form.survey_visit_date.label }}</label>
 							{{ create_form.survey_visit_date }}
+						</div>
 					</div>
 
 					<div class="mb-3">

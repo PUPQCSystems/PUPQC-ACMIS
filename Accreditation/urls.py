@@ -120,7 +120,7 @@ urlpatterns = [
     path("instrument/level/area/parameter/upload/<str:pk>/archive-page/", views_parameter_component.archive_landing, name='instrument-parameter-component-archive-page'),
 
 
-    path("program-accreditation/area/<str:pk>/", views_instrument_area.landing_page, name='program-accreditation-area'),
+    path("program-accreditation/area-landing/<str:pk>/<str:accred_pk>/", views_instrument_area.landing_page, name='program-accreditation-area'),
     # path("program-accreditation/area/create/<int:pk>/",views_instrument_area.create_area, name='program-accreditation-area-create'),
     path("program-accreditation/area/archive/<str:ins_pk>/<str:pk>/", views_instrument_area.archive, name='program-accreditation-area-archive'),
     path("program-accreditation/area/<str:pk>/archive-page/", views_instrument_area.archive_landing, name='program-accreditation-area-archive-page'),

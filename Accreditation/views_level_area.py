@@ -44,32 +44,36 @@ class LevelAreaList(PermissionRequiredMixin, View):
         for form in formset:
             form.instance.instrument_level_id = instrument_level_id
             form.instance.created_by = request.user
-
+        try:
     
-        if formset.is_valid():
-            formset_saved = formset.save()  # Save the formset with the assigned foreign keys
+            if formset.is_valid():
+                formset_saved = formset.save()  # Save the formset with the assigned foreign keys
 
-            if formset_saved:
-                # Create an instance of the ActivityLog model
-                activity_log_entry = activity_log()
+                if formset_saved:
+                    # Create an instance of the ActivityLog model
+                    activity_log_entry = activity_log()
 
-                # Set the attributes of the instance
-                activity_log_entry.module = "ACCREDITATION LEVEL AREA MODULE"
-                activity_log_entry.action = "Created a record"
-                activity_log_entry.type = "CREATE"
-                activity_log_entry.datetime_acted =  timezone.now()
-                activity_log_entry.acted_by = request.user
-                # Set other attributes as needed
+                    # Set the attributes of the instance
+                    activity_log_entry.module = "ACCREDITATION LEVEL AREA MODULE"
+                    activity_log_entry.action = "Created a record"
+                    activity_log_entry.type = "CREATE"
+                    activity_log_entry.datetime_acted =  timezone.now()
+                    activity_log_entry.acted_by = request.user
+                    # Set other attributes as needed
 
-                # Save the instance to the database
-                activity_log_entry.save()
+                    # Save the instance to the database
+                    activity_log_entry.save()
 
-                messages.success(request, f"Instrument's level areas is successfully created!")
-                return JsonResponse({'status': 'success'}, status=200)
+                    messages.success(request, f"Instrument's level areas is successfully created!")
+                    return JsonResponse({'status': 'success'}, status=200)
+                else:
+                    return JsonResponse({'error': "The form is empty. Please input a value before submitting."}, status=400)
             else:
-                return JsonResponse({'error': "The form is empty. Please input a value before submitting."}, status=400)
-        else:
-            return JsonResponse({'errors': formset.errors}, status=400)
+                return JsonResponse({'errors': formset.errors}, status=400)
+        except IntegrityError as e:
+            # Handle the IntegrityError here
+            return JsonResponse({'error': 'Error: Duplicate or conflicting selected areas. Please choose a unique option.'}, status=400)
+
                 
 
 @login_required

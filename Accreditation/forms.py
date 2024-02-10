@@ -366,6 +366,12 @@ class ProgramAccreditation_Form(forms.ModelForm):
         error_messages={'required': "Please select an Instrument Level before submitting the form."},
         widget=forms.Select(attrs={'class': 'form-control form-select select'}))
     
+    mock_accred_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}),
+                                                                       required=True,
+                                                                        error_messages={'required': "Please set the mock accreditation date beefore submitting the form."})
+    
+    
     survey_visit_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
                                                                      'class': 'form-control'}), 
                                                                      required=True,
@@ -373,7 +379,7 @@ class ProgramAccreditation_Form(forms.ModelForm):
 
     class Meta:
         model = program_accreditation
-        fields = ('program', 'instrument_level', 'survey_visit_date', 'description')
+        fields = ('program', 'instrument_level', 'mock_accred_date', 'survey_visit_date', 'description')
 
         widgets = {
             'description': forms.Textarea(attrs={'required': False, 'class': 'form-control'}),
@@ -381,24 +387,24 @@ class ProgramAccreditation_Form(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        due_date = cleaned_data.get('due_date')
+        mock_accred_date = cleaned_data.get('mock_accred_date')
         survey_visit_date = cleaned_data.get('survey_visit_date')
 
         if not survey_visit_date:
             raise ValidationError("Please set the survey visit date before submitting the form. ")
 
-        if due_date and survey_visit_date:
-            # Check if due_date is equal to survey_visit_date
-            if due_date == survey_visit_date:
-                raise ValidationError("Due date cannot be equal to the survey visit date. ")
+        if mock_accred_date and survey_visit_date:
+            # Check if mock_accred_date is equal to survey_visit_date
+            if mock_accred_date == survey_visit_date:
+                raise ValidationError("Mock Accreditation Date cannot be equal to the survey visit date. ")
 
-            # Check if due_date is after survey_visit_date
-            if due_date > survey_visit_date:
-                raise ValidationError("Due date cannot be after the survey visit date. ")
+            # Check if mock_accred_date is after survey_visit_date
+            if mock_accred_date > survey_visit_date:
+                raise ValidationError("Mock Accreditation Date cannot be after the survey visit date. ")
 
-            # Check if due_date is before the current date
-            if due_date < timezone.now():
-                raise ValidationError("Due date should be set in the future. ")
+            # Check if mock_accred_date is before the current date
+            if mock_accred_date < timezone.now():
+                raise ValidationError("Mock Accreditation Date should be set in the future. ")
 
         return cleaned_data
     
@@ -422,10 +428,10 @@ class ProgramAccreditation_UpdateForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-control form-select select edit-instrument-button',
                                     'id': 'id_instrument_level_update'}))
     
-    due_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+    mock_accred_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
                                                                      'class': 'form-control'}),
                                                                        required=True,
-                                                                        error_messages={'required': "Please set the due date submitting the form."})
+                                                                        error_messages={'required': "Please set the mock accreditation date beefore submitting the form."})
     survey_visit_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
                                                                      'class': 'form-control'}), 
                                                                      required=True,
@@ -433,7 +439,7 @@ class ProgramAccreditation_UpdateForm(forms.ModelForm):
 
     class Meta:
         model = program_accreditation
-        fields = ('program', 'instrument_level', 'due_date', 'survey_visit_date', 'description')
+        fields = ('program', 'instrument_level', 'mock_accred_date', 'survey_visit_date', 'description')
 
         widgets = {
             'description': forms.Textarea(attrs={'required': False, 'class': 'form-control'}),
@@ -441,24 +447,24 @@ class ProgramAccreditation_UpdateForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        due_date = cleaned_data.get('due_date')
+        mock_accred_date = cleaned_data.get('mock_accred_date')
         survey_visit_date = cleaned_data.get('survey_visit_date')
 
         if not survey_visit_date:
             raise ValidationError("Please set the survey visit date before submitting the form. ")
 
-        if due_date and survey_visit_date:
-            # Check if due_date is equal to survey_visit_date
-            if due_date == survey_visit_date:
-                raise ValidationError("Due date cannot be equal to the survey visit date. ")
+        if mock_accred_date and survey_visit_date:
+            # Check if mock_accred_date is equal to survey_visit_date
+            if mock_accred_date == survey_visit_date:
+                raise ValidationError("Mock Accreditation Date cannot be equal to the survey visit date. ")
 
-            # Check if due_date is after survey_visit_date
-            if due_date > survey_visit_date:
-                raise ValidationError("Due date cannot be after the survey visit date. ")
+            # Check if mock_accred_date is after survey_visit_date
+            if mock_accred_date > survey_visit_date:
+                raise ValidationError("Mock Accreditation Date cannot be after the survey visit date. ")
 
-            # Check if due_date is before the current date
-            if due_date < timezone.now():
-                raise ValidationError("Due date should be set in the future. ")
+            # Check if mock_accred_date is before the current date
+            if mock_accred_date < timezone.now():
+                raise ValidationError("Mock Accreditation Date should be set in the future. ")
 
         return cleaned_data
     

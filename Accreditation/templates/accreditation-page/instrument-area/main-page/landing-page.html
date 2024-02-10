@@ -23,7 +23,9 @@
 
 {% block content %}
 
-<div class="row g-4 row-cards">
+
+{% if perms.Accreditation.view_instrument_level_area %}
+    <div class="row g-4 row-cards">
         <div class="col-2">
                 <div class="subheader mb-2">Navigations</div>
                 <div class="list-group list-group-transparent mb-2">
@@ -32,16 +34,19 @@
                     </a>
                 </div>
         </div>
-
-        {% include "accreditation-page/instrument-area/main-page/area-cards.html" %}
+        <div class="row row-cards">
+            {% include "accreditation-page/instrument-area/main-page/analytics-cards.html" %}
+            {% include "accreditation-page/instrument-area/main-page/area-cards.html" %}
+        </div>
     </div>
+{% endif %}
 
 
     {% if perms.Accreditation.add_instrument_level_area %}
-        {% include "accreditation-level-area/main-page/create-modal.html" %}
+        {% include "accreditation-page/instrument-area/main-page/create-modal.html" %}
     {% endif %}
 
-    {% if perms.Accreditation.change_instrument_level_area or  perms.Accreditation.delete_instrument_level_area %}
+    {% if perms.Accreditation.add_instrument_level_area or perms.Accreditation.change_instrument_level_area or  perms.Accreditation.delete_instrument_level_area %}
         {% include "accreditation-page/instrument-area/main-page/scripts.html" %}
     {% endif %}
 

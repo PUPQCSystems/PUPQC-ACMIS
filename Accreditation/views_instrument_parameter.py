@@ -4,7 +4,7 @@ from django.views import View
 from django.shortcuts import render, redirect, render, get_object_or_404
 from django.http import  JsonResponse
 from Users.models import activity_log
-from .models import level_area_parameter, parameter_components #Import the model for data retieving
+from .models import level_area_parameter, parameter_components, user_assigned_to_area #Import the model for data retieving
 from .forms import AreaParameter_Form
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -16,8 +16,16 @@ from django.contrib.auth.decorators import login_required, permission_required
 def landing_page(request, pk):
     #Getting the data from the API
     records = level_area_parameter.objects.select_related('instrument_level_area').select_related('parameter').filter(instrument_level_area=pk, is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
+    assigned_users = user_assigned_to_area.objects.select_related('area', 'assigned_user').filter(is_removed = False, area=pk)
     create_form = AreaParameter_Form(request.POST or None)
 
+    has_access = False
+    
+    for assigned_user in assigned_users:
+        if request.user.id == assigned_user.assigned_user_id:
+            has_access = True
+            break
+   
     # Initialize an empty list to store update forms for each record
     details = []
 
@@ -29,8 +37,13 @@ def landing_page(request, pk):
         details.append((record, update_form, created_by, modified_by))
 
 
-    context = { 'records': records,'details': details, 'pk': pk, 'create_form': create_form}  #Getting all the data inside the type table and storing it to the context variable
-
+    context = { 'records': records,
+                'details': details, 
+                'pk': pk, 
+                'create_form': create_form, 
+                'has_access':  has_access
+               }  #Getting all the data inside the type table and storing it to the context variable
+    
     return render(request, 'accreditation-page/instrument-parameter/main-page/landing-page.html', context)   
 
 

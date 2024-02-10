@@ -1,0 +1,74 @@
+
+
+
+
+
+
+   
+        <div id="carousel-controls" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <!-- For LOOP HERE-->
+                    <div class="row row-cards">
+                        {% for record in records  %}
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="card"  onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
+                                        <div class="card-status-start bg-primary"></div>
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center">
+
+                                                <div class="subheader"> {{ record.instrument_level.level }} 
+                                                    {% now "Y-m-d" as today %}
+                                                    {% if record.instrument_level.progress_percentage == 100 %}
+                                                        <span class="badge badge-outline text-green">Ready</span>
+                                                    {% else %}
+                                                        <span class="badge badge-outline text-red">Not Ready</span>
+                                                        {% if record.survey_visit_date|date:"Y-m-d" < today %}
+                                                            <span class="badge badge-outline text-red">Overdue</span>
+                                                        {% endif %}
+                                                  
+                                                    {% endif %}
+                        
+
+                                                </div>
+                                            </div>
+
+                                            <a href="{% url 'accreditations:program-accreditation-area' pk=record.instrument_level.id accred_pk=record.id %}">
+                                                <div class="h3 mb-3">{{ record.program.program_name }}</div>
+                                            </a>
+                                            <div class="d-flex">
+                                                <div class="subheader">Accreditation Progress</div>
+                                                <div class="ms-auto">
+                                                    <span class="text-green d-inline-flex align-items-center lh-1 subheader">
+                                                        {% if record.instrument_level.progress_percentage %}
+                                                            {{ record.instrument_level.progress_percentage }}% Done
+                                                        {% else  %}
+                                                                0% Done
+                                                        {% endif %}
+                                                        
+                                                </div>  
+                                            </div>
+                                            <div class="progress progress-sm">
+                                                <div class="progress-bar bg-primary" style="width:{{ record.instrument_level.progress_percentage }}%" role="progressbar" aria-valuenow="      {{ record.instrument_level.progress_percentage }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ record.instrument_level.progress_percentage }} Complete">
+                                                    <span class="visually-hidden">{{ record.instrument_level.progress_percentage }}% Complete</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carousel-controls" role="button" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carousel-controls" role="button" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </a>
+        </div>
+ 
+</div>

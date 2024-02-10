@@ -222,6 +222,7 @@ class program_accreditation(models.Model):
     program = models.ForeignKey(Programs, on_delete=models.CASCADE, null=True, blank=True, related_name='program_relation')
     instrument_level = models.ForeignKey(instrument_level, on_delete=models.CASCADE, null=True, blank=True, related_name='instrument_level_relation')
     description = models.CharField(max_length=5000, null=True, blank=True)
+    mock_accred_date = models.DateTimeField(auto_now=False, null=True, blank=True)
     survey_visit_date = models.DateTimeField(auto_now=False, null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_program_accreditation', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
@@ -232,6 +233,18 @@ class program_accreditation(models.Model):
 
     class Meta:
         unique_together = ('program', 'instrument_level')
+
+class accreditation_certificates(models.Model):
+    accredited_program = models.ForeignKey(program_accreditation, related_name='accredited_program_certificate', on_delete=models.CASCADE, null=True, blank=True)
+    certificate_path = models.FileField(upload_to = 'accreditation-certifacates/')
+    certificate_name = models.CharField(max_length=100, null=True, blank=True)
+    description = models.CharField(max_length=5000, null=True, blank=True)
+    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_accreditation_certificate', null=True, blank=True)
+    uploaded_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_accreditation_certificate', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
 
 
 class accreditation_records(models.Model):
@@ -252,3 +265,15 @@ class accreditation_records(models.Model):
 
     def __str__(self):
         return(self.accredited_program.program)
+    
+class user_assigned_to_area(models.Model):
+    assigned_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='assigned_user', null=True, blank=True)
+    area = models.ForeignKey(instrument_level_area, related_name='assigned_area' ,on_delete=models.CASCADE, null=True, blank=True)
+    is_chairperson = models.BooleanField(default=False)
+    is_member = models.BooleanField(default=False)
+    assigned_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='assigned_by', null=True, blank=True)
+    assigned_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_by_assignees', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    removed_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_removed = models.BooleanField(default=False)

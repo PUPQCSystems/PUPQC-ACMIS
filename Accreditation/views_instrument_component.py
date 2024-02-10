@@ -6,7 +6,7 @@ from django.views import View
 from django.db.models import Sum
 
 from Users.models import activity_log
-from .models import component_upload_bin, instrument_level, instrument_level_area, level_area_parameter, parameter_components, uploaded_evidences #Import the model for data retieving
+from .models import component_upload_bin, instrument_level, instrument_level_area, level_area_parameter, parameter_components, uploaded_evidences, user_assigned_to_area #Import the model for data retieving
 from .forms import FileUpload_Form, ReviewUploadBin_Form, UploadBin_Form, ParameterComponent_Form
 from django.contrib import messages
 from django.utils import timezone

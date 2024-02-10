@@ -4,9 +4,9 @@ from django.views import View
 from rest_framework import generics, viewsets, status
 from django.shortcuts import render, redirect, render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-
-from Users.models import activity_log
-from .models import instrument, instrument_level, instrument_level_area #Import the model for data retieving
+from django.contrib.auth.models import Group, Permission
+from Users.models import CustomUser, activity_log
+from .models import instrument, instrument_level, instrument_level_area, program_accreditation #Import the model for data retieving
 from Accreditation.serializers import InstrumentSerializer
 from .forms import Create_Instrument_Form, Create_InstrumentLevel_Form, Create_LevelArea_Form, LevelAreaFormSet
 from django.contrib import messages
@@ -15,10 +15,12 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 @login_required
 @permission_required("Accreditation.view_instrument_level_area", raise_exception=True)
-def landing_page(request, pk):
-    #Getting the data from the API
+def landing_page(request, pk, accred_pk):
     formset  = LevelAreaFormSet(queryset=instrument_level_area.objects.none())
     records = instrument_level_area.objects.select_related('instrument_level').select_related('area').filter(instrument_level=pk, is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
+    accred_program = program_accreditation.objects.select_related('instrument_level', 'program').get(id=accred_pk)
+    user_records = CustomUser.objects.filter(is_active = True)
+    # group = Group.objects.get(id=auth_group_id)
 
     # Initialize an empty list to store update forms for each record
     details = []
@@ -30,7 +32,13 @@ def landing_page(request, pk):
         modified_by = record.modified_by  # Get the user who modified the record
         details.append((record, update_form, created_by, modified_by))
 
-    context = { 'records': records,'details': details, 'pk': pk, 'area_formset': formset}  #Getting all the data inside the type table and storing it to the context variable
+    context = { 'records': records,
+                'details': details, 
+                'pk': pk,   
+                'area_formset': formset, 
+                'user_records': user_records,
+                'accred_program': accred_program
+                }  #Getting all the data inside the type table and storing it to the context variable
 
     return render(request, 'accreditation-page/instrument-area/main-page/landing-page.html', context)
 
