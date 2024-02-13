@@ -91,8 +91,11 @@
                         $('#id_instrument_level').append('<option value="' + key + '">' + value + '</option>');
                     });
                 },
-                error: function (error) {
-                    console.log('Error:', error);
+               error: function(error) {
+                    // Check for the errors field in the JSON response
+                    toastr.error(error.responseJSON.errors);
+                    $('#id_instrument_level').empty();
+                        
                 }
             });
         });
@@ -116,9 +119,10 @@
                             $('.edit-instrument-button').append('<option value="' + key + '">' + value + '</option>');
                         });
                     },
-                    error: function (error) {
-                        console.log('Error:', error);
-                    }
+                    error: function(error) {
+                        toastr.error(error.responseJSON.errors);
+                        $('.edit-instrument-button').empty();
+                }
                 });
             });
   

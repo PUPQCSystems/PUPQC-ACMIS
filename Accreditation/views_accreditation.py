@@ -47,27 +47,27 @@ def create(request):
         return JsonResponse({'errors': create_form.errors}, status=400)
     
 def filter_instrument(request):
-        program_id = request.GET.get('program_id')
-        instrument_records =  instrument.objects.filter(program=program_id, is_deleted=False)
+    program_id = request.GET.get('program_id')
 
-    
+    # Check if program_id is provided and is a valid integer
+    if not program_id:
+        return JsonResponse({'errors': 'Please select a valid option'}, status=400)
+    else:
+        # Check if there are instrument records for the provided program_id
+        instrument_records = instrument.objects.filter(program=program_id, is_deleted=False)
+
+        if not instrument_records.exists():
+            return JsonResponse({'errors': 'No instruments found for the provided program'}, status=404)
+
+
         for instrument_record in instrument_records:
             instrument_id = instrument_record.id       
         instrument_levels = instrument_level.objects.filter(instrument_id =instrument_id, is_deleted=False)
 
         options = {}
         for choices_level in instrument_levels:
-             option = choices_level.level.name +' - '+choices_level.instrument.name
-             options[choices_level.id] = option
-
-        print(options)
-
-
-         #    Serialize the queryset to JSON
-
-        # for instrument_record in instrument_records:
-        #     instrument_id = instrument_record.id       
-        # instrument_levels = list(instrument_level.objects.filter(instrument_id =instrument_id, is_deleted=False).values())
+                option = choices_level.level.name +' - '+choices_level.instrument.name
+                options[choices_level.id] = option
 
         return JsonResponse({'instrument_levels': options})
 

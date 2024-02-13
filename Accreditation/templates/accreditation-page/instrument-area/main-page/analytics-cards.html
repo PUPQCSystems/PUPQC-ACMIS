@@ -8,7 +8,7 @@
 
 
       {% now "F j, Y" as today %}
-      {% if accred_program.mock_accred_date|date:"F j, Y" != today %}
+      {% if today < accred_program.mock_accred_date|date:"F j, Y" %}
         <li class="step-item active">
       {% else %}
         <li class="step-item">
@@ -24,7 +24,7 @@
         </ul>
       </li>
 
-      {% if accred_program.mock_accred_date|date:"F j, Y" == today %}
+      {% if  today >= accred_program.mock_accred_date|date:"F j, Y" and today < accred_program.survey_visit_date|date:"F j, Y" %}
         <li class="step-item active">
       {% else %}
         <li class="step-item">
@@ -35,7 +35,7 @@
         </ul>
       </li>
  
-      {% if accred_program.survey_visit_date|date:"F j, Y" == today %}
+      {% if today >= accred_program.survey_visit_date|date:"F j, Y" %}
         <li class="step-item active">
       {% else %}
         <li class="step-item">
