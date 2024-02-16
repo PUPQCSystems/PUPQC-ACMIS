@@ -324,10 +324,10 @@ ParameterComponentFormSet = modelformset_factory(
 class UploadBin_Form(forms.ModelForm):
     title = forms.CharField(max_length=500, 
                            min_length = 5, 
-                           required=False,
+                           required=True,
                             validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&0-9]*$', 
                             message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Description Field!")],
-                            error_messages={'required': "Please enter a number before submitting the form."})
+                            error_messages={'required': "Please enter an upload bin title before submitting the form."})
 
     class Meta:
         model = component_upload_bin

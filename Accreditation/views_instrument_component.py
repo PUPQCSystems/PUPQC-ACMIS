@@ -602,3 +602,4 @@ class FileUpload(PermissionRequiredMixin, View):
         
             else:
                 return JsonResponse({'error': 'Please attach a file before submitting the form.'}, status=400)
+            
