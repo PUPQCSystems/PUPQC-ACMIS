@@ -6,10 +6,13 @@ from .forms import Create_Area_Form
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import login_required
- 
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
-class AreaList(View):
+class AreaList(PermissionRequiredMixin, View):
+
+    permission_required = ["Accreditation.view_area", "Accreditation.add_area"]
+
     def get(self, request):
         #Getting the data from the API
         create_form = Create_Area_Form(request.POST or None)
@@ -45,6 +48,7 @@ class AreaList(View):
         
    
 @login_required
+@permission_required("Accreditation.change_area", raise_exception=True)
 def update(request, pk):
 # Retrieve the type object with the given primary key (pk)
     try:
@@ -71,6 +75,7 @@ def update(request, pk):
             return JsonResponse({'errors': update_form.errors}, status=400)
         
 @login_required
+@permission_required("Accreditation.delete_area", raise_exception=True)
 def archive(request, pk):
     # Gets the records who have this ID
     area_record = area.objects.get(id=pk)
@@ -88,6 +93,7 @@ def archive(request, pk):
 
 #------------------------------------------------------------[ ARCHIVE PAGE CODES ]------------------------------------------------------------#
 @login_required
+@permission_required("Accreditation.delete_area", raise_exception=True)
 def archive_landing(request):
     records = area.objects.filter(is_deleted= True) #Getting all th
 
@@ -104,6 +110,7 @@ def archive_landing(request):
 
 
 @login_required
+@permission_required("Accreditation.delete_area", raise_exception=True)
 def restore(request, pk):
     # Gets the records who have this ID
     area_record =  area.objects.get(id=pk)
@@ -119,6 +126,7 @@ def restore(request, pk):
 
 
 @login_required
+@permission_required("Accreditation.delete_area", raise_exception=True)
 def destroy(request, pk):
     if request.method == 'POST':
         entered_password = request.POST.get('password')

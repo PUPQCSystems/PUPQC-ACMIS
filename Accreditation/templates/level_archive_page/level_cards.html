@@ -18,7 +18,10 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
-                                    <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
+                                    {% if perms.Accreditation.change_accredlevel %}
+                                        <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
+                                    {% endif %}
+
                                     <a  href={% url 'accreditations:level-archive-page-restore' pk=record.id %} class="dropdown-item">Restore</a>
                                     <button type="button" class="dropdown-item text-danger delete-button" id="delete-button" data-id={{ record.id }}>Delete</button>
                                 </div>
@@ -38,7 +41,11 @@
         </div>
 
         {% include "level_archive_page/view_modal.html" %}
-        {% include "accreditation_levels/edit_modal.html" %}
+
+        {% if perms.Accreditation.change_accredlevel %}
+            {% include "accreditation_levels/edit_modal.html" %}
+        {% endif %}
+        
     <!-- END of For Loop -->
     {% endfor %}
 </div>

@@ -10,21 +10,32 @@
 <!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
 {% block page-title-actions %}
         <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search Accreditation Level..."/>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Create</button>
-        <a href="{% url 'accreditations:level-archive-page' %}" class="btn btn-success" type="button">Archive <i class="fa-solid fa-arrow-right"></i></a> 
+        {% if perms.Accreditation.add_accredlevel %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Create</button>
+        {% endif %}
+
+        {% if perms.Accreditation.delete_accredlevel %}
+            <a href="{% url 'accreditations:level-archive-page' %}" class="btn btn-success" type="button">Archive <i class="fa-solid fa-arrow-right"></i></a> 
+        {% endif %}
 {% endblock page-title-actions %}
 
 
 
 {% block content %}
     <!-- LEVEL CARDS -->
-    {% include "accreditation_levels/level_cards.html" %}
+    {% if perms.Accreditation.view_accredlevel %}
+        {% include "accreditation_levels/level_cards.html" %}
+    {% endif %}
 
   
     <!-- MODALS-->
-    {% include "accreditation_levels/create_modal.html" %}
+    {% if perms.Accreditation.add_accredlevel %}
+        {% include "accreditation_levels/create_modal.html" %}
+    {% endif %}
 
     <!-- scripts -->
-    {% include "accreditation_levels/scripts.html" %}
+    {% if perms.Accreditation.add_accredlevel or perms.Accreditation.view_accredlevel or perms.Accreditation.change_accredlevel or perms.Accreditation.delete_accredlevel %}
+        {% include "accreditation_levels/scripts.html" %}
+    {% endif %}
 
 {% endblock content %}

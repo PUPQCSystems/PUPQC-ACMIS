@@ -17,12 +17,16 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
-                                    <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
-                                                                                
-                                    <form method="POST" action="{% url 'accreditations:area-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
-                                        {% csrf_token %}
-                                        <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
-                                    </form>
+                                    {% if perms.Accreditation.change_area %}
+                                        <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
+                                    {% endif %}                 
+
+                                    {% if perms.Accreditation.delete_area %}
+                                        <form method="POST" action="{% url 'accreditations:area-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
+                                            {% csrf_token %}
+                                            <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
+                                        </form>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -39,8 +43,12 @@
             </div>
         </div>
 
+
         {% include "accreditation-areas/main-page/view-modal.html" %}
-        {% include "accreditation-areas/main-page/edit-modal.html" %}
+
+        {% if perms.Accreditation.change_area %}
+            {% include "accreditation-areas/main-page/edit-modal.html" %}
+        {% endif %}
 
     <!-- END of For Loop -->
     {% endfor %}

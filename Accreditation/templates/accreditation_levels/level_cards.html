@@ -17,12 +17,18 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
-                                    <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
-                                                                                
-                                    <form method="POST" action="{% url 'accreditations:level-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
-                                        {% csrf_token %}
-                                        <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
-                                    </form>
+
+                                    {% if perms.Accreditation.change_accredlevel %}
+                                        <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
+                                    {% endif %}            
+                                        
+                                    {% if perms.Accreditation.delete_accredlevel %}
+                                        <form method="POST" action="{% url 'accreditations:level-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
+                                            {% csrf_token %}
+                                            <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
+                                        </form>
+                                    {% endif %}
+
                                 </div>
                             </div>
                         </div>
@@ -40,7 +46,10 @@
         </div>
 
         {% include "accreditation_levels/view_modal.html" %}
-        {% include "accreditation_levels/edit_modal.html" %}
+
+        {% if perms.Accreditation.change_accredlevel %}
+            {% include "accreditation_levels/edit_modal.html" %}
+        {% endif %}
 
     <!-- END of For Loop -->
     {% endfor %}

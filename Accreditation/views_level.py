@@ -9,11 +9,12 @@ from .models import accredlevel
 from .serializers import  AccredTypeSerializer
 from django.utils import timezone
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
  
 
 # Create your views here.
 @login_required
+@permission_required("Accreditation.view_accredlevel", raise_exception=True)
 def landing_page(request):
     #Getting all the data inside the type table and storing it to the context variable
     create_form = Create_Level_Form(request.POST or None)
@@ -33,6 +34,7 @@ def landing_page(request):
     return render(request, 'accreditation_levels/landing_page.html', context)
 
 @login_required
+@permission_required("Accreditation.add_accredlevel", raise_exception=True)
 def create_level(request):
     create_form = Create_Level_Form(request.POST or None)
     if create_form.is_valid():
@@ -65,6 +67,7 @@ def create_level(request):
         return JsonResponse({'errors': create_form.errors}, status=400)
 
 @login_required
+@permission_required("Accreditation.change_accredlevel", raise_exception=True)
 def update_level(request, pk):
     # Retrieve the type object with the given primary key (pk)
     try:
@@ -105,6 +108,7 @@ def update_level(request, pk):
             return JsonResponse({'errors': update_form.errors}, status=400)
 
 @login_required
+@permission_required("Accreditation.delete_accredlevel", raise_exception=True)
 def archive_level(request, pk):
     # Gets the records who have this ID
     accreditation_level = accredlevel.objects.get(id=pk)
@@ -136,6 +140,7 @@ def archive_level(request, pk):
 
 # --------------------------------- [ARCHIVE PAGE] --------------------------------- #
 @login_required
+@permission_required("Accreditation.delete_accredlevel", raise_exception=True)
 def archive_level_page(request):
     records = accredlevel.objects.filter(is_deleted=True)
 
@@ -151,6 +156,7 @@ def archive_level_page(request):
     return render(request, 'level_archive_page/archive_landing.html', context)
 
 @login_required
+@permission_required("Accreditation.delete_accredlevel", raise_exception=True)
 def restore_level(request, pk):
     # Gets the records who have this ID
     accreditation_level = accredlevel.objects.get(id=pk)
@@ -181,6 +187,7 @@ def restore_level(request, pk):
     return redirect('accreditations:level-archive-page')
 
 @login_required
+@permission_required("Accreditation.delete_accredlevel", raise_exception=True)
 def destroy_level(request, pk):
     if request.method == 'POST':
         entered_password = request.POST.get('password')
