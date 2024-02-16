@@ -6,12 +6,13 @@ from django.contrib import messages
 from .serializers import  AccredTypeSerializer
 from django.utils import timezone
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import QueryDict
 
 # Create your views here.
 
 @login_required
+@permission_required("Accreditation.view_accredbodies", raise_exception=True)
 def landing_page(request):
     #Getting all the data inside the type table and storing it to the context variable
     create_form = Create_Bodies_Form(request.POST or None)
@@ -31,6 +32,7 @@ def landing_page(request):
     return render(request, 'accreditation_bodies/landing_page.html', context)
     
 @login_required
+@permission_required("Accreditation.add_accredbodies", raise_exception=True)
 def create_bodies(request):
     create_form = Create_Bodies_Form(request.POST or None)
     if create_form.is_valid():
@@ -47,6 +49,7 @@ def create_bodies(request):
         return JsonResponse({'errors': create_form.errors}, status=400)
 
 @login_required
+@permission_required("Accreditation.change_accredbodies", raise_exception=True)
 def update_bodies(request, pk):
     # Retrieve the type object with the given primary key (pk)
     try:
@@ -76,6 +79,7 @@ def update_bodies(request, pk):
         
 
 @login_required
+@permission_required("Accreditation.delete_accredbodies", raise_exception=True)
 def archive_bodies(request, pk):
     # Gets the records who have this ID
     accreditation_body = accredbodies.objects.get(id=pk)
@@ -93,6 +97,7 @@ def archive_bodies(request, pk):
 # --------------------------------- [ARCHIVE PAGE] --------------------------------- #
 
 @login_required
+@permission_required("Accreditation.delete_accredbodies", raise_exception=True)
 def archive_landing(request):
     records = accredbodies.objects.filter(is_deleted=True)
 
@@ -108,6 +113,7 @@ def archive_landing(request):
     return render(request, 'bodies_archive_page/archive_landing.html', context)
 
 @login_required
+@permission_required("Accreditation.delete_accredbodies", raise_exception=True)
 def restore_bodies(request, pk):
     # Gets the records who have this ID
     accreditation_body = accredbodies.objects.get(id=pk)
@@ -122,6 +128,7 @@ def restore_bodies(request, pk):
     return redirect('accreditations:bodies-archive-page')
 
 @login_required
+@permission_required("Accreditation.delete_accredbodies", raise_exception=True)
 def destroy_bodies(request, pk):
     if request.method == 'DELETE':
 

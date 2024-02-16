@@ -10,23 +10,38 @@
 <!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
 {% block page-title-actions %}
         <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search User…"/>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#register-modal">Register</button>
-        <a href=" {% url "users:archive-landing" %} " class="btn btn-success" type="button">Archive <i class="fa-solid fa-arrow-right"></i></a> 
+
+        {% if perms.Users.add_customuser %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#register-modal">Register</button>
+        {% endif %}
+
+        {% if perms.Users.delete_customuser %}
+            <a href=" {% url "users:archive-landing" %} " class="btn btn-success" type="button">Archive <i class="fa-solid fa-arrow-right"></i></a> 
+        {% endif %}
+
 {% endblock page-title-actions %}
 
 
 {% block content %}
-    <!-- USER CARDS -->
-    {% include "users/user_cards.html" %} 
 
-    <!-- STYLES -->
-    {% include "users/styles.html" %} 
+    {% if perms.Users.view_customuser %}
+        <!-- USER CARDS -->
+        {% include "users/user_cards.html" %} 
+    {% endif %}
 
-    <!-- REGISTER MODAL -->
-    {% include "users/register_modal.html" %} 
+        <!-- STYLES -->
+        {% include "users/styles.html" %} 
 
-    <!-- SCRIPTS -->
-    {% include "users/scripts.html" %}
+    {% if perms.Users.add_customuser %}
+        <!-- REGISTER MODAL -->
+        {% include "users/register_modal.html" %}
+    {% endif %} 
+
+
+    {% if perms.Users.add_customuser or perms.Users.view_customuser or perms.Users.change_customuser or perms.Users.delete_customuser%}
+        <!-- SCRIPTS -->
+        {% include "users/scripts.html" %}
+    {% endif %}
 
 {% endblock content %}
 

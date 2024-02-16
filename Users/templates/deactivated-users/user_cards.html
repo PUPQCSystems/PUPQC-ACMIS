@@ -22,17 +22,23 @@
                     <a href="#" class="card-btn" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">
                         View
                     </a>
-                    <a href="#" class="card-btn edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}" >
-                        Edit
-                    </a>
+
+                    {% if perms.Users.change_customuser %}
+                        <a href="#" class="card-btn edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}" >
+                            Edit
+                        </a>
+                    {% endif %}
+
                     <a href="#" class="card-btn text-danger reactivate-button" data-id={{ record.id }}>
                         Reactivate
                     </a>
                 </div>
             </div>
         </div>
-
-        {% include "users/edit_modal.html" %} 
+        {% if perms.Users.change_customuser %}
+            {% include "users/edit_modal.html" %} 
+        {% endif %}
+        
         {% include "deactivated-users/view_modal.html" %} 
     {% endfor %}
 </div>

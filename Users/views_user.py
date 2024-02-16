@@ -5,10 +5,11 @@ from Users.models import CustomUser, auth_group_info
 from django.http import JsonResponse
 from django.utils import timezone
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import Group, Permission
 
 @login_required
+@permission_required("Users.view_customuser", raise_exception=True)
 def landing_page(request):
     # Getting all the data inside the Program table and storing it in the context variable
     register_form = CreateUserForm()
@@ -30,6 +31,7 @@ def landing_page(request):
 
 
 @login_required
+@permission_required("Users.add_customuser", raise_exception=True)
 def register(request):
     register_form = CreateUserForm(request.POST)
     auth_group_id = request.POST.get('selected_group')
@@ -59,6 +61,7 @@ def register(request):
     
     #This is the function for updating the record
 @login_required
+@permission_required("Users.change_customuser", raise_exception=True)
 def update_account(request, pk):
     # Retrieve the program object with the given primary key (pk)
     try:
@@ -99,6 +102,7 @@ def update_account(request, pk):
 
         
 @login_required
+@permission_required("Users.delete_customuser", raise_exception=True)
 def deactivate_account(request, pk):
     if request.method == 'POST':
         entered_password = request.POST.get('password')
@@ -136,6 +140,7 @@ def deactivate_account(request, pk):
 
 #----------------------------------------[ ARCHIVE PAGE FUNCTIONS ]----------------------------------------#
 @login_required
+@permission_required("Users.delete_customuser", raise_exception=True)
 def archive_landing(request):
     # Getting all the data inside the Program table and storing it in the context variable
 
@@ -155,6 +160,7 @@ def archive_landing(request):
     return render(request, 'deactivated-users/landing_page.html', context)
 
 @login_required
+@permission_required("Users.delete_customuser", raise_exception=True)
 def reactivate_account(request, pk):
     if request.method == 'POST':
         entered_password = request.POST.get('password')

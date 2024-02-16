@@ -9,22 +9,27 @@
 <!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
 {% block page-title-actions %}
         <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search program…"/>
-        <a href="{% url 'users:landing' %}" type="button" class="btn btn-primary">
-            <i class="fa-solid fa-arrow-left"></i> Back
-        </a>
-        <button type="button" class="btn btn-success" disabled>Restore</button>
+        {% if perms.Users.delete_customuser %}
+            <a href="{% url 'users:landing' %}" type="button" class="btn btn-primary">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
+            <button type="button" class="btn btn-success" disabled>Restore</button>
+        {% endif %}
 {% endblock page-title-actions %}
 
 
 {% block content %}
-    <!-- USER CARDS -->
-    {% include "deactivated-users/user_cards.html" %} 
 
-    <!-- STYLES -->
-    {% include "deactivated-users/styles.html" %} 
+    {% if perms.Users.delete_customuser %}
+        <!-- USER CARDS -->
+        {% include "deactivated-users/user_cards.html" %} 
 
-    <!-- SCRIPTS -->
-    {% include "deactivated-users/scripts.html" %}
+        <!-- STYLES -->
+        {% include "deactivated-users/styles.html" %} 
+
+        <!-- SCRIPTS -->
+        {% include "deactivated-users/scripts.html" %}
+    {% endif %}
 
 {% endblock content %}
 
