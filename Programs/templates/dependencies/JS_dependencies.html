@@ -1,5 +1,4 @@
 {% load static %}
-
 <!--FONTAWSOME-->
 <script src="{% static 'fontawesomefree/js/all.min.js' %}"></script>
 
@@ -25,9 +24,6 @@
 <script src="{% static 'custom-assets/js/validation.js' %}"></script>
 <script src="{% static 'custom-assets/js/htmx.js' %}"></script>
 
-{% comment %}-----------------------------[ FILEPOND Dependencies ]---------------------------{% endcomment %}
-
-
 
 
 <script>
@@ -40,13 +36,36 @@
     }
 </script>
 
-<script src="{% static 'vendor/DataTables/jquery.dataTables.js' %} "></script>
-<script>
-    $(document).ready(function () {
-        $('#myTable').DataTable();
-    });
-</script>
-
+{% comment %}-----------------------------[ DataTable Dependencies ]---------------------------{% endcomment %}
+<script src="{% static 'vendor/DataTables/JSZip-3.10.1/jszip.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/pdfmake-0.2.7/pdfmake.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/pdfmake-0.2.7/vfs_fonts.js' %}"></script>
+<script src="{% static 'vendor/DataTables/DataTables-2.0.0/js/dataTables.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/DataTables-2.0.0/js/dataTables.bootstrap5.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/AutoFill-2.7.0/js/dataTables.autoFill.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/AutoFill-2.7.0/js/autoFill.bootstrap5.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/Buttons-3.0.0/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/Buttons-3.0.0/js/buttons.bootstrap5.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/Buttons-3.0.0/js/buttons.colVis.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/Buttons-3.0.0/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/Buttons-3.0.0/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/ColReorder-2.0.0/js/dataTables.colReorder.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/DateTime-1.5.2/js/dataTables.dateTime.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/FixedColumns-5.0.0/js/dataTables.fixedColumns.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/FixedHeader-4.0.0/js/dataTables.fixedHeader.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/KeyTable-2.12.0/js/dataTables.keyTable.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/Responsive-3.0.0/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/Responsive-3.0.0/js/responsive.bootstrap5.js' %}"></script>
+<script src="{% static 'vendor/DataTables/RowGroup-1.5.0/js/dataTables.rowGroup.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/RowReorder-1.5.0/js/dataTables.rowReorder.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/Scroller-2.4.0/js/dataTables.scroller.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/SearchBuilder-1.7.0/js/dataTables.searchBuilder.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/SearchBuilder-1.7.0/js/searchBuilder.bootstrap5.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/SearchPanes-2.3.0/js/dataTables.searchPanes.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/SearchPanes-2.3.0/js/searchPanes.bootstrap5.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/Select-2.0.0/js/dataTables.select.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/StateRestore-1.4.0/js/dataTables.stateRestore.min.js' %}"></script>
+<script src="{% static 'vendor/DataTables/StateRestore-1.4.0/js/stateRestore.bootstrap5.min.js' %}"></script>
 
 
 

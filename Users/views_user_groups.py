@@ -52,8 +52,6 @@ class CreateUserGroups(View):
                 new_group, created = Group.objects.get_or_create(name = group_name)
                 group_id = new_group.id
             
-                print(new_group)
-                
                  # Create an instance of the ActivityLog model
                 activity_log_entry = activity_log()
 

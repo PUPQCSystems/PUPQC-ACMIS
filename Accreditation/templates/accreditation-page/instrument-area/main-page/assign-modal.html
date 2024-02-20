@@ -20,6 +20,7 @@
 						<div class="step-circle" onclick="displayStep{{ record.id }}(1)">1</div>
 						<div class="step-circle" onclick="displayStep{{ record.id }}(2)">2</div>
 						<div class="step-circle" onclick="displayStep{{ record.id }}(3)">3</div>
+						<div class="step-circle" onclick="displayStep{{ record.id }}(4)">4</div>
 					</div>
 					
 					<form id="assign-form-{{ record.id }}">
@@ -36,7 +37,20 @@
 							<div class="row align-items-center">
 								<div class="col">
 									<!-- Step 2 form fields here -->
-									<h3>Step 2: Add Area Members</h3>
+									<h3>Step 2: Add Co-chairman</h3>
+								</div>
+							</div>
+								{% include "accreditation-page/instrument-area/main-page/area-cochairman-table.html" %}
+							<br>
+							<button type="button" class="btn btn-primary prev-step-{{ record.id }}">Previous</button>
+							<button type="button" class="btn btn-primary next-step-{{ record.id }}">Next</button>
+						</div>
+
+						<div class="step{{ record.id }} step{{ record.id }}-3">
+							<div class="row align-items-center">
+								<div class="col">
+									<!-- Step 3 form fields here -->
+									<h3>Step 3: Add Area Members</h3>
 								</div>
 							</div>
 								{% include "accreditation-page/instrument-area/main-page/area-members-table.html" %}
@@ -45,9 +59,9 @@
 							<button type="button" class="btn btn-primary next-step-{{ record.id }}">Next</button>
 						</div>
 					
-						<div class="step{{ record.id }} step{{ record.id }}-3">
+						<div class="step{{ record.id }} step{{ record.id }}-4">
 							<!-- Step 3 form fields here -->
-							<h3>Step 3: Complete the Area Assignment</h3>
+							<h3>Step 4: Complete the Area Assignment</h3>
 							<div class="mb-3">
 								<p>Please click the Submit button if the member assignment to area is done. </p>
 							</div>
@@ -64,7 +78,7 @@
     var updateProgressBar{{ record.id }};
     
       function displayStep{{ record.id }}(stepNumber{{ record.id }}) {
-        if (stepNumber{{ record.id }} >= 1 && stepNumber{{ record.id }} <= 3) {
+        if (stepNumber{{ record.id }} >= 1 && stepNumber{{ record.id }} <= 4) {
           $(".step{{ record.id }}-" + currentStep{{ record.id }}).hide();
           $(".step{{ record.id }}-" + stepNumber{{ record.id }}).show();
           currentStep{{ record.id }} = stepNumber{{ record.id }};
@@ -76,7 +90,7 @@
         $('#assign-form-{{ record.id }}').find('.step{{ record.id }}').slice(1).hide();
       
         $(".next-step-{{ record.id }}").click(function() {
-          if (currentStep{{ record.id }} < 3) {
+          if (currentStep{{ record.id }} < 4) {
             $(".step{{ record.id }}-" + currentStep{{ record.id }}).addClass("animate__animated animate__fadeOutLeft");
             currentStep{{ record.id }}++;
             setTimeout(function() {
@@ -100,7 +114,7 @@
         });
     
         updateProgressBar{{ record.id }} = function() {
-          var progressPercentage{{ record.id }} = ((currentStep{{ record.id }} - 1) / 2) * 100;
+          var progressPercentage{{ record.id }} = ((currentStep{{ record.id }} - 1) / 3) * 100;
           $("#form-progress-bar-{{ record.id }}").css("width", progressPercentage{{ record.id }} + "%");
         }
       });

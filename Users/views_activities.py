@@ -1,17 +1,28 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from .forms import UpdateForm, CreateUserForm
-from Users.models import CustomUser, activity_log
+from Users.models import activity_log
 from django.http import JsonResponse
 from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 
+#Import Paginator
+from django.core.paginator import Paginator
+
 @login_required
 def admin_activities(request):
-    records = activity_log.objects.select_related('acted_by').filter(is_deleted=False).order_by('-datetime_acted')
-   
-    context = {'records': records}   
+    # records = activity_log.objects.select_related('acted_by').filter(is_deleted=False).order_by('-datetime_acted') 
+    records = activity_log.objects.select_related('acted_by').filter(is_deleted=False).order_by('-datetime_acted') 
+
+    # Setup the pagination
+    paginator = Paginator(activity_log.objects.select_related('acted_by').filter(is_deleted=False).order_by('-datetime_acted'), 15)
+    page = request.GET.get('page')
+    activity_log_list = paginator.get_page(page)
+
+
+    context = {'records': records, 
+               'log_paginator': activity_log_list}   
     return render(request, 'activity-logs/landing-page.html', context)
 
 def user_activities(request):

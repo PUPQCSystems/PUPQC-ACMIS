@@ -22,7 +22,7 @@
                     <div class="divide-y">
 
                         <!-- For LOOP HERE-->
-                        {% for record in records %}
+                        {% for record in log_paginator %}
                             <div>
                                 <div class="row">
                                     <div class="col-auto">
@@ -68,9 +68,98 @@
                         {% endfor %}
                     </div>
                 </div>
-            </div>
+
+                {% comment %} Card Footer and Pagination {% endcomment %}
+                <div class="card-footer d-flex align-items-center">
+                    <p class="m-0 text-muted">Page <span>{{ log_paginator.number }}</span> of <span>{{ log_paginator.paginator.num_pages }}</span></p>
+                    <ul class="pagination m-0 ms-auto">
+
+                        {% if log_paginator.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ log_paginator.previous_page_number }}" tabindex="-1" aria-disabled="true">
+                                <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M15 6l-6 6l6 6"></path></svg>
+                                prev
+                                </a>
+                            </li>
+
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M15 6l-6 6l6 6"></path></svg>
+                                prev
+                                </a>
+                            </li>
+                        {% endif %}
+
+
+                        {% if log_paginator.number <= 4 %}
+                            {% for page_no in log_paginator.paginator.page_range|slice:":5" %}
+                                {% if  log_paginator.number == page_no  %}                  
+                                    <li class="page-item active"><a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+                                {% else %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li> 
+                                {% endif %}
+                            {% endfor %}
+
+
+                        {% elif log_paginator.number >= 5 %}
+                            {% with no1=log_paginator.number|add:"-5" %}
+                                {% with no2=no1|add:"1" %}
+                                    {% with range=5|add:no2 %}
+                                        {% for page_no in ''|center:range %}
+
+                                            {% if forloop.counter <= no1 %}
+
+                                            {% else %}
+                                                {% if  log_paginator.number == forloop.counter  %}                  
+                                                    <li class="page-item active"><a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+                                                {% else %}
+                                                    <li class="page-item"><a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a></li> 
+                                                {% endif %}
+                                            
+                                            {% endif %}
+
+                
+                                        {% endfor %}
+                                    {% endwith %}
+                                {% endwith %}
+                            {% endwith %}
+
+                          
+                        {% else %}
+                            {% for page_no in log_paginator.paginator.page_range|slice:"0:5" %}
+                                <li class="page-item"><a class="page-link" href="?page={{ page_no }}">{{ page_no }}</a></li>
+                            {% endfor %}
+                        {% endif %}
+
+
+                        {% if log_paginator.has_next %} 
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ log_paginator.next_page_number }}">
+                                next <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M9 6l6 6l-6 6"></path></svg>
+                                </a>
+                            </li>
+
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">
+                                next <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M9 6l6 6l-6 6"></path></svg>
+                                </a>
+                            </li>
+                        {% endif %}
+                  
+                    </ul>
+                  </div>
+                </div> 
+
+                
         </div>
     </div>
+
 
 
 {% else %}

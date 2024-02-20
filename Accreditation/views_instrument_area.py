@@ -5,6 +5,7 @@ from rest_framework import generics, viewsets, status
 from django.shortcuts import render, redirect, render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import Group, Permission
+from Accreditation.models_views import UserGroupView
 from Users.models import CustomUser, activity_log
 from .models import instrument, instrument_level, instrument_level_area, program_accreditation #Import the model for data retieving
 from Accreditation.serializers import InstrumentSerializer
@@ -12,6 +13,7 @@ from .forms import Create_Instrument_Form, Create_InstrumentLevel_Form, Create_L
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required, permission_required
+from django.db import connection
 
 @login_required
 @permission_required("Accreditation.view_instrument_level_area", raise_exception=True)
@@ -19,7 +21,7 @@ def landing_page(request, pk, accred_pk):
     formset  = LevelAreaFormSet(queryset=instrument_level_area.objects.none())
     records = instrument_level_area.objects.select_related('instrument_level').select_related('area').filter(instrument_level=pk, is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
     accred_program = program_accreditation.objects.select_related('instrument_level', 'program').get(id=accred_pk)
-    user_records = CustomUser.objects.filter(is_active = True)
+    user_records = UserGroupView.objects.all()
     # group = Group.objects.get(id=auth_group_id)
 
     # Initialize an empty list to store update forms for each record
@@ -71,6 +73,44 @@ def archive(request, ins_pk, pk):
 
     messages.success(request, f'{name} is successfully archived!') 
     return redirect('accreditations:program-accreditation-area', pk=ins_pk)
+
+
+# AREA ASSIGNMENT CODES
+def assign_user(self, request, pk):
+        formset = LevelAreaFormSet(data=self.request.POST)
+        instrument_level_id = pk  # assign  the instrument_level ID
+        for form in formset:
+            form.instance.instrument_level_id = instrument_level_id
+            form.instance.created_by = request.user
+        try:
+    
+            if formset.is_valid():
+                formset_saved = formset.save()  # Save the formset with the assigned foreign keys
+
+                if formset_saved:
+                    # Create an instance of the ActivityLog model
+                    activity_log_entry = activity_log()
+
+                    # Set the attributes of the instance
+                    activity_log_entry.module = "ACCREDITATION LEVEL AREA MODULE"
+                    activity_log_entry.action = "Created a record"
+                    activity_log_entry.type = "CREATE"
+                    activity_log_entry.datetime_acted =  timezone.now()
+                    activity_log_entry.acted_by = request.user
+                    # Set other attributes as needed
+
+                    # Save the instance to the database
+                    activity_log_entry.save()
+
+                    messages.success(request, f"Instrument's level areas is successfully created!")
+                    return JsonResponse({'status': 'success'}, status=200)
+                else:
+                    return JsonResponse({'error': "The form is empty. Please input a value before submitting."}, status=400)
+            else:
+                return JsonResponse({'errors': formset.errors}, status=400)
+        except IntegrityError as e:
+            # Handle the IntegrityError here
+            return JsonResponse({'error': 'Error: Duplicate or conflicting selected areas. Please choose a unique option.'}, status=400)
 
 #------------------------------------------------------------[ ARCHIVE PAGE CODES ]------------------------------------------------------------#
 @login_required

@@ -1,29 +1,54 @@
 
 <div class="tbl-container">
-    <table id="member-Table-{{ record.id }}" class="">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-
-            {% for user_record in user_records %}
+    <div class="col-12">
+        <table class="table table-vcenter card-table hover" id="member-Table-{{ record.id }}" style="width:100%">
+            <thead>
                 <tr>
-                    <td>{{ user_record.first_name }} {{ user_record.last_name }}</td>
-                    <td>{{ user_record.email }}</td>
+                    <th class="w-1"><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices"></th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Group</th>
                 </tr>
-            {% endfor %}
+            </thead>
+            <tbody>
+                {% for user_record in user_records %}
+                    <tr>
+                        <td>
+                            <input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select User">
+                        </td>
 
-        </tbody>
-    </table> 
+                        <td>
+                            <div class="d-flex py-1 align-items-center">
+                                <span class="avatar me-2" style="background-image: url(./static/avatars/006m.jpg)"></span>
+                                <div class="flex-fill">
+                                    <div class="font-weight-medium">{{ user_record.first_name }} {{ user_record.last_name }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-muted"><a href="#" class="text-reset">{{ user_record.email }}</a></td>
+                        <td class="text-muted badge-list">
+                            {% for item in user_record.user_group %}
+                            <span class="badge bg-blue-lt">{{ item }}</span>
+                            {% endfor %}
+                        </td>
+
+                    </tr>
+                        
+                {% endfor %}
+            </tbody>
+        </table>
+       
+
+    </div>
 </div>
 
 <script>
     $(document).ready(function () {
-        $('#member-Table-{{ record.id }}').DataTable();
+        $('#member-Table-{{ record.id }}').DataTable({
+            columnDefs: [
+            { targets: [0], orderable: false } // Disable ordering for the first column (index 0)
+        ]
+        });
     });
 </script>
 

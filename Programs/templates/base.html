@@ -12,6 +12,8 @@
 
 		<!-- CSS DEPENDENCIES-->
 		{% include "dependencies/CSS_dependencies.html" %} 
+		{% block css_content %} 
+		{% endblock %}
 
 	</head>
 		<body>
@@ -61,6 +63,9 @@
 
 				<!-- JS DEPENDENCIES-->
 				{% include "dependencies/JS_dependencies.html" %}
+				{% block javascript_content %} 
+				{% endblock %}
+				
 
 				{% for message in messages %}
 					<script>toastr.success("{{ message }}") </script>
