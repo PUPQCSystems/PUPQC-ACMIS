@@ -125,7 +125,8 @@ urlpatterns = [
     path("program-accreditation/area/archive/<str:ins_pk>/<str:pk>/", views_instrument_area.archive, name='program-accreditation-area-archive'),
     path("program-accreditation/area/<str:pk>/archive-page/", views_instrument_area.archive_landing, name='program-accreditation-area-archive-page'),
     path("program-accreditation/area/archive-page/restore/<str:ins_pk>/<str:pk>/", views_instrument_area.restore, name='program-accreditation-area-restore'),
-
+    path("program-accreditation/area/assign-user/", views_instrument_area.assign_user, name='program-accreditation-area-assign-user'),
+   
 
     path("program-accreditation/area/parameter/<str:pk>/", views_instrument_parameter.landing_page, name='program-accreditation-parameter'),
     path("program-accreditation/area/parameter/create/<int:pk>/", views_instrument_parameter.create, name='program-accreditation-parameter-create'),

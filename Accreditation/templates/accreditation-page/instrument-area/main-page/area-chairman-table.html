@@ -1,3 +1,5 @@
+{% load crispy_forms_tags %}
+
 <div class="tbl-container">
     <div class="col-12">
 		<table class="table table-vcenter card-table hover" id="chairman-Table-{{ record.id }}" style="width:100%">
@@ -13,7 +15,7 @@
 				{% for user_record in user_records %}
 					<tr>
 						<td>
-							<input class="form-check-input" type="radio" id="chairman-radio-{{ user_record.id }}" name="chairman-radio">
+							<input class="form-check-input m-0 align-middle" type="radio" id="chairman-radio-{{ user_record.id }}" name="is_chairman" value="{{ user_record.id }}">
 						</td>
 
 						<td>

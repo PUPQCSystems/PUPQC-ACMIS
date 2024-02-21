@@ -1,10 +1,10 @@
-
+{% load crispy_forms_tags %}
 <div class="tbl-container">
     <div class="col-12">
         <table class="table table-vcenter card-table hover" id="member-Table-{{ record.id }}" style="width:100%">
             <thead>
                 <tr>
-                    <th class="w-1"><input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select all invoices"></th>
+                    <th class="w-1"><input class="form-check-input m-0 align-middle" type="checkbox" id="check-all-assign" aria-label="Select all invoices"></th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Group</th>
@@ -14,7 +14,7 @@
                 {% for user_record in user_records %}
                     <tr>
                         <td>
-                            <input class="form-check-input m-0 align-middle" type="checkbox" aria-label="Select User">
+                            <input type="checkbox" name="is_member" class="form-check-input m-0 align-middle" id="id_is_member"  value="{{ user_record.id }}">
                         </td>
 
                         <td>

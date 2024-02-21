@@ -81,7 +81,7 @@ class CreateUserGroups(View):
                 # The list_of_persmission variable is a list so we use for loop to get the permission individually
                 for permission in list_of_persmission:
                 # Code to save the records. This will create a new record in the auth_group_permissions table
-                    print('The permission id:', permission)
+                    # print('The permission id:', permission)
                     new_group.permissions.add(permission)
                 
                 redirect_url = '/user/groups/'

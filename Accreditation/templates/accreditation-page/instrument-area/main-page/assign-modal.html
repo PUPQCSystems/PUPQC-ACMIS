@@ -28,6 +28,7 @@
 						<div class="step{{ record.id }} step{{ record.id }}-1">
 							<!-- Step 1 form fields here -->
 							<h3>Step 1: Add Area Chairman</h3>
+								<input type="hidden" name="area" value="{{ record.id }}">
 								{% include "accreditation-page/instrument-area/main-page/area-chairman-table.html" %}
 							<br>
 							<button type="button" class="btn btn-primary next-step-{{ record.id }}">Next</button>
@@ -66,7 +67,7 @@
 								<p>Please click the Submit button if the member assignment to area is done. </p>
 							</div>
 							<button type="button" class="btn btn-primary prev-step-{{ record.id }}">Previous</button>
-							<button type="button" id="submit" data-id={{ pk }} class="btn btn-primary">Submit</button>
+							<button type="button" data-id={{ record.id }} class="btn btn-primary assign-button">Submit</button>
 						</div>
 					</form>
 				</div>

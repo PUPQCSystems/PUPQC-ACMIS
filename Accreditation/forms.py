@@ -503,3 +503,21 @@ class FileUpload_Form(forms.ModelForm):
             'file_path': forms.FileInput(attrs={'id': 'file-path-{{ upload_bin.id }}'}),
         }
 
+
+
+# ---------------------------- [ AREA ASSIGNMENT FORM ] ---------------------------- #
+class ChairManAssignedToArea_Form(forms.ModelForm):
+    class Meta:
+        model = user_assigned_to_area
+        fields = ['area', 'is_chairman']
+
+
+class CoChairUserAssignedToArea_Form(forms.ModelForm):
+    class Meta:
+        model = user_assigned_to_area
+        fields = ['area', 'is_cochairman']
+
+class MemberAssignedToArea_Form(forms.ModelForm):
+    class Meta:
+        model = user_assigned_to_area
+        fields = ['area','is_member']

@@ -4,6 +4,8 @@ from django.conf import settings
 from django.utils import timezone
 from Programs.models import Programs
 from django.contrib.postgres.fields import ArrayField
+
+from Users.models import CustomUser
 from . import models_views
 
  # Create your models here.
@@ -268,9 +270,10 @@ class accreditation_records(models.Model):
         return(self.accredited_program.program)
     
 class user_assigned_to_area(models.Model):
-    assigned_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='assigned_user', null=True, blank=True)
-    area = models.ForeignKey(instrument_level_area, related_name='assigned_area' ,on_delete=models.CASCADE, null=True, blank=True)
-    is_chairperson = models.BooleanField(default=False)
+    assigned_user = models.ForeignKey(CustomUser, on_delete=models.PROTECT, related_name='assigned_user', null=False, blank=False)
+    area = models.ForeignKey(instrument_level_area, related_name='assigned_area' ,on_delete=models.CASCADE, null=False, blank=False)
+    is_chairman = models.BooleanField(default=False)
+    is_cochairman = models.BooleanField(default=False)
     is_member = models.BooleanField(default=False)
     assigned_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='assigned_by', null=True, blank=True)
     assigned_at = models.DateTimeField(default=timezone.now)
@@ -278,3 +281,6 @@ class user_assigned_to_area(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     removed_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_removed = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('assigned_user', 'area')
