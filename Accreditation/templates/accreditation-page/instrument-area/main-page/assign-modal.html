@@ -120,3 +120,25 @@
         }
       });
 </script>
+
+<script>
+    // Function to check all checkboxes on ASSIGN
+    $(document).ready(function() {
+        // Check
+        $("#check-all-assign-{{record.id}}").on("click", function() {
+            if ($(this).prop("checked")) {
+                $(".check-button-{{record.id}}").prop("checked", true); // Use your checkbox ID here
+            } else {
+                $(".check-button-{{record.id}}").prop("checked", false); // Use your checkbox ID here
+            }
+        });
+
+        // Uncheck
+        $(".check-button-{{record.id}}").on("change", function() { // Use your checkbox ID here
+            if (!$(this).prop("checked")) {
+                $("#check-all-assign").prop("checked", false);
+            }
+
+        });
+    });
+</script>

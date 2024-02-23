@@ -200,29 +200,6 @@
 </script> 
 
 
-
-<script>
-    //Function to check all checkboxes on ASSIGN
-    $(document).ready(function() {
-        // Check
-        $("#check-all-assign").on("click", function() {
-            if ($(this).prop("checked")) {
-                $("input[type='checkbox']").prop("checked", true);
-            } else {
-                $("input[type='checkbox']").prop("checked", false);
-            }
-        });
-
-        // Uncheck
-        $("input[type='checkbox']").on("change", function() {
-            if (!$(this).prop("checked")) {
-                $("#check-all-assign").prop("checked", false);
-            }
-        });
-    });
-</script>
-
-
 {% comment %} AJAX FOR UPDATING  {% endcomment %}
 <script>
     $(document).ready(function(){

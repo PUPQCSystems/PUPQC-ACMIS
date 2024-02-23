@@ -23,7 +23,10 @@ def landing_page(request, pk, accred_pk):
     cochairman_form = CoChairUserAssignedToArea_Form(request.POST or None)
     member_form = MemberAssignedToArea_Form(request.POST or None)
     formset  = LevelAreaFormSet(queryset=instrument_level_area.objects.none())
-    records = instrument_level_area.objects.select_related('instrument_level').select_related('area').filter(instrument_level=pk, is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
+    # records = instrument_level_area.objects.select_related('instrument_level','area').filter(instrument_level=pk, is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
+    records = instrument_level_area.objects.select_related('instrument_level', 'area').filter(instrument_level=pk, is_deleted=False)
+
+
     accred_program = program_accreditation.objects.select_related('instrument_level', 'program').get(id=accred_pk)
     user_records = UserGroupView.objects.all()
     # group = Group.objects.get(id=auth_group_id)
@@ -33,10 +36,13 @@ def landing_page(request, pk, accred_pk):
 
     # Iterate through each record and create an update form for it
     for record in records:
+        user_counts = user_assigned_to_area.objects.filter(area_id=record.id).count()
+        assigned_user = user_assigned_to_area.objects.filter(area_id=record.id).values_list('assigned_user_id', 'area_id', 'is_chairman', 'is_cochairman', 'is_member')
+        print(assigned_user)
         update_form = Create_LevelArea_Form(instance=record)
         created_by = record.created_by  # Get the user who created the record
         modified_by = record.modified_by  # Get the user who modified the record
-        details.append((record, update_form, created_by, modified_by))
+        details.append((record, user_counts, assigned_user ,update_form, created_by, modified_by))
 
     context = { 'records': records,
                 'details': details, 
@@ -140,25 +146,29 @@ def assign_user(request):
             
                     member_list = request.POST.getlist('is_member')
                     if member_list:
-                        count = 0
+                        print('Member List: ', member_list)
+                        count = 1
                         for member_id in member_list:
-                            if count != 5:
+                            if count <= 5:
                                 member = CustomUser.objects.get(id=int(member_id))
                                 
                                 # Check for assignment conflicts
                                 if user_assigned_to_area.objects.filter(assigned_user=member, area=area).exists():
-                                    return JsonResponse({'error': 'Area assignment conflict: Users cannot have multiple roles within the same area.'}, status=400)
+                                    return JsonResponse({'error': f'Area assignment conflict: {member.first_name} {member.last_name} user cannot have multiple roles within the same area.'}, status=400)
+                                    break
 
-                                else:
-                                    member_instance = member_form.save(commit=False)
-                                    member_instance.assigned_user = member
-                                    member_instance.area = area
-                                    member_instance.is_member = True
-                                    member_instance.assigned_by = request.user
-                                    member_instance.save()
+                                member_instance = member_form.save(commit=False)
+                                member_instance.assigned_user = member
+                                member_instance.area = area
+                                member_instance.is_member = True
+                                member_instance.assigned_by = request.user
+                                member_instance.save()
+                                print('Counts: ', count)
                             else:
                                 return JsonResponse({'error': 'The System can only accepts Five (5) members per areas.'}, status=400)
+                                break
                             count += 1
+       
 
                 messages.success(request, "Area Managers are successfully assigned!")
                 return JsonResponse({'status': 'success'}, status=200)

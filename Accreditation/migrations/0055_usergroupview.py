@@ -38,14 +38,13 @@ class Migration(migrations.Migration):
                         u.last_name,
                         u.middle_name,
                         u.email,
-                        ARRAY(SELECT grp.name
-                        FROM public."auth_group" grp
-                        INNER JOIN public."Users_customuser_groups" ug
-                        ON grp.id = ug.group_id
-                        INNER JOIN  public."Users_customuser" u
-                        ON u.id = ug.customuser_id)
-                        
-                        as user_group
+                       ARRAY( SELECT grp_1.name
+                                FROM auth_group grp_1
+                                JOIN "Users_customuser_groups" ug_1 
+                                    ON grp_1.id = ug_1.group_id
+                                JOIN "Users_customuser" u_1 
+                                    ON u_1.id = ug_1.customuser_id
+                                WHERE u_1.id = u.id) AS user_group
                         
                 FROM public."Users_customuser" u
                 INNER JOIN  public."Users_customuser_groups" ug

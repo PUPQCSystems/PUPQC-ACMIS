@@ -2,7 +2,7 @@
 
     {% if records %}
         <!-- For LOOP HERE-->
-        {% for record, update_form, created_by, modified_by in details %}
+        {% for record, user_counts, assigned_user, update_form, created_by, modified_by in details %}
             <div class="col-sm-6 col-lg-4">
                 <div class="card card-sm" onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
                     <div class="card-status-top bg-green"></div>
@@ -12,8 +12,6 @@
                                 <div class="h1 mb-1">{{ record.area }}</div>  
                             </a> 
                             <div class="ms-auto lh-1">
-            
-                                
                                 <div class="dropdown">
                                     <a class="text-muted" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
@@ -78,7 +76,7 @@
                                                 <path d="M19 16v6" />
                                                 <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
                                             </svg>
-                                            <span class=" text_muted badge-notification ">4</span>
+                                            <span class=" text_muted badge-notification ">{{user_counts}}</span>
                                         </span>
                                     </button>
                                 </div>

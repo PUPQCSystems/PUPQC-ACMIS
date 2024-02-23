@@ -13,8 +13,28 @@
             <tbody>
                 {% for user_record in user_records %}
                     <tr>
-                        <td>
-                            <input class="form-check-input m-0 align-middle radio-button" type="radio" id="id_is_cochairman" name="is_cochairman" value="{{ user_record.id }}">
+						<td>	
+                            {% if assigned_user %}
+                                <input class="form-check-input m-0 align-middle" 
+                                    type="radio" 
+                                    id="chairman-radio-{{ user_record.id }}" 
+                                    name="is_cochairman" 
+                                    value="{{ user_record.id }}" 
+                                    {% for assigned_user_id, area_id, is_chairman, is_cochairman, is_member in assigned_user %}
+                                        {% if user_record.id == assigned_user_id and is_cochairman == True and area_id == record.id %} 
+                                            checked 
+                                        {% endif %}
+                                    {% endfor %}
+                                    >
+                                    A
+                        
+                            {% else %}
+                                <input class="form-check-input m-0 align-middle" 
+                                    type="radio" 
+                                    id="chairman-radio-{{ user_record.id }}" 
+                                    name="is_cochairman" 
+                                    value="{{ user_record.id }}">D
+                            {% endif %}
                         </td>
 
                         <td>
@@ -44,6 +64,10 @@
         $('#cochairman-Table-{{ record.id }}').DataTable({
             columnDefs: [
             { targets: [0], orderable: false } // Disable ordering for the first column (index 0)
+        ],
+            lengthMenu: [
+            [5, 10, 25, 50, -1],
+            [5, 10, 25, 50, 'All']
         ]
         });
     });

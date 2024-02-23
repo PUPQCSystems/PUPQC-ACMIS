@@ -14,8 +14,46 @@
 			<tbody>
 				{% for user_record in user_records %}
 					<tr>
-						<td>
-							<input class="form-check-input m-0 align-middle" type="radio" id="chairman-radio-{{ user_record.id }}" name="is_chairman" value="{{ user_record.id }}">
+						<td>	
+							{% with is_checked=False %}
+								{% with user_record.id as user_id %}
+									{% if assigned_user %}
+										{% for assigned_user_id, area_id, is_chairman, is_cochairman, is_member in assigned_user %}
+											{% if user_id == assigned_user_id and is_chairman %}
+												{% with is_checked=True %}
+													<input class="form-check-input m-0 align-middle" 
+														type="radio" 
+														id="chairman-radio-{{ user_record.id }}" 
+														name="is_chairman" 
+														value="{{ user_record.id }}" 
+														{% if is_checked %}
+															checked
+														{% endif %} >
+												{% endwith %}
+
+											{% elif user_id != assigned_user_id and is_chairman == True %}
+												<input class="form-check-input m-0 align-middle" 
+														type="radio" 
+														id="chairman-radio-{{ user_record.id }}" 
+														name="is_chairman" 
+														value="{{ user_record.id }}" >
+
+											{% endif %}
+										{% endfor %}
+									
+
+									{% else %}
+										<input class="form-check-input m-0 align-middle" 
+												type="radio" 
+												id="chairman-radio-{{ user_record.id }}" 
+												name="is_chairman" 
+												value="{{ user_record.id }}" >
+									
+									{% endif %}
+									
+							{% endwith %}
+						{% endwith %}
+						
 						</td>
 
 						<td>
@@ -45,7 +83,12 @@
         $('#chairman-Table-{{ record.id }}').DataTable({
 			columnDefs: [
             { targets: [0], orderable: false } // Disable ordering for the first column (index 0)
-        ]
+        ],
+
+			lengthMenu: [
+			[5, 10, 25, 50, -1],
+			[5, 10, 25, 50, 'All']
+		]
 		});
     });
 </script>

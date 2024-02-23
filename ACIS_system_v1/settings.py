@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'rest_framework',
     "corsheaders",
 
-    # 'debug_toolbar',
+    'debug_toolbar',
     'fontawesomefree',
     "crispy_forms",
     "crispy_bootstrap5",
@@ -83,7 +83,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 INTERNAL_IPS = [
