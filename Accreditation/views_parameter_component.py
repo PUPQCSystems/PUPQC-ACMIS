@@ -138,15 +138,15 @@ def create_uploadBin(request,pk):
 
         
         #----------------[ Codes for calculating program percentage for the component ]----------------#
-        progress = 0
         # Get the component record
         component_record = parameter_components.objects.select_related('area_parameter').get(id=pk)
 
-        # Count all and approved upload bins for the component
-        all_upload_bins = component_upload_bin.objects.filter(parameter_component_id=pk).count()
-        approve_upload_bins = component_upload_bin.objects.filter(parameter_component_id=pk, status="approve").count()
+        # Count all and approved upload bins for the component that are NOT soft deleted
+        all_upload_bins = component_upload_bin.objects.filter(parameter_component_id=pk, is_deleted=False).count()
+        approve_upload_bins = component_upload_bin.objects.filter(parameter_component_id=pk, status="approve", is_deleted=False).count()
 
         # Calculate progress for the component
+        progress = 0.00
         progress = (approve_upload_bins / all_upload_bins) * 100
 
         # Update the progress_percentage field of the component record
@@ -155,16 +155,23 @@ def create_uploadBin(request,pk):
 
         print("Component Progress:", progress)
 
-        #----------------[ Codes for calculating program percentage for the component ]----------------#
-        # Get the parameter record
-        parameter_record = level_area_parameter.objects.get(id=component_record.area_parameter_id)
 
-        # Count all and approved upload bins for all child parameter components of the parameter
-        all_parameter_bins = component_upload_bin.objects.filter(parameter_component__area_parameter_id=parameter_record.id).count()
-        approved_parameter_bins = component_upload_bin.objects.filter(parameter_component__area_parameter_id=parameter_record.id, status="approve").count()
+    # -------------------------------- [ CALCULATING THE PROGRESS PERCENTAGE FOR PARAMETERS] -------------------------------------
+        # Get the component record directly using the parameter_component_id
+
+        # Get all child parameter_components of the parent area_parameter
+        area_parameter_id = component_record.area_parameter_id
+
+        # Get the parameter record
+        parameter_record = level_area_parameter.objects.get(id=area_parameter_id)
+
+        # Count all and approved upload bins for all child parameter components of a parameter that are NOT soft deleted
+        area_parameter_components = parameter_components.objects.filter(area_parameter_id=area_parameter_id, is_deleted=False)
+        all_parameter_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+        approved_parameter_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
 
         # Calculate progress for the parameter
-        progress=0
+        progress = 0.00
         progress = (approved_parameter_bins / all_parameter_bins) * 100
 
         # Update the progress_percentage field of the parameter record
@@ -173,13 +180,13 @@ def create_uploadBin(request,pk):
 
         print("Parameter Progress:", progress)
 
-        #-------------------------------[ Codes for calculating program percentage of the program accreditation ]---------------------------#
-   
+# ----------------------------------[ Calculating the progress percentage per each instrument_areas ]--------------------------------------
+        
         # Get the area record
         area_record = instrument_level_area.objects.select_related('instrument_level').get(id=parameter_record.instrument_level_area_id)
 
-        # Get all child parameters of the area
-        area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id)
+        # Get all child parameters of the area that are not soft deleted
+        area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
 
         # Initialize counters
         all_area_bins = 0
@@ -187,37 +194,58 @@ def create_uploadBin(request,pk):
 
         # Iterate through each parameter
         for parameter in area_parameters:
-            # Get all child parameter_components of the parameter
-            area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id)
+            # Get all child parameter_components of the parameter that are NOT soft deleted
+            area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
 
-            # Count all and approved bins for each component
-            all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components).count()
-            approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve").count()
+            # Count all and approved bins for each component that are not soft deleted
+            all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+            approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
 
             # Increment counters
             all_area_bins += all_bins
             approved_area_bins += approved_bins
 
         # Calculate progress
+        progress = 0.00
         progress = (approved_area_bins / all_area_bins) * 100
 
         # Update the progress_percentage field of the area record
         area_record.progress_percentage = progress
         area_record.save()
 
-        #----------------[ Codes for calculating program percentage of the program accreditation/ instument_level ]----------------
-        progress = 0.00
+#----------------[ Codes for calculating program percentage of the program accreditation/ instument_level ]----------------
+
         instrument_id = area_record.instrument_level.id
         instrument_record = instrument_level.objects.get(id = instrument_id)
-        # codes for updateing progress percentage of a specific area   
-        # Get the area ID of a specific area from the parameter_component record
-        area_records_count = instrument_level_area.objects.filter(instrument_level_id = instrument_id).count()
-     
-        overall_percentage = area_records_count * 100
 
-        percentage_sum = instrument_level_area.objects.filter(instrument_level_id=instrument_id).aggregate(Sum('progress_percentage'))['progress_percentage__sum'] or 0
-        print("Percentage Sum: ", percentage_sum)
-        progress = (percentage_sum / overall_percentage ) * 100
+        # Get all child areas of the program accreditation/ instrument level
+        areas = instrument_level_area.objects.filter(instrument_level=instrument_record, is_deleted=False)
+
+        # Initialize counters
+        all_area_bins = 0
+        approved_area_bins = 0
+        for area_record in areas:
+            # Get all child parameters of the area
+            area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
+
+            # Iterate through each parameter
+            for parameter in area_parameters:
+                # Get all child parameter_components of the parameter
+                area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
+
+                # Count all and approved bins for each component
+                all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+                approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+
+                # Increment counters
+                all_area_bins += all_bins
+                approved_area_bins += approved_bins
+
+        # Calculate progress
+        progress = 0.00
+        progress = (approved_area_bins / all_area_bins) * 100
+        print("Progress: ", progress)
+        # Update the progress_percentage field of the area record
         instrument_record.progress_percentage = progress
         instrument_record.save()
     
@@ -324,6 +352,125 @@ def archive_uploadBin(request, url_pk, record_pk):
     uploadBin_record.deleted_at = timezone.now()
     uploadBin_record.save()
 
+
+# -------------------------------- [ CALCULATING THE PROGRESS PERCENTAGE FOR COMPONENTS] -------------------------------------
+    # Get the component record directly using the parameter_component_id
+    component_id =  uploadBin_record.parameter_component_id
+    component_record = parameter_components.objects.select_related('area_parameter').get(id=component_id)
+
+    # Count all and approved upload bins for the component that are NOT soft deleted
+    all_upload_bins = component_upload_bin.objects.filter(parameter_component_id=component_id, is_deleted=False).count()
+    approve_upload_bins = component_upload_bin.objects.filter(parameter_component_id=component_id, status="approve", is_deleted=False).count()
+
+    # Calculate progress for the component
+    progress = 0.00
+    progress = (approve_upload_bins / all_upload_bins) * 100
+
+    # Update the progress_percentage field of the component record
+    component_record.progress_percentage = progress
+    component_record.save()
+
+    print("Component Progress:", progress)
+
+
+# -------------------------------- [ CALCULATING THE PROGRESS PERCENTAGE FOR PARAMETERS] -------------------------------------
+    # Get the component record directly using the parameter_component_id
+
+    # Get all child parameter_components of the parent area_parameter
+    area_parameter_id = component_record.area_parameter_id
+
+    # Get the parameter record
+    parameter_record = level_area_parameter.objects.get(id=area_parameter_id)
+
+    # Count all and approved upload bins for all child parameter components of a parameter that are NOT soft deleted
+    area_parameter_components = parameter_components.objects.filter(area_parameter_id=area_parameter_id, is_deleted=False)
+    all_parameter_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+    approved_parameter_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+
+    # Calculate progress for the parameter
+    progress = 0.00
+    progress = (approved_parameter_bins / all_parameter_bins) * 100
+
+    # Update the progress_percentage field of the parameter record
+    parameter_record.progress_percentage = progress
+    parameter_record.save()
+
+    print("Parameter Progress:", progress)
+
+
+
+# ----------------------------------[ Calculating the progress percentage per each instrument_areas ]--------------------------------------
+    
+    # Get the area record
+    area_record = instrument_level_area.objects.select_related('instrument_level').get(id=parameter_record.instrument_level_area_id)
+
+    # Get all child parameters of the area that are not soft deleted
+    area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
+
+    # Initialize counters
+    all_area_bins = 0
+    approved_area_bins = 0
+
+    # Iterate through each parameter
+    for parameter in area_parameters:
+        # Get all child parameter_components of the parameter that are NOT soft deleted
+        area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
+
+        # Count all and approved bins for each component that are not soft deleted
+        all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+        approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+
+        # Increment counters
+        all_area_bins += all_bins
+        approved_area_bins += approved_bins
+
+    # Calculate progress
+    progress = 0.00
+    progress = (approved_area_bins / all_area_bins) * 100
+
+    # Update the progress_percentage field of the area record
+    area_record.progress_percentage = progress
+    area_record.save()
+
+#----------------[ Codes for calculating program percentage of the program accreditation/ instument_level ]----------------
+
+    instrument_id = area_record.instrument_level.id
+    instrument_record = instrument_level.objects.get(id = instrument_id)
+
+    # Get all child areas of the program accreditation/ instrument level
+    areas = instrument_level_area.objects.filter(instrument_level=instrument_record, is_deleted=False)
+
+    # Initialize counters
+    all_area_bins = 0
+    approved_area_bins = 0
+    for area_record in areas:
+        # Get all child parameters of the area
+        area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
+
+        # Iterate through each parameter
+        for parameter in area_parameters:
+            # Get all child parameter_components of the parameter
+            area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
+
+            # Count all and approved bins for each component
+            all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+            approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+
+            # Increment counters
+            all_area_bins += all_bins
+            approved_area_bins += approved_bins
+
+    # Calculate progress
+    progress = 0.00
+    progress = (approved_area_bins / all_area_bins) * 100
+    print("Progress: ", progress)
+    # Update the progress_percentage field of the area record
+    instrument_record.progress_percentage = progress
+    instrument_record.save()
+
+
+
+
     # Create an instance of the ActivityLog model
     activity_log_entry = activity_log()
 
@@ -352,6 +499,101 @@ def archive_component(request, url_pk, record_pk):
     component_record.is_deleted=True
     component_record.deleted_at = timezone.now()
     component_record.save()
+
+# -------------------------------- [ CALCULATING THE PROGRESS PERCENTAGE FOR PARAMETERS] -------------------------------------
+    # Get the component record directly using the parameter_component_id
+
+    # Get all child parameter_components of the parent area_parameter
+    area_parameter_id = component_record.area_parameter_id
+
+    # Get the parameter record
+    parameter_record = level_area_parameter.objects.get(id=area_parameter_id)
+
+    # Count all and approved upload bins for all child parameter components of a parameter that are NOT soft deleted
+    area_parameter_components = parameter_components.objects.filter(area_parameter_id=area_parameter_id, is_deleted=False)
+    all_parameter_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+    approved_parameter_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+
+    # Calculate progress for the parameter
+    progress = 0.00
+    progress = (approved_parameter_bins / all_parameter_bins) * 100
+
+    # Update the progress_percentage field of the parameter record
+    parameter_record.progress_percentage = progress
+    parameter_record.save()
+
+    print("Parameter Progress:", progress)
+
+
+# ----------------------------------[ Calculating the progress percentage per each instrument_areas ]--------------------------------------
+    
+    # Get the area record
+    area_record = instrument_level_area.objects.select_related('instrument_level').get(id=parameter_record.instrument_level_area_id)
+
+    # Get all child parameters of the area that are not soft deleted
+    area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
+
+    # Initialize counters
+    all_area_bins = 0
+    approved_area_bins = 0
+
+    # Iterate through each parameter
+    for parameter in area_parameters:
+        # Get all child parameter_components of the parameter that are NOT soft deleted
+        area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
+
+        # Count all and approved bins for each component that are not soft deleted
+        all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+        approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+
+        # Increment counters
+        all_area_bins += all_bins
+        approved_area_bins += approved_bins
+
+    # Calculate progress
+    progress = 0.00
+    progress = (approved_area_bins / all_area_bins) * 100
+
+    # Update the progress_percentage field of the area record
+    area_record.progress_percentage = progress
+    area_record.save()
+
+#----------------[ Codes for calculating program percentage of the program accreditation/ instument_level ]----------------
+
+    instrument_id = area_record.instrument_level.id
+    instrument_record = instrument_level.objects.get(id = instrument_id)
+
+    # Get all child areas of the program accreditation/ instrument level
+    areas = instrument_level_area.objects.filter(instrument_level=instrument_record, is_deleted=False)
+
+    # Initialize counters
+    all_area_bins = 0
+    approved_area_bins = 0
+    for area_record in areas:
+        # Get all child parameters of the area
+        area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
+
+        # Iterate through each parameter
+        for parameter in area_parameters:
+            # Get all child parameter_components of the parameter
+            area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
+
+            # Count all and approved bins for each component
+            all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+            approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+
+            # Increment counters
+            all_area_bins += all_bins
+            approved_area_bins += approved_bins
+
+    # Calculate progress
+    progress = 0.00
+    progress = (approved_area_bins / all_area_bins) * 100
+    print("Progress: ", progress)
+    # Update the progress_percentage field of the area record
+    instrument_record.progress_percentage = progress
+    instrument_record.save()
+
 
     # Create an instance of the ActivityLog model
     activity_log_entry = activity_log()
@@ -430,6 +672,102 @@ def restore_component(request, comp_pk, pk):
     component_record.is_deleted=False
     component_record.save()
 
+# -------------------------------- [ CALCULATING THE PROGRESS PERCENTAGE FOR PARAMETERS] -------------------------------------
+    # Get the component record directly using the parameter_component_id
+
+    # Get all child parameter_components of the parent area_parameter
+    area_parameter_id = component_record.area_parameter_id
+
+    # Get the parameter record
+    parameter_record = level_area_parameter.objects.get(id=area_parameter_id)
+
+    # Count all and approved upload bins for all child parameter components of a parameter that are NOT soft deleted
+    area_parameter_components = parameter_components.objects.filter(area_parameter_id=area_parameter_id, is_deleted=False)
+    all_parameter_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+    approved_parameter_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+
+    # Calculate progress for the parameter
+    progress = 0.00
+    progress = (approved_parameter_bins / all_parameter_bins) * 100
+
+    # Update the progress_percentage field of the parameter record
+    parameter_record.progress_percentage = progress
+    parameter_record.save()
+
+    print("Parameter Progress:", progress)
+
+
+# ----------------------------------[ Calculating the progress percentage per each instrument_areas ]--------------------------------------
+    
+    # Get the area record
+    area_record = instrument_level_area.objects.select_related('instrument_level').get(id=parameter_record.instrument_level_area_id)
+
+    # Get all child parameters of the area that are not soft deleted
+    area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
+
+    # Initialize counters
+    all_area_bins = 0
+    approved_area_bins = 0
+
+    # Iterate through each parameter
+    for parameter in area_parameters:
+        # Get all child parameter_components of the parameter that are NOT soft deleted
+        area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
+
+        # Count all and approved bins for each component that are not soft deleted
+        all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+        approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+
+        # Increment counters
+        all_area_bins += all_bins
+        approved_area_bins += approved_bins
+
+    # Calculate progress
+    progress = 0.00
+    progress = (approved_area_bins / all_area_bins) * 100
+
+    # Update the progress_percentage field of the area record
+    area_record.progress_percentage = progress
+    area_record.save()
+
+#----------------[ Codes for calculating program percentage of the program accreditation/ instument_level ]----------------
+
+    instrument_id = area_record.instrument_level.id
+    instrument_record = instrument_level.objects.get(id = instrument_id)
+
+    # Get all child areas of the program accreditation/ instrument level
+    areas = instrument_level_area.objects.filter(instrument_level=instrument_record, is_deleted=False)
+
+    # Initialize counters
+    all_area_bins = 0
+    approved_area_bins = 0
+    for area_record in areas:
+        # Get all child parameters of the area
+        area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
+
+        # Iterate through each parameter
+        for parameter in area_parameters:
+            # Get all child parameter_components of the parameter
+            area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
+
+            # Count all and approved bins for each component
+            all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+            approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+
+            # Increment counters
+            all_area_bins += all_bins
+            approved_area_bins += approved_bins
+
+    # Calculate progress
+    progress = 0.00
+    progress = (approved_area_bins / all_area_bins) * 100
+    print("Progress: ", progress)
+    # Update the progress_percentage field of the area record
+    instrument_record.progress_percentage = progress
+    instrument_record.save()
+
+
+
     # Create an instance of the ActivityLog model
     activity_log_entry = activity_log()
 
@@ -458,6 +796,122 @@ def restore_uploadBin(request, upl_pk, pk):
     uploadBin_record.deleted_at = None
     uploadBin_record.is_deleted=False
     uploadBin_record.save()
+
+# -------------------------------- [ CALCULATING THE PROGRESS PERCENTAGE FOR COMPONENTS] -------------------------------------
+    # Get the component record directly using the parameter_component_id
+    component_id =  uploadBin_record.parameter_component_id
+    component_record = parameter_components.objects.select_related('area_parameter').get(id=component_id)
+
+    # Count all and approved upload bins for the component that are NOT soft deleted
+    all_upload_bins = component_upload_bin.objects.filter(parameter_component_id=component_id, is_deleted=False).count()
+    approve_upload_bins = component_upload_bin.objects.filter(parameter_component_id=component_id, status="approve", is_deleted=False).count()
+
+    # Calculate progress for the component
+    progress = 0.00
+    progress = (approve_upload_bins / all_upload_bins) * 100
+
+    # Update the progress_percentage field of the component record
+    component_record.progress_percentage = progress
+    component_record.save()
+
+    print("Component Progress:", progress)
+
+
+# -------------------------------- [ CALCULATING THE PROGRESS PERCENTAGE FOR PARAMETERS] -------------------------------------
+    # Get the component record directly using the parameter_component_id
+
+    # Get all child parameter_components of the parent area_parameter
+    area_parameter_id = component_record.area_parameter_id
+
+    # Get the parameter record
+    parameter_record = level_area_parameter.objects.get(id=area_parameter_id)
+
+    # Count all and approved upload bins for all child parameter components of a parameter that are NOT soft deleted
+    area_parameter_components = parameter_components.objects.filter(area_parameter_id=area_parameter_id, is_deleted=False)
+    all_parameter_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+    approved_parameter_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+
+    # Calculate progress for the parameter
+    progress = 0.00
+    progress = (approved_parameter_bins / all_parameter_bins) * 100
+
+    # Update the progress_percentage field of the parameter record
+    parameter_record.progress_percentage = progress
+    parameter_record.save()
+
+    print("Parameter Progress:", progress)
+
+
+
+# ----------------------------------[ Calculating the progress percentage per each instrument_areas ]--------------------------------------
+    
+    # Get the area record
+    area_record = instrument_level_area.objects.select_related('instrument_level').get(id=parameter_record.instrument_level_area_id)
+
+    # Get all child parameters of the area that are not soft deleted
+    area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
+
+    # Initialize counters
+    all_area_bins = 0
+    approved_area_bins = 0
+
+    # Iterate through each parameter
+    for parameter in area_parameters:
+        # Get all child parameter_components of the parameter that are NOT soft deleted
+        area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
+
+        # Count all and approved bins for each component that are not soft deleted
+        all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+        approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+
+        # Increment counters
+        all_area_bins += all_bins
+        approved_area_bins += approved_bins
+
+    # Calculate progress
+    progress = 0.00
+    progress = (approved_area_bins / all_area_bins) * 100
+
+    # Update the progress_percentage field of the area record
+    area_record.progress_percentage = progress
+    area_record.save()
+
+#----------------[ Codes for calculating program percentage of the program accreditation/ instument_level ]----------------
+
+    instrument_id = area_record.instrument_level.id
+    instrument_record = instrument_level.objects.get(id = instrument_id)
+
+    # Get all child areas of the program accreditation/ instrument level
+    areas = instrument_level_area.objects.filter(instrument_level=instrument_record, is_deleted=False)
+
+    # Initialize counters
+    all_area_bins = 0
+    approved_area_bins = 0
+    for area_record in areas:
+        # Get all child parameters of the area
+        area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
+
+        # Iterate through each parameter
+        for parameter in area_parameters:
+            # Get all child parameter_components of the parameter
+            area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
+
+            # Count all and approved bins for each component
+            all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+            approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+
+            # Increment counters
+            all_area_bins += all_bins
+            approved_area_bins += approved_bins
+
+    # Calculate progress
+    progress = 0.00
+    progress = (approved_area_bins / all_area_bins) * 100
+    print("Progress: ", progress)
+    # Update the progress_percentage field of the area record
+    instrument_record.progress_percentage = progress
+    instrument_record.save()
+
 
     # Create an instance of the ActivityLog model
     activity_log_entry = activity_log()

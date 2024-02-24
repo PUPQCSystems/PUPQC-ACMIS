@@ -1,5 +1,4 @@
 from django.urls import path
-
 from Users import views_activities, views_user_groups
 # from .views import UserRegistration
 from . import views_profile, views_user
@@ -31,13 +30,6 @@ urlpatterns = [
     path('groups/restore/<str:pk>/', views_user_groups.restore, name="user-groups-restore"),
     path('groups/destroy/<str:pk>/', views_user_groups.destroy, name="user-groups-destroy"),
     path('groups/archive-page/', views_user_groups.archive_landing, name="user-groups-archive-page"),
-
-
-
-
-
-
-
 
 
 ]

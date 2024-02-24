@@ -66,20 +66,22 @@
                                     </div>
                                 </div>
 
-                                <div class="col-auto text-muted">
-                                    <button class="switch-icon" data-bs-toggle="modal" data-bs-target="#assign-modal-{{ record.id }}">
-                                        <span class="switch-icon-a text-muted">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                                                <path d="M16 19h6" />
-                                                <path d="M19 16v6" />
-                                                <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
-                                            </svg>
-                                            <span class=" text_muted badge-notification ">{{user_counts}}</span>
-                                        </span>
-                                    </button>
-                                </div>
+                                {% if perms.Accreditation.add_user_assigned_to_area and perms.Accreditation.view_user_assigned_to_area and perms.Accreditation.change_user_assigned_to_area and perms.Accreditation.delete_user_assigned_to_area %}
+                                    <div class="col-auto text-muted">
+                                        <button class="switch-icon" data-bs-toggle="modal" data-bs-target="#assign-modal-{{ record.id }}">
+                                            <span class="switch-icon-a text-muted">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                                                    <path d="M16 19h6" />
+                                                    <path d="M19 16v6" />
+                                                    <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+                                                </svg>
+                                                <span class=" text_muted badge-notification ">{{user_counts}}</span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                {% endif %}
                                 {% comment %} 
                                     <div class="col-auto">
                                         <a href="#" class="link-muted"><!-- Download SVG icon from http://tabler-icons.io/i/share -->
@@ -98,7 +100,9 @@
                 {% include "accreditation-page/instrument-area/main-page/edit-modal.html" %}
             {% endif %}
 
-            {% include "accreditation-page/instrument-area/main-page/assign-modal.html" %}
+            {% if perms.Accreditation.add_user_assigned_to_area and perms.Accreditation.view_user_assigned_to_area and perms.Accreditation.change_user_assigned_to_area and perms.Accreditation.delete_user_assigned_to_area %}
+                {% include "accreditation-page/instrument-area/main-page/assign-modal.html" %}
+            {% endif %}
         {% endfor %}
 
 

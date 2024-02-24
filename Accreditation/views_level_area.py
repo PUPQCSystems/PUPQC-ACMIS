@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, render, get_object_or_404
 from django.http import  JsonResponse
 
 from Users.models import activity_log
-from .models import instrument, instrument_level_area #Import the model for data retieving
+from .models import component_upload_bin, instrument, instrument_level, instrument_level_area, level_area_parameter, parameter_components #Import the model for data retieving
 from Accreditation.serializers import InstrumentSerializer
 from .forms import Create_LevelArea_Form, LevelAreaFormSet
 from django.contrib import messages
@@ -136,6 +136,43 @@ def archive(request, ins_pk, pk):
     name = level_area.area
     level_area.save()
 
+
+#----------------[ Codes for calculating program percentage of the program accreditation/ instument_level ]----------------
+    instrument_id = level_area.instrument_level.id
+    instrument_record = instrument_level.objects.get(id = instrument_id)
+
+    # Get all child areas of the program accreditation/ instrument level
+    areas = instrument_level_area.objects.filter(instrument_level=instrument_record, is_deleted=False)
+
+    # Initialize counters
+    all_area_bins = 0
+    approved_area_bins = 0
+    for area_record in areas:
+        # Get all child parameters of the area
+        area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
+
+        # Iterate through each parameter
+        for parameter in area_parameters:
+            # Get all child parameter_components of the parameter
+            area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
+
+            # Count all and approved bins for each component
+            all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+            approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+
+            # Increment counters
+            all_area_bins += all_bins
+            approved_area_bins += approved_bins
+
+    # Calculate progress
+    progress = 0.00
+    progress = (approved_area_bins / all_area_bins) * 100
+    print("Progress: ", progress)
+    # Update the progress_percentage field of the area record
+    instrument_record.progress_percentage = progress
+    instrument_record.save()
+
+
     # Create an instance of the ActivityLog model
     activity_log_entry = activity_log()
 
@@ -182,6 +219,41 @@ def restore(request, ins_pk, pk):
     level_area.is_deleted=False
     name = level_area.area
     level_area.save()
+
+    #----------------[ Codes for calculating program percentage of the program accreditation/ instument_level ]----------------
+    instrument_id = level_area.instrument_level.id
+    instrument_record = instrument_level.objects.get(id = instrument_id)
+
+    # Get all child areas of the program accreditation/ instrument level
+    areas = instrument_level_area.objects.filter(instrument_level=instrument_record, is_deleted=False)
+
+    # Initialize counters
+    all_area_bins = 0
+    approved_area_bins = 0
+    for area_record in areas:
+        # Get all child parameters of the area
+        area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
+
+        # Iterate through each parameter
+        for parameter in area_parameters:
+            # Get all child parameter_components of the parameter
+            area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
+
+            # Count all and approved bins for each component
+            all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+            approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+
+            # Increment counters
+            all_area_bins += all_bins
+            approved_area_bins += approved_bins
+
+    # Calculate progress
+    progress = 0.00
+    progress = (approved_area_bins / all_area_bins) * 100
+    print("Progress: ", progress)
+    # Update the progress_percentage field of the area record
+    instrument_record.progress_percentage = progress
+    instrument_record.save()
 
     # Create an instance of the ActivityLog model
     activity_log_entry = activity_log()
