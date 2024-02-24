@@ -25,7 +25,7 @@
                                         {% endif %}
                                         
                                         {% if perms.Accreditation.delete_level_area_parameter %}
-                                            <form method="POST" action="{% url 'accreditations:program-accreditation-area-archive' ins_pk=pk pk=record.id %}" id="archive-form-{{ record.id }}">
+                                            <form method="POST" action="{% url 'accreditations:program-accreditation-area-archive' ins_pk=pk pk=record.id accred_pk=accred_program.id %}" id="archive-form-{{ record.id }}">
                                                 {% csrf_token %}
                                                 <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
                                             </form>

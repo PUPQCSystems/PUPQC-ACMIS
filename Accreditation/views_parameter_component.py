@@ -360,17 +360,24 @@ def archive_uploadBin(request, url_pk, record_pk):
 
     # Count all and approved upload bins for the component that are NOT soft deleted
     all_upload_bins = component_upload_bin.objects.filter(parameter_component_id=component_id, is_deleted=False).count()
-    approve_upload_bins = component_upload_bin.objects.filter(parameter_component_id=component_id, status="approve", is_deleted=False).count()
+    if all_upload_bins:
+        approve_upload_bins = component_upload_bin.objects.filter(parameter_component_id=component_id, status="approve", is_deleted=False).count()
 
-    # Calculate progress for the component
-    progress = 0.00
-    progress = (approve_upload_bins / all_upload_bins) * 100
+        # Calculate progress for the component
+        progress = 0.00
+        progress = (approve_upload_bins / all_upload_bins) * 100
 
-    # Update the progress_percentage field of the component record
-    component_record.progress_percentage = progress
-    component_record.save()
+        # Update the progress_percentage field of the component record
+        component_record.progress_percentage = progress
+        component_record.save()
 
-    print("Component Progress:", progress)
+        print("Component Progress:", progress)
+
+    else:
+        # Update the progress_percentage field of the component record
+        component_record.progress_percentage = 0.00
+        component_record.save()
+
 
 
 # -------------------------------- [ CALCULATING THE PROGRESS PERCENTAGE FOR PARAMETERS] -------------------------------------

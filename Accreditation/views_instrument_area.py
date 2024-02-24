@@ -59,7 +59,7 @@ def landing_page(request, pk, accred_pk):
 
 @login_required
 @permission_required("Accreditation.delete_instrument_level_area", raise_exception=True)
-def archive(request, ins_pk, pk):
+def archive(request, ins_pk, pk, accred_pk):
     # Gets the records who have this ID
     level_area = instrument_level_area.objects.get(id=pk)
 
@@ -77,34 +77,44 @@ def archive(request, ins_pk, pk):
 
     # Get all child areas of the program accreditation/ instrument level
     areas = instrument_level_area.objects.filter(instrument_level=instrument_record, is_deleted=False)
+    if areas.exists():
 
-    # Initialize counters
-    all_area_bins = 0
-    approved_area_bins = 0
-    for area_record in areas:
-        # Get all child parameters of the area
-        area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
+        # Initialize counters
+        all_area_bins = 0
+        approved_area_bins = 0
+        for area_record in areas:
+            # Get all child parameters of the area
+            area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
 
-        # Iterate through each parameter
-        for parameter in area_parameters:
-            # Get all child parameter_components of the parameter
-            area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
+            # Iterate through each parameter
+            for parameter in area_parameters:
+                # Get all child parameter_components of the parameter
+                area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
 
-            # Count all and approved bins for each component
-            all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
-            approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+                # Count all and approved bins for each component
+                all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+                approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
 
-            # Increment counters
-            all_area_bins += all_bins
-            approved_area_bins += approved_bins
+                # Increment counters
+                all_area_bins += all_bins
+                approved_area_bins += approved_bins
 
-    # Calculate progress
-    progress = 0.00
-    progress = (approved_area_bins / all_area_bins) * 100
-    print("Progress: ", progress)
-    # Update the progress_percentage field of the area record
-    instrument_record.progress_percentage = progress
-    instrument_record.save()
+        # Calculate progress
+        progress = 0.00
+        if all_area_bins:
+            progress = (approved_area_bins / all_area_bins) * 100
+            print("Progress: ", progress)
+            # Update the progress_percentage field of the area record
+            instrument_record.progress_percentage = progress
+            instrument_record.save()
+        else:
+            instrument_record.progress_percentage = 0.00
+            instrument_record.save()
+
+    else:
+        # Calculate progress
+        instrument_record.progress_percentage = 0.00
+        instrument_record.save()
 
 
     # Create an instance of the ActivityLog model
@@ -122,7 +132,7 @@ def archive(request, ins_pk, pk):
     activity_log_entry.save()
 
     messages.success(request, f'{name} is successfully archived!') 
-    return redirect('accreditations:program-accreditation-area', pk=ins_pk)
+    return redirect('accreditations:program-accreditation-area', pk=ins_pk, accred_pk=accred_pk)
 
 @login_required
 @permission_required(["Accreditation.add_user_assigned_to_area", "Accreditation.change_user_assigned_to_area", "Accreditation.view_user_assigned_to_area", "Accreditation.delete_user_assigned_to_area"], raise_exception=True)
@@ -258,7 +268,7 @@ def assign_user(request):
 #------------------------------------------------------------[ ARCHIVE PAGE CODES ]------------------------------------------------------------#
 @login_required
 @permission_required("Accreditation.delete_instrument_level_area", raise_exception=True)
-def archive_landing(request, pk):
+def archive_landing(request, pk, accred_pk):
     records = instrument_level_area.objects.select_related('instrument_level').select_related('area').filter(instrument_level=pk, is_deleted= True) #Getting all the data inside the Program table and storing it to the context variable
 
     details = []
@@ -269,12 +279,16 @@ def archive_landing(request, pk):
         modified_by = record.modified_by  # Get the user who modified the record
         details.append((record, update_form,created_by, modified_by))
 
-    context = { 'details': details, 'pk': pk , 'records': records}#Getting all the data inside the type table and storing it to the context variable
+    #Getting all the data inside the type table and storing it to the context variable
+    context = { 'details': details, 
+                'pk': pk , 
+                'records': records, 
+                'accred_pk':accred_pk}
     return render(request, 'accreditation-page/instrument-area/archive-page/landing-page.html', context)
 
 @login_required
 @permission_required("Accreditation.delete_instrument_level_area", raise_exception=True)
-def restore(request, ins_pk, pk):
+def restore(request, ins_pk, pk, accred_pk):
     # Gets the records who have this ID
     level_area = instrument_level_area.objects.get(id=pk)
 
@@ -314,13 +328,12 @@ def restore(request, ins_pk, pk):
 
     # Calculate progress
     progress = 0.00
-    progress = (approved_area_bins / all_area_bins) * 100
-    print("Progress: ", progress)
-    # Update the progress_percentage field of the area record
-    instrument_record.progress_percentage = progress
-    instrument_record.save()
-
-
+    if all_area_bins:
+        progress = (approved_area_bins / all_area_bins) * 100
+        print("Progress: ", progress)
+        # Update the progress_percentage field of the area record
+        instrument_record.progress_percentage = progress
+        instrument_record.save()
 
     # Create an instance of the ActivityLog model
     activity_log_entry = activity_log()
@@ -337,4 +350,4 @@ def restore(request, ins_pk, pk):
     activity_log_entry.save()
 
     messages.success(request, f'{name} is successfully restored!') 
-    return redirect('accreditations:program-accreditation-area-archive-page', pk=ins_pk)
+    return redirect('accreditations:program-accreditation-area-archive-page', pk=ins_pk, accred_pk=accred_pk)

@@ -141,31 +141,40 @@ def archive(request, ins_pk, pk):
 
     # Get all child parameters of the area that are not soft deleted
     area_parameters = level_area_parameter.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
+    if area_parameters.exists():
+        # Initialize counters
+        all_area_bins = 0
+        approved_area_bins = 0
 
-    # Initialize counters
-    all_area_bins = 0
-    approved_area_bins = 0
+        # Iterate through each parameter
+        for parameter in area_parameters:
+            # Get all child parameter_components of the parameter that are NOT soft deleted
+            area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
 
-    # Iterate through each parameter
-    for parameter in area_parameters:
-        # Get all child parameter_components of the parameter that are NOT soft deleted
-        area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
+            # Count all and approved bins for each component that are not soft deleted
+            all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
+            approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
 
-        # Count all and approved bins for each component that are not soft deleted
-        all_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
-        approved_bins = component_upload_bin.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
+            # Increment counters
+            all_area_bins += all_bins
+            approved_area_bins += approved_bins
 
-        # Increment counters
-        all_area_bins += all_bins
-        approved_area_bins += approved_bins
+        # Calculate progress
+        progress = 0.00
+        if all_area_bins:
+            progress = (approved_area_bins / all_area_bins) * 100
 
-    # Calculate progress
-    progress = 0.00
-    progress = (approved_area_bins / all_area_bins) * 100
-
-    # Update the progress_percentage field of the area record
-    area_record.progress_percentage = progress
-    area_record.save()
+            # Update the progress_percentage field of the area record
+            area_record.progress_percentage = progress
+            area_record.save()
+        
+        else:
+            area_record.progress_percentage = 0.00
+            area_record.save()
+        
+    else:
+        area_record.progress_percentage = 0.00
+        area_record.save()
 
 #----------------[ Codes for calculating program percentage of the program accreditation/ instument_level ]----------------
 
@@ -275,11 +284,12 @@ def restore(request, ins_pk, pk):
 
     # Calculate progress
     progress = 0.00
-    progress = (approved_area_bins / all_area_bins) * 100
+    if all_area_bins:
+        progress = (approved_area_bins / all_area_bins) * 100
 
-    # Update the progress_percentage field of the area record
-    area_record.progress_percentage = progress
-    area_record.save()
+        # Update the progress_percentage field of the area record
+        area_record.progress_percentage = progress
+        area_record.save()
 
 #----------------[ Codes for calculating program percentage of the program accreditation/ instument_level ]----------------
 

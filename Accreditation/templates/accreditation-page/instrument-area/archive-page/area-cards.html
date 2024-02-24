@@ -26,7 +26,7 @@
                                         {% endif %}
 
                                         {% if perms.Accreditation.delete_level_area_parameter %}
-                                            <a  href={% url 'accreditations:program-accreditation-area-restore' ins_pk=pk pk=record.id %} class="dropdown-item">Restore</a>
+                                            <a  href={% url 'accreditations:program-accreditation-area-restore' ins_pk=pk pk=record.id accred_pk=accred_pk %} class="dropdown-item">Restore</a>
                                         {% endif %}
 
                                     </div>

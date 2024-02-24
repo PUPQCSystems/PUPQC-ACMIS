@@ -9,9 +9,9 @@
 {% block page-title-actions %}
         <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search instrument area..."/>
         
-        {% comment %} <a href="{% url 'accreditations:program-accreditation-area' pk=pk %}" type="button" class="btn btn-primary">
+        <a href="{% url 'accreditations:program-accreditation-area' pk=pk accred_pk=accred_pk %}" type="button" class="btn btn-primary">
             <i class="fa-solid fa-arrow-left"></i> Back
-        </a> {% endcomment %}
+        </a> 
 
 {% endblock page-title-actions %}
 
