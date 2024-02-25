@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    Faculty Development
+{% endblock page-title %}
+
+{% block content %}
+
+    <div class="row g-4 row-cards">
+        {% include "exhibit-page/navigation-card.html" %}
+
+        {% include "faculty-info-system/faculty-awards/awards-card.html" %}
+    </div>
+    
+    {% comment %} {% include "research-info-system/student-research/analytics-card.html" %}
+
+    <br> {% endcomment %}
+
+{% endblock content %}
+
+{% block js_content %}
+    {% include "faculty-info-system/faculty-awards/script.html" %}
+{% endblock js_content %}
+
+
+{% block css_content %}
+    {% include "faculty-info-system/faculty-awards/style.html" %}  
+{% endblock css_content %}

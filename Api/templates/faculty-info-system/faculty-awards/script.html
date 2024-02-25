@@ -1,0 +1,32 @@
+<script>
+    $(document).ready(function () {
+        my_table = $('#fis-award-table').DataTable({
+            scrollX: true,
+			columnDefs: [
+            { targets: [0], orderable: false } // Disable ordering for the first column (index 0)
+        ],
+
+			lengthMenu: [
+			[5, 10, 25, 50, -1],
+			[5, 10, 25, 50, 'All']
+		],
+
+        buttons: [
+                    'excelHtml5'
+                    , 'pdfHtml5'
+                    ,  {    extend: 'print',
+                            exportOptions: {
+                                columns: [0, 1, 2, 3, 4, 5, 6]
+                            }
+                        }
+                    , 'colvis'],
+        layout: {
+            topStart: 'buttons'
+        },
+
+       
+		});
+
+        
+    });
+</script>

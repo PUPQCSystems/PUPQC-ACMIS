@@ -1,0 +1,72 @@
+<div class="row row-cards">
+    <div class="card ">
+        <div class="card-header ">
+            <h2 class="card-title">Lists of Faculties</h2>
+        </div>
+        <div class="card-body">
+            <div class="tbl-container">
+                <table id="fis-award-table" class="display no-wrap table table-striped" style="width:100%">
+                    <thead class="">
+                        <tr>
+                            <th>Name</th>
+                            <th>Title</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>     
+                            <th>Duration</th>   
+                            <th>Conducted by</th>   
+                            <th>Type</th> 
+                            <th>Evidence</th>     
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for record in records %}
+                            <tr>
+
+                                <td>
+                                    {{ record.FirstName }}  
+
+                                    {% if record.MiddleInitial %} 
+                                        {{ record.MiddleInitial }}.
+                                    {% endif %} 
+                                    
+                                    {{ record.LastName }}
+                                </td>
+
+                                <td>        
+                                    {{ record.title}}
+                                </td>
+
+                                <td>
+                                    {{ record.date_start}}
+                                </td>
+
+                                <td>        
+                                    {{ record.date_end}}
+                                </td>
+                                
+                                <td>        
+                                    {{ record.hours}}
+                                </td>
+
+                                <td>        
+                                    {{ record.conducted_by}}
+                                </td>
+
+                                <td>        
+                                    {{ record.type}}
+                                </td>
+
+                                <td>        
+                                    <a href="https://drive.google.com/file/d/{{record.file_id}}/view"> https://drive.google.com/file/d/{{record.file_id}}/view </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table> 
+
+
+                </div>
+        </div>
+    </div>
+</div>

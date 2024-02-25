@@ -4,6 +4,11 @@
         <a class="list-group-item d-flex align-items-center" href="{% url "apis:research-info-faculty" %}">
             Faculty's Researches
         </a>
+
+        <a class="list-group-item d-flex align-items-center" href="{% url "apis:faculty-awards-info" program_accred_pk=program_accred_pk %}">
+            Faculty Development
+        </a>
+
         <a class="list-group-item d-flex align-items-center" href="{% url "apis:research-info-student" %}">
             Student's Researches
         </a>

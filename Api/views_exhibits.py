@@ -16,7 +16,7 @@ from django.http import QueryDict
 
 
 @login_required
-def landing_page(request):
+def landing_page(request, program_accred_pk):
     
         # API endpoint URL
     api_url = 'https://research-info-system-qegn.onrender.com/integration/faculty/research-papers/list'
@@ -54,7 +54,7 @@ def landing_page(request):
             # Pass data to template context
             # return render(request, 'my_template.html', {'api_data': data})
             # return JsonResponse({'api_data': data})
-            return render(request,'exhibit-page/landing-page.html' ,{'records': data})
+            return render(request,'exhibit-page/landing-page.html' ,{'records': data, 'program_accred_pk':program_accred_pk})
         else:
             # Handle unsuccessful request
             return JsonResponse({'error': f"Failed to fetch data from the API: {response.status_code}"}, status=500)
