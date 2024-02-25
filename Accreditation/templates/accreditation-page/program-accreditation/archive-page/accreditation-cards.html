@@ -35,7 +35,7 @@
 
                     </div>
 
-                    <a href="{% url 'accreditations:program-accreditation-area' pk=record.instrument_level.id %}">
+                    <a href="{% url 'accreditations:program-accreditation-area' pk=record.instrument_level.id accred_pk=record.id %}">
                         <div class="h3 mb-3">{{ record.program.program_name }}</div>
                     </a>
                     <div class="d-flex">

@@ -32,6 +32,11 @@
 								<div class="col">
 						
 									{% block page-title %}{% endblock page-title %}
+									{% if breadcrumbs %}
+						
+											{% include "dynamic_breadcrumbs/breadcrumbs.html" with breadcrumbs=breadcrumbs%}
+				
+									{% endif %}
 
 								</div>
 

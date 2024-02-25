@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'fontawesomefree',
     "crispy_forms",
     "crispy_bootstrap5",
+    'dynamic_breadcrumbs',
 
     'Programs',
     'Users.apps.UsersConfig',
@@ -106,6 +107,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                # Breadcrubms
+                "dynamic_breadcrumbs.context_processors.breadcrumbs",
             ],
         },
     },
