@@ -68,6 +68,7 @@ def faculty_awards_info(request, program_accred_pk):
 
                 if faculty_id in faculty_details["Faculties"]:
                     print('This is the result: ',bool(formatted_date_range <=  formatted_date_str <=  formatted_survey_date))
+                    print(formatted_date_range, formatted_date_str, formatted_survey_date)
                     if formatted_date_range <=  formatted_date_str <=  formatted_survey_date :
                         details_entry = faculty_details["Faculties"][faculty_id]
                         new_entry = {
