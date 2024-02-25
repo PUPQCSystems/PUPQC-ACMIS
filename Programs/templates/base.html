@@ -30,12 +30,12 @@
 						<div class="container-xl">
 							<div class="row g-2 align-items-center">
 								<div class="col">
-						
-									{% block page-title %}{% endblock page-title %}
+									<h2 class="page-title">
+										{% block page-title %}{% endblock page-title %}
+									</h2>
+									
 									{% if breadcrumbs %}
-						
-											{% include "dynamic_breadcrumbs/breadcrumbs.html" with breadcrumbs=breadcrumbs%}
-				
+										{% include "dynamic_breadcrumbs/breadcrumbs.html" with breadcrumbs=breadcrumbs%}
 									{% endif %}
 
 								</div>

@@ -1,18 +1,22 @@
 <div class="row row-cards">
     <div class="card ">
         <div class="card-header ">
-            <h2 class="card-title">Researches</h2>
+            <h2 class="card-title">Lists of Student Researches
+                <span class="card-subtitle">(The data in the table displays information from {{ date_range|date:"M d, Y" }} to {{ accred_program.survey_visit_date|date:"M d, Y" }})</span>
+            </h2>
         </div>
         <div class="card-body">
             <div class="tbl-container">
-                <table id="myTable" class="">
+            <div id="table-default" class="data_table table-responsive">
+                <table id="ris-student-table" class="display no-wrap table table-striped" style="width:100%">
                     <thead>
                         <tr>
-                            <th style="width: 15rem">Research Title</th>
-                            <th>Date Published</th>
-                            <th>Researchers</th>
-                            <th>Course</th>
-                            <th>Research Advicer</th>       
+                            <th>Research Title</th>
+                            <th>Content</th>
+                            <th>Abstract</th>
+                            <th>Publish Date</th>
+                            <th>Authors</th>      
+                            <th style="width: 5rem">Evidence</th>       
                         </tr>
                     </thead>
                     <tbody>
@@ -20,40 +24,44 @@
                         {% for record in records %}
                             <tr>
                                 <td>
-                                    {{ record.Title}}
-                                </td>   
+                                    {{ record.research_paper.title }}
+                                </td>
 
                                 <td>
-                                    {{ record.Date }}
+                                    {{ record.research_paper.content|safe }}
                                 </td>
 
                                 <td>        
+                                    {{ record.research_paper.abstract|safe }}
+                                </td>
+
+                                <td>        
+                                    {{ record.research_paper.date_publish|date:"F j, Y g:i A" }}
+                                </td>
+
+                                <td>
                                     <ul>
-                                    {% for researcher in record.Researchers %}
-                                        <li> <strong>{{ researcher.Name }}</strong> </li>
-                                        <li> {{ researcher.StudentNumber }} </li>
-                                        <br>
-                                    {% endfor %}
+                                        {% for author in record.research_paper.authors %}
+                                            <li>{{ author.name }}</li>
+                                            <br>
+                                        {% endfor %}
                                     </ul>
                                 </td>
 
                                 <td>
-                                    {% for course in record.Courses %}
-                                        {{ course }}
-                                    {% endfor %}
-                                </td>
-
-                                <td>        
-                                    {{ record.ResearchAdvicer }}
+                                    <a href="{{ record.research_paper.file }}">{{ record.research_paper.file }}</a>
                                 </td>
                                 
                             </tr>
                         {% endfor %}
+
+            
+                        
+                        <!-- Add the remaining rows as per your data -->
+                        <!-- ... (additional rows) ... -->
                     </tbody>
                 </table> 
-
-
-                </div>
+            </div>
         </div>
     </div>
 </div>

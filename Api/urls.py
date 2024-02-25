@@ -14,8 +14,8 @@ urlpatterns = [
     path('student-awards/<str:program_accred_pk>/', views_student_award.landing_page, name='student-award-page'),
 
     path('esis/extension/records/', views_esis.extension_info, name='extension-info'),
-    path('ris/research/infos/students/', views_ris.research_student, name='research-info-student'),
-    path('ris/research/infos/faculties/', views_ris.research_faculty, name='research-info-faculty'),
+    path('ris/research/infos/students/<str:program_accred_pk>/', views_ris.research_student, name='research-info-student'),
+    path('ris/research/infos/faculties/<str:program_accred_pk>/', views_ris.research_faculty, name='research-info-faculty'),
 
     path('fis/awards/infos/<str:program_accred_pk>/', views_fis.faculty_awards_info, name='faculty-awards-info'),
 

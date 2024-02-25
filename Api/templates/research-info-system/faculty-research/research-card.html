@@ -1,19 +1,22 @@
 <div class="row row-cards">
     <div class="card ">
         <div class="card-header ">
-            <h2 class="card-title">Researches</h2>
+            <h2 class="card-title">Lists of Faculty Researches
+                <span class="card-subtitle">(The data in the table displays information from {{ date_range|date:"M d, Y" }} to {{ accred_program.survey_visit_date|date:"M d, Y" }})</span>
+            </h2>
         </div>
         <div class="card-body">
             <div class="tbl-container">
-        <table id="myTable" class="">
+            <div id="table-default" class="data_table table-responsive">
+                <table id="ris-faculty-table" class="display no-wrap table table-striped" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Author</th>
                             <th>Research Title</th>
-                            <th>Publication Year</th>
-                            <th>Publisher</th>
-                            <th>Category</th>
-                            <th>Author Type</th>          
+                            <th>Content</th>
+                            <th>Abstract</th>
+                            <th>Publish Date</th>
+                            <th>Authors</th>      
+                            <th style="width: 5rem">Evidence</th>       
                         </tr>
                     </thead>
                     <tbody>
@@ -21,28 +24,33 @@
                         {% for record in records %}
                             <tr>
                                 <td>
-                                    {{ record.Author}}
+                                    {{ record.research_paper.title }}
                                 </td>
 
                                 <td>
-                                    {{ record.ResearchTitle }}
+                                    {{ record.research_paper.content|safe }}
                                 </td>
 
                                 <td>        
-                                    {{ record.PublicationYear }}
+                                    {{ record.research_paper.abstract|safe }}
                                 </td>
 
                                 <td>        
-                                    {{ record.Publisher }}
-                                </td>
-                                <td>
-                                    {{ record.Category }}
+                                    {{ record.research_paper.date_publish|date:"F j, Y" }}
                                 </td>
 
                                 <td>
-                                    {{ record.AuthorType }}
+                                    <ul>
+                                        {% for author in record.research_paper.authors %}
+                                            <li>{{ author.name }}</li>
+                                            <br>
+                                        {% endfor %}
+                                    </ul>
                                 </td>
 
+                                <td>
+                                    <a href="{{ record.research_paper.file }}">{{ record.research_paper.file }}</a>
+                                </td>
                                 
                             </tr>
                         {% endfor %}
@@ -53,7 +61,7 @@
                         <!-- ... (additional rows) ... -->
                     </tbody>
                 </table> 
-
+            </div>
         </div>
     </div>
 </div>

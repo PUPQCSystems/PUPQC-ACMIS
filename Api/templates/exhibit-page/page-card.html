@@ -1,0 +1,64 @@
+{% load static %}
+
+
+<div class="row row-cards">
+    <div class="col-md-6 col-lg-3">
+        <a href="{% url "apis:research-info-faculty"  program_accred_pk=program_accred_pk %}" class="card card-link"  onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
+            <!-- Photo -->
+            <div class="img-responsive img-responsive-21x90 card-img-top" style="background-image: url({% static 'custom-assets/images/exhibits-page/faculty-research.jpg' %})"></div>
+            <div class="card-body">
+                <h3 class="card-title">Faculty Researches</h3>
+                <p class="text-secondary">
+                    This page likely contains records of research projects conducted by faculty members. 
+                    It may include details such as the title of the research, abstract, publication date, authors, 
+                    and possibly links to associated documents or publications.
+                </p>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <a href="{% url "apis:research-info-student" program_accred_pk=program_accred_pk %}" class="card card-link" onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
+            <!-- Photo -->
+            <div class="img-responsive img-responsive-21x90 card-img-top" style="background-image: url({% static 'custom-assets/images/exhibits-page/student-research.jpg' %})"></div>
+            <div class="card-body">
+                <h3 class="card-title">Student Researches</h3>
+                <p class="text-secondary">
+                    This page likely contains records of research projects conducted by students. Similar to the Faculty Researches page, 
+                    it may include details such as the title of the research, abstract, publication date, authors (students), and associated documents or publications.
+                </p>
+            </div>
+        </a>
+    </div>
+
+
+    <div class="col-md-6 col-lg-3">
+        <a href="{% url "apis:faculty-awards-info" program_accred_pk=program_accred_pk %}" class="card card-link" onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
+            <!-- Photo -->
+            <div class="img-responsive img-responsive-21x90 card-img-top" style="background-image: url({% static 'custom-assets/images/exhibits-page/faculty-development.jpg' %})"></div>
+            <div class="card-body">
+                <h3 class="card-title">Faculty Development Records</h3>
+                <p class="text-secondary">
+                    This page likely contains records related to the professional development activities of faculty members. 
+                    It may include details such as training programs attended, workshops conducted, certifications obtained, and other professional development activities.
+                </p>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <a href="{% url "apis:student-award-page" program_accred_pk=program_accred_pk %}" class="card card-link" onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
+            <!-- Photo -->
+            <div class="img-responsive img-responsive-21x90 card-img-top" style="background-image: url({% static 'custom-assets/images/exhibits-page/student-awards.jpg' %})"></div>
+            <div class="card-body">
+                <h3 class="card-title">Student Awards&Recognitions</h3>
+                <p class="text-secondary">
+                    This page likely contains records of awards and recognitions received by students. 
+                    It may include details such as the name of the award, date received, recipient's name, and possibly a brief description of the achievement.
+                </p>
+            </div>
+        </a>
+    </div>
+
+
+</div>
