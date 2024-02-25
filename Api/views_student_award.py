@@ -7,8 +7,10 @@ from rest_framework import status
 import os, requests, json
 from datetime import date
 
+from Accreditation.models import program_accreditation
+
 @login_required
-def landing_page(request):
+def landing_page(request, program_accred_pk):
     # Initialize counters for PL and DL
     PL_count = 0
     DL_count = 0
@@ -32,7 +34,10 @@ def landing_page(request):
             # Parse JSON response
             data = response.json()
 
-# Codes for SUM OF PL AND DL
+            # Get the record that has an id equal to program_accred_pk
+            accred_program = program_accreditation.objects.select_related('instrument_level', 'program').get(id=program_accred_pk)
+
+            # Codes for SUM OF PL AND DL
             # Iterate over the records
             for record in data["result"]:
                 if record["Lister"] == "President Lister":
@@ -40,11 +45,12 @@ def landing_page(request):
                 elif record["Lister"] == "Dean Lister":
                     DL_count += 1            
 
-
             context = {
                 'records': data,
                 'PL_count': PL_count,
-                'DL_count': DL_count
+                'DL_count': DL_count,
+                'program_accred_pk': program_accred_pk,
+                'accred_program': accred_program
             }
             # Pass data to template context
             # return render(request, 'my_template.html', {'api_data': data})

@@ -20,7 +20,14 @@
         </div>
     </div>
 
-    {% include "student-award-page/scripts.html" %}
-
 {% endblock content %}
+
+
+{% block css_content %}
+    {% include "student-award-page/style.html" %}
+{% endblock css_content %}
+
+{% block js_content %}
+    {% include "student-award-page/scripts.html" %}
+{% endblock js_content %}
 

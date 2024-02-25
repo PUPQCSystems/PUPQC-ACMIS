@@ -1,12 +1,4 @@
-
-<style>
-#chart {
-    max-width: 650px;
-    margin: 35px auto;
-  }
-</style>
   
-
 <script>
 
     var options = {
@@ -80,4 +72,53 @@
       var chart = new ApexCharts(document.querySelector("#PL-DL-course-chart"), options);
       chart.render();
     
+</script>
+
+<script>
+  $(document).ready(function () {
+      my_table = $('#student-award-table').DataTable({
+        lengthMenu: [
+          [5, 10, 25, 50, 100, -1],
+          [5, 10, 25, 50, 100, 'All']
+        ],
+        dom: 'B<"row"<"col-sm-6"l><"col-sm-6"f>>rt<"row mt-2 justify-content-between"<"col-md-auto me-auto"i><"col-md-auto ms-auto"p>>', // Define the layout with Bootstrap classes
+
+ 
+        buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: ':visible',
+                            rows:':visible'
+                        }
+                    }
+
+                    , 
+                    {
+                        extend: 'pdfHtml5',
+                        exportOptions: {
+                            columns: ':visible',
+                            rows:':visible'
+                        }
+                    }
+                    ,   {
+                            extend: 'print',
+                            exportOptions: {
+                                columns: ':visible',
+                                rows:':visible'
+                            }
+                        }
+                    , 'colvis'],
+        layout: {
+            topStart: 'buttons'
+        },
+
+     
+    });
+
+  my_table.buttons().container()
+  .appendTo('#student-award-table_wrapper .col-md-6:eq(0)');
+
+      
+  });
 </script>

@@ -4,37 +4,39 @@
     </div>
     <div class="card-body">
         <div class="tbl-container">
-            <table id="myTable" class="">
-                <thead>
-                    <tr>
-                        <th>Student Number</th>
-                        <th>Student Name</th>
-                        <th>Batch</th>
-                        <th>Class Name</th>
-                        <th>Lister</th>
-                        <th>Semester</th>
-                    </tr>
-                </thead>
-                <tbody>
 
-                    {% for item in records.result %}
-
+            <div class="data_table">
+                <table id="student-award-table" class="display no-wrap table table-striped" style="width:100%">
+                    <thead>
                         <tr>
-                            <td>{{ item.StudentNumber }}</td>
-                            <td>{{ item.StudentName }}</td>
-                            <td>{{ item.Batch }}</td>
-                            <td>{{ item.ClassName }}</td>
-                            <td>{{ item.Lister }}</td>
-                            <td>{{ item.Semester }}</td>
-
+                            <th>Student Number</th>
+                            <th>Student Name</th>
+                            <th>Batch</th>
+                            <th>Class Name</th>
+                            <th>Lister</th>
+                            <th>Semester</th>
                         </tr>
+                    </thead>
+                    <tbody>
 
-                    {% endfor %}
-        
-                </tbody>
-            </table> 
+                        {% for item in records.result %}
 
+                            <tr>
+                                <td>{{ item.StudentNumber }}</td>
+                                <td>{{ item.StudentName }}</td>
+                                <td>{{ item.Batch }}</td>
+                                <td>{{ item.ClassName }}</td>
+                                <td>{{ item.Lister }}</td>
+                                <td>{{ item.Semester }}</td>
 
+                            </tr>
+
+                        {% endfor %}
+            
+                    </tbody>
+                </table> 
             </div>
+
+        </div>
     </div>
 </div>

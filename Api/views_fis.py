@@ -81,7 +81,12 @@ def faculty_awards_info(request, program_accred_pk):
             # Pass data to template context
             # return render(request, 'my_template.html', {'api_data': data})
             # return JsonResponse({'records': new_data, 'current_data': current_data, 'faculty_details': faculty_details})
-            return render(request,'faculty-info-system/faculty-awards/landing-page.html' ,{'records': new_data, 'program_accred_pk': program_accred_pk})
+            context = {'records': new_data, 
+                       'program_accred_pk': program_accred_pk, 
+                       'accred_program': accred_program,
+                       'date_range': date_range
+                       }
+            return render(request,'faculty-info-system/faculty-awards/landing-page.html', context)
         else:
             # Handle unsuccessful request
             return JsonResponse({'error': f"Failed to fetch data from the API: {response.status_code}"}, status=500)

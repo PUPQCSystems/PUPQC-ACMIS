@@ -11,7 +11,7 @@ urlpatterns = [
     path('program-accreditation-records/', ProgramAccreditation.as_view(), name='program-accreditaion'),
 
     path('exhibit/<str:program_accred_pk>/', views_exhibits.landing_page, name='exhibit-page'),
-    path('student-awards/', views_student_award.landing_page, name='student-award-page'),
+    path('student-awards/<str:program_accred_pk>/', views_student_award.landing_page, name='student-award-page'),
 
     path('esis/extension/records/', views_esis.extension_info, name='extension-info'),
     path('ris/research/infos/students/', views_ris.research_student, name='research-info-student'),
