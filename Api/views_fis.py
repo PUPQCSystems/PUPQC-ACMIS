@@ -36,40 +36,30 @@ def faculty_awards_info(request, program_accred_pk):
 
             #Get the date of the actual survey
             survey_date = accred_program.survey_visit_date
-            # Parse the string to a datetime object
-            survey_date_obj = datetime.strptime(str(survey_date), "%Y-%m-%d %H:%M:%S%z")
-            # Format the datetime object as a string in the desired format
-            formatted_survey_date = survey_date_obj.strftime("%Y-%m-%d %H:%M:%S")
 
             # Calculate the start date three years prior to the survey date
-            start_date_range = survey_date - timedelta(days=3*365)
-            # Parse the string to a datetime object
-            date_range_obj = datetime.strptime(str(start_date_range), "%Y-%m-%d %H:%M:%S%z")
-            # Format the datetime object as a string in the desired format
-            formatted_date_range = date_range_obj.strftime("%Y-%m-%d %H:%M:%S")
-
+            date_range = survey_date - timedelta(days=3*365)
 
             new_data = []
 
             for data_entry in current_data:
                 faculty_id = str(data_entry["FacultyId"])  # Convert faculty_id to string for comparison
-                # Parse the string to a datetime object
-                date_start = datetime.strptime(data_entry["date_start"], "%a, %d %b %Y %H:%M:%S %Z")
-                # Format the datetime object as a string in the desired format
-                formatted_date_str = date_start.strftime("%Y-%m-%d %H:%M:%S%z")
 
                 # Assuming data_entry["date_start"] and data_entry["date_end"] are strings representing dates
                 date_start = timezone.make_aware(datetime.strptime(data_entry["date_start"], "%a, %d %b %Y %H:%M:%S %Z"))
                 date_end = timezone.make_aware(datetime.strptime(data_entry["date_end"], "%a, %d %b %Y %H:%M:%S %Z"))
-
                 # Format the dates as required
                 formatted_date_start = date_start.strftime("%b %d, %Y %I:%M%p")
                 formatted_date_end = date_end.strftime("%b %d, %Y %I:%M%p")
 
+                # print('Start Date: ', type(date_start), date_start)
+                # print('Range Date: ', type(date_range), date_range)
+                # print('Survey Date: ', type(survey_date), survey_date)
+
                 if faculty_id in faculty_details["Faculties"]:
-                    print('This is the result: ',bool(formatted_date_range <=  formatted_date_str <=  formatted_survey_date))
-                    print(formatted_date_range, formatted_date_str, formatted_survey_date)
-                    if formatted_date_range <=  formatted_date_str <=  formatted_survey_date :
+                    # print('This is the result: ',bool(date_range <=  date_start <= survey_date))
+                    # print(date_range, date_start, survey_date)
+                    if date_range <=  date_start <= survey_date:
                         details_entry = faculty_details["Faculties"][faculty_id]
                         new_entry = {
                             "id": data_entry["id"],
@@ -90,8 +80,8 @@ def faculty_awards_info(request, program_accred_pk):
 
             # Pass data to template context
             # return render(request, 'my_template.html', {'api_data': data})
-            return JsonResponse({'records': new_data, 'current_data': current_data, 'faculty_details': faculty_details})
-            # return render(request,'faculty-info-system/faculty-awards/landing-page.html' ,{'records': new_data, 'program_accred_pk': program_accred_pk})
+            # return JsonResponse({'records': new_data, 'current_data': current_data, 'faculty_details': faculty_details})
+            return render(request,'faculty-info-system/faculty-awards/landing-page.html' ,{'records': new_data, 'program_accred_pk': program_accred_pk})
         else:
             # Handle unsuccessful request
             return JsonResponse({'error': f"Failed to fetch data from the API: {response.status_code}"}, status=500)
