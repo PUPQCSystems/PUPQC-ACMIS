@@ -41,8 +41,6 @@ def faculty_awards_info(request, program_accred_pk):
             # Format the datetime object as a string in the desired format
             formatted_survey_date = survey_date_obj.strftime("%Y-%m-%d %H:%M:%S")
 
-
-
             # Calculate the start date three years prior to the survey date
             start_date_range = survey_date - timedelta(days=3*365)
             # Parse the string to a datetime object
@@ -91,8 +89,8 @@ def faculty_awards_info(request, program_accred_pk):
 
             # Pass data to template context
             # return render(request, 'my_template.html', {'api_data': data})
-            # return JsonResponse({'records': new_data})
-            return render(request,'faculty-info-system/faculty-awards/landing-page.html' ,{'records': new_data, 'program_accred_pk': program_accred_pk})
+            return JsonResponse({'records': new_data, 'current_data': current_data, 'faculty_details': faculty_details})
+            # return render(request,'faculty-info-system/faculty-awards/landing-page.html' ,{'records': new_data, 'program_accred_pk': program_accred_pk})
         else:
             # Handle unsuccessful request
             return JsonResponse({'error': f"Failed to fetch data from the API: {response.status_code}"}, status=500)
