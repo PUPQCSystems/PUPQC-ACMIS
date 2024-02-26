@@ -1,16 +1,7 @@
 from rest_framework import serializers
-from Accreditation.models import accreditation_records, instrument_level, program_accreditation
+from Accreditation.models import instrument_level, program_accreditation
 from Programs.models import Programs
 from Users.models import CustomUser, category_training, faculty_certificates, seminar_workshop_training
-
-class AccreditationRecordSerializer(serializers.ModelSerializer):
-    accredited_program = serializers.StringRelatedField(many=True)
-    program_accreditation_level = serializers.StringRelatedField(many=True)
-
-    class Meta:
-        model = accreditation_records
-        fields = ('program', 'instrument_level', 'description', 'status', 'due_date', 'survey_visit_date', 'accredited_program', 'program_accreditation_level')
-
 
 
 class InstrumentLevelSerializer(serializers.ModelSerializer):
@@ -32,9 +23,6 @@ class ProgramAccreditationSerializer(serializers.ModelSerializer):
         fields = ('id', 'description', 'status', 'due_date', 'survey_visit_date', 'program','instrument_level')
 
 
-
-
-    
 
 # class ProgramAccreditationSerializer(serializers.ModelSerializer):
 #     accredited_program = serializers.StringRelatedField(many=True)

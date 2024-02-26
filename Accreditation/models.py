@@ -227,6 +227,12 @@ class program_accreditation(models.Model):
     description = models.CharField(max_length=5000, null=True, blank=True)
     mock_accred_date = models.DateTimeField(auto_now=False, null=True, blank=True)
     survey_visit_date = models.DateTimeField(auto_now=False, null=True, blank=True)
+    revisit_date = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_done = models.BooleanField(default=False)
+    result_remarks =  models.CharField(max_length=5000, null=True, blank=True)
+    status = models.CharField(max_length=20, null=True, blank=True)
+    validity_date_from = models.DateTimeField(auto_now=False, null=True, blank=True)
+    validity_date_to = models.DateTimeField(auto_now=False, null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_program_accreditation', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_program_accreditation', null=True, blank=True)
@@ -248,23 +254,6 @@ class accreditation_certificates(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_deleted = models.BooleanField(default=False)
-
-
-class accreditation_records(models.Model):
-    accredited_program = models.ForeignKey(program_accreditation, related_name='accredited_program', on_delete=models.CASCADE, null=True, blank=True)
-    accreditation_level = models.ForeignKey(accredlevel, related_name='program_accreditation_level' ,on_delete=models.CASCADE, null=True, blank=True)
-    description = models.CharField(max_length=5000, null=True, blank=True)
-    status = models.CharField(max_length=20, null=True, blank=True)
-    remarks =  models.CharField(max_length=500, null=True, blank=True)
-    validity_date_from = models.DateTimeField(auto_now=False, null=True, blank=True)
-    validity_date_to = models.DateTimeField(auto_now=False, null=True, blank=True)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_accreditation_records', null=True, blank=True)
-    created_at = models.DateTimeField(default=timezone.now)
-    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_accreditation_records', null=True, blank=True)
-    modified_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
-    is_deleted = models.BooleanField(default=False)
-
 
     def __str__(self):
         return(self.accredited_program.program)

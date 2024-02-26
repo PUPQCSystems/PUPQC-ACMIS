@@ -7,9 +7,7 @@
 
 
 {% block content %}
-
-
-
+  
     <div class="container-xl">
       <div class="row row-deck row-cards">
         <div class="alert alert-success" role="alert">
@@ -18,18 +16,28 @@
         </div>
 
         <div class="hr-text"></div>
-        
+          {% include "dashboard_landing/under-accred-card.html" %}
           {% include "dashboard_landing/counter-cards.html" %}
-
 
         <div class="hr-text">Programs Under Accreditation</div>
         <!--Campuses-->
         <div class="col-12">
-              {% include "dashboard_landing/program-accreditation-cards.html" %}
+              {% comment %} {% include "dashboard_landing/program-accreditation-cards.html" %} {% endcomment %}
 
         </div>  
       </div>
       <!--TASK-->
     </div>
+
+    {% include "dashboard_landing/under-accred-modal.html" %}
   
 {% endblock content %}
+
+
+{% block css_content %}
+  {% include "dashboard_landing/style.html" %}
+{% endblock css_content %}
+
+{% block js_content %}
+  {% include "dashboard_landing/script.html" %}
+{% endblock js_content %}

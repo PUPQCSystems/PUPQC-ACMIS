@@ -1,0 +1,45 @@
+<script>
+    $(document).ready(function () {
+        my_table = $('#under-accreditation-table').DataTable({
+            scrollX: true,
+            responsive: true,
+
+            lengthMenu: [
+                [5, 10, 25, 50, 100, -1],
+                [5, 10, 25, 50, 100, 'All']
+            ],
+
+            dom: 'B<"row"<"col-sm-6"l><"col-sm-6"f>>rt<"row mt-2 justify-content-between"<"col-md-auto me-auto"i><"col-md-auto ms-auto"p>>', // Define the layout with Bootstrap classes
+
+            buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                rows:':visible'
+                            }
+                        }, 
+                        {
+                            extend: 'pdfHtml5',
+                            exportOptions: {
+                                rows:':visible'
+                            }
+                        },   
+                        {
+                            extend: 'print',
+                            exportOptions: {
+                                rows:':visible'
+                            }
+                            }
+                        , 'colvis'],
+            layout: {
+                topStart: 'buttons'
+            },
+    
+         
+        });
+
+
+
+        
+    });
+</script>

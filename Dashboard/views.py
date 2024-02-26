@@ -8,16 +8,31 @@ from Accreditation.models import program_accreditation
 # Create your views here.
 @login_required
 def landing_page(request):
-		
-	records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
-	slide_count = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted= False).count()
+	
+	#Getting all the data inside the Program table and storing it to the context variable
+	under_accred_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted= False, is_done=False) 
 
-	loop_counts = 0
-	loop_counts =  math.ceil(slide_count / 3)
+	#This code counts the programs taht under accreditation
+	under_accred_programs_count = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted= False, is_done=False).count()
 
-	print(loop_counts)
+	# Calculating the overall progress percentage of the all under accreditation program
+	progress=0.00
+	progress_percentage_result=0.00
+	overall_progress=0.00
+	count = 0
+	for record in under_accred_records:
+		if record.instrument_level.progress_percentage:
+			progress += float(record.instrument_level.progress_percentage)
+		count+=1
+	
+	overall_progress = 100 * count
+	if progress:
+		progress_percentage_result= (progress / overall_progress) * 100
 
-	context = { 'records': records, 'loop_counts': loop_counts}  #Getting all the data inside the type table and storing it to the context variable
+	context = { 'under_accred_records': under_accred_records,
+				'under_accred_programs_count': under_accred_programs_count,
+				'progress_percentage_result':progress_percentage_result,
+			}  #Getting all the data inside the type table and storing it to the context variable
 
 	#Getting all the data inside the Program table and storing it to the context variable
 	return render(request, 'dashboard_landing/dashboard_landing.html', context)
