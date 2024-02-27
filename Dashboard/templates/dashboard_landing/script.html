@@ -36,10 +36,372 @@
             },
     
          
-        });
-
-
-
-        
+        });        
     });
 </script>
+
+<script>
+    $(document).ready(function () {
+        my_table = $('#ready-accreditation-table').DataTable({
+            scrollX: true,
+            responsive: true,
+
+            lengthMenu: [
+                [5, 10, 25, 50, 100, -1],
+                [5, 10, 25, 50, 100, 'All']
+            ],
+
+            dom: 'B<"row"<"col-sm-6"l><"col-sm-6"f>>rt<"row mt-2 justify-content-between"<"col-md-auto me-auto"i><"col-md-auto ms-auto"p>>', // Define the layout with Bootstrap classes
+
+            buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                rows:':visible'
+                            }
+                        }, 
+                        {
+                            extend: 'pdfHtml5',
+                            exportOptions: {
+                                rows:':visible'
+                            }
+                        },   
+                        {
+                            extend: 'print',
+                            exportOptions: {
+                                rows:':visible'
+                            }
+                            }
+                        , 'colvis'],
+            layout: {
+                topStart: 'buttons'
+            },
+    
+         
+        });        
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        my_table = $('#awaiting-result-table').DataTable({
+            scrollX: true,
+            responsive: true,
+
+            lengthMenu: [
+                [5, 10, 25, 50, 100, -1],
+                [5, 10, 25, 50, 100, 'All']
+            ],
+
+            dom: 'B<"row"<"col-sm-6"l><"col-sm-6"f>>rt<"row mt-2 justify-content-between"<"col-md-auto me-auto"i><"col-md-auto ms-auto"p>>', // Define the layout with Bootstrap classes
+
+            buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                rows:':visible'
+                            }
+                        }, 
+                        {
+                            extend: 'pdfHtml5',
+                            exportOptions: {
+                                rows:':visible'
+                            }
+                        },   
+                        {
+                            extend: 'print',
+                            exportOptions: {
+                                rows:':visible'
+                            }
+                            }
+                        , 'colvis'],
+            layout: {
+                topStart: 'buttons'
+            },
+    
+         
+        });        
+    });
+</script>
+
+
+<script>
+    // @formatter:off
+    document.addEventListener("DOMContentLoaded", function () {
+        window.ApexCharts && (new ApexCharts(document.getElementById('under-accred-chart'), {
+            chart: {
+                type: "bar",
+                fontFamily: 'inherit',
+                height: 240,
+                parentHeightOffset: 0,
+                toolbar: {
+                    show: true,
+                    //offsetX: 10, // Adjust the horizontal position (positive value moves it to the right, negative to the left)
+                    //offsetY: -35, // Adjust the vertical position (positive value moves it down, negative moves it up)
+                    
+                },
+                animations: {
+                    enabled: true
+                },
+                
+            },
+
+            title: {
+                text: "Ongoing Accreditations", // Title or header text
+                align: "center", // Align the title to the center
+                margin: 10, // Add some margin below the title
+                style: {
+                    fontSize: '18px', // Customize the font size if needed
+                    fontWeight: 'bold' // Add font weight if needed
+                }
+            },
+
+            plotOptions: {
+                bar: {
+                    columnWidth: '50%',
+                }
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            fill: {
+                opacity: 1,
+            },
+            series: [{
+                name: "Ongoing Accreditation",
+                data: [
+                    {{ accreditation_summary.under_accred_summary.level_1 }}, 
+                    {{ accreditation_summary.under_accred_summary.level_2 }}, 
+                    {{ accreditation_summary.under_accred_summary.level_3 }}, 
+                    {{ accreditation_summary.under_accred_summary.level_4 }}
+                ]
+           
+            }],
+            tooltip: {
+                theme: 'dark'
+            },
+            grid: {
+                padding: {
+                    top: -20,
+                    right: 0,
+                    left: -4,
+                    bottom: -4
+                },
+                strokeDashArray: 4,
+            },
+            xaxis: {
+                labels: {
+                    padding: 0,
+                },
+                tooltip: {
+                    enabled: true
+                },
+                axisBorder: {
+                    show: false,
+                },
+                type: 'int',
+            },
+            yaxis: {
+                labels: {
+                    padding: 4
+                },
+            },
+            labels: [
+                'Level I', 'Level II', 'Level III', 'Level IV'
+            ],
+            colors: [tabler.getColor("primary")],
+            legend: {
+                show: false,
+            },
+        })).render();
+    });
+    // @formatter:on
+  </script>
+
+
+  <script>
+    // @formatter:off
+    document.addEventListener("DOMContentLoaded", function () {
+        window.ApexCharts && (new ApexCharts(document.getElementById('accredited-program-chart'), {
+            chart: {
+                type: "bar",
+                fontFamily: 'inherit',
+                height: 240,
+                parentHeightOffset: 0,
+                toolbar: {
+                    show: true,
+                    //offsetX: 10, // Adjust the horizontal position (positive value moves it to the right, negative to the left)
+                    //offsetY: -35, // Adjust the vertical position (positive value moves it down, negative moves it up)
+                },
+                animations: {
+                    enabled: true
+                },
+                    
+            },
+
+            title: {
+                text: "Accredited Programs", // Title or header text
+                align: "center", // Align the title to the center
+                margin: 10, // Add some margin below the title
+                style: {
+                    fontSize: '18px', // Customize the font size if needed
+                    fontWeight: 'bold' // Add font weight if needed
+                }
+            },
+
+            plotOptions: {
+                bar: {
+                    columnWidth: '50%',
+                }
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            fill: {
+                opacity: 1,
+            },
+            series: [{
+                name: "Accreditation Programs",
+
+                data: [ {{ accreditation_summary.accredited_summary.level_1 }}, 
+                {{ accreditation_summary.accredited_summary.level_2 }}, 
+                {{ accreditation_summary.accredited_summary.level_3 }}, 
+                {{ accreditation_summary.accredited_summary.level_4 }}
+                ]
+
+            }],
+            tooltip: {
+                theme: 'dark'
+            },
+            grid: {
+                padding: {
+                    top: -20,
+                    right: 0,
+                    left: -4,
+                    bottom: -4
+                },
+                strokeDashArray: 4,
+            },
+            xaxis: {
+                labels: {
+                    padding: 0,
+                },
+                tooltip: {
+                    enabled: false
+                },
+                axisBorder: {
+                    show: false,
+                },
+                type: 'int',
+            },
+            yaxis: {
+                labels: {
+                    padding: 4
+                },
+            },
+            labels: [
+                'Level I', 'Level II', 'Level III', 'Level IV'
+            ],
+            colors: [tabler.getColor("primary")],
+            legend: {
+                show: false,
+            },
+        })).render();
+    });
+    // @formatter:on
+  </script>
+
+  <script>
+    // @formatter:off
+    document.addEventListener("DOMContentLoaded", function () {
+        window.ApexCharts && (new ApexCharts(document.getElementById('chart-tasks-overview'), {
+            chart: {
+                type: "bar",
+                fontFamily: 'inherit',
+                height: 320,
+                parentHeightOffset: 0,
+                toolbar: {
+                    toolbar: {
+                        show: true,
+                        //offsetX: 10, // Adjust the horizontal position (positive value moves it to the right, negative to the left)
+                        //offsetY: -35, // Adjust the vertical position (positive value moves it down, negative moves it up)
+                    },
+                },
+                animations: {
+                    enabled: true
+                },
+            },
+            title: {
+                text: "Program Counts Per Progress Percentage", // Title or header text
+                align: "center", // Align the title to the center
+                margin: 10, // Add some margin below the title
+                style: {
+                    fontSize: '18px', // Customize the font size if needed
+                    fontWeight: 'bold' // Add font weight if needed
+                }
+            },
+            plotOptions: {
+                bar: {
+                    columnWidth: '50%',
+                }
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            fill: {
+                opacity: 1,
+            },
+            series: [{
+                name: "Program Counts",
+                data: [
+                        {{progress_percentage_count.count_0}}, 
+                        {{progress_percentage_count.count_11}}, 
+                        {{progress_percentage_count.count_21}}, 
+                        {{progress_percentage_count.count_31}}, 
+                        {{progress_percentage_count.count_41}}, 
+                        {{progress_percentage_count.count_51}}, 
+                        {{progress_percentage_count.count_61}}, 
+                        {{progress_percentage_count.count_71}}, 
+                        {{progress_percentage_count.count_81}}, 
+                        {{progress_percentage_count.count_91}}, 
+                        
+                ]
+            }],
+            tooltip: {
+                theme: 'dark'
+            },
+            grid: {
+                padding: {
+                    top: -20,
+                    right: 0,
+                    left: -4,
+                    bottom: -4
+                },
+                strokeDashArray: 4,
+            },
+            xaxis: {
+                labels: {
+                    padding: 0,
+                },
+                tooltip: {
+                    enabled: false
+                },
+                axisBorder: {
+                    show: false,
+                },
+                categories: ['0%-10%', '11%-20%', '21%-30%', '31%-40%', '41%-50%', '51%-60%', '61%-70%', '71%-80%', '81%-90%', '91%-100%'],
+            },
+            yaxis: {
+                labels: {
+                    padding: 4
+                },
+            },
+            colors: [tabler.getColor("primary")],
+            legend: {
+                show: false,
+            },
+        })).render();
+    });
+    // @formatter:on
+  </script>
+

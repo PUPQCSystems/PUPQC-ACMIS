@@ -31,13 +31,16 @@
 
 
     {% include "accreditation-page/instrument-component/main-page/parameter-component-cards.html" %}
-    
-    {% include "accreditation-page/instrument-component/main-page/scripts.html" %}
-
-    {% include "accreditation-page/instrument-component/main-page/styles.html" %}
-
 
 {% endblock content %}
 
 
+{% block css_content %}
+    {% include "accreditation-page/instrument-component/main-page/styles.html" %}
+{% endblock css_content %}
+
+
+{% block js_content %}
+    {% include "accreditation-page/instrument-component/main-page/scripts.html" %}
+{% endblock js_content %}
 

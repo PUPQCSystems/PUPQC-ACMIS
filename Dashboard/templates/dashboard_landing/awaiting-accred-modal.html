@@ -1,0 +1,67 @@
+<div class="modal modal-blur fade" id="awaiting-result-modal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title">Lists of Program Under Accreditation</h5>
+		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+			<div id="table-default" class="data_table table-responsive">
+				<table id="awaiting-result-table" class="display no-wrap table">
+					<thead>
+					<tr>
+						<th>Program Name</th>
+						<th>Accrediting Body</th>
+						<th>Accreditation Level</th>
+						<th>Accreditation Instrument</th>
+						<th>Mock Accreditation Date</th>
+						<th>Actual Survey Date</th>
+						<th>Progress</th>
+
+					</tr>
+					</thead>
+					<tbody class="table-tbody">
+					{% for record in awaiting_result_data.awaiting_result_records %}
+						<tr>
+							<td>
+								<a href="{% url 'accreditations:program-accreditation-area' pk=record.instrument_level.id accred_pk=record.id %}">
+									{{ record.program }}
+								</a>
+							</td>
+							<td >{{ record.instrument_level.instrument.accredbodies }}</td>
+							<td>{{ record.instrument_level.level }}</td>
+							<td>{{ record.instrument_level.instrument }}</td>
+							<td>{{ record.mock_accred_date|date:"F j, Y g:i A" }}</td>
+							<td>{{ record.survey_visit_date|date:"F j, Y g:i A" }}</td>
+							<td>
+								<div class="row align-items-center">
+									<div class="col-12 col-lg-auto">
+										{% if record.instrument_level.progress_percentage %}
+											{{ record.instrument_level.progress_percentage }}%
+										{% else %}
+											0.00%
+										{% endif %}		
+									</div>
+									<div class="col">
+										<div class="progress" style="width: 5rem">
+											<div class="progress-bar" style="width: {{ record.instrument_level.progress_percentage }}%" role="progressbar" aria-valuenow="{{ record.instrument_level.progress_percentage }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ record.instrument_level.progress_percentage }}% Complete">
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+			
+		<div class="modal-footer">
+		  <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+		</div>
+
+	</div>
+  </div>
+</div>

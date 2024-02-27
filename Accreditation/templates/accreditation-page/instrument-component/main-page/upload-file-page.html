@@ -149,11 +149,11 @@
                     <div class="col-4">
                         <div class="card p-4" style= "margin-top: 20px" >
                             <div class="card-status-top bg-green"></div>
-                            <div class = "divide-y overflow-auto">
+                            <div class = "divide-y overflow-x">
                                 <div class="row">
                                     <input type="file" name="file_path" id="file-path" required="" multiple>
                                 </div>
-
+                                Uploaded Files
                                 {% for file in uploaded_files %}
                                     <div class="row">
                                     <a href="#"class="text-muted"> {{ file.file_name }}
@@ -175,17 +175,12 @@
             </div>
 
         </div>	
+{% endblock content %}
 
 
 
 
-  <!-- Minified and Compressed jQuery for Production-->
-  <script src="{% static 'vendor/filepond/filepond.js' %} "></script>
-  <script src=" {% static 'vendor/filepond/filepond-plugin-file-validate-type.js' %}"></script>
-  <script src=" {% static 'vendor/filepond/filepond-plugin-file-validate-size.js' %}"></script>
-  <script src=" {% static 'vendor/filepond/filepond-plugin-image-preview.js' %}"></script>
-
-
+{% block js_content %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var files = []
@@ -252,8 +247,4 @@
     })
 </script>  
 
-
-{% endblock content %}
-
-
-
+{% endblock js_content %}

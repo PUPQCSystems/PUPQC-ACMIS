@@ -37,10 +37,10 @@
 													</span>
 												</div>
 												<div class="col">
-													<div class="text-truncate">
+													<div class="">
 													<strong>{{ uploaded_record.uploaded_by.first_name }} {{ uploaded_record.uploaded_by.last_name }}</strong> submitted 
 													
-													<a href="#" class="btn btn-ghost-primary">								
+													<a href="#" class="" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#file-modal-{{ uploaded_record.id  }}">								
 															{{ uploaded_record.file_name }}
 													</a>
 													</div>
@@ -51,9 +51,7 @@
 												</div>
 												</div>
 											</div>
-											{% include "accreditation-page/instrument-component/main-page/file-view-modal.html" %}
 										{% endif %}
-										
 									{% endfor %}
 								
 								</div>
@@ -91,3 +89,9 @@
 		</form>
 	</div>
 </div>
+
+{% for uploaded_record in uploaded_records %}
+	{% if upload_bin.id == uploaded_record.upload_bin_id %}
+		{% include "accreditation-page/instrument-component/main-page/file-view-modal.html" %}
+	{% endif %}
+{% endfor %}

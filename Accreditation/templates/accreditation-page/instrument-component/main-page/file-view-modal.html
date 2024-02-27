@@ -1,20 +1,35 @@
 {% load crispy_forms_tags %}
 
 <!-- Modal -->
-<div class="modal modal-blur fade" id="file-modal-{{ upload_record.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal modal-blur fade" id="file-modal-{{ uploaded_record.id  }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       	<div class="modal-content">
         	<div class="modal-header">
-          		<h1 class="modal-title">View File</h1>
-          		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          		<h1 class="modal-title">{{ uploaded_record.id  }}</h1>
+          		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-toggle="modal" data-bs-target="#review-modal-{{ upload_bin.id }}"></button>
         	</div>
         	<div class="modal-body">
 
-			
+				{% if uploaded_record.file_name|slice:"-4:" == '.pdf' %}
+					<embed src="{{ uploaded_record.file_path.url }}" type="application/pdf" width="100%" height="600px" />
+
+				{% elif uploaded_record.file_name|slice:"-4:" == '.jpg' or uploaded_record.file_name|slice:"-4:" == 'jpeg' or uploaded_record.file_name|slice:"-4:" == '.png' %}
+					<img src="{{ uploaded_record.file_path.url }}" alt="Uploaded Image" width="100%">
+
+				{% elif uploaded_record.file_name|slice:"-4:" == '.mp4' or uploaded_record.file_name|slice:"-4:" == 'webm' %}
+					<div class="card">
+						<div class="card-body">
+							<h3 class="card-title">Vimeo Player</h3>
+							<div id="player-youtube" data-plyr-provider="youtube" data-plyr-embed-id="P3wSIQhelcY"></div>
+						</div>
+					</div>
+				
+				{% endif %}
+
 					  
 			</div>
 				<div class="modal-footer">
-					<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn me-auto" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#review-modal-{{ upload_bin.id }}">Close</button>
 				</div>
 
     	</div>

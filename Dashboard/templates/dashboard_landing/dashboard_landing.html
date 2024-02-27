@@ -16,10 +16,14 @@
         </div>
 
         <div class="hr-text"></div>
-          {% include "dashboard_landing/under-accred-card.html" %}
           {% include "dashboard_landing/counter-cards.html" %}
 
-        <div class="hr-text">Programs Under Accreditation</div>
+        <div class="hr-text">Accreditation Counts Charts</div>
+        {% include "dashboard_landing/accreditation-count-charts.html" %}
+
+        <div class="hr-text">Progress Percentage Summary</div>
+        {% include "dashboard_landing/progress-program-count-chart.html" %}
+
         <!--Campuses-->
         <div class="col-12">
               {% comment %} {% include "dashboard_landing/program-accreditation-cards.html" %} {% endcomment %}
@@ -28,8 +32,6 @@
       </div>
       <!--TASK-->
     </div>
-
-    {% include "dashboard_landing/under-accred-modal.html" %}
   
 {% endblock content %}
 
@@ -41,3 +43,9 @@
 {% block js_content %}
   {% include "dashboard_landing/script.html" %}
 {% endblock js_content %}
+
+{% block modal_content %}
+  {% include "dashboard_landing/ready-accred-modal.html" %}
+  {% include "dashboard_landing/under-accred-modal.html" %}
+  {% include "dashboard_landing/awaiting-accred-modal.html" %}
+{% endblock modal_content %}

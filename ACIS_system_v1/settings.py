@@ -20,9 +20,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 
-SESSION_COOKIE_AGE = 10000
-SESSION_COOKIE_SECURE = True
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_COOKIE_AGE = 10000
+# SESSION_COOKIE_SECURE = True
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
