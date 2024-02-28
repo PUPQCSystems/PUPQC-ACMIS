@@ -16,7 +16,9 @@
         </div>
 
         <div class="hr-text"></div>
+
           {% include "dashboard_landing/counter-cards.html" %}
+          {% include "dashboard_landing/review-card.html" %}
 
         <div class="hr-text">Accreditation Counts Charts</div>
         {% include "dashboard_landing/accreditation-count-charts.html" %}
@@ -48,4 +50,5 @@
   {% include "dashboard_landing/ready-accred-modal.html" %}
   {% include "dashboard_landing/under-accred-modal.html" %}
   {% include "dashboard_landing/awaiting-accred-modal.html" %}
+
 {% endblock modal_content %}

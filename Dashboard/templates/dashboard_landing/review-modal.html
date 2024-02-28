@@ -1,0 +1,137 @@
+<div class="modal modal-blur fade" id="review-modal-{{upload_bin.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+	  <div class="modal-content">
+		
+		<div class="modal-header">
+		  <h5 class="modal-title">Review Modal</h5>
+		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+			<div class="row row-cards">
+				<div class="col-sm-12 col-lg-12">
+					<div class="card">
+					<div class="card-status-top bg-cyan"></div>
+					<div class="card-body">
+						<h3 class="card-title">Upload Bin Details</h3>
+						
+						<div class="row row-cards">
+							<div class="col-sm-6 col-lg-4 datagrid">
+								<div class="datagrid-item">
+									<div class="datagrid-title">Program</div>
+									<div class="datagrid-content">{{ upload_bin.parameter_component.area_parameter.instrument_level_area.instrument_level.instrument.program }}</div>
+								  </div>
+
+								  <div class="datagrid-item">
+									<div class="datagrid-title">Accreditation Level</div>
+									<div class="datagrid-content">{{ upload_bin.parameter_component.area_parameter.instrument_level_area.instrument_level}}</div>
+								  </div>
+
+
+							</div>
+				
+							<div class="col-sm-6 col-lg-4 datagrid">
+								<div class="datagrid-item">
+									<div class="datagrid-title">Area</div>
+									<div class="datagrid-content">{{ upload_bin.parameter_component.area_parameter.instrument_level_area.area.area_number }}</div>
+								  </div>
+
+								  <div class="datagrid-item">
+									<div class="datagrid-title">Parameter</div>
+									<div class="datagrid-content">{{ upload_bin.parameter_component.area_parameter.parameter.name }}</div>
+								  </div>
+							</div>
+
+							<div class="col-sm-6 col-lg-4 datagrid">
+								<div class="datagrid-item">
+									<div class="datagrid-title">Component</div>
+									<div class="datagrid-content">{{ upload_bin.parameter_component }}</div>
+								  </div>
+								  
+								  <div class="datagrid-item">
+									<div class="datagrid-title">Bin Title</div>
+									<div class="datagrid-content">{{ upload_bin.title }}</div>
+								  </div>
+					
+								
+							</div>
+
+						</div>
+
+
+					</div>
+					</div>
+				</div>
+
+				<div class="col-12">
+					<div class="row row-cards">
+						<div class="col-sm-12 col-lg-6">
+							<div class="card" style="height: 20rem">
+								<div class="card-status-top bg-cyan"></div>
+								<div class="card-header">
+								<h3 class="card-title">Files</h3>
+								</div>
+								<div class="list-group list-group-flush list-group-hoverable">
+										{% for uploaded_record in uploaded_records %}
+											{% if upload_bin.id == uploaded_record.upload_bin_id %}
+												<div class="list-group-item">	
+													<div class="row align-items-center">
+														<div class="col">
+															<a href="#" class="text-reset d-block" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#file-modal-{{ uploaded_record.id }}">{{ uploaded_record.file_name }}</a>
+															<span class="text-muted small">
+																Uploaded by {{ uploaded_record.uploaded_by.first_name }} {{ uploaded_record.uploaded_by.last_name }}
+																on {{ uploaded_record.uploaded_at|date:"F j, Y"}}
+															</span>
+														</div>
+													</div>
+												</div>
+											{% endif %}
+										{% endfor %}
+									
+								
+								</div>
+							</div>
+						</div>
+			
+						<div class="col-sm-12 col-lg-6">
+							<div class="card">
+								<div class="card-status-top bg-cyan"></div>
+								<div class="card-body">
+									<form id="review-upload-form-{{ upload_bin.id }}">
+										<div class="mb-3">
+											<label class="form-label required">{{ review_form.status.label }}</label>
+											{{ review_form.status }}
+										</div>
+
+										<div class="mb-3">
+											<label class="form-label">{{ review_form.remarks.label }}</label>
+											<textarea class="form-control" id="id_remarks" name="remarks" placeholder="Input your remarks here..."
+											style="height: 10rem"></textarea>
+										</div>
+
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+			
+		<div class="modal-footer">
+		  <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+		  <button type="button" data-id="{{ upload_bin.id }}" class="btn btn-primary review-upload-button">Submit</button>
+		</div>
+									</form>
+	</div>
+  </div>
+</div>
+
+{% block modal_content %}
+	{% for uploaded_record in uploaded_records %}
+		{% if upload_bin.id == uploaded_record.upload_bin_id %}
+			{% include "dashboard_landing/file-view-modal.html" %}
+		{% endif %}
+	{% endfor %}
+{% endblock modal_content %}
+

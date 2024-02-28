@@ -124,6 +124,25 @@
     });
 </script>
 
+<script>
+    $(document).ready(function () {
+        my_table = $('#review-table').DataTable({
+            scrollX: true,
+            scrollY: true,
+            responsive: false,
+
+            lengthMenu: [
+                [5, 10, 25, 50, 100, -1],
+                [5, 10, 25, 50, 100, 'All']
+            ],
+
+    
+         
+        });        
+    });
+</script>
+
+
 
 <script>
     // @formatter:off
@@ -404,4 +423,42 @@
     });
     // @formatter:on
   </script>
+
+
+  {% comment %} AJAX FOR REVIEWING AN UPLOAD BIN {% endcomment %}
+<script>
+    $(document).ready(function(){
+        $(".review-upload-button").click(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var serializedData = $("#review-upload-form-"+id).serialize();
+            var url = "/accreditation/program-accreditation/area/parameter/review-upload/"+id+"/";
+
+
+            $.ajax({
+                url: url, 
+                data: serializedData,
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
+                type: "POST",
+                success: function(response) {
+                    location.reload();
+                    
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> 
 

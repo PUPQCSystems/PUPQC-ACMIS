@@ -262,12 +262,9 @@
 
 
   <!-- JavaScript Function to Open Second Modal -->
-  <script>
-    function openFileModal(id) {
-      // Open the second modal
-      var myModal = new bootstrap.Modal(document.getElementById('#file-modal-'+id));
-      myModal.show();
-    }
-  </script>
-
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    window.Plyr && (new Plyr('#player-youtube'));
+  });
+</script>
 

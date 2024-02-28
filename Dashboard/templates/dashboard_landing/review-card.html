@@ -1,0 +1,47 @@
+<div class="col-md-12 col-lg-6">
+    <div class="card" style="height: 26rem">
+      <div class="card-header">
+        <h3 class="card-title">Reviewer Tasks</h3>
+      </div>
+      <div class="card-body table-responsive">
+        <table id="review-table" class="table card-table table-vcenter">
+          <thead>
+            <tr>
+              <th>Bin Title</th>
+              <th>Component</th>
+              <th>Parameter</th>
+              <th>Area</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for upload_bin in upload_bins %}
+              <tr>
+                <td>
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#review-modal-{{upload_bin.id}}">{{ upload_bin.title }}</a>
+                </td>
+
+                <td class="text-nowrap text-muted">
+                  {{ upload_bin.parameter_component }}
+                </td>
+
+                <td class="text-nowrap text-muted">
+                  {{ upload_bin.parameter_component.area_parameter.parameter }}
+                </td>
+
+                <td class="text-nowrap text-muted">
+                  {{ upload_bin.parameter_component.area_parameter.instrument_level_area.area }}
+                </td>
+            </tr>
+
+            {% block modal_content %}
+              {% include "dashboard_landing/review-modal.html" %}
+            {% endblock modal_content %}
+
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+  </div>
+  
