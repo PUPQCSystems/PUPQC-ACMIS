@@ -230,6 +230,7 @@ class program_accreditation(models.Model):
     survey_visit_date = models.DateTimeField(auto_now=False, null=True, blank=True)
     revisit_date = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_done = models.BooleanField(default=False)
+    is_failed = models.BooleanField(default=False)
     result_remarks =  models.CharField(max_length=5000, null=True, blank=True)
     status = models.CharField(max_length=20, null=True, blank=True)
     validity_date_from = models.DateTimeField(auto_now=False, null=True, blank=True)

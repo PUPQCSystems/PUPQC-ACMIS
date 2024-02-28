@@ -1,52 +1,136 @@
 
 <div class="card">
-  <div class="card-header">
-    <h3 class="card-title">Accreditation Status of {{accred_program.program.abbreviation}}</h3>
-  </div>
-  <div class="card-body">
-    <ul class="steps steps-green steps-counter my-4">
+	<div class="card-header">
+		<h3 class="card-title">Accreditation Status of {{accred_program.program.abbreviation}}</h3>
+	</div>
+	<div class="card-body">
+		<ul class="steps steps-green steps-counter my-4 ul-text" style="text">
 
 
-      {% now "F j, Y" as today %}
-      {% if today < accred_program.mock_accred_date|date:"F j, Y" %}
-        <li class="step-item active">
-      {% else %}
-        <li class="step-item">
-      {% endif %}
-        <ul>
-          <li>Document Preparation</li>
-          {% if accred_program.instrument_level.progress_percentage == 100.00 %}
-            <li class="text-green">{{ accred_program.instrument_level.progress_percentage}}% DONE</li>
-          {% else %}
-            <li class="text-blue">{{ accred_program.instrument_level.progress_percentage}}% DONE</li>
-          {% endif %}
+			{% now "F j, Y" as today %}
+			{% if today < accred_program.mock_accred_date|date:"F j, Y" %}
+				<li class="step-item active">
+			{% else %}
+				<li class="step-item">
+			{% endif %}
+				<ul>
+					<li>Document Preparation</li>
+					{% if accred_program.instrument_level.progress_percentage == 100.00 %}
+						<li class="text-green">{{ accred_program.instrument_level.progress_percentage}}% DONE</li>
+					{% else %}
+						<li class="text-blue">{{ accred_program.instrument_level.progress_percentage}}% DONE</li>
+					{% endif %}
 
-        </ul>
-      </li>
+				</ul>
+			</li>
 
-      {% if  today >= accred_program.mock_accred_date|date:"F j, Y" and today < accred_program.survey_visit_date|date:"F j, Y" %}
-        <li class="step-item active">
-      {% else %}
-        <li class="step-item">
-      {% endif %}
-        <ul>
-          <li>Mock Accreditation</li>
-          <li>{{ accred_program.mock_accred_date|date:"F j, Y" }}</li>
-        </ul>
-      </li>
+			{% if  today >= accred_program.mock_accred_date|date:"F j, Y" and today < accred_program.survey_visit_date|date:"F j, Y" %}
+				<li class="step-item active">
+			{% else %}
+				<li class="step-item">
+			{% endif %}
+				<ul>
+					<li>Mock Accreditation</li>
+					<li>{{ accred_program.mock_accred_date|date:"F j, Y" }}</li>
+				</ul>
+			</li>
  
-      {% if today >= accred_program.survey_visit_date|date:"F j, Y" %}
-        <li class="step-item active">
-      {% else %}
-        <li class="step-item">
-      {% endif %}
-        <ul>
-          <li>Actual Survey Visit</li>
-          <li>{{ accred_program.survey_visit_date|date:"F j, Y" }}</li>
-        </ul>
+			{% if today == accred_program.survey_visit_date|date:"F j, Y" %}
+				<li class="step-item active">
+			{% else %}
+				<li class="step-item">
+			{% endif %}
+				<ul>
+					<li>Actual Survey Visit</li>
+					<li>{{ accred_program.survey_visit_date|date:"F j, Y" }}</li>
+				</ul>
 
-      </li>
-      <li class="step-item">Result</li>
-    </ul>
-  </div>
+			</li>
+
+
+			{% if today > accred_program.survey_visit_date|date:"F j, Y" and accred_program.revisit_date == None %}
+				<li class="step-item active">
+
+            {% elif today < accred_program.revisit_date|date:"F j, Y" %}
+                <li class="step-item active">
+
+			{% else %}
+				<li class="step-item">
+			{% endif %}
+				<ul>
+					<li>Certification</li>
+
+					{% if accred_program.is_done == False and today > accred_program.survey_visit_date|date:"F j, Y" and accred_program.revisit_date == None%}
+						<span class="badge badge-outline text-blue">Awaiting Result</span>
+
+					{% elif accred_program.is_done == False and accred_program.revisit_date %}
+						<li class="text-blue">
+							<span class="badge badge-outline text-orange">Survey Revisit</span>
+						</li>
+
+					{% elif accred_program.is_done == True %}
+						<li>
+							<span class="badge badge-outline text-green">{{ accred_program.instrument_level.level}} Certified </span>
+						</li>
+
+					{% endif %}    
+
+				</ul>
+			</li>
+
+
+			{% if accred_program.revisit_date %}
+                {% if today == accred_program.revisit_date|date:"F j, Y" %}
+                    <li class="step-item active">
+                {% else %}
+                    <li class="step-item">
+                {% endif %}
+
+                        <ul>
+                            <li>Survery Revisit</li>
+                            {% if today  >= accred_program.revisit_date|date:"F j, Y" %}
+                                <span class="badge badge-outline text-blue">{{ accred_program.revisit_date|date:"F j, Y" }}</span>
+
+                            {% else %}
+                                    <span class="badge badge-outline text-muted">{{ accred_program.revisit_date|date:"F j, Y" }}</span>
+
+
+                            {% endif %}
+                        </ul>
+                    </li>
+
+
+                {% if today > accred_program.revisit_date|date:"F j, Y" %}
+                    <li class="step-item active">
+                {% else %}
+                    <li class="step-item">
+                {% endif %}
+					<ul>
+						<li>Certification</li>
+	
+						{% if today > accred_program.revisit_date|date:"F j, Y" and accred_program.is_done == False and accred_program.is_failed == False %}
+							<span class="badge badge-outline text-blue">Awaiting Result</span>
+	
+						{% elif accred_program.is_done == True and accred_program.is_failed == False %}
+							<li class="text-blue">
+								<span class="badge badge-outline text-green">{{ accred_program.instrument_level.level}} Certified</span>
+							</li>
+	
+						{% elif accred_program.is_done == False and accred_program.is_failed == True %}
+							<li>
+								<span class="badge badge-outline text-red"> Failed </span>
+							</li>
+	
+						{% endif %}    
+	
+					</ul>
+				</li>
+
+			{% endif %}
+				
+
+
+
+		</ul>
+	</div>
 </div>
