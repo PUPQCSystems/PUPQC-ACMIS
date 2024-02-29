@@ -106,7 +106,7 @@ def program_accreditation_summary(under_accred_records, accredited_records):
 
 
 def survey_visit_ready():
-	survey_ready_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted=False, is_done=False, instrument_level__progress_percentage__gte=70.0)
+	survey_ready_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted=False, is_done=False, instrument_level__progress_percentage =100.0)
 	count = 0
 	for record in survey_ready_records:
 		count += 1
@@ -117,13 +117,13 @@ def survey_visit_ready():
 # This functions get the records with survey_visit_date greater than or equal to one week from now
 def awaiting_result():
 # Calculate the date seven days ago
-	seven_days_ago = timezone.now() - timedelta(days=7)
+	one_days_ago = timezone.now() - timedelta(days=1)
 
 	# Filter records where the survey visit date is seven days or more in the past
 	under_accred_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(
 		is_deleted=False,
 		is_done=False,
-		survey_visit_date__lte=seven_days_ago
+		survey_visit_date__lte=one_days_ago
 	)
 
 	count = 0
