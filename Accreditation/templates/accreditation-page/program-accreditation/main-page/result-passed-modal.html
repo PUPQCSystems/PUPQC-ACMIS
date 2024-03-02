@@ -1,0 +1,170 @@
+{% load crispy_forms_tags %}
+
+<!-- Modal -->
+<div class="modal modal-blur fade" id="result-passed-modal-{{record.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header">
+				  <h1 class="modal-title">Carry out Accreditation for a Program</h1>
+				  <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}" aria-label="Close"></button>
+			</div>
+
+			<div class="modal-body">
+				<form method="POST" autocomplete="off" id="result-passed-form-{{ record.id }}">
+
+					<div class="row">
+						<div class="col-lg-7">
+							<div class="mb-3">
+								<label class="form-label">{{ passed_result_form.result_remarks.label }}</label>
+								<textarea name="result_remarks" cols="40" rows="10" class="form-control" maxlength="5000" id="id_result_remarks_{{ record.id }}"></textarea>
+							</div>
+						</div>
+
+						<div class="col-lg-5">
+
+							<label class="form-label required">Upload Certificate Here</label>
+						
+								<div class = "divide-y overflow-x">
+									<div class="row">
+										<input type="file" name="certificate_path" id="certification-path" multiple>
+									</div>
+									{% comment %} Uploaded Files
+									 {% for file in uploaded_files %}
+										<div class="row">
+										<a href="#"class="text-muted"> {{ file.file_name }}
+										</a>
+							 
+										</div>
+									{% endfor %} {% endcomment %}
+	
+								</div>
+				   
+					
+						</div>
+					</div>
+			
+
+					<div class="mb-3 row">
+						<h2>Validity Dates</h2>
+						<div class="col">
+							<label class="form-label required">From</label>
+							<input type="datetime-local" name="validity_date_from" class="form-control" required="" id="id_validity_date_from_{{ record.id }}">
+						</div>
+
+						<div class="col">
+							<label class="form-label required">To</label>
+							<input type="datetime-local" name="validity_date_to" class="form-control" required="" id="id_validity_date_to_{{ record.id }}">
+						</div>
+					</div>
+					
+
+				</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn me-auto" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">Close</button>
+						<button id="passed-button-{{ record.id }}" type="button" class="btn btn-primary">Save</button>
+					</div>
+
+				</form>
+		</div>
+	  </div>
+</div>
+
+{% block js_content  %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+		var accepted_file_types = [ 
+			'image/jpeg',
+			'image/png',
+			'image/gif',
+			'image/bmp',
+			'image/svg+xml',
+			'image/webp',
+			'application/pdf',
+			'application/msword',
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+			'application/vnd.ms-excel',
+			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			'application/vnd.ms-powerpoint',
+			'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+			]
+        var files = []
+        // Now acceptedFileTypes is a JavaScript array
+
+        FilePond.registerPlugin(FilePondPluginFileValidateSize);    //Register plugin to validate file size
+        FilePond.registerPlugin(FilePondPluginFileValidateType);    //Register plugin to validate file type
+        FilePond.registerPlugin(FilePondPluginImagePreview);
+        FilePond.setOptions({
+            allowMultiple:true,
+            maxFiles: 5,             //It sets the max file counts
+            maxFileSize: '100MB'      //It sets the accepted max storage size
+        })
+        const inputElement = document.querySelector('input[type="file"]');  //Convert input types that are file types into filepond
+        var pond = FilePond.create( inputElement, {
+            acceptedFileTypes:  accepted_file_types, // The lists are the accepted file types
+            onaddfile: (err, fileItem) => {
+                if (!err) {
+                files.push(fileItem.file)
+                }
+                console.log(files)
+            },
+            onremovefile: (err, fileItem) => {
+                const index = files.indexOf(fileItem.file)
+                if (index > -1) {
+                    files.splice(index, 1)
+                }
+                console.log(files)
+            }
+        } );
+
+		var formData = new FormData();
+        $(document).on('click', '#passed-button-'+{{ record.id }}, function(e) {
+            var url = "/accreditation/passed-result/"+{{ record.id }}+"/";
+            formData.append('length', files.length)
+            for (var i = 0; i < files.length; i++) {
+                formData.append('files' + i, files[i])
+            }
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+
+			// Combine formData and serializedData
+			formData.append('result_remarks', document.getElementById('id_result_remarks_'+{{ record.id }}).value);
+			formData.append('validity_date_from', document.getElementById('id_validity_date_from_'+{{ record.id }}).value);
+			formData.append('validity_date_to', document.getElementById('id_validity_date_to_'+{{ record.id }}).value);
+			
+
+			alert('Value: '+ document.getElementById('id_result_remarks').value);
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                success: function(response) {
+					location.reload();
+
+                },
+                error: function(error) {
+					if (error.responseJSON && error.responseJSON.error) {
+                        // Handle the other error message
+                        toastr.error(error.responseJSON.error);
+                    }
+                    // Check for the errors field in the JSON response
+                    else if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                    
+                }
+            })
+        })
+    })
+</script>  
+
+{% endblock js_content  %}

@@ -521,3 +521,80 @@ class MemberAssignedToArea_Form(forms.ModelForm):
     class Meta:
         model = user_assigned_to_area
         fields = ['area','is_member']
+
+
+# ---------------------------- [ ACCREDITATION RESULT FORMS ] ---------------------------- #
+
+class PassedResult_Form(forms.ModelForm):
+    validity_date_from = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}),
+                                                                       required=True,
+                                                                        error_messages={'required': "Please set the validity date 'from' before submitting the form."})
+    validity_date_to = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}), 
+                                                                     required=True,
+                                                                      error_messages={'required': "Please set the validity date 'to' before submitting the form."})
+
+    class Meta:
+        model = program_accreditation
+        fields = ('validity_date_from', 'validity_date_to', 'result_remarks')
+
+        widgets = {
+            'result_remarks': forms.Textarea(attrs={'required': False, 'class': 'form-control'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        validity_date_from = cleaned_data.get('validity_date_from')
+        validity_date_to = cleaned_data.get('validity_date_to')
+
+        if  validity_date_from and  validity_date_to:
+            # Check if  validity_date_from is equal to  validity_date_to
+            if  validity_date_from ==  validity_date_to:
+                raise ValidationError("Validity Date 'from' cannot be equal to the survey visit date. ")
+
+            # Check if  validity_date_from is after  validity_date_to
+            if  validity_date_from >  validity_date_to:
+                raise ValidationError("Validity Date 'from' cannot be after the survey visit date. ")
+
+            # Check if  validity_date_from is before the current date
+            if  validity_date_from < timezone.now():
+                raise ValidationError("Validity Date 'from' should be set in the future. ")
+
+        return cleaned_data
+
+class RevisitResult_Form(forms.ModelForm):
+    revisit_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}),
+                                                                       required=True,
+                                                                        error_messages={'required': "Please set the mock accreditation date beefore submitting the form."})
+
+    class Meta:
+        model = program_accreditation
+        fields = ('revisit_date', 'result_remarks')
+
+        widgets = {
+            'result_remarks': forms.Textarea(attrs={'required': False, 'class': 'form-control'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        revisit_date = cleaned_data.get('revisit_date')
+
+        if not revisit_date:
+            raise ValidationError("Please ensure that the survey revisit date is set before submitting the form.")
+
+        if revisit_date:
+            if revisit_date < timezone.now():
+                raise ValidationError("Revisit Date should be set in the future. ")
+
+        return cleaned_data
+    
+
+class FailedResult_Form(forms.ModelForm):
+    class Meta:
+        model = program_accreditation
+        fields = ('result_remarks',)
+        widgets = {
+            'result_remarks': forms.Textarea(attrs={'required': True, 'class': 'form-control'}),
+        }

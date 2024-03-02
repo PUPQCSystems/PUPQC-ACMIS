@@ -3,10 +3,12 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, QueryDict
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from Accreditation.forms import ProgramAccreditation_Form, ProgramAccreditation_UpdateForm
-from Accreditation.models import instrument, instrument_level, program_accreditation
+from Accreditation.forms import FailedResult_Form, PassedResult_Form, ProgramAccreditation_Form, ProgramAccreditation_UpdateForm, RevisitResult_Form
+from Accreditation.models import accreditation_certificates, instrument, instrument_level, program_accreditation
 from django.core.serializers import serialize
 from django.contrib.auth import authenticate
+from datetime import timedelta
+
 
 # Create your views here.
 
@@ -14,7 +16,12 @@ from django.contrib.auth import authenticate
 @permission_required("Accreditation.view_program_accreditation", raise_exception=True)
 def landing_page(request):
     #Getting the data from the API
+    passed_result_form = PassedResult_Form(request.POST or None)
+    revisit_result_form = RevisitResult_Form(request.POST or None)
+    failed_result_form = FailedResult_Form(request.POST or None)
     create_form = ProgramAccreditation_Form(request.POST or None)
+
+    certificates_records = accreditation_certificates.objects.select_related('accredited_program').filter(is_deleted= False) 
     records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
 
     # Initialize an empty list to store update forms for each record
@@ -27,7 +34,14 @@ def landing_page(request):
         modified_by = record.modified_by  # Get the user who modified the record
         details.append((record, update_form, created_by, modified_by))
         
-    context = { 'records': records, 'create_form': create_form, 'details': details}  #Getting all the data inside the type table and storing it to the context variable
+    context = { 'records': records, 
+               'create_form': create_form, 
+               'details': details,
+               'passed_result_form': passed_result_form,
+               'failed_result_form': failed_result_form,
+               'revisit_result_form': revisit_result_form,
+               'certificates_records':  certificates_records 
+               }  #Getting all the data inside the type table and storing it to the context variable
     return render(request, 'accreditation-page/program-accreditation/main-page/landing-page.html', context)
 
 @login_required
@@ -180,6 +194,149 @@ def destroy(request, pk):
     return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 
+# --------------------------------- [ACCREDITATION RESULT CODES] --------------------------------- #
+@login_required
+@permission_required("Accreditation.change_program_accreditation", raise_exception=True)
+@permission_required("Accreditation.add_program_accreditation", raise_exception=True)
+@permission_required("Accreditation.view_program_accreditation", raise_exception=True)
+@permission_required("Accreditation.delete_program_accreditation", raise_exception=True)
+def result_passed(request, pk):
+    # Retrieve the type object with the given primary key (pk)
+    try:
+        accreditation_record = program_accreditation.objects.get(id=pk)
+    except program_accreditation.DoesNotExist:
+        return JsonResponse({'errors': 'Program Accreditaion Record not found'}, status=404)
+
+    # Create an instance of the form with the type data
+    # update_form = Create_Bodies_Form(instance=type)
+    if request.method == 'POST':
+        # Process the form submission with updated data
+        passed_result_form = PassedResult_Form(request.POST or None, instance=accreditation_record)
+
+        if passed_result_form.is_valid():
+            length = request.POST.get('length')
+            length = int(length)
+            if length != 0:
+                                # Get the current datetime in UTC timezone
+                entry_result_at = accreditation_record.entry_result_at
+                current_datetime = timezone.now()
+                passed_result_form.instance.is_done = True
+                passed_result_form.instance.is_visited = True
+                passed_result_form.instance.entry_result_at = current_datetime
+
+                # Get the modified datetime from the record
+  
+
+                # Make entry_result_at timezone-aware if it's not already
+                # if entry_result_at.tzinfo is None:
+                #     entry_result_at = entry_result_at.replace(tzinfo=timezone.utc)
+
+                # Calculate the time difference
+                time_difference = current_datetime - entry_result_at
+
+                # Check if the time difference is less than or equal to 24 hours and if the date today is less than the revisit date
+                if time_difference <= timedelta(hours=24) and current_datetime < accreditation_record.revisit_date:
+                    passed_result_form.instance.revisit_date = None
+                    print(timedelta(hours=23))
+                    print(time_difference)
+                    print (current_datetime)
+                    print (entry_result_at)
 
 
+                passed_result_form.save()
 
+                for file_num in range(0, int(length)):
+                    print('File:', request.FILES.get(f'files{file_num}'))
+                    accreditation_certificates.objects.create(
+                        accredited_program_id = pk ,
+                        uploaded_by = request.user,
+                        certificate_name =  request.FILES.get(f'files{file_num}'), 
+                        certificate_path=request.FILES.get(f'files{file_num}')
+                        
+                    ) 
+                # Provide a success message as a JSON response
+                messages.success(request, f'The Accreditation Result is successfully posted!') 
+                return JsonResponse({"status": "success"}, status=200)
+            else:
+                return JsonResponse({'error': 'Please attach a file before submitting the form.'}, status=400)
+            
+
+
+        else:
+            # Return a validation error as a JSON response
+            return JsonResponse({'errors': passed_result_form.errors}, status=400)
+        
+
+@login_required
+@permission_required("Accreditation.change_program_accreditation", raise_exception=True)
+@permission_required("Accreditation.add_program_accreditation", raise_exception=True)
+@permission_required("Accreditation.view_program_accreditation", raise_exception=True)
+@permission_required("Accreditation.delete_program_accreditation", raise_exception=True)
+def result_revisit(request, pk):
+    # Retrieve the type object with the given primary key (pk)
+    try:
+        accreditation_record = program_accreditation.objects.get(id=pk)
+    except program_accreditation.DoesNotExist:
+        return JsonResponse({'errors': 'Program Accreditaion not found'}, status=404)
+
+    # Create an instance of the form with the type data
+    # update_form = Create_Bodies_Form(instance=type)
+    if request.method == 'POST':
+        # Process the form submission with updated data
+        revisit_result_form = RevisitResult_Form(request.POST or None, instance=accreditation_record)
+
+        if revisit_result_form.is_valid():
+            # Save the updated data to the database
+            revisit_result_form.instance.modified_by = request.user
+            revisit_result_form.instance.is_done = False
+            revisit_result_form.instance.is_failed = False
+            revisit_result_form.instance.is_visited = True
+            revisit_result_form.instance.validity_date_from = None
+            revisit_result_form.instance.validity_date_to = None
+            current_datetime = timezone.now()
+            revisit_result_form.instance.entry_result_at = current_datetime
+            revisit_result_form.save()
+
+            # Provide a success message as a JSON response
+            messages.success(request, f'The Accreditation Result is successfully posted!') 
+            return JsonResponse({"status": "success"}, status=200)
+
+        else:
+            # Return a validation error as a JSON response
+            return JsonResponse({'errors': revisit_result_form.errors}, status=400)
+        
+
+@login_required
+@permission_required("Accreditation.change_program_accreditation", raise_exception=True)
+@permission_required("Accreditation.add_program_accreditation", raise_exception=True)
+@permission_required("Accreditation.view_program_accreditation", raise_exception=True)
+@permission_required("Accreditation.delete_program_accreditation", raise_exception=True)
+def result_failed(request, pk):
+    # Retrieve the type object with the given primary key (pk)
+    try:
+        accreditation_record = program_accreditation.objects.get(id=pk)
+    except program_accreditation.DoesNotExist:
+        return JsonResponse({'errors': 'Program Accreditaion not found'}, status=404)
+
+    # Create an instance of the form with the type data
+    # update_form = Create_Bodies_Form(instance=type)
+    if request.method == 'POST':
+        # Process the form submission with updated data
+        failed_result_form = FailedResult_Form(request.POST or None, instance=accreditation_record)
+
+        if failed_result_form.is_valid():
+            # Save the updated data to the database
+            failed_result_form.instance.modified_by = request.user
+            failed_result_form.instance.is_failed = True
+            failed_result_form.instance.is_done = True
+            current_datetime = timezone.now()
+            failed_result_form.instance.entry_result_at = current_datetime
+            failed_result_form.save()
+
+            # Provide a success message as a JSON response
+            messages.success(request, f'The Accreditation Result is successfully posted!') 
+            return JsonResponse({"status": "success"}, status=200)
+
+        else:
+            # Return a validation error as a JSON response
+            return JsonResponse({'errors': failed_result_form.errors}, status=400)

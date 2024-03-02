@@ -46,18 +46,36 @@
 {% endif %}
 
 
+   
+{% endblock content %}
+
+{% block modal_content %}
     {% if perms.Accreditation.add_instrument_level_area %}
         {% include "accreditation-page/instrument-area/main-page/create-modal.html" %}
     {% endif %}
 
+    {% include "accreditation-page/instrument-area/main-page/result-modal.html" %}
+    {% include "accreditation-page/instrument-area/main-page/result-passed-modal.html" %}
+    {% include "accreditation-page/instrument-area/main-page/result-revisit-modal.html" %}
+    {% include "accreditation-page/instrument-area/main-page/result-failed-modal.html" %}
+{% endblock modal_content %}
+
+
+{% block js_content %}
     {% if perms.Accreditation.add_instrument_level_area or perms.Accreditation.change_instrument_level_area or  perms.Accreditation.delete_instrument_level_area %}
         {% include "accreditation-page/instrument-area/main-page/scripts.html" %}
     {% endif %}
+{% endblock js_content %}
 
+{% block css_content %}
     {% include "accreditation-page/instrument-area/main-page/styles.html" %}
+{% endblock css_content %}
 
-   
-{% endblock content %}
+
+
+
+
+
 
 
 

@@ -151,3 +151,117 @@
         })
     });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all the "Next" buttons
+        const nextButtons = document.querySelectorAll('.next-btn');
+
+        // Add event listener to each "Next" button
+        nextButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Get the parent modal of the clicked button
+                const parentModal = button.closest('.modal');
+                var id = $(this).data('id');   
+    
+                // Get the selected value from the parent modal's select element
+                const selectElement = parentModal.querySelector('.form-select');
+                const selectedValue = selectElement.value;
+
+                // Open the corresponding result modal based on the selected value
+                switch (selectedValue) {
+                    case 'passed':
+                        var passedModal = new bootstrap.Modal(document.getElementById('result-passed-modal-'+id));
+                        passedModal.show();
+                        break;
+                    case 'sfr':
+                        var revisitModal = new bootstrap.Modal(document.getElementById('result-revisit-modal-'+id));
+                        revisitModal.show();
+                        break;
+                    case 'failed':
+                        var failedModal = new bootstrap.Modal(document.getElementById('result-failed-modal-'+id));
+                        failedModal.show();
+                        break;
+                    default:
+                        // Do nothing
+                        break;
+                }
+            });
+        });
+    });
+</script>
+
+
+{% comment %} AJAX FOR POSTING REVISIT RESULT  {% endcomment %}
+<script>
+    $(document).ready(function(){
+        $(".revisit-button").click(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var serializedData = $("#result-revisit-form-"+id).serialize();
+            var url = "/accreditation/revisit-result/"+id+"/";
+
+
+            $.ajax({
+                url: url, 
+                data: serializedData,
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
+                type: "POST",
+                success: function(response) {
+                    location.reload();
+                    
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> 
+
+
+{% comment %} AJAX FOR POSTING FAILED RESULT  {% endcomment %}
+<script>
+    $(document).ready(function(){
+        $(".failed-button").click(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var serializedData = $("#result-failed-form-"+id).serialize();
+            var url = "/accreditation/failed-result/"+id+"/";
+
+            $.ajax({
+                url: url, 
+                data: serializedData,
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
+                type: "POST",
+                success: function(response) {
+                    location.reload();
+                    
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> 

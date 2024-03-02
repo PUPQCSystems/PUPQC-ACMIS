@@ -1,14 +1,46 @@
 
+{% load tz %}
+{% now "Y-m-d" as today %}
 <div class="card">
 	<div class="card-header">
 		<h3 class="card-title">Accreditation Status of {{accred_program.program.abbreviation}}</h3>
+
+		{% if accred_program.is_done == False and today > accred_program.survey_visit_date|date:"Y-m-d" and accred_program.revisit_date == None %}
+			<a href="#" class="btn btn-outline-info  ms-auto position-relative" data-bs-toggle="modal" data-bs-target="#result-modal">
+				Add Result
+				<span class="badge bg-green badge-notification badge-blink"></span>
+			</a>
+
+		{% elif today > accred_program.survey_visit_date|date:"Y-m-d" and accred_program.revisit_date %}
+			<a href="#" class="btn btn-outline-info  ms-auto position-relative" data-bs-toggle="modal" data-bs-target="#result-modal">
+				Modify Result
+				<span class="badge bg-green badge-notification badge-blink"></span>
+			</a>
+
+		{% elif today > accred_program.survey_visit_date|date:"Y-m-d" and accred_program.is_done == True%}
+		<a href="#" class="btn btn-outline-info  ms-auto position-relative" data-bs-toggle="modal" data-bs-target="#result-modal">
+			Modify Result
+			<span class="badge bg-green badge-notification badge-blink"></span>
+		</a>
+
+		  {% else %}
+			<a href="#" class="btn btn-outline-info  ms-auto position-relative disabled" data-bs-toggle="modal" data-bs-target="#result-modal">
+				Add Result2
+			</a>
+
+		{% endif %}
+
+
+
+
+		  
 	</div>
 	<div class="card-body">
 		<ul class="steps steps-green steps-counter my-4 ul-text" style="text">
 
 
-			{% now "F j, Y" as today %}
-			{% if today < accred_program.mock_accred_date|date:"F j, Y" %}
+
+			{% if today < accred_program.mock_accred_date|date:"Y-m-d" %}
 				<li class="step-item active">
 			{% else %}
 				<li class="step-item">
@@ -24,7 +56,7 @@
 				</ul>
 			</li>
 
-			{% if  today >= accred_program.mock_accred_date|date:"F j, Y" and today < accred_program.survey_visit_date|date:"F j, Y" %}
+			{% if  today >= accred_program.mock_accred_date|date:"Y-m-d" and today < accred_program.survey_visit_date|date:"Y-m-d" %}
 				<li class="step-item active">
 			{% else %}
 				<li class="step-item">
@@ -35,7 +67,7 @@
 				</ul>
 			</li>
  
-			{% if today == accred_program.survey_visit_date|date:"F j, Y" %}
+			{% if today == accred_program.survey_visit_date|date:"Y-m-d" %}
 				<li class="step-item active">
 			{% else %}
 				<li class="step-item">
@@ -48,10 +80,10 @@
 			</li>
 
 
-			{% if today > accred_program.survey_visit_date|date:"F j, Y" and accred_program.revisit_date == None %}
+			{% if today > accred_program.survey_visit_date|date:"Y-m-d" and accred_program.revisit_date == None %}
 				<li class="step-item active">
 
-            {% elif today < accred_program.revisit_date|date:"F j, Y" %}
+            {% elif today < accred_program.revisit_date|date:"Y-m-d" %}
                 <li class="step-item active">
 
 			{% else %}
@@ -60,15 +92,15 @@
 				<ul>
 					<li>Certification</li>
 
-					{% if accred_program.is_done == False and today > accred_program.survey_visit_date|date:"F j, Y" and accred_program.revisit_date == None%}
+					{% if accred_program.is_done == False and today > accred_program.survey_visit_date|date:"Y-m-d" and accred_program.revisit_date == None%}
 						<span class="badge badge-outline text-blue">Awaiting Result</span>
 
-					{% elif accred_program.is_done == False and accred_program.revisit_date %}
+					{% elif accred_program.revisit_date %}
 						<li class="text-blue">
 							<span class="badge badge-outline text-orange">Survey Revisit</span>
 						</li>
 
-					{% elif accred_program.is_done == True %}
+					{% elif accred_program.is_done == True and accred_program.validity_date_from and accred_program.validity_date_to and accred_program.revisit_date == None %}
 						<li>
 							<span class="badge badge-outline text-green">{{ accred_program.instrument_level.level}} Certified </span>
 						</li>
@@ -80,7 +112,7 @@
 
 
 			{% if accred_program.revisit_date %}
-                {% if today == accred_program.revisit_date|date:"F j, Y" %}
+                {% if today <= accred_program.revisit_date|date:"Y-m-d" %}
                     <li class="step-item active">
                 {% else %}
                     <li class="step-item">
@@ -88,7 +120,7 @@
 
                         <ul>
                             <li>Survery Revisit</li>
-                            {% if today  >= accred_program.revisit_date|date:"F j, Y" %}
+                            {% if today  >= accred_program.revisit_date|date:"Y-m-d" %}
                                 <span class="badge badge-outline text-blue">{{ accred_program.revisit_date|date:"F j, Y" }}</span>
 
                             {% else %}
@@ -100,7 +132,7 @@
                     </li>
 
 
-                {% if today > accred_program.revisit_date|date:"F j, Y" %}
+                {% if today > accred_program.revisit_date|date:"Y-m-d" %}
                     <li class="step-item active">
                 {% else %}
                     <li class="step-item">
@@ -108,15 +140,15 @@
 					<ul>
 						<li>Certification</li>
 	
-						{% if today > accred_program.revisit_date|date:"F j, Y" and accred_program.is_done == False and accred_program.is_failed == False %}
+						{% if today > accred_program.revisit_date|date:"Y-m-d" and accred_program.is_done == False and accred_program.is_failed == False %}
 							<span class="badge badge-outline text-blue">Awaiting Result</span>
 	
-						{% elif accred_program.is_done == True and accred_program.is_failed == False %}
+						{% elif accred_program.is_done == True and accred_program.is_failed == False and accred_program.validity_date_from and accred_program.validity_date_to%}
 							<li class="text-blue">
 								<span class="badge badge-outline text-green">{{ accred_program.instrument_level.level}} Certified</span>
 							</li>
 	
-						{% elif accred_program.is_done == False and accred_program.is_failed == True %}
+						{% elif accred_program.is_done == True and accred_program.is_failed == True and accred_program.validity_date_from and accred_program.validity_date_to %}
 							<li>
 								<span class="badge badge-outline text-red"> Failed </span>
 							</li>

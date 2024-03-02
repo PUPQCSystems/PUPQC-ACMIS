@@ -26,6 +26,11 @@ urlpatterns = [
     path("archive-page/", views_accreditation.archive_landing, name='accreditation-archive-page'),
     path("archive-page/restore/<str:pk>/", views_accreditation.restore, name='accreditation-restore'),
     path("archive-page/destroy/<str:pk>/", views_accreditation.destroy, name='accreditation-destroy'),
+    path("passed-result/<str:pk>/", views_accreditation.result_passed, name='accreditation-result-passed'),
+    path("failed-result/<str:pk>/", views_accreditation.result_failed, name='accreditation-result-failed'),
+    path("revisit-result/<str:pk>/", views_accreditation.result_revisit, name='accreditation-result-revisit'),
+
+
 
     path("type/", views_type.landing_page, name='type-landing'),
     path("type/create/", views_type.create_type, name='type-create'),

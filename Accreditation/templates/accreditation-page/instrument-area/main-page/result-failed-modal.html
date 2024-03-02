@@ -1,0 +1,33 @@
+{% load crispy_forms_tags %}
+
+<!-- Modal -->
+<div class="modal modal-blur fade" id="result-failed-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      	<div class="modal-content">
+        	<div class="modal-header">
+          		<h1 class="modal-title">Carry out Accreditation for a Program</h1>
+          		<button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#result-modal" aria-label="Close"></button>
+        	</div>
+	
+        	<div class="modal-body">
+
+				<form method="POST" autocomplete="off" id="result-failed-form">
+					{% csrf_token %}
+
+					<div class="mb-3">
+						<label class="form-label required">Result Remarks</label>
+						{{ failed_result_form.result_remarks }}
+					</div>
+
+			</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn me-auto" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#result-modal">Close</button>
+						<button type="button" class="btn btn-primary failed-button" data-id="{{ accred_program.id }}">Save</button>
+					</div>
+
+				</form>
+    	</div>
+  	</div>
+</div>
+  

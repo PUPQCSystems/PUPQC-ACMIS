@@ -7,9 +7,9 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import Group, Permission
 from Accreditation.models_views import UserGroupView
 from Users.models import CustomUser, activity_log
-from .models import component_upload_bin, instrument, instrument_level, instrument_level_area, level_area_parameter, parameter_components, program_accreditation, user_assigned_to_area #Import the model for data retieving
+from .models import accreditation_certificates, component_upload_bin, instrument, instrument_level, instrument_level_area, level_area_parameter, parameter_components, program_accreditation, user_assigned_to_area #Import the model for data retieving
 from Accreditation.serializers import InstrumentSerializer
-from .forms import ChairManAssignedToArea_Form, CoChairUserAssignedToArea_Form, Create_Instrument_Form, Create_InstrumentLevel_Form, Create_LevelArea_Form, LevelAreaFormSet, MemberAssignedToArea_Form
+from .forms import ChairManAssignedToArea_Form, CoChairUserAssignedToArea_Form, Create_Instrument_Form, Create_InstrumentLevel_Form, Create_LevelArea_Form, FailedResult_Form, LevelAreaFormSet, MemberAssignedToArea_Form, PassedResult_Form, RevisitResult_Form
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required, permission_required
@@ -22,8 +22,12 @@ def landing_page(request, pk, accred_pk):
     chairman_form =ChairManAssignedToArea_Form(request.POST or None)
     cochairman_form = CoChairUserAssignedToArea_Form(request.POST or None)
     member_form = MemberAssignedToArea_Form(request.POST or None)
+    passed_result_form = PassedResult_Form(request.POST or None)
+    revisit_result_form = RevisitResult_Form(request.POST or None)
+    failed_result_form = FailedResult_Form(request.POST or None)
     formset  = LevelAreaFormSet(queryset=instrument_level_area.objects.none())
     # records = instrument_level_area.objects.select_related('instrument_level','area').filter(instrument_level=pk, is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
+    certificates_records = accreditation_certificates.objects.select_related('accredited_program').filter(is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
     records = instrument_level_area.objects.select_related('instrument_level', 'area').filter(instrument_level=pk, is_deleted=False)
 
 
@@ -44,6 +48,8 @@ def landing_page(request, pk, accred_pk):
         modified_by = record.modified_by  # Get the user who modified the record
         details.append((record, user_counts, assigned_user ,update_form, created_by, modified_by))
 
+    print(accred_program.revisit_date)
+
     context = { 'records': records,
                 'details': details, 
                 'pk': pk,   
@@ -52,7 +58,11 @@ def landing_page(request, pk, accred_pk):
                 'accred_program': accred_program,
                 'chairman_form': chairman_form,
                 'cochairman_form': cochairman_form,
-                'member_form': member_form
+                'member_form': member_form,
+                'passed_result_form': passed_result_form,
+                'failed_result_form': failed_result_form,
+                'revisit_result_form': revisit_result_form,
+                'certificates_records': certificates_records
                 }  #Getting all the data inside the type table and storing it to the context variable
 
     return render(request, 'accreditation-page/instrument-area/main-page/landing-page.html', context)

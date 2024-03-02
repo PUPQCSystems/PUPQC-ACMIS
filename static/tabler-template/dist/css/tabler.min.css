@@ -4638,6 +4638,23 @@ fieldset:disabled .btn {
   opacity: 1
 }
 
+.dropdown-divider-top {
+  height: 0;
+  /* margin: 0px; */
+  overflow: hidden;
+  border-top: 1px solid var(--tblr-dropdown-divider-bg);
+  opacity: 1
+}
+
+.dropdown-divider-bottom {
+  height: 0;
+  /* margin: 0px; */
+  overflow: hidden;
+  border-top: 1px solid var(--tblr-dropdown-divider-bg);
+  opacity: 1
+}
+
+
 .dropdown-item {
   display: block;
   width: 100%;

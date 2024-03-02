@@ -30,17 +30,22 @@
 		{% include "accreditation-page/program-accreditation/main-page/create-modal.html" %}
 	{% endif %}
 
+{% endblock content %}
 
+{% block js_content  %}
 	{% if perms.Accreditation.add_program_accreditation or perms.Accreditation.change_program_accreditation or perms.Accreditation.delete_program_accreditation %}
 		{% include "accreditation-page/program-accreditation/main-page/scripts.html" %}
 	{% endif %}
+{% endblock js_content %}
 
+{% block css_content %}
 	{% if perms.Accreditation.view_program_accreditation %}
 		{% include "accreditation-page/program-accreditation/main-page/styles.html" %}
 	{% endif %}
-				
-	 
-{% endblock content %}
+{% endblock  %}
+
+
+
 
 
 

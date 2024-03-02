@@ -31,6 +31,42 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
+
+                                    {% if user.is_superuser == True and record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None %}
+                                        <button class="dropdown-item position-relative text-green" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
+                                            Add Result 
+                                            {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
+                                            <span class="badge bg-green ms-auto badge-blink" style="font-size: 10px">Active</span>
+                                        </button>
+                                        <div class="dropdown-divider-top"></div>
+
+                                    {% elif user.is_superuser == True and record.is_done == True and record.is_failed == True %}
+                                        <button class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
+                                            Change Result 
+                                            {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
+                                            <span class="badge bg-blue ms-auto badge-blink" style="font-size: 10px">Active</span>
+                                        </button>
+                                        <div class="dropdown-divider-top"></div>
+
+                                    {% elif record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date %}
+                                        <button class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
+                                            Change Result 
+                                            {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
+                                            <span class="badge bg-blue ms-auto badge-blink" style="font-size: 10px">Active</span>
+                                        </button>
+                                        <div class="dropdown-divider-top"></div>
+
+
+                                    {% elif user.is_superuser == True and record.is_done == False and today < record.survey_visit_date|date:"Y-m-d" and record.revisit_date  == None %}
+                                        <button class="dropdown-item position-relative" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}" disabled>
+                                            Add Result
+                                            <span class="badge bg-secondary ms-auto" style="font-size: 10px">Inactive</span>
+                                        </button>
+                                        <div class="dropdown-divider-top"></div>
+
+                                    {% endif %}
+
+
                                     {% if perms.Accreditation.view_program_accreditation %}
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
                                     {% endif %}
@@ -78,13 +114,32 @@
             </div>
         </div>
 
-        {% if perms.Accreditation.view_program_accreditation %}
-            {% include "accreditation-page/program-accreditation/main-page/view-modal.html" %}
-        {% endif %}
+        {% block modal_content %}
 
-        {% if perms.Accreditation.change_program_accreditation %}
-            {% include "accreditation-page/program-accreditation/main-page/edit-modal.html" %}
-        {% endif %}
+            {% if perms.Accreditation.view_program_accreditation %}
+                {% include "accreditation-page/program-accreditation/main-page/view-modal.html" %}
+            {% endif %}
+
+            {% if perms.Accreditation.change_program_accreditation %}
+                {% include "accreditation-page/program-accreditation/main-page/edit-modal.html" %}
+            {% endif %}
+
+            {% if user.is_superuser == True and record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-passed-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-failed-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-revisit-modal.html" %}
+
+            {% elif user.is_superuser == True and record.is_done == True and record.is_failed == True %}
+                {% include "accreditation-page/program-accreditation/main-page/result-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-passed-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-failed-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-revisit-modal.html" %}
+            {% endif %}
+
+
+        {% endblock modal_content %}
+        
 
     {% endfor %}
 </div>

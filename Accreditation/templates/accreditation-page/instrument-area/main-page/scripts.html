@@ -241,4 +241,211 @@
     });
 </script> 
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all the "Next" buttons
+        const nextButtons = document.querySelectorAll('.next-btn');
+
+        // Add event listener to each "Next" button
+        nextButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Get the parent modal of the clicked button
+                const parentModal = button.closest('.modal');
+                var id = $(this).data('id');   
     
+                // Get the selected value from the parent modal's select element
+                const selectElement = parentModal.querySelector('.form-select');
+                const selectedValue = selectElement.value;
+
+                // Open the corresponding result modal based on the selected value
+                switch (selectedValue) {
+                    case 'passed':
+                        var passedModal = new bootstrap.Modal(document.getElementById('result-passed-modal'));
+                        passedModal.show();
+                        break;
+                    case 'sfr':
+                        var revisitModal = new bootstrap.Modal(document.getElementById('result-revisit-modal'));
+                        revisitModal.show();
+                        break;
+                    case 'failed':
+                        var failedModal = new bootstrap.Modal(document.getElementById('result-failed-modal'));
+                        failedModal.show();
+                        break;
+                    default:
+                        // Do nothing
+                        break;
+                }
+            });
+        });
+    });
+</script>
+
+{% comment %} AJAX FOR POSTING REVISIT RESULT  {% endcomment %}
+<script>
+    $(document).ready(function(){
+        $(".revisit-button").click(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var serializedData = $("#result-revisit-form").serialize();
+            var url = "/accreditation/revisit-result/"+id+"/";
+
+
+            $.ajax({
+                url: url, 
+                data: serializedData,
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
+                type: "POST",
+                success: function(response) {
+                    location.reload();
+                    
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> 
+
+
+{% comment %} AJAX FOR POSTING FAILED RESULT  {% endcomment %}
+<script>
+    $(document).ready(function(){
+        $(".failed-button").click(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var serializedData = $("#result-failed-form").serialize();
+            var url = "/accreditation/failed-result/"+id+"/";
+
+            $.ajax({
+                url: url, 
+                data: serializedData,
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
+                type: "POST",
+                success: function(response) {
+                    location.reload();
+                    
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> 
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var accepted_file_types = [ 
+            'image/jpeg',
+            'image/png',
+            'image/gif',
+            'image/bmp',
+            'image/svg+xml',
+            'image/webp',
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+            ]
+        var files = []
+        // Now acceptedFileTypes is a JavaScript array
+
+        FilePond.registerPlugin(FilePondPluginFileValidateSize);    //Register plugin to validate file size
+        FilePond.registerPlugin(FilePondPluginFileValidateType);    //Register plugin to validate file type
+        FilePond.registerPlugin(FilePondPluginImagePreview);
+        FilePond.setOptions({
+            allowMultiple:true,
+            maxFiles: 5,             //It sets the max file counts
+            maxFileSize: '100MB'      //It sets the accepted max storage size
+        })
+        const inputElement = document.querySelector('input[type="file"]');  //Convert input types that are file types into filepond
+        var pond = FilePond.create( inputElement, {
+            acceptedFileTypes:  accepted_file_types, // The lists are the accepted file types
+            onaddfile: (err, fileItem) => {
+                if (!err) {
+                files.push(fileItem.file)
+                }
+                console.log(files)
+            },
+            onremovefile: (err, fileItem) => {
+                const index = files.indexOf(fileItem.file)
+                if (index > -1) {
+                    files.splice(index, 1)
+                }
+                console.log(files)
+            }
+        } );
+
+        var formData = new FormData();
+        $(document).on('click', '#passed-button', function(e) {
+            var id = $(this).data('id');
+            var url = "/accreditation/passed-result/"+id+"/";
+            formData.append('length', files.length)
+            for (var i = 0; i < files.length; i++) {
+                formData.append('files' + i, files[i])
+            }
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+
+            // Combine formData and serializedData
+            formData.append('result_remarks', document.getElementById('id_result_remarks').value);
+            formData.append('validity_date_from', document.getElementById('id_validity_date_from').value);
+            formData.append('validity_date_to', document.getElementById('id_validity_date_to').value);
+            
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                success: function(response) {
+                    location.reload();
+
+                },
+                error: function(error) {
+                    if (error.responseJSON && error.responseJSON.error) {
+                        // Handle the other error message
+                        toastr.error(error.responseJSON.error);
+                    }
+                    // Check for the errors field in the JSON response
+                    else if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                    
+                }
+            })
+        })
+    })
+</script>  

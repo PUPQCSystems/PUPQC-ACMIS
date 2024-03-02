@@ -233,6 +233,7 @@ class program_accreditation(models.Model):
     is_failed = models.BooleanField(default=False)
     result_remarks =  models.CharField(max_length=5000, null=True, blank=True)
     status = models.CharField(max_length=20, null=True, blank=True)
+    entry_result_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     validity_date_from = models.DateTimeField(auto_now=False, null=True, blank=True)
     validity_date_to = models.DateTimeField(auto_now=False, null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_program_accreditation', null=True, blank=True)
@@ -247,8 +248,8 @@ class program_accreditation(models.Model):
 
 class accreditation_certificates(models.Model):
     accredited_program = models.ForeignKey(program_accreditation, related_name='accredited_program_certificate', on_delete=models.CASCADE, null=True, blank=True)
-    certificate_path = models.FileField(upload_to = 'accreditation-certifacates/')
-    certificate_name = models.CharField(max_length=100, null=True, blank=True)
+    certificate_path = models.FileField(upload_to = 'accreditation-certifacates/', max_length=300)
+    certificate_name = models.CharField(max_length=300, null=True, blank=True)
     description = models.CharField(max_length=5000, null=True, blank=True)
     uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_accreditation_certificate', null=True, blank=True)
     uploaded_at = models.DateTimeField(default=timezone.now)
