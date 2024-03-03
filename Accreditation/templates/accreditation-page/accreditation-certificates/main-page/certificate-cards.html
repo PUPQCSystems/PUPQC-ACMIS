@@ -1,0 +1,39 @@
+<div class="row row-cards">
+
+	{% if records %}
+	<!-- For loop here -->
+	{% for record in records  %}
+		<div class="col-sm-6 col-lg-3">
+			<div class="card card-sm">
+				<div class="card-body">
+				  <h3 class="card-title">{{ record.certificate_name }}</h3>
+				  <div class="ratio ratio-16x9">
+					<img src="./static/projects/dashboard-3.png" class="rounded object-cover" alt="Code HTML email template for welcome email">
+				  </div>
+				</div>
+			  </div>
+		</div>
+
+	<!-- END of For Loop -->
+	{% endfor %}
+
+	{% else %}
+		<div class="empty">
+			<div class="empty-header">0 records</div>
+			<p class="empty-title">Oops… It seems like there are no records in this page. </p>
+			<p class="empty-subtitle text-muted">
+			You can create a record if you like. Just click the 'create' button and save the details.
+			</p>
+			<div class="empty-action">
+				<a href="{% url "dashboards:dashboard-landing" %}" class="btn btn-primary">
+					<!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
+					<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l14 0"></path><path d="M5 12l6 6"></path><path d="M5 12l6 -6"></path></svg>
+					Take me home
+				</a>
+			</div>
+		</div>
+	{% endif %}
+</div>
+
+
+

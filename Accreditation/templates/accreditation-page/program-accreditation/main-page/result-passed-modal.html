@@ -16,7 +16,7 @@
 						<div class="col-lg-7">
 							<div class="mb-3">
 								<label class="form-label">{{ passed_result_form.result_remarks.label }}</label>
-								<textarea name="result_remarks" cols="40" rows="10" class="form-control" maxlength="5000" id="id_result_remarks_{{ record.id }}"></textarea>
+								<textarea name="result_remarks" cols="40" rows="12" class="form-control" maxlength="5000" id="id_result_remarks_{{ record.id }}"></textarea>
 							</div>
 						</div>
 
@@ -24,18 +24,26 @@
 
 							<label class="form-label required">Upload Certificate Here</label>
 						
-								<div class = "divide-y overflow-x">
+								<div class = "" >
 									<div class="row">
 										<input type="file" name="certificate_path" id="certification-path" multiple>
 									</div>
-									{% comment %} Uploaded Files
-									 {% for file in uploaded_files %}
-										<div class="row">
-										<a href="#"class="text-muted"> {{ file.file_name }}
-										</a>
-							 
-										</div>
-									{% endfor %} {% endcomment %}
+
+									<div class="divide-y scrollable" style="height: 10rem">
+
+										{% for file in certificates_records %}
+											{% if file.accredited_program_id == record.id %}
+												<div class="row">
+													<div class="col">
+														<a href="#" class="text-muted" style="font-size: 10px">{{ file.certificate_name }}</a>
+													</div>
+													{% comment %} <div class="col-auto">
+														<span class="badge bg-red badge-pill"></span>
+													</div> {% endcomment %}
+												</div>
+											{% endif %}
+										{% endfor %} 
+									</div>
 	
 								</div>
 				   

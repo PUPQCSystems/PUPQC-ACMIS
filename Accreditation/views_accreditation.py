@@ -340,3 +340,24 @@ def result_failed(request, pk):
         else:
             # Return a validation error as a JSON response
             return JsonResponse({'errors': failed_result_form.errors}, status=400)
+        
+
+@login_required
+@permission_required("Accreditation.view_program_accreditation", raise_exception=True)
+def result_page(request, pk):
+    #Getting the data from the API
+    passed_result_form = PassedResult_Form(request.POST or None)
+    revisit_result_form = RevisitResult_Form(request.POST or None)
+    failed_result_form = FailedResult_Form(request.POST or None)
+
+    accreditation_record = program_accreditation.objects.get(id=pk)
+    certificates_records = accreditation_certificates.objects.select_related('accredited_program').filter( accredited_program_id=pk, is_deleted= False) 
+        
+    context = { 
+               'passed_result_form': passed_result_form,
+               'failed_result_form': failed_result_form,
+               'revisit_result_form': revisit_result_form,
+               'records':  certificates_records,
+               'accred_program': accreditation_record
+               }  #Getting all the data inside the type table and storing it to the context variable
+    return render(request, 'accreditation-page/accreditation-certificates/main-page/landing-page.html', context)

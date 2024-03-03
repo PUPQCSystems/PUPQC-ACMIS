@@ -31,6 +31,8 @@ urlpatterns = [
     path("revisit-result/<str:pk>/", views_accreditation.result_revisit, name='accreditation-result-revisit'),
 
 
+    path("result-page/<str:pk>/", views_accreditation.result_page, name='accreditation-result-page'),
+
 
     path("type/", views_type.landing_page, name='type-landing'),
     path("type/create/", views_type.create_type, name='type-create'),

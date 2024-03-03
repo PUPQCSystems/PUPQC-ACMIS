@@ -3,7 +3,7 @@
 
 <!-- PAGE TITLE FOR THIS PAGE -->
 {% block page-title %}
-    Parameter Components Page
+    Accreditation Certificates 
 {% endblock page-title %}
 
 
@@ -18,12 +18,13 @@
 
 {% block content %}
     <!-- LEVEL CARDS -->
-    {% include "accreditation-component/main-page/component-cards.html" %}
+    <div class="row">
+    {% include "accreditation-page/accreditation-certificates/main-page/info-card.html" %}
+    {% include "accreditation-page/accreditation-certificates/main-page/certificate-cards.html" %}
+    </div>
   
-    <!-- MODALS-->
-    {% include "accreditation-component/main-page/create-modal.html" %}
 
     <!-- scripts -->
-    {% include "accreditation-component/main-page/scripts.html" %}
+    {% include "accreditation-page/accreditation-certificates/main-page/scripts.html" %}
 
 {% endblock content %}

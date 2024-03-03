@@ -16,29 +16,33 @@
 						<div class="col-lg-7">
 							<div class="mb-3">
 								<label class="form-label">{{ passed_result_form.result_remarks.label }}</label>
-								<textarea name="result_remarks" cols="40" rows="11" class="form-control" maxlength="5000" id="id_result_remarks"></textarea>
+								<textarea name="result_remarks" cols="40" rows="12" class="form-control" maxlength="5000" id="id_result_remarks"></textarea>
 							</div>
 						</div>
 
 						<div class="col-lg-5">
-
 							<label class="form-label required">Upload Certificate Here</label>
 						
-								<div class = "divide-y scrollable" style="height: 15rem">
+								<div class = "" >
 									<div class="row">
 										<input type="file" name="certificate_path" id="certification-path" multiple>
 									</div>
 
-									 {% for file in certificates_records %}
-									 <div class="row">
-										<div class="col">
-											<a href="#" class="text-muted" style="font-size: 10px">{{ file.certificate_name }}</a>
-										</div>
-										{% comment %} <div class="col-auto">
-											<span class="badge bg-red badge-pill"></span>
-										</div> {% endcomment %}
+									<div class="divide-y scrollable" style="height: 10rem">
+
+										{% for file in certificates_records %}
+											{% if file.accredited_program_id == accred_program.id %}
+												<div class="row">
+													<div class="col">
+														<a href="#" class="text-muted" style="font-size: 10px">{{ file.certificate_name }}</a>
+													</div>
+													{% comment %} <div class="col-auto">
+														<span class="badge bg-red badge-pill"></span>
+													</div> {% endcomment %}
+												</div>
+											{% endif %}
+										{% endfor %} 
 									</div>
-									{% endfor %} 
 	
 								</div>
 				   
