@@ -351,7 +351,7 @@ def result_page(request, pk):
     failed_result_form = FailedResult_Form(request.POST or None)
 
     accreditation_record = program_accreditation.objects.get(id=pk)
-    certificates_records = accreditation_certificates.objects.select_related('accredited_program').filter( accredited_program_id=pk, is_deleted= False) 
+    certificates_records = accreditation_certificates.objects.select_related('accredited_program').filter( accredited_program_id=pk, is_deleted= False)
         
     context = { 
                'passed_result_form': passed_result_form,
