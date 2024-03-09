@@ -1,4 +1,5 @@
 <!-- Modal -->
+{% now "Y-m-d" as today %}
 <div class="modal modal-blur fade" id="result-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       	<div class="modal-content">
@@ -14,7 +15,9 @@
 					  <option selected>Open this select menu</option>
 					  <option value="passed">Passed</option>
 					  <option value="sfr">Subject for Revisit</option>
-					  <option value="failed">Failed</option>
+						{% if today > accred_program.revisit_date|date:"Y-m-d" %}
+							<option value="failed">Failed</option>
+						{% endif %}
 					</select>
 					<label for="floatingSelect">Select a Result</label>
 				  </div>

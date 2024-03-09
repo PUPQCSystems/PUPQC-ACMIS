@@ -15,8 +15,8 @@
 					<div class="row">
 						<div class="col-lg-7">
 							<div class="mb-3">
-								<label class="form-label">{{ passed_result_form.result_remarks.label }}</label>
-								<textarea name="result_remarks" cols="40" rows="12" class="form-control" maxlength="5000" id="id_result_remarks_{{ record.id }}"></textarea>
+								<label class="form-label">{{ remarks_result_form.remarks.label }}</label>
+								<textarea name="remarks" cols="40" rows="12" class="form-control" maxlength="5000" id="id_remarks_{{ record.id }}"></textarea>
 							</div>
 						</div>
 
@@ -136,7 +136,7 @@
             formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
 
 			// Combine formData and serializedData
-			formData.append('result_remarks', document.getElementById('id_result_remarks_'+{{ record.id }}).value);
+			formData.append('remarks', document.getElementById('id_remarks_'+{{ record.id }}).value);
 			formData.append('validity_date_from', document.getElementById('id_validity_date_from_'+{{ record.id }}).value);
 			formData.append('validity_date_to', document.getElementById('id_validity_date_to_'+{{ record.id }}).value);
 			

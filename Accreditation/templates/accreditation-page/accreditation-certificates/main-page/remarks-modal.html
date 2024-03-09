@@ -1,0 +1,34 @@
+<!-- Modal -->
+{% now "Y-m-d" as today %}
+<div class="modal modal-blur fade" id="remarks-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      	<div class="modal-content">
+        	<div class="modal-header">
+				<h1 class="modal-title">Remarks</h1>
+          		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        	</div>
+	
+        	<div class="modal-body ">
+
+				{% for remark in remarks_records %}
+					{% if forloop.counter == 1 %}
+						<div class="hr-text">Survey Visit Remarks ({{ remark.created_at|date:"F j, Y" }})</div>
+						<p>{{ remark.remarks }}</p>
+
+					{% elif forloop.counter == 2 %}
+						<div class="hr-text">Final Result Remarks ({{ accred_program.status }} - {{ remark.created_at|date:"F j, Y" }})</div>
+						<p>{{ remark.remarks }}</p>
+
+					{% endif %}
+				{% endfor %}
+
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+			</div>
+
+    	</div>
+  	</div>
+</div>
+  

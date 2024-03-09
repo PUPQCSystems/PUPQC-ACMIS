@@ -1,113 +1,94 @@
+{% now "Y-m-d" as today %}
 <div class="row row-cards">
-    <div class="card">
-        <div class="card-status-top bg-cyan"></div>
-        <div class="card-header">
-            <h3 class="card-title">Program Accreditation Info</h3>
-        </div>
-        <div class="card-body">
-            <div class="datagrid">
+    <div class="col-sm-12 col-lg-8">
+        <div class="card">
+            <div class="card-status-top bg-cyan"></div>
+            <div class="card-header">
+                <h3 class="card-title">Results</h3>
+            </div>
+            <div class="card-body">
 
-
-                    <div class="datagrid-item">
-                        <div class="datagrid-title">Program</div>
-                        <div class="datagrid-content">{{ accred_program.program.program_name }}</div>
-                    </div>
-
-                    <div class="datagrid-item">
-                        <div class="datagrid-title">Accreditation Level</div>
-                        <div class="datagrid-content">Applying for {{ accred_program.instrument_level.level}}</div>
-                    </div>
-
-                    <div class="datagrid-item">
-                        <div class="datagrid-title">Accreditation Instrument</div>
-                        <div class="datagrid-content"> {{accred_program.instrument_level}}</div>
-                    </div>
-
-
-
-                <div class="datagrid-item">
-                    <div class="datagrid-title">Mock Accreditation Date</div>
-                    <div class="datagrid-content"> {{ accred_program.mock_accred_date|date:"F j, Y g:i A" }}</div>
-                </div>
-
-                <div class="datagrid-item">
-                    <div class="datagrid-title">Date of Actual Survey</div>
-                    <div class="datagrid-content"> {{ accred_program.survey_visit_date|date:"F j, Y g:i A" }}</div>
-                </div>
-
-                <div class="datagrid-item">
-                    <div class="datagrid-title">status</div>
-                    <div class="datagrid-content">
-
-                        {% if accred_program.status == "ONGOING"  %}
-                            <span class="status status-blue">
-                                {{accred_program.status}}
-                            </span>
-
-                        {% elif   accred_program.status == "DONE" %}
-                            <span class="status status-green">
-                                {{accred_program.status}}
-                            </span>
-
-                        {% endif %}
+                <div class="row">
+                    <div class="col-6">
+                        <p class="h3">Accreditation Result</p>
                         
                     </div>
-                </div>
 
-                <div class="datagrid-item">
-                    <div class="datagrid-title">Created by</div>
-                    <div class="datagrid-content">
-                        <div class="d-flex align-items-center">
-
-                            {% if accred_program.created_by.profile_pic %}
-                                <span class="avatar avatar-xs me-2 rounded" style="background-image: url(./static/avatars/000m.jpg)"></span>
-                            
-                            {% else %}
-                                <span class="avatar avatar-xs me-2 rounded">{{ accred_program.created_by.first_name|first|default:'' }} {{ accred_program.created_by.last_name|first|default:'' }}</span>
-        
-                            {% endif %}
-                            {{ accred_program.created_by.first_name}} {{ accred_program.created_by.last_name }}
-
-
-
-                        </div>
+                    <div class="col-6 text-right">
+                        <p class="">{{ accred_program.status }}</p>
                     </div>
                 </div>
 
-                <div class="datagrid-item">
-                    <div class="datagrid-title">Created at</div>
-                    <div class="datagrid-content">{{accred_program.created_at|date:"F j, Y g:i A"}}</div>
-                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="h3">Revisit Date</p>
+                    </div>
 
-                <div class="datagrid-item">
-                    <div class="datagrid-title">Modified by</div>
-                    <div class="datagrid-content">
-                        <div class="d-flex align-items-center">
-
-                            {% if accred_program.modified_by.profile_pic %}
-                                <span class="avatar avatar-xs me-2 rounded" style="background-image: url(./static/avatars/000m.jpg)"></span>
-                            
-                            {% else %}
-                                <span class="avatar avatar-xs me-2 rounded">{{ accred_program.modified_by.first_name|first|default:'' }} {{ accred_program.modified_by.last_name|first|default:'' }}</span>
-        
-                            {% endif %}
-                            {{ accred_program.modified_by.first_name}} {{ accred_program.modified_by.last_name }}
-
-                        </div>
+                    <div class="col-6 text-right">
+                        <p class="">{{ accred_program.revisit_date }}</p>
                     </div>
                 </div>
 
-                <div class="datagrid-item">
-                    <div class="datagrid-title">Last Modified</div>
-                    <div class="datagrid-content">{{accred_program.modified_at|date:"F j, Y g:i A"}}</div>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="h3">Revisit Status</p>
+                    </div>
+
+                    <div class="col-6 text-right">
+                        <p class="">
+                            {% if accred_program.revisit_date|date:"Y-m-d" == today %}
+                                Ongoing
+
+                            {% elif today > accred_program.revisit_date|date:"Y-m-d" %}
+                                Done
+
+                            {% elif today < accred_program.revisit_date|date:"Y-m-d" %}
+                                Not Started
+
+                            {% endif %}
+                        </p>
+                    </div>
                 </div>
 
-                <div class="datagrid-item">
-                    <div class="datagrid-title">Description</div>
-                    <div class="datagrid-content">{{accred_program.description}}</div>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="h3 position-relative">Result Remarks
+                            <span class="badge bg-green ms-2">{{ remarks_counts }}</span>
+                        </p>
+                    </div>
+
+            
+                    <div class="col-6 text-right">
+                        {% if remarks_counts >= 2 %}
+                            <a href="#" class="" data-bs-toggle="modal" data-bs-target="#remarks-modal">Click to view remarks
+                  
+                            </a>
+
+                        {% elif remarks_counts == 1 %}
+                            <p class="">{{ remark.remarks }}</p>
+                        {% endif %}
+                    </div>
+
                 </div>
 
             </div>
         </div>
     </div>
+
+
+
+
+    <div class="col-sm-12 col-lg-4">
+        <div class="card">
+            <div class="card-status-top bg-cyan"></div>
+            <div class="card-header">
+                <h3 class="card-title">Program Info</h3>
+            </div>
+            <div class="card-body">
+
+            </div>
+        </div>
+    </div>
+
+
 </div>

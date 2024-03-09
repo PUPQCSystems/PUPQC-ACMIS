@@ -413,7 +413,7 @@
             formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
 
             // Combine formData and serializedData
-            formData.append('result_remarks', document.getElementById('id_result_remarks').value);
+            formData.append('remarks', document.getElementById('id_remarks').value);
             formData.append('validity_date_from', document.getElementById('id_validity_date_from').value);
             formData.append('validity_date_to', document.getElementById('id_validity_date_to').value);
             

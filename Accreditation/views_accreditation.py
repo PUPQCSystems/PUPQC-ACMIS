@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, QueryDict
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from Accreditation.forms import FailedResult_Form, PassedResult_Form, ProgramAccreditation_Form, ProgramAccreditation_UpdateForm, RevisitResult_Form
-from Accreditation.models import accreditation_certificates, instrument, instrument_level, program_accreditation
+from Accreditation.forms import PassedResult_Form, ProgramAccreditation_Form, ProgramAccreditation_UpdateForm, RemarksResult_Form, RevisitResult_Form
+from Accreditation.models import accreditation_certificates, instrument, instrument_level, program_accreditation, result_remarks
 from django.core.serializers import serialize
 from django.contrib.auth import authenticate
 from datetime import timedelta
@@ -18,7 +18,7 @@ def landing_page(request):
     #Getting the data from the API
     passed_result_form = PassedResult_Form(request.POST or None)
     revisit_result_form = RevisitResult_Form(request.POST or None)
-    failed_result_form = FailedResult_Form(request.POST or None)
+    remarks_result_form = RemarksResult_Form(request.POST or None)
     create_form = ProgramAccreditation_Form(request.POST or None)
 
     certificates_records = accreditation_certificates.objects.select_related('accredited_program').filter(is_deleted= False) 
@@ -38,8 +38,8 @@ def landing_page(request):
                'create_form': create_form, 
                'details': details,
                'passed_result_form': passed_result_form,
-               'failed_result_form': failed_result_form,
                'revisit_result_form': revisit_result_form,
+                'remarks_result_form': remarks_result_form,
                'certificates_records':  certificates_records 
                }  #Getting all the data inside the type table and storing it to the context variable
     return render(request, 'accreditation-page/program-accreditation/main-page/landing-page.html', context)
@@ -212,17 +212,21 @@ def result_passed(request, pk):
     if request.method == 'POST':
         # Process the form submission with updated data
         passed_result_form = PassedResult_Form(request.POST or None, instance=accreditation_record)
+        remarks_result_form = RemarksResult_Form(request.POST or None)
 
-        if passed_result_form.is_valid():
+        if passed_result_form.is_valid() and remarks_result_form.is_valid():
             length = request.POST.get('length')
             length = int(length)
             if length != 0:
-                                # Get the current datetime in UTC timezone
+                # Get the current datetime in UTC timezone
                 entry_result_at = accreditation_record.entry_result_at
                 current_datetime = timezone.now()
                 passed_result_form.instance.is_done = True
                 passed_result_form.instance.is_visited = True
                 passed_result_form.instance.entry_result_at = current_datetime
+                passed_result_form.instance.status = 'PASSED'
+                remarks_result_form.instance.accredited_program = accreditation_record
+                remarks_result_form.instance.created_by = request.user
 
                 # Get the modified datetime from the record
   
@@ -232,18 +236,15 @@ def result_passed(request, pk):
                 #     entry_result_at = entry_result_at.replace(tzinfo=timezone.utc)
 
                 # Calculate the time difference
-                time_difference = current_datetime - entry_result_at
+                if entry_result_at:
+                    time_difference = current_datetime - entry_result_at
 
-                # Check if the time difference is less than or equal to 24 hours and if the date today is less than the revisit date
-                if time_difference <= timedelta(hours=24) and current_datetime < accreditation_record.revisit_date:
-                    passed_result_form.instance.revisit_date = None
-                    print(timedelta(hours=23))
-                    print(time_difference)
-                    print (current_datetime)
-                    print (entry_result_at)
-
+                    # Check if the time difference is less than or equal to 24 hours and if the date today is less than the revisit date
+                    if time_difference <= timedelta(hours=24) and current_datetime < accreditation_record.revisit_date:
+                        passed_result_form.instance.revisit_date = None
 
                 passed_result_form.save()
+                remarks_result_form.save()
 
                 for file_num in range(0, int(length)):
                     print('File:', request.FILES.get(f'files{file_num}'))
@@ -284,6 +285,7 @@ def result_revisit(request, pk):
     if request.method == 'POST':
         # Process the form submission with updated data
         revisit_result_form = RevisitResult_Form(request.POST or None, instance=accreditation_record)
+        remarks_result_form = RemarksResult_Form(request.POST or None)
 
         if revisit_result_form.is_valid():
             # Save the updated data to the database
@@ -293,9 +295,14 @@ def result_revisit(request, pk):
             revisit_result_form.instance.is_visited = True
             revisit_result_form.instance.validity_date_from = None
             revisit_result_form.instance.validity_date_to = None
+            revisit_result_form.instance.status = 'SUBJECT FOR SURVEY REVISIT'
             current_datetime = timezone.now()
             revisit_result_form.instance.entry_result_at = current_datetime
             revisit_result_form.save()
+
+            remarks_result_form.instance.accredited_program = accreditation_record
+            remarks_result_form.instance.created_by = request.user
+            remarks_result_form.save()
 
             # Provide a success message as a JSON response
             messages.success(request, f'The Accreditation Result is successfully posted!') 
@@ -322,16 +329,20 @@ def result_failed(request, pk):
     # update_form = Create_Bodies_Form(instance=type)
     if request.method == 'POST':
         # Process the form submission with updated data
-        failed_result_form = FailedResult_Form(request.POST or None, instance=accreditation_record)
+        remarks_result_form = RemarksResult_Form(request.POST or None)
 
-        if failed_result_form.is_valid():
+        if remarks_result_form.is_valid():
             # Save the updated data to the database
-            failed_result_form.instance.modified_by = request.user
-            failed_result_form.instance.is_failed = True
-            failed_result_form.instance.is_done = True
+            accreditation_record.modified_by = request.user
+            accreditation_record.is_failed = True
+            accreditation_record.is_done = True
+            accreditation_record.status = 'FAILED'
             current_datetime = timezone.now()
-            failed_result_form.instance.entry_result_at = current_datetime
-            failed_result_form.save()
+            accreditation_record.entry_result_at = current_datetime
+            remarks_result_form.instance.accredited_program = accreditation_record
+            remarks_result_form.instance.created_by = request.user
+            remarks_result_form.save()
+            accreditation_record.save()
 
             # Provide a success message as a JSON response
             messages.success(request, f'The Accreditation Result is successfully posted!') 
@@ -339,7 +350,7 @@ def result_failed(request, pk):
 
         else:
             # Return a validation error as a JSON response
-            return JsonResponse({'errors': failed_result_form.errors}, status=400)
+            return JsonResponse({'errors': remarks_result_form.errors}, status=400)
         
 
 @login_required
@@ -348,16 +359,49 @@ def result_page(request, pk):
     #Getting the data from the API
     passed_result_form = PassedResult_Form(request.POST or None)
     revisit_result_form = RevisitResult_Form(request.POST or None)
-    failed_result_form = FailedResult_Form(request.POST or None)
+    remarks_result_form = RemarksResult_Form(request.POST or None)
 
     accreditation_record = program_accreditation.objects.get(id=pk)
     certificates_records = accreditation_certificates.objects.select_related('accredited_program').filter( accredited_program_id=pk, is_deleted= False)
+    remarks_records = result_remarks.objects.select_related('accredited_program').filter( accredited_program_id=pk).order_by('created_at')
+    remarks_counts = result_remarks.objects.filter( accredited_program_id=pk).count()
+
         
     context = { 
                'passed_result_form': passed_result_form,
-               'failed_result_form': failed_result_form,
                'revisit_result_form': revisit_result_form,
                'records':  certificates_records,
-               'accred_program': accreditation_record
+               'accred_program': accreditation_record,
+               'remarks_result_form': remarks_result_form,
+               'remarks_records':  remarks_records,
+                'remarks_counts':  remarks_counts
                }  #Getting all the data inside the type table and storing it to the context variable
     return render(request, 'accreditation-page/accreditation-certificates/main-page/landing-page.html', context)
+
+# --------------------------------- [ACCREDITATION RESULT CODES] --------------------------------- #
+
+@login_required
+@permission_required("Accreditation.delete_program_accreditation", raise_exception=True)
+def certificate_destroy(request, pk):
+    if request.method == 'POST':
+
+        data = QueryDict(request.body.decode('utf-8'))
+        entered_password = data.get('password')
+        user = request.user
+
+        if user and user.is_authenticated:
+            if authenticate(email=user.email, password=entered_password):
+                # Gets the records who have this ID
+                accreditation_certificate = accreditation_certificates.objects.get(id=pk)
+
+                #After getting that record, this code will delete it.
+                accreditation_certificate.delete()
+                messages.success(request, f'The File is permanently deleted!') 
+                return JsonResponse({'success': True}, status=200)
+            
+            else:
+                return JsonResponse({'success': False, 'error': 'Incorrect password'})
+        else:
+            return JsonResponse({'success': False, 'error': 'User not logged in'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request'})

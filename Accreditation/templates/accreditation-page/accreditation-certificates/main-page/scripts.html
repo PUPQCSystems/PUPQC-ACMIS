@@ -70,29 +70,6 @@
     });
 </script> 
 
-
-<script>
-    $(".archive-button").click(function(event) {
-        var id = $(this).data('id');         //Get the Id of the record
-        var form = 'archive-form-'+id;      //Attaching the id of the record to this string for identifying the specific form
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "This file will be deleted permanently. This action cannot be undone!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, archive it!',
-            cancelButtonText: 'No, cancel!',    
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Delete the file here
-                document.getElementById(form).submit();
-            }
-        })
-    });
-</script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Get all the "Next" buttons
@@ -265,7 +242,7 @@
             formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
 
             // Combine formData and serializedData
-            formData.append('result_remarks', document.getElementById('id_result_remarks').value);
+            formData.append('remarks', document.getElementById('id_remarks').value);
             formData.append('validity_date_from', document.getElementById('id_validity_date_from').value);
             formData.append('validity_date_to', document.getElementById('id_validity_date_to').value);
             
@@ -301,3 +278,62 @@
         })
     })
 </script>  
+
+
+<script>
+	const deleteButtons = document.querySelectorAll('.delete-button');
+
+	deleteButtons.forEach((deleteButton) => {
+			deleteButton.addEventListener('click', async () => {
+					const id = event.target.dataset.id; // Get the ID of the button
+					const { value: password, isConfirmed } = await Swal.fire({
+							title: 'Are you sure?',
+							text: "This file will be deleted permanently. This action cannot be undone!",
+							icon: 'warning',
+							showCancelButton: true,
+							confirmButtonColor: '#3085d6',
+							cancelButtonColor: '#d33',
+							confirmButtonButtonText: 'Yes, delete it!',
+							cancelButtonButtonText: 'No, cancel',
+							input: 'password',
+							inputPlaceholder: 'Enter your password to confirm deletion',
+							inputAttributes: {
+									maxlength: 20,
+									autocapitalize: 'off',
+									autocorrect: 'off'
+							}
+					});
+
+					if (isConfirmed) 
+					{
+						if (password) {
+								var url = "/accreditation/certificate/destroy/"+id+"/";
+								// Send AJAX request to verify password
+								$.ajax({
+										url: url,
+										method: 'POST',
+										data: { password: password,
+												'csrfmiddlewaretoken': '{{ csrf_token }}', },
+										success: function(response) {
+												if (response.success) {
+                                                    location.reload();
+												} else {
+														toastr.error(response.error);
+												}
+										},
+										error: function() {
+												toastr.error('Error verifying password');
+										}
+								});
+						} 
+						else {
+								Swal.fire({
+									icon: 'error',
+									title: 'Please input a password!',
+									showConfirmButton: true,
+								});
+						}
+					}
+			});
+	});
+</script>

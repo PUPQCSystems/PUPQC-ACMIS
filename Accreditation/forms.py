@@ -537,11 +537,7 @@ class PassedResult_Form(forms.ModelForm):
 
     class Meta:
         model = program_accreditation
-        fields = ('validity_date_from', 'validity_date_to', 'result_remarks')
-
-        widgets = {
-            'result_remarks': forms.Textarea(attrs={'required': False, 'class': 'form-control'}),
-        }
+        fields = ('validity_date_from', 'validity_date_to')
 
     def clean(self):
         cleaned_data = super().clean()
@@ -571,11 +567,9 @@ class RevisitResult_Form(forms.ModelForm):
 
     class Meta:
         model = program_accreditation
-        fields = ('revisit_date', 'result_remarks')
+        fields = ('revisit_date',)
 
-        widgets = {
-            'result_remarks': forms.Textarea(attrs={'required': False, 'class': 'form-control'}),
-        }
+
 
     def clean(self):
         cleaned_data = super().clean()
@@ -591,10 +585,13 @@ class RevisitResult_Form(forms.ModelForm):
         return cleaned_data
     
 
-class FailedResult_Form(forms.ModelForm):
+class RemarksResult_Form(forms.ModelForm):
     class Meta:
-        model = program_accreditation
-        fields = ('result_remarks',)
+        model = result_remarks
+        fields = ('remarks',)
         widgets = {
-            'result_remarks': forms.Textarea(attrs={'required': True, 'class': 'form-control'}),
+            'remarks': forms.Textarea(attrs={'required': False, 'class': 'form-control'}),
         }
+
+
+
