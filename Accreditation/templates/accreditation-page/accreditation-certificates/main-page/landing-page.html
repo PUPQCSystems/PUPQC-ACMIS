@@ -12,28 +12,32 @@
         {% now "Y-m-d" as today %}
         <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search Files..."/>
 
-		{% if accred_program.is_done == False and today > accred_program.survey_visit_date|date:"Y-m-d" and accred_program.revisit_date == None %}
-			<a href="#" class="btn btn-outline-info  ms-auto position-relative" data-bs-toggle="modal" data-bs-target="#result-modal">
-				Add Result
-				<span class="badge bg-green badge-notification badge-blink"></span>
-			</a>
+		{% if user.is_superuser == True %}
 
-		{% elif today > accred_program.survey_visit_date|date:"Y-m-d" and accred_program.revisit_date %}
+			{% if accred_program.is_done == False and today > accred_program.survey_visit_date|date:"Y-m-d" and accred_program.revisit_date == None %}
+				<a href="#" class="btn btn-outline-info  ms-auto position-relative" data-bs-toggle="modal" data-bs-target="#result-modal">
+					Add Result
+					<span class="badge bg-green badge-notification badge-blink"></span>
+				</a>
+
+			{% elif today > accred_program.survey_visit_date|date:"Y-m-d" and accred_program.revisit_date %}
+				<a href="#" class="btn btn-outline-info  ms-auto position-relative" data-bs-toggle="modal" data-bs-target="#result-modal">
+					Modify Result
+					<span class="badge bg-green badge-notification badge-blink"></span>
+				</a>
+
+			{% elif today > accred_program.survey_visit_date|date:"Y-m-d" and accred_program.is_done == True%}
 			<a href="#" class="btn btn-outline-info  ms-auto position-relative" data-bs-toggle="modal" data-bs-target="#result-modal">
 				Modify Result
 				<span class="badge bg-green badge-notification badge-blink"></span>
 			</a>
 
-		{% elif today > accred_program.survey_visit_date|date:"Y-m-d" and accred_program.is_done == True%}
-		<a href="#" class="btn btn-outline-info  ms-auto position-relative" data-bs-toggle="modal" data-bs-target="#result-modal">
-			Modify Result
-			<span class="badge bg-green badge-notification badge-blink"></span>
-		</a>
+			{% else %}
+				<a href="#" class="btn btn-outline-info  ms-auto position-relative disabled" data-bs-toggle="modal" data-bs-target="#result-modal">
+					Add Result2
+				</a>
 
-		  {% else %}
-			<a href="#" class="btn btn-outline-info  ms-auto position-relative disabled" data-bs-toggle="modal" data-bs-target="#result-modal">
-				Add Result2
-			</a>
+			{% endif %}
 
 		{% endif %}
 {% endblock page-title-actions %}

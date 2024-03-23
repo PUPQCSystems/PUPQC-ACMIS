@@ -24,7 +24,7 @@
 {% endblock page-title-actions %}
 
 {% block content %}
-        {% if has_access or user.is_superuser %}
+        {% if is_chairman or has_access or user.is_superuser %}
             {% include "accreditation-page/instrument-parameter/main-page/parameter-cards.html" %}
 
             {% if perms.Accreditation.add_level_area_parameter %}

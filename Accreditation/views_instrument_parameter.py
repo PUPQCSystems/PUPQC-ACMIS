@@ -20,10 +20,13 @@ def landing_page(request, pk):
     create_form = AreaParameter_Form(request.POST or None)
 
     has_access = False
+    is_chairman = False
     
     for assigned_user in assigned_users:
         if request.user.id == assigned_user.assigned_user_id:
             has_access = True
+            if assigned_user.is_chairman == True:
+                is_chairman = True
             break
    
     # Initialize an empty list to store update forms for each record
@@ -41,7 +44,8 @@ def landing_page(request, pk):
                 'details': details, 
                 'pk': pk, 
                 'create_form': create_form, 
-                'has_access':  has_access
+                'has_access':  has_access,
+                'is_chairman': is_chairman
                }  #Getting all the data inside the type table and storing it to the context variable
     
     return render(request, 'accreditation-page/instrument-parameter/main-page/landing-page.html', context)   
