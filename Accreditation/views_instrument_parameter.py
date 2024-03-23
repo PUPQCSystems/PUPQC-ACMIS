@@ -17,6 +17,7 @@ def landing_page(request, pk):
     #Getting the data from the API
     records = level_area_parameter.objects.select_related('instrument_level_area').select_related('parameter').filter(instrument_level_area=pk, is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
     assigned_users = user_assigned_to_area.objects.select_related('area', 'assigned_user').filter(is_removed = False, area=pk)
+    chairman_users = user_assigned_to_area.objects.select_related('area', 'assigned_user').filter(is_removed = False)
     create_form = AreaParameter_Form(request.POST or None)
 
     has_access = False
@@ -25,10 +26,14 @@ def landing_page(request, pk):
     for assigned_user in assigned_users:
         if request.user.id == assigned_user.assigned_user_id:
             has_access = True
-            if assigned_user.is_chairman == True:
+            break
+
+    for chairman_user in chairman_users:
+        if request.user.id == chairman_user.assigned_user_id:
+            if chairman_user.is_chairman == True:
                 is_chairman = True
             break
-   
+
     # Initialize an empty list to store update forms for each record
     details = []
 
