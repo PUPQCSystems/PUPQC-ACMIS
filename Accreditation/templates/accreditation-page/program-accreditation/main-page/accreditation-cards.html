@@ -33,7 +33,7 @@
                                 <div class="dropdown-menu dropdown-menu-end">
 
                                     {% if user.is_superuser == True and record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None %}
-                                        <button class="dropdown-item position-relative text-green" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
+                                        <button id="{{ record.id }}" class="dropdown-item position-relative text-green" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
                                             Add Result 
                                             {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
                                             <span class="badge bg-green ms-auto badge-blink" style="font-size: 10px">Active</span>
@@ -41,7 +41,15 @@
                                         <div class="dropdown-divider-top"></div>
 
                                     {% elif user.is_superuser == True and record.is_done == True and record.is_failed == True %}
-                                        <button class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
+                                        <button id="{{ record.id }}" class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
+                                            Change Result 
+                                            {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
+                                            <span class="badge bg-blue ms-auto badge-blink" style="font-size: 10px">Active</span>
+                                        </button>
+                                        <div class="dropdown-divider-top"></div>
+
+                                    {% elif user.is_superuser == True and record.is_done == True and record.is_failed == False %}
+                                        <button id="{{ record.id }}" class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
                                             Change Result 
                                             {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
                                             <span class="badge bg-blue ms-auto badge-blink" style="font-size: 10px">Active</span>
@@ -49,7 +57,7 @@
                                         <div class="dropdown-divider-top"></div>
 
                                     {% elif record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date %}
-                                        <button class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
+                                        <button id="{{ record.id }}" class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
                                             Change Result 
                                             {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
                                             <span class="badge bg-blue ms-auto badge-blink" style="font-size: 10px">Active</span>
@@ -58,7 +66,7 @@
 
 
                                     {% elif user.is_superuser == True and record.is_done == False and today < record.survey_visit_date|date:"Y-m-d" and record.revisit_date  == None %}
-                                        <button class="dropdown-item position-relative" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}" disabled>
+                                        <button id="{{ record.id }}" class="dropdown-item position-relative" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}" disabled>
                                             Add Result
                                             <span class="badge bg-secondary ms-auto" style="font-size: 10px">Inactive</span>
                                         </button>
@@ -135,7 +143,15 @@
                 {% include "accreditation-page/program-accreditation/main-page/result-passed-modal.html" %}
                 {% include "accreditation-page/program-accreditation/main-page/result-failed-modal.html" %}
                 {% include "accreditation-page/program-accreditation/main-page/result-revisit-modal.html" %}
+
+            {% elif user.is_superuser == True and record.is_done == True and record.is_failed == False %}
+                {% include "accreditation-page/program-accreditation/main-page/result-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-passed-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-failed-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-revisit-modal.html" %}
+      
             {% endif %}
+            
 
 
         {% endblock modal_content %}

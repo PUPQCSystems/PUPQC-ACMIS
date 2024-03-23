@@ -8,6 +8,9 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, Permission
 from django.contrib import auth
+from django.core.mail import EmailMessage
+from django.conf import settings
+from django.template.loader import render_to_string
 
 @login_required
 def landing_page(request):
@@ -32,11 +35,20 @@ def landing_page(request):
 
 @login_required
 def register(request):
+
     register_form = CreateUserForm(request.POST)
     auth_group_id = request.POST.get('selected_group')
+    print('AUTH: ', auth_group_id)
 
     if auth_group_id:
         if register_form.is_valid():
+            user_email = request.POST.get('email')
+            user_password = request.POST.get('password1')
+            user_first_name = request.POST.get('first_name')
+            user_last_name = request.POST.get('last_name')
+
+            template = render_to_string('email-templates/register-email.html', 
+                                        {'email': user_email, 'password': user_password, 'first_name': user_first_name, 'last_name': user_last_name})
             # Create a new group
             group = Group.objects.get(id=auth_group_id)
             register_form.instance.created_by = request.user
@@ -46,6 +58,17 @@ def register(request):
             # Add a user to the group
             user = CustomUser.objects.get(id=user_id)
             user.groups.add(group)
+
+
+            email = EmailMessage(
+                'Welcome to the Accreditation and Certification Management Information System!',
+                template,
+                settings.EMAIL_HOST_USER,
+                [user_email],
+            )
+
+            email.fail_silently=False
+            email.send()
 
             messages.success(request, 'Account was successfully created.')
             return JsonResponse({'success': True}, status=200)

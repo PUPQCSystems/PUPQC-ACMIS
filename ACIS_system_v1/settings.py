@@ -211,3 +211,12 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'  
 
 AUTH_USER_MODEL = 'Users.CustomUser'
+
+# Email Backend
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'accreditation.system@gmail.com'
+EMAIL_HOST_PASSWORD = 'litypprhbtjkheje'

@@ -19,36 +19,38 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-6">
-                        <p class="h3">Revisit Date</p>
+                {% if accred_program.revisit_date %}
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="h3">Revisit Date</p>
+                        </div>
+
+                        <div class="col-6 text-right">
+                            <p class="">{{ accred_program.revisit_date }}</p>
+                        </div>
                     </div>
 
-                    <div class="col-6 text-right">
-                        <p class="">{{ accred_program.revisit_date }}</p>
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="h3">Revisit Status</p>
+                        </div>
+
+                        <div class="col-6 text-right">
+                            <p class="">
+                                {% if accred_program.revisit_date|date:"Y-m-d" == today %}
+                                    Ongoing
+
+                                {% elif today > accred_program.revisit_date|date:"Y-m-d" %}
+                                    Done
+
+                                {% elif today < accred_program.revisit_date|date:"Y-m-d" %}
+                                    Not Started
+
+                                {% endif %}
+                            </p>
+                        </div>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-6">
-                        <p class="h3">Revisit Status</p>
-                    </div>
-
-                    <div class="col-6 text-right">
-                        <p class="">
-                            {% if accred_program.revisit_date|date:"Y-m-d" == today %}
-                                Ongoing
-
-                            {% elif today > accred_program.revisit_date|date:"Y-m-d" %}
-                                Done
-
-                            {% elif today < accred_program.revisit_date|date:"Y-m-d" %}
-                                Not Started
-
-                            {% endif %}
-                        </p>
-                    </div>
-                </div>
+                {% endif %}
 
                 <div class="row">
                     <div class="col-6">
@@ -59,17 +61,43 @@
 
             
                     <div class="col-6 text-right">
-                        {% if remarks_counts >= 2 %}
+                        {% if remarks_counts %}
                             <a href="#" class="" data-bs-toggle="modal" data-bs-target="#remarks-modal">Click to view remarks
                   
                             </a>
-
-                        {% elif remarks_counts == 1 %}
-                            <p class="">{{ remark.remarks }}</p>
                         {% endif %}
                     </div>
 
                 </div>
+
+                {% if accred_program.status == "PASSED" %}
+                    <div class="row">
+                        <div class="h1">
+                                Validity Dates
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="h3 text-muted">Valid From</p>
+                        </div>
+
+                        <div class="col-6 text-right">
+                            <p class="">{{ accred_program.validity_date_from }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="h3 text-muted">Until</p>
+                        </div>
+
+                        <div class="col-6 text-right">
+                            <p class="">{{ accred_program.validity_date_to }}</p>
+                        </div>
+                    </div>
+
+                {% endif %}
 
             </div>
         </div>
@@ -85,6 +113,30 @@
                 <h3 class="card-title">Program Info</h3>
             </div>
             <div class="card-body">
+                <div>
+                    <small class="text-muted">Program</small>
+                    <h4 class="lh-1">{{accred_program.program}}</h4>
+                </div>
+
+                <div>
+                    <small class="text-muted">Instrument</small>
+                    <h4 class="lh-1">{{accred_program.instrument_level.instrument }}</h4>
+                </div>
+
+                <div>
+                    <small class="text-muted">Level</small>
+                    <h4 class="lh-1">{{accred_program.instrument_level.level}}</h4>
+                </div>
+
+                <div>
+                    <small class="text-muted">Mock Accreditation</small>
+                    <h4 class="lh-1">{{accred_program.mock_accred_date}}</h4>
+                </div>
+
+                <div>
+                    <small class="text-muted">Actual Survey</small>
+                    <h4 class="lh-1">{{accred_program.survey_visit_date}}</h4>
+                </div>
 
             </div>
         </div>

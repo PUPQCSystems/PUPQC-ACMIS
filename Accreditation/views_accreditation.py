@@ -215,6 +215,8 @@ def result_passed(request, pk):
         remarks_result_form = RemarksResult_Form(request.POST or None)
 
         if passed_result_form.is_valid() and remarks_result_form.is_valid():
+            remarks_counts = result_remarks.objects.filter( accredited_program_id=pk).count()
+
             length = request.POST.get('length')
             length = int(length)
             if length != 0:
@@ -240,11 +242,21 @@ def result_passed(request, pk):
                     time_difference = current_datetime - entry_result_at
 
                     # Check if the time difference is less than or equal to 24 hours and if the date today is less than the revisit date
-                    if time_difference <= timedelta(hours=24) and current_datetime < accreditation_record.revisit_date:
-                        passed_result_form.instance.revisit_date = None
+                    if accreditation_record.revisit_date:
+                        if time_difference <= timedelta(hours=24) and current_datetime < accreditation_record.revisit_date:
+                            passed_result_form.instance.revisit_date = None
+                            remarks_record = result_remarks.objects.filter(accredited_program_id=pk).order_by('-created_at').first()
+                            remarks_record.delete()
+
+                        
 
                 passed_result_form.save()
-                remarks_result_form.save()
+                if remarks_counts == 2:
+                    latest_remark = result_remarks.objects.filter(accredited_program_id=pk).latest('created_at')
+                    latest_remark.remarks =  remarks_result_form.cleaned_data.get('remarks')
+                    latest_remark.save()
+                else:
+                    remarks_result_form.save()
 
                 for file_num in range(0, int(length)):
                     print('File:', request.FILES.get(f'files{file_num}'))
@@ -288,6 +300,8 @@ def result_revisit(request, pk):
         remarks_result_form = RemarksResult_Form(request.POST or None)
 
         if revisit_result_form.is_valid():
+            remarks_counts = result_remarks.objects.filter( accredited_program_id=pk).count()
+            entry_result_at = accreditation_record.entry_result_at
             # Save the updated data to the database
             revisit_result_form.instance.modified_by = request.user
             revisit_result_form.instance.is_done = False
@@ -302,7 +316,22 @@ def result_revisit(request, pk):
 
             remarks_result_form.instance.accredited_program = accreditation_record
             remarks_result_form.instance.created_by = request.user
-            remarks_result_form.save()
+
+            # Calculate the time difference
+            if entry_result_at:
+                time_difference = current_datetime - entry_result_at
+
+                if time_difference <= timedelta(hours=24):
+                    remarks_record = result_remarks.objects.filter(accredited_program_id=pk).order_by('-created_at').first()
+                    remarks_record.delete()
+
+            if remarks_counts == 2:
+                latest_remark = result_remarks.objects.filter(accredited_program_id=pk).latest('created_at')
+                latest_remark.remarks =  request.POST.get('remarks')
+                latest_remark.save()
+            else:
+                remarks_result_form.save()
+            
 
             # Provide a success message as a JSON response
             messages.success(request, f'The Accreditation Result is successfully posted!') 
@@ -329,9 +358,10 @@ def result_failed(request, pk):
     # update_form = Create_Bodies_Form(instance=type)
     if request.method == 'POST':
         # Process the form submission with updated data
-        remarks_result_form = RemarksResult_Form(request.POST or None)
+        remarks_result_form = RemarksResult_Form(request.POST)
 
         if remarks_result_form.is_valid():
+            remarks_counts = result_remarks.objects.filter( accredited_program_id=pk).count()
             # Save the updated data to the database
             accreditation_record.modified_by = request.user
             accreditation_record.is_failed = True
@@ -341,8 +371,14 @@ def result_failed(request, pk):
             accreditation_record.entry_result_at = current_datetime
             remarks_result_form.instance.accredited_program = accreditation_record
             remarks_result_form.instance.created_by = request.user
-            remarks_result_form.save()
             accreditation_record.save()
+
+            if remarks_counts == 2:
+                latest_remark = result_remarks.objects.filter(accredited_program_id=pk).latest('created_at')
+                latest_remark.remarks =  remarks_result_form.cleaned_data.get('remarks')
+                latest_remark.save()
+            else:
+                remarks_result_form.save()
 
             # Provide a success message as a JSON response
             messages.success(request, f'The Accreditation Result is successfully posted!') 
@@ -365,6 +401,8 @@ def result_page(request, pk):
     certificates_records = accreditation_certificates.objects.select_related('accredited_program').filter( accredited_program_id=pk, is_deleted= False)
     remarks_records = result_remarks.objects.select_related('accredited_program').filter( accredited_program_id=pk).order_by('created_at')
     remarks_counts = result_remarks.objects.filter( accredited_program_id=pk).count()
+
+
 
         
     context = { 
