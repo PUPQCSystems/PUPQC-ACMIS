@@ -60,21 +60,6 @@
                                         </li>
                                     {% endif %}
 
-                                    {% if perms.Accreditation.view_components %}
-                                        <li class="mega-menu-item">
-                                            <div class="menu-icon instrument-icon">
-                                                <i class="fa-solid fa-clipboard-list fa-2xl" style="color: #b31e1e;"></i>
-                                            </div>
-                                            <div class="mega-menu-link">
-                                                <a href="{% url 'accreditations:component-landing' %}"><strong>Parameter Components</strong>
-                                                    <p class="text-break description-text"><small>The Parameter Components Page allows you to manage parameter's components. 
-                                                                        You can create, retrieve, update, delete, and restore components in this page. </p></small>
-                                                </a>
-                                            </div>
-                                        </li>
-                                    {% endif %}
-
-
                                     <li class="mega-menu-item">
                                         <div class="menu-icon instrument-icon">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-users-group" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
