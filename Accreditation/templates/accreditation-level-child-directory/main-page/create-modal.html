@@ -6,7 +6,8 @@
 			<form 
 				autocomplete="off" 
 				id="create-folder-form"
-				class="modal-content">
+				class="modal-content"
+				data-id="{{ parent_folder.id }}">
 
 				<div class="modal-header">
 					<h1 class="modal-title">New Folder</h1>
@@ -20,7 +21,7 @@
 
 				<div class="modal-footer">
 					<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-					<button id="submit" type="button" data-id="{{ pk }}" class="btn btn-primary">Create</button>
+					<button id="submit" type="submit" class="btn btn-primary">Create</button>
 				</div>
 
 

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    Archived Level Areas
+{% endblock page-title %}
+
+
+<!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
+{% block page-title-actions %}
+        <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search instrument's level area..."/>
+        <a href="{% url 'accreditations:instrument-level-area' pk=pk %}" type="button" class="btn btn-primary">
+            <i class="fa-solid fa-arrow-left"></i> Back
+        </a>
+
+{% endblock page-title-actions %}
+
+{% block content %}
+
+        {% include "accreditation-level-area/archive-page/area-cards.html" %}
+
+        {% if perms.Accreditation.delete_instrument_level_area or perms.Accreditation.change_instrument_level_area %}
+            {% include "accreditation-level-area/archive-page/scripts.html" %}
+        {% endif %}
+   
+{% endblock content %}
+
+
+

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    {{ instrument_level_record.instrument }} ({{ instrument_level_record.level }})
+{% endblock page-title %}
+
+
+<!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
+{% block page-title-actions %}
+        <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search levels..."/>
+        {% if perms.Accreditation.add_instrument_level_area %}
+            <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#create-modal">
+                <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg>
+                Create
+              </a>
+        {% endif %}
+
+        {% comment %} {% if perms.Accreditation.delete_instrument_level_area %}
+            <a href="{% url "accreditations:instrument-level-area-archive-page" pk=pk%}" class="btn btn-success" type="button">
+                Archive <i class="fa-solid fa-arrow-right"></i>
+            </a> 
+        {% endif %} {% endcomment %}
+
+
+{% endblock page-title-actions %}
+
+{% block content %}
+
+    {% if perms.Accreditation.view_instrument_level_area %}
+        {% include "accreditation-level-parent-directory/main-page/folder-cards.html" %}
+    {% endif %}
+
+    {% if perms.Accreditation.add_instrument_level_area %}
+        {% include "accreditation-level-parent-directory/main-page/create-modal.html" %}
+    {% endif %}
+
+    {% if perms.Accreditation.add_instrument_level_area or perms.Accreditation.change_instrument_level_area or perms.Accreditation.delete_instrument_level_area %}
+        {% include "accreditation-level-parent-directory/main-page/scripts.html" %}
+
+        {% include "accreditation-level-parent-directory/main-page/styles.html" %}
+    {% endif %}
+
+{% endblock content %}
+
+
+

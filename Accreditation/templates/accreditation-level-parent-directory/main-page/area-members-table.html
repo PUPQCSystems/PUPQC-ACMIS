@@ -1,0 +1,77 @@
+{% load crispy_forms_tags %}
+<div class="tbl-container">
+    <div class="col-12">
+        <table class="table table-vcenter card-table hover" id="member-Table-{{ record.id }}" style="width:100%">
+            <thead>
+                <tr>
+                    <th class="w-1"><input class="form-check-input m-0 align-middle" type="checkbox" id="check-all-assign-{{record.id}}" aria-label="Select all invoices"></th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Group</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user_record in user_records %}
+                    <tr>
+                        <td>	
+                            {% if assigned_user %}
+                                <input type="checkbox" 
+                                    name="is_member" 
+                                    class="form-check-input m-0 align-middle check-button-{{ record.id }}" 
+                                    id="id_is_member-{{ record.id }}"  
+                                    value="{{ user_record.id }}"
+                                    {% for assigned_user_id, area_id, is_chairman, is_cochairman, is_member in assigned_user %}
+                                        {% if user_record.id == assigned_user_id and is_member == True and area_id == record.id %} 
+                                            checked 
+                                        {% endif %}
+                                    {% endfor %}
+                                    >
+                        
+                            {% else %}
+                                <input type="checkbox" 
+                                    name="is_member" 
+                                    class="form-check-input m-0 align-middle check-button-{{ record.id }}" 
+                                    id="id_is_member-{{ record.id }}"  
+                                    value="{{ user_record.id }}">
+                            {% endif %}
+                        </td>                        
+
+                        <td>
+                            <div class="d-flex py-1 align-items-center">
+                                <span class="avatar me-2" style="background-image: url(./static/avatars/006m.jpg)"></span>
+                                <div class="flex-fill">
+                                    <div class="font-weight-medium">{{ user_record.first_name }} {{ user_record.last_name }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-muted"><a href="#" class="text-reset">{{ user_record.email }}</a></td>
+                        <td class="text-muted badge-list">
+                            {% for item in user_record.user_group %}
+                                <span class="badge bg-blue-lt">{{ item }}</span>
+                            {% endfor %}
+                        </td>
+
+                    </tr>
+                        
+                {% endfor %}
+            </tbody>
+        </table>
+       
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#member-Table-{{ record.id }}').DataTable({
+            columnDefs: [
+            { targets: [0], orderable: false } // Disable ordering for the first column (index 0)
+        ],
+            lengthMenu: [
+            [5, 10, 25, 50, -1],
+            [5, 10, 25, 50, 'All']
+        ]
+        });
+    });
+</script>
+

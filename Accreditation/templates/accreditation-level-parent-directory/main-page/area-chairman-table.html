@@ -1,0 +1,97 @@
+{% load crispy_forms_tags %}
+
+<div class="tbl-container">
+    <div class="col-12">
+		<table class="table table-vcenter card-table hover" id="chairman-Table-{{ record.id }}" style="width:100%">
+			<thead>
+				<tr>
+					<th class="w-1"></th>
+					<th>Name</th>
+					<th>Email</th>
+					<th >Group</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for user_record in user_records %}
+					<tr>
+						<td>	
+							{% with is_checked=False %}
+								{% with user_record.id as user_id %}
+									{% if assigned_user %}
+										{% for assigned_user_id, area_id, is_chairman, is_cochairman, is_member in assigned_user %}
+											{% if user_id == assigned_user_id and is_chairman %}
+												{% with is_checked=True %}
+													<input class="form-check-input m-0 align-middle" 
+														type="radio" 
+														id="chairman-radio-{{ user_record.id }}" 
+														name="is_chairman" 
+														value="{{ user_record.id }}" 
+														{% if is_checked %}
+															checked
+														{% endif %} >
+												{% endwith %}
+
+											{% elif user_id != assigned_user_id and is_chairman == True %}
+												<input class="form-check-input m-0 align-middle" 
+														type="radio" 
+														id="chairman-radio-{{ user_record.id }}" 
+														name="is_chairman" 
+														value="{{ user_record.id }}" >
+
+											{% endif %}
+										{% endfor %}
+									
+
+									{% else %}
+										<input class="form-check-input m-0 align-middle" 
+												type="radio" 
+												id="chairman-radio-{{ user_record.id }}" 
+												name="is_chairman" 
+												value="{{ user_record.id }}" >
+									
+									{% endif %}
+									
+							{% endwith %}
+						{% endwith %}
+						
+						</td>
+
+						<td>
+							<div class="d-flex py-1 align-items-center">
+								<span class="avatar me-2" style="background-image: url(./static/avatars/006m.jpg)"></span>
+								<div class="flex-fill">
+									<div class="font-weight-medium">{{ user_record.first_name }} {{ user_record.last_name }}</div>
+								</div>
+							</div>
+						</td>
+						<td class="text-muted"><a href="#" class="text-reset">{{ user_record.email }}</a></td>
+						<td class="text-muted badge-list">
+							{% for item in user_record.user_group %}
+							<span class="badge bg-blue-lt">{{ item }}</span>
+							{% endfor %}
+						</td>
+					</tr>
+						
+				{% endfor %}
+			</tbody>
+		</table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#chairman-Table-{{ record.id }}').DataTable({
+			columnDefs: [
+            { targets: [0], orderable: false } // Disable ordering for the first column (index 0)
+        ],
+
+			lengthMenu: [
+			[5, 10, 25, 50, -1],
+			[5, 10, 25, 50, 'All']
+		]
+		});
+    });
+</script>
+
+
+

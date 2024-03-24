@@ -4,7 +4,7 @@
 <script>
     $(document).ready(function(){
 
-        $("#submit").click(function(event) {
+        $("#create-folder-form").click(function(event) {
             var serializedData = $("#create-folder-form").serialize();
             const form = document.getElementById("create-folder-form")
             var id = $(this).data('id');
@@ -46,12 +46,12 @@
 {% comment %} AJAX FOR UPDATING  {% endcomment %}
  <script>
     $(document).ready(function(){
-        $(".save-changes").click(function(event) {
+        $(".update-instrument-level-form").submit(function(event) {
             var id = $(this).data('id');
             event.preventDefault();
             event.stopPropagation();
             var serializedData = $("#update-instrument-level-form-"+id).serialize();
-            var url = "/accreditation/instrument/level/area/update/"+id+"/";
+            var url = "/accreditation/instrument/level/directory/update/"+id+"/";
     
             $.ajax({
                 url: url, 
