@@ -4,7 +4,7 @@
 <script>
     $(document).ready(function(){
 
-        $("#create-folder-form").click(function(event) {
+        $("#create-folder-form").submit(function(event) {
             var serializedData = $("#create-folder-form").serialize();
             const form = document.getElementById("create-folder-form")
             var id = $(this).data('id');
@@ -20,21 +20,15 @@
                     location.reload();
                 },
                 error: function(error) {
-					if (error.responseJSON && error.responseJSON.error) {
-                        // Handle the IntegrityError message
-                        toastr.error(error.responseJSON.error);
-                    }
-                       // Check for the formset_errors field in the JSON response
-                	else if (error.responseJSON && error.responseJSON.errors) {
-                    // Iterate over the formset_errors field and display the validation errors to the user
-                    error.responseJSON.errors.forEach(function(formError) {
-                        for (var field in formError) {
-                            toastr.error(`${formError[field]}`);
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
                         }
-                    });
-                } else {
-                    toastr.error('Something went wrong. Please try again later.');
-                }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
                 }
 
             });
@@ -73,7 +67,6 @@
                         toastr.error('Something went wrong. Please try again later.');
                     }
                 }
-
             });
         });
     });
@@ -152,43 +145,3 @@
     
 </script>
 
-
-<script>
-    let container = document.querySelector("#area-form")
-    let addButton = document.querySelector("#add-form")
-    let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
-
-    addButton.addEventListener('click', addForm)
-
-    function addForm(e) {
-        e.preventDefault()
-
-        let birdForm = container.querySelector(".level-area-form:last-child")  // Select the last form in the container
-        let newForm = birdForm.cloneNode(true) // Clone the bird form, including scripts
-
-        let formRegex = RegExp(`form-(\\d){1}-`, 'g') // Regex to find all instances of the form number
-        let formNum = container.querySelectorAll(".level-area-form").length  // Get the total number of forms
-
-        formNum++ // Increment the form number
-        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`) // Update the new form to have the correct form number
-
-        // Add a remove button to the new form
-        let removeButton = document.createElement("button")
-        removeButton.type = "button"
-        removeButton.classList.add("btn", "btn-danger", "remove-form")
-        removeButton.textContent = "Remove"
-        removeButton.addEventListener('click', () => removeForm(newForm))
-
-        newForm.appendChild(removeButton)
-
-        container.appendChild(newForm) // Append the new form to the container
-
-        totalForms.setAttribute('value', `${formNum + 1}`) // Increment the number of total forms in the management form
-    }
-
-    function removeForm(form) {
-        form.remove()
-        let formNum = container.querySelectorAll(".level-area-form").length
-        totalForms.setAttribute('value', `${formNum}`)
-    }
-</script> 

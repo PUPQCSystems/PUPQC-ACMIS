@@ -1,7 +1,7 @@
 {% load crispy_forms_tags %}
 
  <!-- Modal -->
-	<div class="modal modal-blur fade" id="create-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal modal-blur fade" id="create-advance-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div id='create-modal-dialog' class="modal-dialog modal-m modal-dialog-centered">
 			<form 
 				autocomplete="off" 
@@ -14,9 +14,62 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 
-				<div class="modal-body">
+				<div class="modal-body scrollable">
 					{% csrf_token %}
-					{{ create_form|crispy }}
+
+					<div id="div_id_name" class="mb-3"> 
+						<label for="id_name" class="form-label requiredField required">
+							Name
+						</label> 
+						<input type="text" name="name" class="textinput form-control" required="" id="id_name"> 
+					</div>
+
+					<div id="div_id_label" class="mb-3"> 
+						<label class="form-check">
+							<input class="form-check-input" type="checkbox" id="check_label" onmousedown="this.form.id_label.disabled=this.checked">
+							<span class="form-check-label required">Label</span>
+						</label>
+						<input type="text" id="id_label" name="label" class="textinput form-control" disabled>
+					</div>
+
+					<div id="div_id_due_date" class="mb-3"> 
+						<label class="form-check">
+							<input class="form-check-input" type="checkbox" id="check_due">
+							<span class="form-check-label required">Due Date</span>
+						</label>
+						<input type="text" id="id_due_date" name="due_date" class="form-control">
+					</div>
+
+					<div id="div_id_description" class="mb-3"> 
+						<label class="form-check">
+							<input class="form-check-input" type="checkbox" id="check_description">
+							<span class="form-check-label required">Description</span>
+						</label>
+						<input type="text" id="id_description" name="description" class="textinput form-control">
+					</div>
+
+
+					<div id="div_id_description" class="mb-3"> 
+						<label class="form-check">
+							<input class="form-check-input" type="checkbox" id="check_description">
+							<span class="form-check-label required">Add Progress Bar to the Folder</span>
+						</label>
+					</div>
+
+					<div id="div_id_description" class="mb-3"> 
+						<label class="form-check">
+							<input class="form-check-input" type="checkbox" id="check_description">
+							<span class="form-check-label required">Add "Assign Taskforce 
+								<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+									<path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+									<path d="M16 19h6" />
+									<path d="M19 16v6" />
+									<path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+								</svg>" Button</span>
+						</label>
+					</div>
+
 				</div>
 
 				<div class="modal-footer">

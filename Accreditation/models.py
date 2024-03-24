@@ -107,3 +107,40 @@ class instrument_level_folder(models.Model):
         unique_together = ('name', 'parent_directory', 'instrument_level')
 
     
+class submission_bin(models.Model):
+    parent_directory = models.ForeignKey(instrument_level_folder, on_delete=models.CASCADE)
+    title = models.CharField(max_length=500, null=True, blank=True)
+    description = models.CharField(max_length=5000, null=True, blank=True)
+    accepted_file_type = models.CharField(max_length=1000, null=True ,blank=True)
+    accepted_file_size = models.PositiveSmallIntegerField(blank=True, null=True)
+    accepted_file_count = models.PositiveSmallIntegerField(blank=True, null=True)
+    status  = models.CharField(max_length=50, null=True, blank=True)
+    remarks =  models.CharField(max_length=2000, null=True, blank=True)
+    reviewed_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='reviewed_submission_bin', null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_submission_bin', null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_submission_bin', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
+
+
+    def __str__(self):
+        return(self.title)
+    
+
+class files(models.Model):
+    upload_bin = models.ForeignKey(submission_bin, on_delete=models.CASCADE, null=True, blank=True)
+    parent_directory = models.ForeignKey(instrument_level_folder, on_delete=models.CASCADE)
+    file_path = models.FileField(upload_to = 'uploaded-files/')
+    file_name = models.CharField(max_length=100, null=True, blank=True)
+    uploaded_at = models.DateTimeField(default=timezone.now)
+    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_upload_files', null=True, blank=True)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_upload_files', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return(self.file_name)

@@ -105,16 +105,18 @@
 
 
             </div>
+            
+            {% block modal_content %}
+                {% include "accreditation-level-parent-directory/main-page/view-modal.html" %}
 
-            {% include "accreditation-level-parent-directory/main-page/view-modal.html" %}
+                {% if perms.Accreditation.change_instrument_level_area %}
+                    {% include "accreditation-level-parent-directory/main-page/edit-modal.html" %}
+                {% endif %}
 
-            {% if perms.Accreditation.change_instrument_level_area %}
-                {% include "accreditation-level-parent-directory/main-page/edit-modal.html" %}
-            {% endif %}
-
-            {% if perms.Accreditation.add_user_assigned_to_area and perms.Accreditation.view_user_assigned_to_area and perms.Accreditation.change_user_assigned_to_area and perms.Accreditation.delete_user_assigned_to_area %}
-                {% include "accreditation-page/instrument-area/main-page/assign-modal.html" %}
-            {% endif %}
+                {% if perms.Accreditation.add_user_assigned_to_area and perms.Accreditation.view_user_assigned_to_area and perms.Accreditation.change_user_assigned_to_area and perms.Accreditation.delete_user_assigned_to_area %}
+                    {% include "accreditation-page/instrument-area/main-page/assign-modal.html" %}
+                {% endif %}
+            {% endblock modal_content %}
 
         {% endfor %}
 
