@@ -1,12 +1,6 @@
 from rest_framework import serializers
-from .models import accredtype, accredlevel, instrument, accredbodies
+from .models import accredlevel, instrument, accredbodies
 from Programs.serializers import ProgramSerializer
-
-
-class AccredTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = accredtype
-        fields = ('__all__')  
 
 
 class AccredLevelSerializer(serializers.ModelSerializer):

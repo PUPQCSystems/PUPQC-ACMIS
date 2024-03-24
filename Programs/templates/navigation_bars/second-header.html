@@ -73,20 +73,6 @@
                                         </li>
                                     {% endif %}
 
-                                    {% if perms.Accreditation.view_area %}
-                                        <li class="mega-menu-item">
-                                            <div class="menu-icon instrument-icon">
-                                                <i class="fa-solid fa-clipboard-list fa-2xl" style="color: #b31e1e;"></i>
-                                            </div>
-                                            <div class="mega-menu-link">
-                                                <a href="{% url 'accreditations:area-landing' %}"><strong>Accreditation Area</strong>
-                                                    <p class="text-break description-text"><small>The Accreditation Area Page allows you to manage accreditation areas. 
-                                                                        You can create, retrieve, update, delete, and restore accreditation areas. </p></small>
-                                                </a>
-                                            </div>
-                                        </li>
-                                    {% endif %}
-
                                     {% if perms.Accreditation.view_components %}
                                         <li class="mega-menu-item">
                                             <div class="menu-icon instrument-icon">
@@ -128,20 +114,6 @@
 
                             <div class="col">
                                 <ul class="content">
-                                    
-                                    {% if perms.Accreditation.view_parameter %}
-                                        <li class="mega-menu-item">
-                                            <div class="menu-icon">
-                                                <i class="fa-solid fa-file-lines fa-2xl" style="color: #b31e1e;"></i>
-                                            </div>
-                                            <div class="mega-menu-link">
-                                                <a href="{% url 'accreditations:parameter-landing' %}"><strong>Accreditation Parameter</strong>
-                                                    <p class="text-break description-text"><small>The Accreditation Parameter Page allows you to manage accreditation parameters. 
-                                                        You can create, retrieve, update, delete, and restore accreditation parameters in this page.</p></small>
-                                                </a>
-                                            </div>
-                                        </li>
-                                    {% endif %}
 
                                     {% if perms.Accreditation.view_instrument_level %}
                                         <li class="mega-menu-item">

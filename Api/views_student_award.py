@@ -7,7 +7,7 @@ from rest_framework import status
 import os, requests, json
 from datetime import date
 
-from Accreditation.models import program_accreditation
+# from Accreditation.models import program_accreditation
 
 @login_required
 def landing_page(request, program_accred_pk):
@@ -35,7 +35,7 @@ def landing_page(request, program_accred_pk):
             data = response.json()
 
             # Get the record that has an id equal to program_accred_pk
-            accred_program = program_accreditation.objects.select_related('instrument_level', 'program').get(id=program_accred_pk)
+            # accred_program = program_accreditation.objects.select_related('instrument_level', 'program').get(id=program_accred_pk)
 
             # Codes for SUM OF PL AND DL
             # Iterate over the records
@@ -50,7 +50,7 @@ def landing_page(request, program_accred_pk):
                 'PL_count': PL_count,
                 'DL_count': DL_count,
                 'program_accred_pk': program_accred_pk,
-                'accred_program': accred_program
+                # 'accred_program': accred_program
             }
             # Pass data to template context
             # return render(request, 'my_template.html', {'api_data': data})

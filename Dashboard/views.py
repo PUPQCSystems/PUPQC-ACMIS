@@ -3,8 +3,6 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from Accreditation.forms import ReviewUploadBin_Form
-from Accreditation.models import component_upload_bin, program_accreditation, uploaded_evidences
 from datetime import datetime, timedelta
 from django.db.models import F
 from django.db.models import F, ExpressionWrapper, DurationField
@@ -12,37 +10,8 @@ from django.utils import timezone
 # Create your views here.
 @login_required
 def landing_page(request):
-	review_form = ReviewUploadBin_Form(request.POST or None)
-	
-	#Getting all the data inside the Program table and storing it to the context variable
-	under_accred_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted= False, is_done=False) 
-	under_accred_programs_count = program_accreditation.objects.filter(is_deleted= False, is_done=False).count() 	#This code counts the programs taht under accreditation
-	upload_bins = component_upload_bin.objects.select_related('parameter_component').filter(is_deleted = False, status='ur')
-	uploaded_records = uploaded_evidences.objects.select_related('upload_bin', 'uploaded_by').filter(is_deleted = False)
-
-	accredited_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted= False, is_done=True) 
-	accredited_program_count = program_accreditation.objects.filter(is_deleted= False, is_done=True).count() 
-
-	progress_percentage_result = progress_precentage_cacl(under_accred_records)
-	accreditation_summary = program_accreditation_summary(under_accred_records, accredited_records)
-
-	survey_ready_data = survey_visit_ready()
-	awaiting_result_data = awaiting_result()
-	progress_percentage_count = programs_progress_percentage_count(under_accred_records)
-	print(	progress_percentage_count)
-
-	context = { 'under_accred_records': under_accred_records,
-				'under_accred_programs_count': under_accred_programs_count,
-				'progress_percentage_result':progress_percentage_result,
-				'accreditation_summary': accreditation_summary,
-				'accredited_records': accredited_records,
-				'accredited_program_count': accredited_program_count,
-				'survey_ready_data': survey_ready_data,
-				'awaiting_result_data': awaiting_result_data,
-				'progress_percentage_count': progress_percentage_count,
-				'upload_bins': upload_bins,
-				'uploaded_records':	uploaded_records,
-				'review_form': review_form 
+	context = { 
+				
 			}  #Getting all the data inside the type table and storing it to the context variable
 
 	#Getting all the data inside the Program table and storing it to the context variable

@@ -1,8 +1,7 @@
 import requests
 from rest_framework import generics, serializers
-from Accreditation.models import program_accreditation
 from Users.models import category_training, faculty_certificates, seminar_workshop_training
-from .serializers import CategorySerializer, FacultyCertificateSerializer, ProgramAccreditationSerializer, WorkshopsSerializer
+from .serializers import CategorySerializer, FacultyCertificateSerializer, WorkshopsSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status

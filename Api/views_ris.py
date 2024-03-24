@@ -8,7 +8,7 @@ import os, requests, json
 from datetime import date, timedelta, datetime
 from django.utils import timezone
 
-from Accreditation.models import program_accreditation
+# from Accreditation.models import program_accreditation
 
 @login_required
 def research_faculty(request, program_accred_pk):
@@ -32,41 +32,41 @@ def research_faculty(request, program_accred_pk):
             # Parse JSON response
             data = response.json()
 
-            # Get the record that has an id equal to program_accred_pk
-            accred_program = program_accreditation.objects.select_related('instrument_level', 'program').get(id=program_accred_pk)
+            # # Get the record that has an id equal to program_accred_pk
+            # accred_program = program_accreditation.objects.select_related('instrument_level', 'program').get(id=program_accred_pk)
 
-            #Get the date of the actual survey
-            survey_date = accred_program.survey_visit_date
+            # #Get the date of the actual survey
+            # survey_date = accred_program.survey_visit_date
 
             # Calculate the start date three years prior to the survey date
-            date_range = survey_date - timedelta(days=3*365)
+            # date_range = survey_date - timedelta(days=3*365)
 
             new_data = []
 
             # Assuming data is defined properly
-            for research in data:
-                publish_date = timezone.make_aware(datetime.strptime(research['research_paper']['date_publish'],"%Y-%m-%d"))
+            # for research in data:
+            #     publish_date = timezone.make_aware(datetime.strptime(research['research_paper']['date_publish'],"%Y-%m-%d"))
 
-                if date_range <= publish_date <= survey_date:
-                    new_entry = {
-                        'research_paper': {
-                            "title": research['research_paper']['title'],
-                            "content": research['research_paper']['content'],
-                            "abstract": research['research_paper']['abstract'],
-                            "file": research['research_paper']['file'],
-                            "date_publish": publish_date,
-                            "authors": research['research_paper']['authors']
-                        }
-                    }
-                    new_data.append(new_entry)
+            #     if date_range <= publish_date <= survey_date:
+            #         new_entry = {
+            #             'research_paper': {
+            #                 "title": research['research_paper']['title'],
+            #                 "content": research['research_paper']['content'],
+            #                 "abstract": research['research_paper']['abstract'],
+            #                 "file": research['research_paper']['file'],
+            #                 "date_publish": publish_date,
+            #                 "authors": research['research_paper']['authors']
+            #             }
+            #         }
+            #         new_data.append(new_entry)
             
             # Pass data to template context
             # return render(request, 'my_template.html', {'api_data': data})
             # return JsonResponse({'api_data': data})
             context =   {   'records': new_data,
                             'program_accred_pk': program_accred_pk, 
-                            'accred_program': accred_program,
-                            'date_range': date_range
+                            # 'accred_program': accred_program,
+                            # 'date_range': date_range
                         }
             return render(request,'research-info-system/faculty-research/landing-page.html', context)
         else:

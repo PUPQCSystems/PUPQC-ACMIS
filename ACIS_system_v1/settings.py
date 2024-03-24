@@ -134,7 +134,7 @@ REST_FRAMEWORK = {
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        'NAME': 'ACIS-Database',
+        'NAME': 'NEW-ACIS-Database',
         'USER': 'ACIS',
         'PASSWORD': 'acis' ,
         "HOST": "127.0.0.1",

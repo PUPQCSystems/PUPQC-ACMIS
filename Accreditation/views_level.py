@@ -6,7 +6,6 @@ from .models import accredlevel #Import the model for data retieving
 from .forms import Create_Level_Form
 from django.contrib import messages
 from .models import accredlevel
-from .serializers import  AccredTypeSerializer
 from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required, permission_required
