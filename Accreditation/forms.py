@@ -145,8 +145,23 @@ class Create_InstrumentDirectory_Form(forms.ModelForm):
         label = "Name", 
         required=True, 
         error_messages={'required': "Please enter a name before submitting the form."})
+
+    # Use BooleanField for checkbox fields
+    has_progress_bar = forms.BooleanField(
+        label="Has Progress Bar",
+        required=False
+    )
+    
+    has_assign_button = forms.BooleanField(
+        label="Has Assign Button",
+        required=False
+    )
+
+    due_date = forms.DateTimeField(
+        required=False,
+    )
     
     class Meta:
         model = instrument_level_folder
-        fields = ('name',)
+        fields = ('name', 'label','due_date', 'description', 'has_progress_bar', 'has_assign_button')
 

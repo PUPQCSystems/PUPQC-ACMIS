@@ -4,9 +4,46 @@
 <script>
     $(document).ready(function(){
 
-        $("#create-folder-form").submit(function(event) {
+        $("#create-simple-folder-form").submit(function(event) {
             var serializedData = $("#create-folder-form").serialize();
             const form = document.getElementById("create-folder-form")
+            var id = $(this).data('id');
+            var url = "/accreditation/instrument/level/directory/create/"+id+"/";
+
+            event.preventDefault();
+
+            $.ajax({
+                url: url,
+                data: serializedData,
+                type: "POST",
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> 
+
+
+{% comment %} AJAX FOR CREATING {% endcomment %}
+<script>
+    $(document).ready(function(){
+
+        $("#create-advance-folder-form").submit(function(event) {
+            var serializedData = $("#create-advance-folder-form").serialize();
+            const form = document.getElementById("create-advance-folder-form")
             var id = $(this).data('id');
             var url = "/accreditation/instrument/level/directory/create/"+id+"/";
 
