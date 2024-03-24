@@ -2,17 +2,17 @@ from django.urls import path
 from Accreditation import  views_instrument_level
 from Accreditation import views_component
 from Accreditation.views_component import ComponentList
-from . import views_level, views_bodies, views_instrument_directory
+from . import views_level, views_bodies, views_instrument
 
 from Accreditation.views_instrument_level import *
-from Accreditation.views_instrument_directory import *
 
 
 
 
 app_name = 'accreditations'
 
-urlpatterns = [    
+urlpatterns = [
+
     path("level/", views_level.landing_page, name='level-landing'),
     path("level/create/", views_level.create_level, name='level-create'),
     path("level/update/<str:pk>/", views_level.update_level, name='level-update'),
@@ -37,6 +37,13 @@ urlpatterns = [
     path("bodies/archive_page/restore/<str:pk>/", views_bodies.restore_bodies, name='bodies-archive-page-restore'),
     path("bodies/archive_page/destroy/<str:pk>/", views_bodies.destroy_bodies, name='bodies-archive-page-destroy'),
 
+    path("instrument/", InstrumentList.as_view(), name='instrument-list'),
+    path("instrument/update/<str:pk>/", views_instrument.update, name='instrument-update'),
+    path("instrument/archive/<str:pk>/", views_instrument.archive, name='instrument-archive'),
+    path("instrument/archive_page/", views_instrument.archive_landing, name='instrument-archive-page'),
+    path("instrument/archive_page/restore/<str:pk>/", views_instrument.restore, name='instrument-restore'),
+    path("instrument/archive_page/destroy/<str:pk>/", views_instrument.destroy, name='instrument-destroy'),
+
     path("instrument/level/<str:pk>/", InstrumentLevelList.as_view(), name='instrument-level'),
     path("instrument/level/create/<int:pk>/", InstrumentLevelList.as_view(), name='instrument-level-create'),
     path("instrument/level/update/<str:pk>/", views_instrument_level.update, name='instrument-level-update'),
@@ -45,10 +52,4 @@ urlpatterns = [
     path("instrument/level/archive-page/restore/<str:ins_pk>/<str:pk>/", views_instrument_level.restore, name='instrument-level-restore'),
     path("instrument/level/archive-page/destroy/<str:pk>/", views_instrument_level.destroy, name='instrument-level-destroy'),
 
-    path("instrument/level/directory/<str:pk>/", views_instrument_directory.landing_page, name='instrument-level-directory'),
-    # path("instrument/level/directory/create/<int:pk>/", LeveldirectoryList.as_view(), name='instrument-level-directory-create'),
-
-
-   
 ]
-    
