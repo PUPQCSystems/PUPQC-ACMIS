@@ -18,7 +18,7 @@
 
                                             {% if perms.Accreditation.change_instrument_level %}
                                                 <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Rename</button>
-                                                <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit Folder</button>
+                                                <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Change to Advance</button>
                                             {% endif %}
                                             {% if perms.Accreditation.delete_instrument_level %}           
                                                 <form method="POST" action="{% url 'accreditations:instrument-directory-archive' pk=record.id level_id=pk %}" id="archive-form-{{ record.id }}">

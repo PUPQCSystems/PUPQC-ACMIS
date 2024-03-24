@@ -1,0 +1,30 @@
+{% load crispy_forms_tags %}
+
+ <!-- Modal -->
+	<div class="modal modal-blur fade" id="create-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div id='create-modal-dialog' class="modal-dialog modal-m modal-dialog-centered">
+			<form 
+				autocomplete="off" 
+				id="create-folder-form"
+				class="modal-content"
+				data-id="{{ pk }}">
+
+				<div class="modal-header">
+					<h1 class="modal-title">New Folder</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+
+				<div class="modal-body">
+					{% csrf_token %}
+					{{ create_form|crispy }}
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+					<button id="submit" type="submit" class="btn btn-primary">Create</button>
+				</div>
+
+
+			</form>
+		</div>
+	</div> 

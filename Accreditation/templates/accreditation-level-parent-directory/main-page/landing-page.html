@@ -32,7 +32,8 @@
     {% endif %}
 
     {% if perms.Accreditation.add_instrument_level_area %}
-        {% include "accreditation-level-parent-directory/main-page/create-modal.html" %}
+        {% include "accreditation-level-parent-directory/main-page/create-advance-modal.html" %}
+        {% include "accreditation-level-parent-directory/main-page/create-simple-modal.html" %}
     {% endif %}
 
     {% if perms.Accreditation.add_instrument_level_area or perms.Accreditation.change_instrument_level_area or perms.Accreditation.delete_instrument_level_area %}
