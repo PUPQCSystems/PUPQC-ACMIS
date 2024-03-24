@@ -2,30 +2,28 @@
 
  <!-- Modal -->
 	<div class="modal modal-blur fade" id="create-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div id='create-modal-dialog' class="modal-dialog modal-lg">
-			<div class="modal-content">
+		<div id='create-modal-dialog' class="modal-dialog modal-m modal-dialog-centered">
+			<form 
+				autocomplete="off" 
+				id="create-folder-form"
+				class="modal-content">
 
 				<div class="modal-header">
-					<h1 class="modal-title">Add Level areas</h1>
+					<h1 class="modal-title">New Folder</h1>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 
 				<div class="modal-body">
 					{% csrf_token %}
-					<div id="div_id_name" class="mb-3">
-						<label for="id_name" class="form-label requiredField required">
-							Name
-						</label>
-						<input type="text" name="name" maxlength="100" class="textinput form-control" required="" id="id_name">
-					</div>
+					{{ create_form|crispy }}
 				</div>
 
 				<div class="modal-footer">
 					<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-					<button id="submit" type="button" class="btn btn-primary">Create Level</button>
+					<button id="submit" type="button" data-id="{{ pk }}" class="btn btn-primary">Create</button>
 				</div>
 
 
-			</div>
+			</form>
 		</div>
 	</div> 

@@ -44,9 +44,6 @@ class InstrumentLevelList(PermissionRequiredMixin, View):
                 instrumentlevel_form.instance.instrument_id = pk
                 instrumentlevel = instrumentlevel_form.save()  # Save and capture the instance
 
-                instrument_level_id = instrumentlevel.id  # Get the ID 
-
-
                 messages.success(request, f"Accreditation instrument's level is successfully created!")
                 return JsonResponse({'status': 'success'}, status=200)
             else:

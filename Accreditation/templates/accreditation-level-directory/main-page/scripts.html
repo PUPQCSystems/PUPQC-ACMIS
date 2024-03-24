@@ -5,10 +5,10 @@
     $(document).ready(function(){
 
         $("#submit").click(function(event) {
-            var serializedData = $("#multi-step-form").serialize();
-            const form = document.getElementById("multi-step-form")
+            var serializedData = $("#create-folder-form").serialize();
+            const form = document.getElementById("create-folder-form")
             var id = $(this).data('id');
-            var url = "/accreditation/instrument/level/area/create/"+id+"/";
+            var url = "/accreditation/instrument/level/directory/create/"+id+"/";
 
             event.preventDefault();
 

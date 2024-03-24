@@ -88,16 +88,16 @@ class instrument_level(models.Model):
     def __str__(self):
             return f"{self.level.name} - {self.instrument.name}"
 
-class instrument_level_directory(models.Model):
+class instrument_level_folder(models.Model):
     name = models.CharField(max_length=250, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     instrument_level = models.ForeignKey(instrument_level, on_delete=models.CASCADE, null=True, blank=True)
     parent_directory = models.ForeignKey('self', on_delete=models.CASCADE, related_name='children_directory', null=True, blank=True)
     due_date = models.DateTimeField(auto_now=False, null=True, blank=True)
     progress_percentage  = models.DecimalField(max_digits=5 ,decimal_places=2, null=True, blank=True)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_instrument_level_area', null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_instrument_level_directory', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
-    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_instrument_level_area', null=True, blank=True)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_instrument_level_directory', null=True, blank=True)
     modified_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_deleted = models.BooleanField(default=False)

@@ -5,8 +5,8 @@
     $(document).ready(function(){
 
         $("#submit").click(function(event) {
-            var serializedData = $("#multi-step-form").serialize();
-            const form = document.getElementById("multi-step-form")
+            var serializedData = $("#instrument-level-form").serialize();
+            const form = document.getElementById("instrument-level-form")
             var id = $(this).data('id');
             var url = "/accreditation/instrument/level/create/"+id+"/";
 
@@ -102,93 +102,3 @@
 </script>
 
 
-
-<script>
-    var currentStep = 1;
-    var updateProgressBar;
-    
-      function displayStep(stepNumber) {
-        if (stepNumber >= 1 && stepNumber <= 3) {
-          $(".step-" + currentStep).hide();
-          $(".step-" + stepNumber).show();
-          currentStep = stepNumber;
-          updateProgressBar();
-        }
-      }
-    
-      $(document).ready(function() {
-        $('#multi-step-form').find('.step').slice(1).hide();
-      
-        $(".next-step").click(function() {
-          if (currentStep < 3) {
-            $(".step-" + currentStep).addClass("animate__animated animate__fadeOutLeft");
-            currentStep++;
-            setTimeout(function() {
-              $(".step").removeClass("animate__animated animate__fadeOutLeft").hide();
-              $(".step-" + currentStep).show().addClass("animate__animated animate__fadeInRight");
-              updateProgressBar();
-            }, 500);
-          }
-        });
-    
-        $(".prev-step").click(function() {
-          if (currentStep > 1) {
-            $(".step-" + currentStep).addClass("animate__animated animate__fadeOutRight");
-            currentStep--;
-            setTimeout(function() {
-              $(".step").removeClass("animate__animated animate__fadeOutRight").hide();
-              $(".step-" + currentStep).show().addClass("animate__animated animate__fadeInLeft");
-              updateProgressBar();
-            }, 500);
-          }
-        });
-    
-        updateProgressBar = function() {
-          var progressPercentage = ((currentStep - 1) / 2) * 100;
-          $(".progress-bar").css("width", progressPercentage + "%");
-        }
-      });
-    
-    
-</script>
-
-
-<script>
-    let container = document.querySelector("#area-form")
-    let addButton = document.querySelector("#add-form")
-    let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
-
-    addButton.addEventListener('click', addForm)
-
-    function addForm(e) {
-        e.preventDefault()
-
-        let birdForm = container.querySelector(".level-area-form:last-child")  // Select the last form in the container
-        let newForm = birdForm.cloneNode(true) // Clone the bird form, including scripts
-
-        let formRegex = RegExp(`form-(\\d){1}-`, 'g') // Regex to find all instances of the form number
-        let formNum = container.querySelectorAll(".level-area-form").length  // Get the total number of forms
-
-        formNum++ // Increment the form number
-        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`) // Update the new form to have the correct form number
-
-        // Add a remove button to the new form
-        let removeButton = document.createElement("button")
-        removeButton.type = "button"
-        removeButton.classList.add("btn", "btn-danger", "remove-form")
-        removeButton.textContent = "Remove"
-        removeButton.addEventListener('click', () => removeForm(newForm))
-
-        newForm.appendChild(removeButton)
-
-        container.appendChild(newForm) // Append the new form to the container
-
-        totalForms.setAttribute('value', `${formNum + 1}`) // Increment the number of total forms in the management form
-    }
-
-    function removeForm(form) {
-        form.remove()
-        let formNum = container.querySelectorAll(".level-area-form").length
-        totalForms.setAttribute('value', `${formNum}`)
-    }
-</script> 

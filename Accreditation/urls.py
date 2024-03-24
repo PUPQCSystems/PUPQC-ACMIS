@@ -1,5 +1,5 @@
 from django.urls import path
-from Accreditation import  views_instrument_level
+from Accreditation import  views_instrument_level, views_instrument_level_folder
 from . import views_level, views_bodies, views_instrument
 
 from Accreditation.views_instrument_level import *
@@ -38,5 +38,14 @@ urlpatterns = [
     path("instrument/level/<str:pk>/archive-page/", views_instrument_level.archive_landing, name='instrument-level-archive-page'),
     path("instrument/level/archive-page/restore/<str:ins_pk>/<str:pk>/", views_instrument_level.restore, name='instrument-level-restore'),
     path("instrument/level/archive-page/destroy/<str:pk>/", views_instrument_level.destroy, name='instrument-level-destroy'),
+
+    path("instrument/level/directory/<str:pk>/", views_instrument_level_folder.landing_page, name='instrument-level-directory'),
+    path("instrument/level/directory/create/<str:pk>/", views_instrument_level_folder.create, name='instrument-directory-create'),
+    path("instrument/level/directory/update/<str:pk>/", views_instrument_level.update, name='instrument-directory-update'),
+    path("instrument/level/directory/archive/<str:ins_pk>/<str:pk>/", views_instrument_level.archive, name='instrument-directory-archive'),
+    path("instrument/level/directory/<str:pk>/archive-page/", views_instrument_level.archive_landing, name='instrument-directory-archive-page'),
+    path("instrument/level/directory/archive-page/restore/<str:ins_pk>/<str:pk>/", views_instrument_level.restore, name='instrument-directory-restore'),
+    path("instrument/level/directory/archive-page/destroy/<str:pk>/", views_instrument_level.destroy, name='instrument-directory-destroy'),
+
 
 ]

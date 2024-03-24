@@ -147,9 +147,6 @@ class Create_InstrumentDirectory_Form(forms.ModelForm):
         error_messages={'required': "Please enter a name before submitting the form."})
     
     class Meta:
-        model = instrument_level_directory
-        fields = ('name', 'description')
+        model = instrument_level_folder
+        fields = ('name',)
 
-        widgets = {
-            'description': forms.Textarea(attrs={'required': False}),
-        }

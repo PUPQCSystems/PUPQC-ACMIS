@@ -1,61 +1,16 @@
 <style>
-          .step-container {
-            position: relative;
-            text-align: center;
-            transform: translateY(-43%);
-          }
-      
-          .step-circle {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: #fff;
-            border: 2px solid #007bff;
-            line-height: 30px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-            cursor: pointer; /* Added cursor pointer */
-          }
-      
-          .step-line {
-            position: absolute;
-            top: 16px;
-            left: 50px;
-            width: calc(100% - 100px);
-            height: 2px;
-            background-color: #007bff;
-            z-index: -1;
-          }
-          
-</style>
+  .folder-icon {
+      width: 10vw; /* Adjust this value as needed */
+      height: 10vw; /* Adjust this value as needed */
+      max-width: 72px; /* Set a maximum width */
+      max-height: 72px; /* Set a maximum height */
+  }
 
-
-<style>
-
-[data-role="dynamic-fields"] > .form-inline + .form-inline {
-    margin-top: 0.5em;
-}
-
-[data-role="dynamic-fields"] > .form-inline [data-role="add"] {
-    display: none;
-}
-
-[data-role="dynamic-fields"] > .form-inline:last-child [data-role="add"] {
-    display: inline-block;
-}
-
-[data-role="dynamic-fields"] > .form-inline:last-child [data-role="remove"] {
-    display: none;
-}
-
-#add-area-field {
-  margin-top: 27px;
-}
-
-#remove-area-field {
-  margin-top: 27px;
-}
+  /* Optional: Adjust the size for larger screens */
+  @media (min-width: 768px) {
+      .folder-icon {
+          width: 72px;
+          height: 72px;
+      }
+  }
 </style>
