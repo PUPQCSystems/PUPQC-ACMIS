@@ -9,12 +9,25 @@
 {% block page-title-actions %}
         <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search levels..."/>
         {% if perms.Accreditation.add_instrument_level_area %}
-            <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#create-modal">
-                <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 5l0 14"></path><path d="M5 12l14 0"></path></svg>
-                Create
-              </a>
+              <div class="dropdown">
+                <a href="#" class="btn btn-primary d-none d-sm-inline-block dropdown-toggle " data-bs-toggle="dropdown">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M12 5l0 14"></path><path d="M5 12l14 0"></path>
+                    </svg>
+                    Create
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-simple-modal">
+                    New Folder (Simple)
+                  </a>
+                  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-advance-modal">
+                    New Folder (Advance)
+                  </a>
+                </div>
+              </div>
         {% endif %}
+
 
         {% comment %} {% if perms.Accreditation.delete_instrument_level_area %}
             <a href="{% url "accreditations:instrument-level-area-archive-page" pk=pk%}" class="btn btn-success" type="button">
@@ -41,7 +54,8 @@
 
 {% block modal_content %}
     {% if perms.Accreditation.add_instrument_level_area %}
-        {% include "accreditation-level-child-directory/main-page/create-modal.html" %}
+        {% include "accreditation-level-child-directory/main-page/create-advance-modal.html" %}
+        {% include "accreditation-level-child-directory/main-page/create-simple-modal.html" %}
     {% endif %}
 {% endblock modal_content %}
 

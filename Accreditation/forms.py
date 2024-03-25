@@ -140,11 +140,24 @@ class Create_InstrumentLevel_Form(forms.ModelForm):
         }
 
 
+# class Create_InstrumentDirectory_Form(forms.ModelForm):
+#     name = forms.CharField(
+#         label = "Name", 
+#         required=True, 
+#         error_messages={'required': "Please enter a name before submitting the form."})
+    
+#     class Meta:
+#         model = instrument_level_folder
+#         fields = ('name',)
+
+
 class Create_InstrumentDirectory_Form(forms.ModelForm):
     name = forms.CharField(
         label = "Name", 
         required=True, 
-        error_messages={'required': "Please enter a name before submitting the form."})
+        error_messages={'required': "Please enter a name before submitting the form."},
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
 
     # Use BooleanField for checkbox fields
     has_progress_bar = forms.BooleanField(
@@ -157,9 +170,9 @@ class Create_InstrumentDirectory_Form(forms.ModelForm):
         required=False
     )
 
-    due_date = forms.DateTimeField(
-        required=False,
-    )
+    due_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                        'class': 'form-control'}),
+                                                                        required=False,)
     
     class Meta:
         model = instrument_level_folder

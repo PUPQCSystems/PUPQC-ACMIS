@@ -7,7 +7,7 @@
 				autocomplete="off" 
 				id="create-advance-folder-form"
 				class="modal-content"
-				data-id="{{ pk }}">
+				data-id="{{ parent_folder.id }}">
 
 				<div class="modal-header">
 					<h1 class="modal-title">New Folder</h1>
@@ -16,6 +16,7 @@
 
 				<div class="modal-body scrollable">
 					{% csrf_token %}
+
 					<div id="div_id_name" class="mb-3"> 
 						<label for="id_name" class="form-label requiredField required">
 							Name
@@ -61,7 +62,8 @@
 							<textarea type="datetime-local" name="description" class="form-control datetimeinput" id="id_description" disabled
 								data-bs-toggle="tooltip" 
 								data-bs-html="true" 
-								title="<em>Check</em> the <u>checkbox</u> to activate this input field."></textarea>
+								title="<em>Check</em> the <u>checkbox</u> to activate this input field."
+							></textarea>
 						</div>
 					  </div>
 

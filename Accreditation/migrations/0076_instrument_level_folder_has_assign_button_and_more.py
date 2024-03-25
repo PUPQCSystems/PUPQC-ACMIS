@@ -13,11 +13,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='instrument_level_folder',
             name='has_assign_button',
-            field=models.DateTimeField(blank=True, null=True),
+            field=models.BooleanField(default=False),
         ),
         migrations.AddField(
             model_name='instrument_level_folder',
             name='has_progress_bar',
-            field=models.DateTimeField(blank=True, null=True),
+            field=models.BooleanField(default=False),
         ),
     ]

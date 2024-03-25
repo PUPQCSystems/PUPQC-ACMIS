@@ -1,11 +1,11 @@
 {% load crispy_forms_tags %}
 
  <!-- Modal -->
-	<div class="modal modal-blur fade" id="create-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal modal-blur fade" id="create-simple-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div id='create-modal-dialog' class="modal-dialog modal-m modal-dialog-centered">
 			<form 
 				autocomplete="off" 
-				id="create-folder-form"
+				id="create-simple-folder-form"
 				class="modal-content"
 				data-id="{{ parent_folder.id }}">
 
@@ -16,12 +16,19 @@
 
 				<div class="modal-body">
 					{% csrf_token %}
-					{{ create_form|crispy }}
+
+					<div id="div_id_name" class="mb-3"> 
+						<label for="id_name" class="form-label requiredField required">
+							Name
+						</label> 
+						<input type="text" name="name" class="textinput form-control" required="" id="id_name"> 
+					</div>
+					
 				</div>
 
 				<div class="modal-footer">
 					<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-					<button id="submit" type="submit" class="btn btn-primary">Create</button>
+					<button id="submit-simple" type="submit" class="btn btn-primary">Create</button>
 				</div>
 
 

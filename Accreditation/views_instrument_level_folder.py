@@ -93,7 +93,7 @@ def create(request, pk):
         return JsonResponse({'status': 'success'}, status=200)
     else:
         # Return a validation error using a JSON response
-        return JsonResponse({'errors': 'create_form.errors'}, status=400)
+        return JsonResponse({'errors': create_form.errors}, status=400)
     
 @login_required
 def create_child(request, pk):
@@ -137,7 +137,7 @@ def update(request, pk):
 
     if request.method == 'POST':
         # Process the form submission with updated data
-        update_form = Create_InstrumentDirectory_Form(request.POST or None, instance=folder_record)
+        update_form = Create_InstrumentDirectory_Form(request.POST, instance=folder_record)
 
         if update_form.is_valid():
             # Save the updated data to the database
