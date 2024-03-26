@@ -1,0 +1,144 @@
+<div class="row row-cards">
+    {% if records %}
+        <!-- For LOOP HERE-->
+        {% for record in records %}
+            <div class="col-sm-4 col-lg-3">
+                <div class="card  rounded-4" onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-11 text-truncate"
+                            data-bs-toggle="tooltip" 
+                            data-bs-html="true" 
+                            data-bs-placement="bottom"
+                            title="{{  record.name }}">
+                                <a class="text-reset" href=" {% url 'accreditations:instrument-level-child-directory' pk=record.id %}">{{  record.name }}</a>
+                            </div>
+                            <div class="col-1 ms-auto lh-1">
+                                <div class="dropdown">
+                                    <a  class="text-muted" href="#" id="dropdownMenuButton-{{ record.id }}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                        data-bs-toggle="tooltip" 
+                                        data-bs-html="true" 
+                                        data-bs-placement="bottom"
+                                        title="More actions">
+                                        <!-- Download SVG icon from http://tabler-icons.io/i/dots-vertical -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end " id="dropdownMenu-{{ record.id }}">
+                                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
+                                        <a  href={% url 'accreditations:parent-directory-recycle-bin-restore' ins_pk=instrument_level_record.id pk=record.id %} class="dropdown-item">Restore</a>
+                                        <button class="dropdown-item text-danger archive-button" data-bs-toggle="modal" data-bs-target="#change-advance-modal-{{ record.id }}">Permanent Delete</button>
+                                       
+                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br>
+                        <a class="text-decoration-none" href="{% url 'accreditations:instrument-level-child-directory' pk=record.id %}">
+                            <div class="border  p-4 rounded-4 text-center">
+                        
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray" class="icon folder-icon icon-tabler icons-tabler-filled icon-tabler-folder">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M9 3a1 1 0 0 1 .608 .206l.1 .087l2.706 2.707h6.586a3 3 0 0 1 2.995 2.824l.005 .176v8a3 3 0 0 1 -2.824 2.995l-.176 .005h-14a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-11a3 3 0 0 1 2.824 -2.995l.176 -.005h4z" />
+                                    </svg>
+                                
+                                    {% if record.due_date %}
+                                        <div class="link-warning">
+                                            <!-- Download SVG icon from http://tabler-icons.io/i/calendar -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M4 11h16"></path><path d="M11 15h1"></path><path d="M12 15v3"></path></svg>
+                                            {{ record.due_date|date:"M d, Y" }}
+                                        </div>
+                                    {% endif %}
+                        
+                            </div>
+                        </a>
+            
+
+                        <div class="mt-4">
+                            <div class="row">
+
+                                {% if record.has_progress_bar == True %}
+                                    <div class="col">
+                                        <div class="d-flex">
+                                            <div class="subheader">Progress</div>
+                                            <div class="ms-auto">
+                                                <span class="text-green d-inline-flex align-items-center lh-1 subheader">
+                                                    {% if record.progress_percentage == None %}
+                                                        0% Done
+                                                    {% else %}
+                                                        {{ record.progress_percentage }}% Done
+                                                    {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="progress progress-sm">
+                                            <div class="progress-bar bg-primary" style="width: {{ record.progress_percentage }}%" role="progressbar" aria-valuenow="{{ record.progress_percentage }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ record.progress_percentage }}% Complete">
+                                                <span class="visually-hidden">{{ record.progress_percentage }}% Complete</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                  
+
+                                {% if perms.Accreditation.add_user_assigned_to_area and perms.Accreditation.view_user_assigned_to_area and perms.Accreditation.change_user_assigned_to_area and perms.Accreditation.delete_user_assigned_to_area %}
+                                    {% if record.has_assign_button == True %}
+                                        <div class="col-auto text-muted">
+                                            <button href="#" class="btn rounded-circle btn-icon btn-ghost-info" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#assign-modal-{{ record.id }}"
+                                            data-bs-toggle="tooltip" 
+                                            data-bs-html="true" 
+                                            data-bs-placement="bottom"
+                                            title="Assign User">
+                                            
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                                                    <path d="M16 19h6" />
+                                                    <path d="M19 16v6" />
+                                                    <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+                                                </svg>
+                    
+                                            </button>
+
+                                            {% comment %} <button class="switch-icon" data-bs-toggle="modal" data-bs-target="#assign-modal-{{ record.id }}">
+                                                <span class="switch-icon-a text-muted">
+                                                   
+                                                    <span class=" text_muted badge-notification ">{{user_counts}}</span>
+                                                </span>
+                                            </button> {% endcomment %}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                                {% comment %} 
+                                    <div class="col-auto">
+                                        <a href="#" class="link-muted"><!-- Download SVG icon from http://tabler-icons.io/i/share -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M6 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M18 6m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path><path d="M8.7 10.7l6.6 -3.4"></path><path d="M8.7 13.3l6.6 3.4"></path></svg>
+                                        </a>
+                                    </div>
+                                 {% endcomment %}
+                            </div>
+                        </div>
+               
+                    </div>
+                </div>
+            
+            </div>
+            
+            {% block modal_content %}
+                {% include "accreditation-level-parent-directory/main-page/view-modal.html" %}
+            {% endblock modal_content %}
+
+        {% endfor %}
+
+
+    {% else %}
+    <div class="empty">
+        <div class="empty-header">0 items</div>
+        <p class="empty-title">Oops… It seems like there are no trash in the recycle bin. </p>
+        <p class="empty-subtitle text-muted">
+            Items in the recycle bin will stay here until a user permanently deletes the items.
+        </p>
+      </div>
+      {% endif %}
+</div>

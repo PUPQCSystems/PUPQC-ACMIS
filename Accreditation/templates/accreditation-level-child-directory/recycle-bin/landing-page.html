@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    Recycle Bin Page
+{% endblock page-title %}
+
+
+<!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
+{% block page-title-actions %}
+        <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search levels..."/>
+        <a href="{% url 'accreditations:instrument-level-child-directory' pk=pk %}" class="btn btn-primary">
+          <!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l14 0"></path><path d="M5 12l6 6"></path><path d="M5 12l6 -6"></path></svg>
+          Back
+        </a>
+
+
+{% endblock page-title-actions %}
+
+{% block content %}
+
+    {% if perms.Accreditation.view_instrument_level_area %}
+        {% include "accreditation-level-child-directory/recycle-bin/folder-cards.html" %}
+    {% endif %}
+
+    {% if perms.Accreditation.add_instrument_level_folders or perms.Accreditation.change_instrument_level_folders or perms.Accreditation.delete_instrument_level_folders %}
+        {% include "accreditation-level-child-directory/recycle-bin/scripts.html" %}
+
+        {% include "accreditation-level-child-directory/recycle-bin/styles.html" %}
+    {% endif %}
+
+{% endblock content %}
+
+
+
+
