@@ -155,9 +155,9 @@ class Create_InstrumentDirectory_Form(forms.ModelForm):
     name = forms.CharField(
         label = "Name", 
         required=True, 
-        error_messages={'required': "Please enter a name before submitting the form."},
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-    )
+        validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&0-9]*$', 
+        message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Name Field!")],
+        error_messages={'required': "Please enter a name before submitting the form."})
 
     # Use BooleanField for checkbox fields
     has_progress_bar = forms.BooleanField(
@@ -178,3 +178,23 @@ class Create_InstrumentDirectory_Form(forms.ModelForm):
         model = instrument_level_folder
         fields = ('name', 'label','due_date', 'description', 'has_progress_bar', 'has_assign_button')
 
+class SubmissionBin_Form(forms.ModelForm):
+    name = forms.CharField(max_length=500, 
+                           min_length = 5, 
+                           required=True,
+                            validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&0-9]*$', 
+                            message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Name Field!")],
+                            error_messages={'required': "Please enter a name before submitting the form."})
+
+    class Meta:
+        model = instrument_level_folder
+        fields = ('name', 'description')
+
+        widgets = {
+            'description': forms.Textarea(attrs={'required': False,
+                                                 'max_length': 2000,
+                                                 'min_length': 5,
+                                                 'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&0-9]*$', 
+                                                    message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Description Field!")]
+                                                    }),
+        }
