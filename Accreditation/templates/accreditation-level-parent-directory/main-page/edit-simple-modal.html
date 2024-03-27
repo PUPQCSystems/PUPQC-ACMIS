@@ -14,7 +14,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				{% if record.has_assign_button or record.has_progress_bar or record.due_date or record.label or record.description %}
+				{% if record.is_advance %}
 					{{update_form|crispy }} 
 
 				{% else %}

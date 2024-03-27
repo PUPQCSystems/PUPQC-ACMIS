@@ -5,9 +5,9 @@
     <div class="modal-dialog modal-lg">
 		<form 
 			autocomplete="off" 
-			id="update-upload-bin-form-{{ record.id }}"
+			id="update-submission-bin-form-{{ record.id }}"
 			data-id="{{ record.id }}"
-			class="modal-content">
+			class="modal-content update-submission-bin-form">
 
 			<div class="modal-header">
 				<h1 class="modal-title">Modify Submission Bin</h1>
@@ -15,8 +15,8 @@
 			</div>
 			<div class="modal-body">
 				<div class="mb-3">
-					<label class="form-label required">Title</label>
-					<input type="text" class="form-control" name="title" placeholder="Input Title" required
+					<label class="form-label required">Name</label>
+					<input type="text" class="form-control" name="name" placeholder="Input Name" required
 					value="{{ record.name }}"
 					maxlength="500"
 					minlength="5">
@@ -89,3 +89,30 @@
 		</form>
 	</div>
 </div>
+
+{% block js_content %}
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			var el;
+			window.TomSelect && (new TomSelect(el = document.getElementById('select-update-states-{{ record.id }}'), {
+				copyClassesToDropdown: false,
+				dropdownParent: document.querySelector('.update-upload-bin-modal-{{ upload_bin.id }} form-control'),
+				controlInput: '<input>',
+				render: {
+					item: function(data, escape) {
+						if (data.customProperties) {
+							return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+						}
+						return '<div>' + escape(data.text) + '</div>';
+					},
+					option: function(data, escape) {
+						if (data.customProperties) {
+							return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+						}
+						return '<div>' + escape(data.text) + '</div>';
+					},
+				},
+			}));
+		});
+	</script>		
+{% endblock js_content %}

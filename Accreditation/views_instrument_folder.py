@@ -45,10 +45,18 @@ def create(request, pk):
     create_form = Create_InstrumentDirectory_Form(request.POST or None)
 
     if create_form.is_valid():
+        name = create_form.cleaned_data.get('name')
+        label = create_form.cleaned_data.get('label')
+        due_date = create_form.cleaned_data.get('due_date')
+        description = create_form.cleaned_data.get('description')
+        has_progress_bar = create_form.cleaned_data.get('has_progress_bar')
+        has_assign_button = create_form.cleaned_data.get('has_assign_button')
         create_form.instance.created_by = request.user
         create_form.instance.instrument_level_id = pk
+        if label or due_date or description or has_progress_bar or has_assign_button :
+            create_form.instance.is_advance = True
         create_form.save()
-        name = create_form.cleaned_data.get('name')
+
 
         # Create an instance of the ActivityLog model
         activity_log_entry = activity_log()
@@ -175,6 +183,16 @@ def create_child(request, pk):
     create_form = Create_InstrumentDirectory_Form(request.POST or None)
 
     if create_form.is_valid():
+        name = create_form.cleaned_data.get('name')
+        label = create_form.cleaned_data.get('label')
+        due_date = create_form.cleaned_data.get('due_date')
+        description = create_form.cleaned_data.get('description')
+        has_progress_bar = create_form.cleaned_data.get('has_progress_bar')
+        has_assign_button = create_form.cleaned_data.get('has_assign_button')
+
+        if label or due_date or description or has_progress_bar or has_assign_button :
+            create_form.instance.is_advance = True
+
         create_form.instance.created_by = request.user
         create_form.instance.parent_directory_id = pk
         create_form.save()

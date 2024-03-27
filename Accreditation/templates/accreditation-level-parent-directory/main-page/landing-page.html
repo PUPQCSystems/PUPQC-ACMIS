@@ -1,75 +1,75 @@
 {% extends "base.html" %}
 <!-- PAGE TITLE FOR THIS PAGE -->
 {% block page-title %}
-    {{ instrument_level_record.instrument }} ({{ instrument_level_record.level }})
+	{{ instrument_level_record.instrument }} ({{ instrument_level_record.level }})
 {% endblock page-title %}
 
 
 <!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
 {% block page-title-actions %}
-        <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search levels..."/>
-        {% if perms.Accreditation.add_instrument_level_area %}
-              <div class="dropdown">
-                <a href="#" class="btn btn-primary d-none d-sm-inline-block dropdown-toggle " data-bs-toggle="dropdown">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                        <path d="M12 5l0 14"></path><path d="M5 12l14 0"></path>
-                    </svg>
-                    Create
-                </a>
-                <div class="dropdown-menu">
-                  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-simple-modal">
-                    New Folder (Simple)
-                  </a>
-                  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-advance-modal">
-                    New Folder (Advance)
-                  </a>
-                  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-submission-bin-modal">
-                    Submission Bin
-                  </a>
-                  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-file-upload-modal">
-                    File Upload
-                  </a>
-                </div>
-              </div>
-        {% endif %}
+		<input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search levels..."/>
+		{% if perms.Accreditation.add_instrument_level_area %}
+			  <div class="dropdown">
+				<a href="#" class="btn btn-primary d-none d-sm-inline-block dropdown-toggle " data-bs-toggle="dropdown">
+					<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+						<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+						<path d="M12 5l0 14"></path><path d="M5 12l14 0"></path>
+					</svg>
+					Create
+				</a>
+				<div class="dropdown-menu">
+				  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-simple-modal">
+					New Folder (Simple)
+				  </a>
+				  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-advance-modal">
+					New Folder (Advance)
+				  </a>
+				  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-submission-bin-modal">
+					Submission Bin
+				  </a>
+				  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-file-upload-modal">
+					File Upload
+				  </a>
+				</div>
+			  </div>
+		{% endif %}
 
-        <a href="{% url 'accreditations:parent-folder-recycle-bin' pk=pk %}" class="btn btn-green d-none d-sm-inline-block">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M4 7l16 0" />
-                <path d="M10 11l0 6" />
-                <path d="M14 11l0 6" />
-                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-            </svg>
-            Recycle Bin
-        </a>
+		<a href="{% url 'accreditations:parent-folder-recycle-bin' pk=pk %}" class="btn btn-green d-none d-sm-inline-block">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+				<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+				<path d="M4 7l16 0" />
+				<path d="M10 11l0 6" />
+				<path d="M14 11l0 6" />
+				<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+				<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+			</svg>
+			Recycle Bin
+		</a>
 
 {% endblock page-title-actions %}
 
 {% block content %}
-
-    {% if perms.Accreditation.view_instrument_level_area %}
-        {% include "accreditation-level-parent-directory/main-page/folder-cards.html" %}
-    {% endif %}
-
-    {% if perms.Accreditation.add_instrument_level_area or perms.Accreditation.change_instrument_level_area or perms.Accreditation.delete_instrument_level_area %}
-        {% include "accreditation-level-parent-directory/main-page/scripts.html" %}
-
-        {% include "accreditation-level-parent-directory/main-page/styles.html" %}
-    {% endif %}
-
+	{% if perms.Accreditation.view_instrument_level_folder %}
+		{% include "accreditation-level-parent-directory/main-page/folder-cards.html" %}
+	{% endif %}
 {% endblock content %}
+
+{% block js_content %}
+  	{% include "accreditation-level-parent-directory/main-page/scripts.html" %}
+{% endblock js_content %}
+
+{% block css_content %}
+  	{% include "accreditation-level-parent-directory/main-page/styles.html" %}
+{% endblock css_content %}
 
 
 {% block modal_content %}
-    {% if perms.Accreditation.add_instrument_level_area %}
-        {% include "accreditation-level-parent-directory/main-page/create-advance-modal.html" %}
-        {% include "accreditation-level-parent-directory/main-page/create-simple-modal.html" %}
-        {% include "accreditation-level-parent-directory/main-page/create-submission-bin-modal.html" %}
-        {% include "accreditation-level-parent-directory/main-page/create-file-upload-modal.html" %}
-    {% endif %}
+	{% if perms.Accreditation.add_instrument_level_area %}
+		{% include "accreditation-level-parent-directory/main-page/create-advance-modal.html" %}
+		{% include "accreditation-level-parent-directory/main-page/create-simple-modal.html" %}
+		{% include "accreditation-level-parent-directory/main-page/create-submission-bin-modal.html" %}
+		{% include "accreditation-level-parent-directory/main-page/create-file-upload-modal.html" %}
+	{% endif %}
 {% endblock modal_content %}
 
 

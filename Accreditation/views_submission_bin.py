@@ -92,3 +92,47 @@ def create_submissionBin_child(request, pk):
     else:
         # Return a validation error using a JSON response
         return JsonResponse({'errors': submission_bin_form.errors}, status=400)
+    
+
+@login_required
+def update(request, pk):
+    # Retrieve the type object with the given primary key (pk)
+    try:
+        folder_record = instrument_level_folder.objects.get(id=pk)
+    except instrument_level_folder.DoesNotExist:
+        return JsonResponse({'errors': 'Folder is not found!'}, status=404)
+
+    if request.method == 'POST':
+        # Process the form submission with updated data
+        update_form = SubmissionBin_Form(request.POST, instance=folder_record)
+
+        if update_form.is_valid():
+            # Save the updated data to the database
+            update_form.instance.modified_by = request.user
+            update_form.instance.accepted_file_type = request.POST.getlist('accepted_file_type')
+            update_form.instance.accepted_file_count = request.POST.get('accepted_file_count')
+            update_form.instance.accepted_file_size = request.POST.get('accepted_file_size')
+            update_form.save()   
+            name = update_form.cleaned_data.get('name')
+
+            # Create an instance of the ActivityLog model
+            activity_log_entry = activity_log()
+
+            # Set the attributes of the instance
+            activity_log_entry.module = "INSTRUMENT LEVEL FOLDERS MODULE"
+            activity_log_entry.action = "Modified a Folder"
+            activity_log_entry.type = "UPDATE"
+            activity_log_entry.datetime_acted =  timezone.now()
+            activity_log_entry.acted_by = request.user
+            # Set other attributes as needed
+
+            # Save the instance to the database
+            activity_log_entry.save()
+
+            # Provide a success message as a JSON response
+            messages.success(request, f'{name} is successfully updated!') 
+            return JsonResponse({'status': 'success'}, status=200)
+
+        else:
+            # Return a validation error using a JSON response
+            return JsonResponse({'errors': update_form.errors}, status=400)

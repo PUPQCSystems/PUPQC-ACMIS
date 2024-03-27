@@ -57,5 +57,6 @@ urlpatterns = [
     
     path("instrument/level/parent-directory/create/submission-bin/<str:pk>/", views_submission_bin.create_submissionBin_parent, name='create-parent-submission-bin'),
     path("instrument/level/child-directory/create/submission-bin/<str:pk>/", views_submission_bin.create_submissionBin_child, name='create-child-submission-bin'),
+    path("instrument/level/directory/submission-bin/update/<str:pk>/", views_submission_bin.update, name='instrument-directory-update'),
 
 ]
