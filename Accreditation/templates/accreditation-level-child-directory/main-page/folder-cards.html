@@ -26,9 +26,14 @@
                                     <div class="dropdown-menu dropdown-menu-end " id="dropdownMenu-{{ record.id }}">
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
 
-                                        {% if perms.Accreditation.change_instrument_level %}
-                                            <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
+                                        {% if perms.Accreditation.change_instrument_level_folder %}
+                                                <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-simple-modal-{{ record.id }}">Edit</button>
+
+                                                {% if record.has_assign_button == False and record.has_progress_bar == False and record.description == '' and record.label == None and record.due_date == None %}
+                                                    <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#change-advance-modal-{{ record.id }}">Change to Advance</button>
+                                                {% endif %}
                                         {% endif %}
+                                        
                                         {% if perms.Accreditation.delete_instrument_level %}           
                                             <form method="POST" action="{% url 'accreditations:instrument-directory-archive-child' pk=record.id parent_id=parent_folder.id %}" id="archive-form-{{ record.id }}">
                                                 {% csrf_token %}
@@ -132,8 +137,9 @@
             {% block modal_content %}
                 {% include "accreditation-level-child-directory/main-page/view-modal.html" %}
 
-                {% if perms.Accreditation.change_instrument_level_area %}
-                    {% include "accreditation-level-child-directory/main-page/edit-modal.html" %}
+                {% if perms.Accreditation.change_instrument_level_folder %}
+                    {% include "accreditation-level-child-directory/main-page/change-advance-modal.html" %}
+                    {% include "accreditation-level-child-directory/main-page/edit-simple-modal.html" %}
                 {% endif %}
 
                 {% if perms.Accreditation.add_user_assigned_to_area and perms.Accreditation.view_user_assigned_to_area and perms.Accreditation.change_user_assigned_to_area and perms.Accreditation.delete_user_assigned_to_area %}

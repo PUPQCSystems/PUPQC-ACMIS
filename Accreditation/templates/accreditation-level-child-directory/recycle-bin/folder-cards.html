@@ -26,7 +26,8 @@
                                     <div class="dropdown-menu dropdown-menu-end " id="dropdownMenu-{{ record.id }}">
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
                                         <a  href={% url 'accreditations:child-directory-recycle-bin-restore' parent_pk=pk pk=record.id %} class="dropdown-item">Restore</a>
-                                        <button class="dropdown-item text-danger archive-button" data-bs-toggle="modal" data-bs-target="#change-advance-modal-{{ record.id }}">Permanent Delete</button>
+                                        <button type="button" class="dropdown-item text-danger delete-button" id="delete-button" 
+                                                data-id={{ record.id }}>Permanent Delete</button>
                                        
                         
                                     </div>

@@ -1,0 +1,108 @@
+{% load crispy_forms_tags %}
+
+ <!-- Modal -->
+	<div class="modal modal-blur fade" id="create-file-upload-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div id='create-modal-dialog' class="modal-dialog modal-m modal-dialog-centered modal-dialog-scrollable">
+			<form 
+				autocomplete="off" 
+				id="create-advance-folder-form"
+				class="modal-content"
+				data-id="{{ pk }}">
+
+				<div class="modal-header">
+					<h1 class="modal-title">New Folder</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+
+				<div class="modal-body scrollable">
+					{% csrf_token %}
+					<div id="div_id_name" class="mb-3"> 
+						<label for="id_name" class="form-label requiredField required">
+							Name
+						</label> 
+						<input type="text" name="name" class="textinput form-control" required="" id="id_name"> 
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Label</label>
+						<div class="input-group mb-2">
+						  	<span class="input-group-text">
+								<input class="form-check-input m-0" type="checkbox" onmousedown="this.form.id_label.disabled=this.checked">
+						  	</span>
+						  	<input id="id_label" name="label" type="text" class="form-control" autocomplete="off" disabled
+							  maxlength="1000"
+							  data-bs-toggle="tooltip" 
+							  data-bs-html="true" 
+							  title="<em>Check</em> the <u>checkbox</u> to activate this input field."
+							  >
+						</div>
+					  </div>
+
+					  <div class="mb-3">
+						<label class="form-label">Due Date</label>
+						<div class="input-group mb-2">
+						  	<span class="input-group-text">
+								<input class="form-check-input m-0" type="checkbox" onmousedown="this.form.id_due_date.disabled=this.checked">
+						  	</span>
+							<input type="datetime-local" name="due_date" class="form-control datetimeinput" id="id_due_date" disabled
+								data-bs-toggle="tooltip" 
+								data-bs-html="true" 
+								title="<em>Check</em> the <u>checkbox</u> to activate this input field."
+							>
+						</div>
+					  </div>
+
+					  <div class="mb-3">
+						<label class="form-label">Decription</label>
+						<div class="input-group mb-2">
+						  	<span class="input-group-text">
+								<input class="form-check-input m-0" type="checkbox" onmousedown="this.form.id_description.disabled=this.checked">
+						  	</span>
+							<textarea type="datetime-local" name="description" class="form-control datetimeinput" id="id_description" disabled
+								data-bs-toggle="tooltip" 
+								data-bs-html="true" 
+								title="<em>Check</em> the <u>checkbox</u> to activate this input field."></textarea>
+						</div>
+					  </div>
+
+
+					<div id="div_id_description" class="mb-3"> 
+						<label class="form-check"
+						data-bs-toggle="tooltip" 
+						data-bs-html="true" 
+						title="<em>Check</em> the <u>checkbox</u> if you want to add a progress bar to the folder."
+						>
+							<input class="form-check-input" name="has_progress_bar" type="checkbox" id="id_has_progress_bar">
+							<span class="form-check-label required">Add Progress Bar to the Folder</span>
+						</label>
+					</div>
+
+					<div id="div_id_description" class="mb-3"
+						data-bs-toggle="tooltip" 
+						data-bs-html="true" 
+						title="<em>Check</em> the <u>checkbox</u> if you want to add this button to the folder."
+						>
+						<label class="form-check">
+							<input class="form-check-input" name="has_assign_button" type="checkbox" id="id_has_assign_button">
+							<span class="form-check-label required">Add "Assign Taskforce 
+								<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-plus" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+									<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+									<path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+									<path d="M16 19h6" />
+									<path d="M19 16v6" />
+									<path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+								</svg>" Button</span>
+						</label>
+					</div>
+
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+					<button id="submit-advance" type="submit" class="btn btn-primary">Create</button>
+				</div>
+
+
+			</form>
+		</div>
+	</div> 

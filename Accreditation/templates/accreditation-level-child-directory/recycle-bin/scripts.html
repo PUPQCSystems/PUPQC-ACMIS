@@ -147,76 +147,62 @@
 </script> 
 
 
-
 <script>
-    $(".archive-button").click(function(event) {
-        var id = $(this).data('id');         //Get the Id of the record
-        var form = 'archive-form-'+id;      //Attaching the id of the record to this string for identifying the specific form
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "This will be move and can be restore in the Instrument's Levels Archive Page!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, archive it!',
-            cancelButtonText: 'No, cancel!',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Delete the file here
-                document.getElementById(form).submit();
-            }
-        })
-    });
+	const deleteButtons = document.querySelectorAll('.delete-button');
+
+	deleteButtons.forEach((deleteButton) => {
+			deleteButton.addEventListener('click', async () => {
+					const id = event.target.dataset.id; // Get the ID of the button
+					const { value: password, isConfirmed } = await Swal.fire({
+							title: 'Are you sure?',
+							text: "All other records related to this folder will also be PERMANENTLY deleted.",
+							icon: 'warning',
+							showCancelButton: true,
+							confirmButtonColor: '#3085d6',
+							cancelButtonColor: '#d33',
+							confirmButtonButtonText: 'Yes, delete it!',
+							cancelButtonButtonText: 'No, cancel',
+							input: 'password',
+							inputPlaceholder: 'Enter your password to confirm',
+							inputAttributes: {
+									maxlength: 50,
+									autocapitalize: 'off',
+									autocorrect: 'off'
+							}
+					});
+
+					if (isConfirmed) 
+					{
+						if (password) {
+								var url = "/accreditation/instrument/level/directory/recycle-bin/destroy/"+id+"/";
+								// Send AJAX request to verify password
+								$.ajax({
+										url: url,
+										method: 'POST',
+										data: { password: password,
+												'csrfmiddlewaretoken': '{{ csrf_token }}', },
+										success: function(response) {
+												if (response.success) {
+                                                        location.reload();
+												} else {
+														toastr.error(response.error);
+												}
+										},
+										error: function() {
+												toastr.error('Error verifying password');
+										}
+								});
+						} 
+						else {
+								Swal.fire({
+									icon: 'error',
+									title: 'Please input a password!',
+									showConfirmButton: true,
+								});
+						}
+					}
+			});
+	});
+	 
+		
 </script>
-
-
-<script>
-    var currentStep = 1;
-    var updateProgressBar;
-    
-      function displayStep(stepNumber) {
-        if (stepNumber >= 1 && stepNumber <= 3) {
-          $(".step-" + currentStep).hide();
-          $(".step-" + stepNumber).show();
-          currentStep = stepNumber;
-          updateProgressBar();
-        }
-      }
-    
-      $(document).ready(function() {
-        $('#multi-step-form').find('.step').slice(1).hide();
-      
-        $(".next-step").click(function() {
-          if (currentStep < 2) {
-            $(".step-" + currentStep).addClass("animate__animated animate__fadeOutLeft");
-            currentStep++;
-            setTimeout(function() {
-              $(".step").removeClass("animate__animated animate__fadeOutLeft").hide();
-              $(".step-" + currentStep).show().addClass("animate__animated animate__fadeInRight");
-              updateProgressBar();
-            }, 500);
-          }
-        });
-    
-        $(".prev-step").click(function() {
-          if (currentStep > 1) {
-            $(".step-" + currentStep).addClass("animate__animated animate__fadeOutRight");
-            currentStep--;
-            setTimeout(function() {
-              $(".step").removeClass("animate__animated animate__fadeOutRight").hide();
-              $(".step-" + currentStep).show().addClass("animate__animated animate__fadeInLeft");
-              updateProgressBar();
-            }, 500);
-          }
-        });
-    
-        updateProgressBar = function() {
-          var progressPercentage = ((currentStep - 1) / 1) * 100;
-          $(".progress-bar").css("width", progressPercentage + "%");
-        }
-      });
-    
-    
-</script>
-

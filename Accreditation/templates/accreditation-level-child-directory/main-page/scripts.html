@@ -77,9 +77,9 @@
 </script> 
 
 {% comment %} AJAX FOR UPDATING  {% endcomment %}
- <script>
+<script>
     $(document).ready(function(){
-        $(".update-instrument-level-form").submit(function(event) {
+        $(".update-folder-form").submit(function(event) {
             var id = $(this).data('id');
             event.preventDefault();
             event.stopPropagation();
@@ -106,22 +106,19 @@
                         toastr.error('Something went wrong. Please try again later.');
                     }
                 }
-
             });
         });
-        
     });
 </script> 
-
 
 {% comment %} AJAX FOR UPDATING  {% endcomment %}
 <script>
     $(document).ready(function(){
-        $(".update-child-folder-form").submit(function(event) {
+        $(".change-advance-folder-form").submit(function(event) {
             var id = $(this).data('id');
             event.preventDefault();
             event.stopPropagation();
-            var serializedData = $("#update-instrument-level-form-"+id).serialize();
+            var serializedData = $("#change-advance-folder-form-"+id).serialize();
             var url = "/accreditation/instrument/level/directory/update/"+id+"/";
     
             $.ajax({

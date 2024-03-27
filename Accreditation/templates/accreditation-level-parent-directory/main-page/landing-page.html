@@ -24,6 +24,12 @@
                   <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-advance-modal">
                     New Folder (Advance)
                   </a>
+                  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-submission-bin-modal">
+                    Submission Bin
+                  </a>
+                  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-file-upload-modal">
+                    File Upload
+                  </a>
                 </div>
               </div>
         {% endif %}
@@ -61,6 +67,8 @@
     {% if perms.Accreditation.add_instrument_level_area %}
         {% include "accreditation-level-parent-directory/main-page/create-advance-modal.html" %}
         {% include "accreditation-level-parent-directory/main-page/create-simple-modal.html" %}
+        {% include "accreditation-level-parent-directory/main-page/create-submission-bin-modal.html" %}
+        {% include "accreditation-level-parent-directory/main-page/create-file-upload-modal.html" %}
     {% endif %}
 {% endblock modal_content %}
 
