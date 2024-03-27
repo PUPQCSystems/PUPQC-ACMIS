@@ -1,0 +1,91 @@
+{% load crispy_forms_tags %}
+
+<!-- Modal -->
+<div class="modal modal-blur fade" id="edit-submission-bin-modal-{{ record.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+		<form 
+			autocomplete="off" 
+			id="update-upload-bin-form-{{ record.id }}"
+			data-id="{{ record.id }}"
+			class="modal-content">
+
+			<div class="modal-header">
+				<h1 class="modal-title">Modify Submission Bin</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="mb-3">
+					<label class="form-label required">Title</label>
+					<input type="text" class="form-control" name="title" placeholder="Input Title" required
+					value="{{ record.name }}"
+					maxlength="500"
+					minlength="5">
+				</div>
+
+				  <div class="mb-3 row">
+					<div class="col">
+						<label class="form-label required">File Size in mb</label>
+						<input type="number" class="form-control" name="accepted_file_size" placeholder="Input the max number of file size in mb.." required
+						value="{{ record.accepted_file_size }}">
+					</div>
+
+					<div class="col">
+						<label class="form-label required">File Count</label>
+						<input type="number" class="form-control" name="accepted_file_count" placeholder="Input the max number files to be submitted.." required
+						value="{{ record.accepted_file_count }}">
+					</div>
+				</div>
+
+					<div class="mb-3">
+						<div class="form-label">Select accepted file types</div>
+						<select type="text" class="form-select select-text" name="accepted_file_type" id="select-update-states-{{ record.id }}" value="" multiple>
+							<!-- Images -->
+							<option value="image/jpeg" selected>JPEG</option>
+							<option value="image/png">PNG</option>
+							<option value="image/gif">GIF</option>
+							<option value="image/bmp">BMP</option>
+							<option value="image/svg+xml">SVG</option>
+							<option value="image/webp">WebP</option>
+
+							<!-- Documents -->
+							<option value="application/pdf" selected>PDF</option>
+							<option value="application/msword" selected>Microsoft Word (DOC)</option>
+							<option value="application/vnd.openxmlformats-officedocument.wordprocessingml.document" selected>Microsoft Word (DOCX)</option>
+							<option value="application/vnd.ms-excel" selected>Microsoft Excel (XLS)</option>
+							<option value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">Microsoft Excel (XLSX)</option>
+							<option value="application/vnd.ms-powerpoint" selected>Microsoft PowerPoint (PPT)</option>
+							<option value="application/vnd.openxmlformats-officedocument.presentationml.presentation">Microsoft PowerPoint (PPTX)</option>
+							<option value="text/plain">Plain Text (TXT)</option>
+
+							<!-- Audio/Video -->
+							<option value="audio/mp3">MP3</option>
+							<option value="video/mp4">MP4</option>
+							<option value="audio/ogg">Ogg</option>
+							<option value="video/webm">WebM</option>
+
+							<!-- Archives -->
+							<option value="application/zip">ZIP</option>
+							<option value="application/x-rar-compressed">RAR</option>
+
+							<!-- CSV -->
+							<option value="text/csv">CSV</option>
+
+							<!-- HTML, CSS, JavaScript -->
+							<option value="text/html">HTML</option>
+							<option value="text/css">CSS</option>
+							<option value="application/javascript">JavaScript</option>
+						</select>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Description</label>
+						<textarea class="form-control" id="description" name="description" placeholder="Input upload bin description" data-bs-toggle="autosize">{{ record.description }}</textarea>
+					  </div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+				<button type="submit" class="btn btn-primary save-upload-bin-changes">Save</button>
+			</div>
+		</form>
+	</div>
+</div>

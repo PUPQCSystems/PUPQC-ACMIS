@@ -157,7 +157,8 @@ class Create_InstrumentDirectory_Form(forms.ModelForm):
         required=True, 
         validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&0-9]*$', 
         message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Name Field!")],
-        error_messages={'required': "Please enter a name before submitting the form."})
+        error_messages={'required': "Please enter a name before submitting the form."},
+        widget=forms.TextInput(attrs={'class': 'form-control'}),)
 
     # Use BooleanField for checkbox fields
     has_progress_bar = forms.BooleanField(

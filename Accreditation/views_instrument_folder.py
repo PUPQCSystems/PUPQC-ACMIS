@@ -4,7 +4,7 @@ from django.views import View
 
 from Users.models import activity_log
 from .models import instrument_level, instrument_level_folder #Import the model for data retieving
-from .forms import Create_InstrumentDirectory_Form
+from .forms import Create_InstrumentDirectory_Form, SubmissionBin_Form
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 def parent_landing_page(request, pk):
     #Getting the data from the API
     create_form = Create_InstrumentDirectory_Form(request.POST or None)
+    submission_bin_form = SubmissionBin_Form(request.POST or None)
     records = instrument_level_folder.objects.filter(is_deleted= False, instrument_level=pk, parent_directory= None) #Getting all the data inside the Program table and storing it to the context variable
     instrument_level_record = instrument_level.objects.select_related('instrument').get(id=pk, is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
 
@@ -32,7 +33,8 @@ def parent_landing_page(request, pk):
                 'create_form': create_form, 
                 'details': details,
                 'instrument_level_record':instrument_level_record,
-                'pk': pk
+                'pk': pk,
+                'submission_bin_form':submission_bin_form
                }  
 
     return render(request, 'accreditation-level-parent-directory/main-page/landing-page.html', context)

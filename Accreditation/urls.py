@@ -1,5 +1,5 @@
 from django.urls import path
-from Accreditation import  views_instrument_folder, views_instrument_level
+from Accreditation import  views_instrument_folder, views_instrument_level, views_submission_bin
 from . import views_level, views_bodies, views_instrument
 
 from Accreditation.views_instrument_level import *
@@ -54,6 +54,8 @@ urlpatterns = [
     path("instrument/level/child-directory/recycle-bin/<str:pk>/", views_instrument_folder.child_recycle_bin, name='child-folder-recycle-bin'),
     path("instrument/level/child-directory/recycle-bin/restore/<str:parent_pk>/<str:pk>/", views_instrument_folder.restore_child, name='child-directory-recycle-bin-restore'),
     path("instrument/level/directory/recycle-bin/destroy/<str:pk>/", views_instrument_folder.destroy, name='folder-destroy'),
-
+    
+    path("instrument/level/parent-directory/create/submission-bin/<str:pk>/", views_submission_bin.create_submissionBin_parent, name='create-parent-submission-bin'),
+    path("instrument/level/child-directory/create/submission-bin/<str:pk>/", views_submission_bin.create_submissionBin_child, name='create-child-submission-bin'),
 
 ]

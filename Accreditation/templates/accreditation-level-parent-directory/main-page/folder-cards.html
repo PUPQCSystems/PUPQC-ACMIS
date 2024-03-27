@@ -27,10 +27,14 @@
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
 
                                         {% if perms.Accreditation.change_instrument_level_folder %}
-                                                <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-simple-modal-{{ record.id }}">Edit</button>
+                                                {% if record.is_submission_bin  %}
+                                                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit-submission-bin-modal-{{ record.id }}">Edit</button>
+                                                {% else %}
+                                                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit-simple-modal-{{ record.id }}">Edit</button>
+                                                {% endif %}
 
                                                 {% if record.has_assign_button == False and record.has_progress_bar == False and record.description == '' and record.label == None and record.due_date == None %}
-                                                    <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#change-advance-modal-{{ record.id }}">Change to Advance</button>
+                                                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#change-advance-modal-{{ record.id }}">Change to Advance</button>
                                                 {% endif %}
                                         {% endif %}
 
@@ -142,6 +146,7 @@
                 {% if perms.Accreditation.change_instrument_level_folder %}
                     {% include "accreditation-level-parent-directory/main-page/change-advance-modal.html" %}
                     {% include "accreditation-level-parent-directory/main-page/edit-simple-modal.html" %}
+                    {% include "accreditation-level-parent-directory/main-page/edit-submission-bin-modal.html" %}
                 {% endif %}
 
                 {% if perms.Accreditation.add_user_assigned_to_area and perms.Accreditation.view_user_assigned_to_area and perms.Accreditation.change_user_assigned_to_area and perms.Accreditation.delete_user_assigned_to_area %}
