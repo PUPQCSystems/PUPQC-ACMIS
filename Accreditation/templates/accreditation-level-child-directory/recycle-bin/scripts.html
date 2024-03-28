@@ -206,3 +206,63 @@
 	 
 		
 </script>
+
+<script>
+	const deleteFileButtons = document.querySelectorAll('.file-delete-button');
+
+	deleteFileButtons.forEach((deleteFileButton) => {
+			deleteFileButton.addEventListener('click', async () => {
+					const id = event.target.dataset.id; // Get the ID of the button
+					const { value: password, isConfirmed } = await Swal.fire({
+							title: 'Are you sure?',
+							text: "This will be PERMANENTLY deleted.",
+							icon: 'warning',
+							showCancelButton: true,
+							confirmButtonColor: '#3085d6',
+							cancelButtonColor: '#d33',
+							confirmButtonButtonText: 'Yes, delete it!',
+							cancelButtonButtonText: 'No, cancel',
+							input: 'password',
+							inputPlaceholder: 'Enter your password to confirm',
+							inputAttributes: {
+									maxlength: 50,
+									autocapitalize: 'off',
+									autocorrect: 'off'
+							}
+					});
+
+					if (isConfirmed) 
+					{
+						if (password) {
+								var url = "/accreditation/instrument/level/directory/submission-bin/recycle-bin/destroy/"+id+"/";
+								// Send AJAX request to verify password
+								$.ajax({
+										url: url,
+										method: 'POST',
+										data: { password: password,
+												'csrfmiddlewaretoken': '{{ csrf_token }}', },
+										success: function(response) {
+												if (response.success) {
+                                                        location.reload();
+												} else {
+														toastr.error(response.error);
+												}
+										},
+										error: function() {
+												toastr.error('Error verifying password');
+										}
+								});
+						} 
+						else {
+								Swal.fire({
+									icon: 'error',
+									title: 'Please input a password!',
+									showConfirmButton: true,
+								});
+						}
+					}
+			});
+	});
+</script>
+
+

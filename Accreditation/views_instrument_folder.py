@@ -285,9 +285,11 @@ def parent_recycle_bin(request, pk):
 
 @login_required
 def child_recycle_bin(request, pk):
+    uploaded_files = files.objects.filter(parent_directory=pk, is_deleted=True)
     records = instrument_level_folder.objects.filter(is_deleted= True, parent_directory=pk) #Getting all the data inside the Program table and storing it to the context variable
     context =   {   'records': records,
                     'pk':pk,
+                    'uploaded_files': uploaded_files
                 }   #Getting all the data inside the type table and storing it to the context variable
     return render(request, 'accreditation-level-child-directory/recycle-bin/landing-page.html', context)
 
@@ -351,6 +353,40 @@ def restore_child(request, parent_pk ,pk):
 
     messages.success(request, f'{name} The Folder is successfully restored!') 
     return redirect('accreditations:child-folder-recycle-bin', pk=parent_pk)
+
+@login_required
+def restore_child_file(request, pk):
+    # Gets the records who have this ID
+    file_record = files.objects.get(id=pk)
+
+    #After getting that record, this code will restore it.
+    file_record.modified_by = request.user
+    file_record.deleted_at = None
+    file_record.is_deleted=False
+    name = file_record.file_name
+    file_record.save()
+
+    # Create an instance of the ActivityLog model
+    activity_log_entry = activity_log()
+
+    # Set the attributes of the instance
+    activity_log_entry.module = "RECYCLE BIN MODULE"
+    activity_log_entry.action = "Restored a file"
+    activity_log_entry.type = "RESTORE"
+    activity_log_entry.datetime_acted =  timezone.now()
+    activity_log_entry.acted_by = request.user
+    # Set other attributes as needed
+
+    # Save the instance to the database
+    activity_log_entry.save()
+
+
+    pk = file_record.parent_directory_id
+    messages.success(request, f'The file named {name} is successfully restored!') 
+    return redirect('accreditations:child-folder-recycle-bin', pk=pk)
+
+
+
 
 
 @login_required
