@@ -55,6 +55,7 @@ urlpatterns = [
     path("instrument/level/child-directory/recycle-bin/restore/<str:parent_pk>/<str:pk>/", views_instrument_folder.restore_child, name='child-directory-recycle-bin-restore'),
     path("instrument/level/directory/recycle-bin/destroy/<str:pk>/", views_instrument_folder.destroy, name='folder-destroy'),
     
+    path("instrument/level/directory/submission-bin/<str:pk>/", views_submission_bin.landing_page, name='submission-bin-page'),
     path("instrument/level/parent-directory/create/submission-bin/<str:pk>/", views_submission_bin.create_submissionBin_parent, name='create-parent-submission-bin'),
     path("instrument/level/child-directory/create/submission-bin/<str:pk>/", views_submission_bin.create_submissionBin_child, name='create-child-submission-bin'),
     path("instrument/level/directory/submission-bin/update/<str:pk>/", views_submission_bin.update, name='instrument-directory-update'),

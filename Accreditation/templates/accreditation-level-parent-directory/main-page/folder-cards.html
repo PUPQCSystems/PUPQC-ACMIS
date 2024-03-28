@@ -11,7 +11,11 @@
                             data-bs-html="true" 
                             data-bs-placement="bottom"
                             title="{{  record.name }}">
-                                <a class="text-reset" href=" {% url 'accreditations:instrument-level-child-directory' pk=record.id %}">{{  record.name }}</a>
+                            {% if record.is_submission_bin %}
+                                <a class="text-reset" href="{% url 'accreditations:submission-bin-page' pk=record.id %}">{{record.name}}</a>
+                            {% else %}
+                                <a class="text-reset" href="{% url 'accreditations:instrument-level-child-directory' pk=record.id %}">{{record.name}}</a>
+                            {% endif %}
                             </div>
                             <div class="col-1 ms-auto lh-1">
                                 <div class="dropdown">
@@ -50,7 +54,11 @@
                         </div>
 
                         <br>
-                        <a class="text-decoration-none" href="{% url 'accreditations:instrument-level-child-directory' pk=record.id %}">
+                        {% if record.is_submission_bin %}
+                            <a class="text-decoration-none" href="{% url 'accreditations:submission-bin-page' pk=record.id %}">
+                        {% else %}
+                            <a class="text-decoration-none" href="{% url 'accreditations:instrument-level-child-directory' pk=record.id %}">
+                        {% endif %}
                             <div class="border  p-4 rounded-4 text-center">
                                 {% if record.is_submission_bin %}
                                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="gray"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon folder-icon icon-tabler icons-tabler-outline icon-tabler-upload">

@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.views import View
 
 from Users.models import activity_log
-from .models import instrument_level, instrument_level_folder #Import the model for data retieving
+from .models import files, instrument_level, instrument_level_folder #Import the model for data retieving
 from .forms import Create_InstrumentDirectory_Form, SubmissionBin_Form
 from django.contrib import messages
 from django.utils import timezone
@@ -17,6 +17,48 @@ all_file_types = ['image/jpeg', 'application/pdf', 'application/msword', 'applic
                     'text/plain', 'audio/mp3', 'video/mp4', 'audio/ogg', 'video/webm', 'application/zip', 'application/x-rar-compressed', 'text/csv', 'text/html', 'text/css', 
                     'application/javascript']
  
+def landing_page(request, pk):
+    submission_bin_record = instrument_level_folder.objects.get(id=pk)
+    parent_pk = submission_bin_record.instrument_level.id
+    uploaded_files = files.objects.filter(parent_directory=pk)
+    # This is for the accepted_file_type mapping. This is for making the file types more presentable
+    file_type_mapping = {
+        'image/jpeg': 'JPEG',
+        'image/png': 'PNG',
+        'image/gif': 'GIF',
+        'image/bmp': 'BMP',
+        'image/svg+xml': 'SVG',
+        'image/webp': 'WebP',
+        'application/pdf': 'PDF',
+        'application/msword': 'Microsoft Word (DOC)',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'Microsoft Word (DOCX)',
+        'application/vnd.ms-excel': 'Microsoft Excel (XLS)',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'Microsoft Excel (XLSX)',
+        'application/vnd.ms-powerpoint': 'Microsoft PowerPoint (PPT)',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'Microsoft PowerPoint (PPTX)',
+        'text/plain': 'Plain Text (TXT)',
+        'audio/mp3': 'MP3',
+        'video/mp4': 'MP4',
+        'audio/ogg': 'Ogg',
+        'video/webm': 'WebM',
+        'application/zip': 'ZIP',
+        'application/x-rar-compressed': 'RAR',
+        'text/csv': 'CSV',
+        'text/html': 'HTML',
+        'text/css': 'CSS',
+        'application/javascript': 'JavaScript',
+    }
+
+    context = {     'pk':pk
+                    , 'submission_bin_record': submission_bin_record
+                    , 'file_type_mapping': file_type_mapping
+                    , 'uploaded_files': uploaded_files,
+                    'parent_pk': parent_pk
+                    
+                    }  #Getting all the data inside the type table and storing it to the context variable
+
+    return render(request, 'accreditation-submission-bin/main-page/landing-page.html', context)
+
 @login_required
 def create_submissionBin_parent(request, pk):
     submission_bin_form = SubmissionBin_Form(request.POST or None)
