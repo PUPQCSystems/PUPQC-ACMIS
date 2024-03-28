@@ -63,6 +63,7 @@ urlpatterns = [
     path("instrument/level/child/directory/archive/<str:pk>/<str:parent_id>/", views_instrument_folder.archive_child, name='instrument-directory-archive-child'),
     path("instrument/level/child-directory/recycle-bin/<str:pk>/", views_instrument_folder.child_recycle_bin, name='child-folder-recycle-bin'),
     path("instrument/level/child-directory/recycle-bin/restore/<str:parent_pk>/<str:pk>/", views_instrument_folder.restore_child, name='child-directory-recycle-bin-restore'),
+    path("instrument/level/child-directory/upload-files/<str:pk>/", views_submission_bin.create_child_folder_files, name='child-folder-files-upload'),
 
 
     #------------------------------[ URLS FOR SUBMISSION BIN ]------------------------------#

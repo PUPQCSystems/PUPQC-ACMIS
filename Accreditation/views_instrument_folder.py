@@ -170,6 +170,7 @@ def archive(request, pk, level_id):
 def child_landing_page(request, pk):
     #Getting the data from the API
     create_form = Create_InstrumentDirectory_Form(request.POST or None)
+    uploaded_files = files.objects.filter(parent_directory=pk, is_deleted=False)
     records = instrument_level_folder.objects.filter(is_deleted= False, parent_directory=pk) #Getting all the data inside the Program table and storing it to the context variable
     parent_folder = instrument_level_folder.objects.get(is_deleted=False, id=pk) #Getting the data of the parent folder
     # Initialize an empty list to store update forms for each record
@@ -188,7 +189,8 @@ def child_landing_page(request, pk):
                 'details': details,
                 'pk': pk,
                 'parent_folder': parent_folder,
-                'all_file_types': all_file_types
+                'all_file_types': all_file_types,
+                'uploaded_files': uploaded_files,
                }  
 
     return render(request, 'accreditation-level-child-directory/main-page/landing-page.html', context)
@@ -415,5 +417,12 @@ def archive_files(request, pk):
     # Save the instance to the database
     activity_log_entry.save()
 
-    messages.success(request, f'The file named "{name}" is successfully archived!') 
-    return redirect('accreditations:instrument-level-directory', pk=file_record.instrument_level_id)
+    if file_record.instrument_level:
+        messages.success(request, f'The file named "{name}" is successfully archived!') 
+        return redirect('accreditations:instrument-level-directory', pk=file_record.instrument_level_id)
+
+    elif file_record.parent_directory:
+        messages.success(request, f'The file named "{name}" is successfully archived!') 
+        return redirect('accreditations:instrument-level-child-directory', pk=file_record.parent_directory_id)
+        
+

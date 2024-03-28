@@ -239,6 +239,27 @@ def create_parent_folder_files(request, pk):
         else:
             return JsonResponse({'error': 'Please attach a file before submitting the form.'}, status=400)
         
+def create_child_folder_files(request, pk):
+    if request.method == 'POST':
+        length = request.POST.get('length')
+        length = int(length)
+
+        if length != 0:
+            for file_num in range(0, int(length)):
+                print('File:', request.FILES.get(f'files{file_num}'))
+                files.objects.create(
+                    parent_directory_id = pk ,
+                    uploaded_by = request.user,
+                    file_name =  request.FILES.get(f'files{file_num}'), 
+                    file_path=request.FILES.get(f'files{file_num}')
+                    
+                )
+            messages.success(request, f'Files Uploaded successfully!') 
+            return JsonResponse({'status': 'success'}, status=200)
+            
+        else:
+            return JsonResponse({'error': 'Please attach a file before submitting the form.'}, status=400)
+        
         
 @login_required
 def archive(request, pk, bin_id):
