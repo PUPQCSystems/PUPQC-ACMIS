@@ -42,12 +42,12 @@
                                                 {% endif %}
                                         {% endif %}
 
-                                        {% if perms.Accreditation.delete_instrument_level %}           
-                                            <form method="POST" action="{% url 'accreditations:instrument-directory-archive' pk=record.id level_id=pk %}" id="archive-form-{{ record.id }}">
-                                                {% csrf_token %}
-                                                <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
-                                            </form>
-                                        {% endif %}
+          
+                                        <form method="POST" action="{% url 'accreditations:instrument-directory-archive' pk=record.id level_id=pk %}" id="archive-form-{{ record.id }}">
+                                            {% csrf_token %}
+                                            <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
+                                        </form>
+                        
                                     </div>
                                 </div>
                             </div>

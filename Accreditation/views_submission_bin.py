@@ -19,7 +19,10 @@ all_file_types = ['image/jpeg', 'application/pdf', 'application/msword', 'applic
  
 def landing_page(request, pk):
     submission_bin_record = instrument_level_folder.objects.get(id=pk)
-    parent_pk = submission_bin_record.instrument_level.id
+    parent_pk = ''
+    if submission_bin_record.instrument_level:
+            parent_pk = submission_bin_record.instrument_level.id
+
     uploaded_files = files.objects.filter(parent_directory=pk, is_deleted=False)
     # This is for the accepted_file_type mapping. This is for making the file types more presentable
     file_type_mapping = {

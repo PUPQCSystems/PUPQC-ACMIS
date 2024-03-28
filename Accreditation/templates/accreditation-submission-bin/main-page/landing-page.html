@@ -10,11 +10,20 @@
 		<input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search files..."/>
 		{% if perms.Accreditation.add_instrument_level_area %}
 
-            <a href="{% url 'accreditations:instrument-level-directory' pk=parent_pk %}" class="btn btn-secondary ">
-                <!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l14 0"></path><path d="M5 12l6 6"></path><path d="M5 12l6 -6"></path></svg>
-                Back
-            </a>
+            {% if parent_pk %}
+                <a href="{% url 'accreditations:instrument-level-directory' pk=parent_pk %}" class="btn btn-secondary ">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l14 0"></path><path d="M5 12l6 6"></path><path d="M5 12l6 -6"></path></svg>
+                    Back
+                </a>
+
+            {% else %}
+                <a href="{% url 'accreditations:instrument-level-child-directory' pk=submission_bin_record.parent_directory_id %}" class="btn btn-secondary ">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l14 0"></path><path d="M5 12l6 6"></path><path d="M5 12l6 -6"></path></svg>
+                    Back
+                </a>
+            {% endif %}
 
             <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#upload-modal">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">

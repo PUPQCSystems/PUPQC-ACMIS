@@ -11,7 +11,12 @@
                             data-bs-html="true" 
                             data-bs-placement="bottom"
                             title="{{  record.name }}">
+
+                            {% if record.is_submission_bin %}
+                                <a class="text-reset" href="{% url 'accreditations:submission-bin-page' pk=record.id %}">{{record.name}}</a>
+                            {% else %}
                                 <a class="text-reset" href=" {% url 'accreditations:instrument-level-child-directory' pk=record.id %}">{{  record.name }}</a>
+                            {% endif %}
                             </div>
                             <div class="col-1 ms-auto lh-1">
                                 <div class="dropdown">
@@ -27,11 +32,15 @@
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
 
                                         {% if perms.Accreditation.change_instrument_level_folder %}
-                                                <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-simple-modal-{{ record.id }}">Edit</button>
+                                            {% if record.is_submission_bin  %}
+                                                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit-submission-bin-modal-{{ record.id }}">Edit</button>
+                                            {% else %}
+                                                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit-simple-modal-{{ record.id }}">Edit</button>
+                                            {% endif %}
 
-                                                {% if record.has_assign_button == False and record.has_progress_bar == False and record.description == '' and record.label == None and record.due_date == None %}
-                                                    <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#change-advance-modal-{{ record.id }}">Change to Advance</button>
-                                                {% endif %}
+                                            {% if record.is_advance == False and record.is_submission_bin == False %}
+                                                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#change-advance-modal-{{ record.id }}">Change to Advance</button>
+                                            {% endif %}
                                         {% endif %}
                                         
                                         {% if perms.Accreditation.delete_instrument_level %}           
@@ -46,13 +55,29 @@
                         </div>
 
                         <br>
-                        <a class="text-decoration-none" href="{% url 'accreditations:instrument-level-child-directory' pk=record.id %}">
+
+
+                        {% if record.is_submission_bin %}
+                            <a class="text-reset" href="{% url 'accreditations:submission-bin-page' pk=record.id %}">
+                        {% else %}
+                            <a class="text-decoration-none" href="{% url 'accreditations:instrument-level-child-directory' pk=record.id %}">
+                        {% endif %}
                             <div class="border  p-4 rounded-4 text-center">
-                        
+                                {% if record.is_submission_bin %}
+                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="gray"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon folder-icon icon-tabler icons-tabler-outline icon-tabler-upload">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                        <path d="M7 9l5 -5l5 5" />
+                                        <path d="M12 4l0 12" />
+                                    </svg>
+
+                                {% else %}
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray" class="icon folder-icon icon-tabler icons-tabler-filled icon-tabler-folder">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path d="M9 3a1 1 0 0 1 .608 .206l.1 .087l2.706 2.707h6.586a3 3 0 0 1 2.995 2.824l.005 .176v8a3 3 0 0 1 -2.824 2.995l-.176 .005h-14a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-11a3 3 0 0 1 2.824 -2.995l.176 -.005h4z" />
-                                    </svg>
+                                    </svg>                                
+                                
+                                {% endif %}
                                 
                                     {% if record.due_date %}
                                         <div class="link-warning">
@@ -140,6 +165,7 @@
                 {% if perms.Accreditation.change_instrument_level_folder %}
                     {% include "accreditation-level-child-directory/main-page/change-advance-modal.html" %}
                     {% include "accreditation-level-child-directory/main-page/edit-simple-modal.html" %}
+                    {% include "accreditation-level-child-directory/main-page/edit-submission-bin-modal.html" %}
                 {% endif %}
 
                 {% if perms.Accreditation.add_user_assigned_to_area and perms.Accreditation.view_user_assigned_to_area and perms.Accreditation.change_user_assigned_to_area and perms.Accreditation.delete_user_assigned_to_area %}

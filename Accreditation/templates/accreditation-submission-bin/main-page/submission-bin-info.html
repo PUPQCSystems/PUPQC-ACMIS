@@ -1,141 +1,137 @@
 <div class="card rounded-4">
     <div class="card-body">
         <div class="row row-cards">
-            <div class="col-auto">
-                    <div class="divide-y">
-                        <div>
-                            <div class="row">
-                                    <h1 class="page-title">
-                                    <span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-stack" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                                            <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
-                                            <path d="M5 21h14" />
-                                            <path d="M5 18h14" />
-                                            <path d="M5 15h14" />
-                                        </svg>
-                                    FILES
-                                </span>
-                                </h1>
-                                <div class="text-muted mt-1"> 
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                                        <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
-                                        </svg>
-                                    {{ submission_bin_record.created_by.first_name }} {{ submission_bin_record.created_by.last_name }} - Last modified ({{ submission_bin_record.modified_at|date:"F j, Y g:i A" }})</div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="row">
-                                <div>
-                                    <div class="datagrid">
-
-
-                                        <div class="datagrid-item">
-                                            <div class="datagrid-title">Title</div>
-                                            <div class="datagrid-content">{{ submission_bin_record.name }}</div>
-                                        </div>
-
-                                        <div class="datagrid-item">
-                                            <div class="datagrid-title">Status</div>
-                                            <div class="datagrid-content">
-            
-                                                {% if submission_bin_record.status == "ur"  %}
-                                                    <span class="status status-blue">
-                                                        Under Review
-                                                    </span>
-            
-                                                {% elif   submission_bin_record.status == "rfr" %}
-                                                    <span class="status status-red">
-                                                        Request for Resubmission
-                                                    </span>
-
-                                                {% elif   submission_bin_record.status == "approve" %}
-                                                <span class="status status-green">
-                                                    Approve
-                                                </span>
-                                                {% else %}
-
-                                                {% endif %}
-                                                
-                                            </div>
-                                        </div>
+            <div class="col-12">
+                <div class="divide-y">
         
-                                        <div class="datagrid-item">
-                                            <div class="datagrid-title">Accepted File Size</div>
-                                            <div class="datagrid-content">{{ submission_bin_record.accepted_file_size}} MB</div>
-                                        </div>
-        
-                                        <div class="datagrid-item">
-                                            <div class="datagrid-title">Accepted Max File</div>
-                                            <div class="datagrid-content"> {{submission_bin_record.accepted_file_count}}</div>
-                                        </div>
-            
-                                        <div class="datagrid-item">
-                                            <div class="datagrid-title">Accepted File Types</div>
-            
-                                                <div class="datagrid-content">
-                                                    {% for file_type, display_name in file_type_mapping.items %}
-                                                        {% if file_type in submission_bin_record.accepted_file_type %}
-                                                            <small class="card-text p-y-1">{{ display_name }},</small>
-                                                        {% endif %}
-                                                 
-                                                    {% endfor %}
-                                                
-                                                </div>
-                                        </div>
-            
-                                        <div class="datagrid-item">
-                                            <div class="datagrid-title">Remarks</div>
-                                            <div class="datagrid-content"> {{ submission_bin_record.remarks }}</div>
-                                        </div>
-            
-                                        {% if not submission_bin_record.reviewed_by %}
-                                            <div class="datagrid-item">
-                                                <div class="datagrid-title">Reviewed by</div>
-                                                <div class="datagrid-content">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                        <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
-                                                        <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
-                                                        </svg>
-                                                    {{submission_bin_record.reviewed_by.first_name}} {{submission_bin_record.reviewed_by.last_name}}
-                                    
-                                                </div>
-                                            </div>
-
-                                            <div class="datagrid-item">
-                                                <div class="datagrid-title">Reviewed at</div>
-                                                <div class="datagrid-content">
-                                                    <span class="status status-blue">
-                                                        {{submission_bin_record.reviewed_at|date:"F j, Y g:i A"}}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        
-                                        {% endif %}
-            
-                                        <div class="datagrid-item">
-                                            <div class="datagrid-title">Description</div>
-                                            <div class="datagrid-content" style="height:5rem">{{submission_bin_record.description}}</div>
-                                        </div>
-            
-                                    </div>
-                            
-                                </div>
-                        
-                            </div>
-                        </div>
-
+                    <div class="row">
+                            <h1 class="page-title">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-stack" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                    <path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4" />
+                                    <path d="M5 21h14" />
+                                    <path d="M5 18h14" />
+                                    <path d="M5 15h14" />
+                                </svg>
+                            FILES
+                        </span>
+                        </h1>
+                        <div class="text-muted mt-1"> 
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                                <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                                </svg>
+                            {{ submission_bin_record.created_by.first_name }} {{ submission_bin_record.created_by.last_name }} - Last modified ({{ submission_bin_record.modified_at|date:"F j, Y g:i A" }})</div>
                     </div>
+                
+
+        
+                    <div class="row">
+                        <div>
+                            <div class="datagrid">
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Title</div>
+                                    <div class="datagrid-content">{{ submission_bin_record.name }}</div>
+                                </div>
+
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Status</div>
+                                    <div class="datagrid-content">
+    
+                                        {% if submission_bin_record.status == "ur"  %}
+                                            <span class="status status-blue">
+                                                Under Review
+                                            </span>
+    
+                                        {% elif   submission_bin_record.status == "rfr" %}
+                                            <span class="status status-red">
+                                                Request for Resubmission
+                                            </span>
+
+                                        {% elif   submission_bin_record.status == "approve" %}
+                                        <span class="status status-green">
+                                            Approve
+                                        </span>
+                                        {% else %}
+
+                                        {% endif %}
+                                        
+                                    </div>
+                                </div>
+
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Accepted File Size</div>
+                                    <div class="datagrid-content">{{ submission_bin_record.accepted_file_size}} MB</div>
+                                </div>
+
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Accepted Max File</div>
+                                    <div class="datagrid-content"> {{submission_bin_record.accepted_file_count}}</div>
+                                </div>
+    
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Accepted File Types</div>
+    
+                                        <div class="datagrid-content">
+                                            {% for file_type, display_name in file_type_mapping.items %}
+                                                {% if file_type in submission_bin_record.accepted_file_type %}
+                                                    <small class="card-text p-y-1">{{ display_name }},</small>
+                                                {% endif %}
+                                            
+                                            {% endfor %}
+                                        
+                                        </div>
+                                </div>
+    
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Remarks</div>
+                                    <div class="datagrid-content"> {{ submission_bin_record.remarks }}</div>
+                                </div>
+    
+                                {% if not submission_bin_record.reviewed_by %}
+                                    <div class="datagrid-item">
+                                        <div class="datagrid-title">Reviewed by</div>
+                                        <div class="datagrid-content">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                                                <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                                                </svg>
+                                            {{submission_bin_record.reviewed_by.first_name}} {{submission_bin_record.reviewed_by.last_name}}
+                            
+                                        </div>
+                                    </div>
+
+                                    <div class="datagrid-item">
+                                        <div class="datagrid-title">Reviewed at</div>
+                                        <div class="datagrid-content">
+                                            <span class="status status-blue">
+                                                {{submission_bin_record.reviewed_at|date:"F j, Y g:i A"}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                
+                                {% endif %}
+    
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Description</div>
+                                    <div class="datagrid-content" style="height:5rem">{{submission_bin_record.description}}</div>
+                                </div>
+    
+                            </div>
+                    
+                        </div>
+                
+                    </div>
+          
+                </div>
 
             </div>
 
            
         </div>
     </div>	
-
 </div>	

@@ -101,10 +101,17 @@ def update(request, pk):
         update_form = Create_InstrumentDirectory_Form(request.POST, instance=folder_record)
 
         if update_form.is_valid():
+            name = update_form.cleaned_data.get('name')
+            label = update_form.cleaned_data.get('label')
+            due_date = update_form.cleaned_data.get('due_date')
+            description = update_form.cleaned_data.get('description')
+            has_progress_bar = update_form.cleaned_data.get('has_progress_bar')
+            has_assign_button = update_form.cleaned_data.get('has_assign_button')
             # Save the updated data to the database
             update_form.instance.modified_by = request.user
+            if label or due_date or description or has_progress_bar or has_assign_button :
+                update_form.instance.is_advance = True
             update_form.save()  
-            name = update_form.cleaned_data.get('name')
 
             # Create an instance of the ActivityLog model
             activity_log_entry = activity_log()
