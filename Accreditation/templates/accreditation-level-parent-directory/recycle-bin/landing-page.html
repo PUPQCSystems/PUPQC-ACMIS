@@ -19,17 +19,43 @@
 
 {% block content %}
 
-    {% if perms.Accreditation.view_instrument_level_area %}
-        {% include "accreditation-level-parent-directory/recycle-bin/folder-cards.html" %}
-    {% endif %}
+    <div class="card rounded-3">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs rounded-3" data-bs-toggle="tabs">
+                <li class="nav-item">
+                    <a href="#tabs-home-8" class="nav-link active" data-bs-toggle="tab">Folders</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#tabs-profile-8" class="nav-link" data-bs-toggle="tab">Files</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content">
+                <div class="tab-pane fade active show" id="tabs-home-8">
+                    <h4>Folders</h4>
+                    {% include "accreditation-level-parent-directory/recycle-bin/folder-cards.html" %}
+                </div>
 
-    {% if perms.Accreditation.add_instrument_level_folders or perms.Accreditation.change_instrument_level_folders or perms.Accreditation.delete_instrument_level_folders %}
-        {% include "accreditation-level-parent-directory/recycle-bin/scripts.html" %}
-
-        {% include "accreditation-level-parent-directory/recycle-bin/styles.html" %}
-    {% endif %}
-
+                <div class="tab-pane fade" id="tabs-profile-8">
+                    <h4>Files</h4>
+                    {% include "accreditation-level-parent-directory/recycle-bin/file-cards.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
+
+
+{% block js_content %}
+    {% include "accreditation-level-parent-directory/recycle-bin/scripts.html" %}
+{% endblock js_content %}
+
+{% block css_content %}
+    {% include "accreditation-level-parent-directory/recycle-bin/styles.html" %}
+{% endblock css_content %}
+
+
 
 
 

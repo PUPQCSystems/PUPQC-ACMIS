@@ -47,9 +47,11 @@ urlpatterns = [
     path("instrument/level/directory/archive/<str:pk>/<str:level_id>/", views_instrument_folder.archive, name='instrument-directory-archive'),
     path("instrument/level/child/directory/archive/<str:pk>/<str:parent_id>/", views_instrument_folder.archive_child, name='instrument-directory-archive-child'),
 
+    path("instrument/level/parent-directory/file/archive/<str:pk>/", views_instrument_folder.archive_files, name='parent-directory-file-archive'),
     path("instrument/level/parent-directory/recycle-bin/<str:pk>/", views_instrument_folder.parent_recycle_bin, name='parent-folder-recycle-bin'),
     path("instrument/level/parent-directory/recycle-bin/restore/<str:ins_pk>/<str:pk>/", views_instrument_folder.restore_parent, name='parent-directory-recycle-bin-restore'),
     path("instrument/level/parent-directory/recycle-bin/destroy/<str:pk>/", views_instrument_level.destroy, name='parent-directory-recycle-bin-destroy'),
+    path("instrument/level/parent-directory/upload-files/<str:pk>/", views_submission_bin.create_parent_folder_files, name='parent-folder-files-upload'),
 
     path("instrument/level/child-directory/recycle-bin/<str:pk>/", views_instrument_folder.child_recycle_bin, name='child-folder-recycle-bin'),
     path("instrument/level/child-directory/recycle-bin/restore/<str:parent_pk>/<str:pk>/", views_instrument_folder.restore_child, name='child-directory-recycle-bin-restore'),
@@ -59,5 +61,12 @@ urlpatterns = [
     path("instrument/level/parent-directory/create/submission-bin/<str:pk>/", views_submission_bin.create_submissionBin_parent, name='create-parent-submission-bin'),
     path("instrument/level/child-directory/create/submission-bin/<str:pk>/", views_submission_bin.create_submissionBin_child, name='create-child-submission-bin'),
     path("instrument/level/directory/submission-bin/update/<str:pk>/", views_submission_bin.update, name='instrument-directory-update'),
+    path("instrument/level/directory/submission-bin/upload-files/<str:pk>/", views_submission_bin.create_files, name='files-upload'),
+
+    path("instrument/level/directory/submission-bin/archive/<str:pk>/<str:bin_id>/", views_submission_bin.archive, name='file-archive'),
+    path("instrument/level/directory/submission-bin/recycle-bin/<str:pk>/", views_submission_bin.recycle_bin, name='submission-bin-recycle-bin-page'),
+    path("instrument/level/directory/submission-bin/recycle-bin/restore/<str:pk>/", views_submission_bin.restore, name='file-restore'),
+    path("instrument/level/directory/submission-bin/recycle-bin/destroy/<str:pk>/", views_submission_bin.destroy, name='file-destroy'),
+
 
 ]

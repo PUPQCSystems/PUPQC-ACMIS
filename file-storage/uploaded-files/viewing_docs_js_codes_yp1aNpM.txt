@@ -1,0 +1,32 @@
+import React from 'react';
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+
+
+function App() {
+
+  const docs = [
+    {
+      uri: "https://calibre-ebook.com/downloads/demos/demo.docx",
+      fileType: "docx",
+      fileName: "SampleFiles.docx"
+
+
+    } // Remote file
+    // { uri: require("./example-files/pdf.pdf") }, // Local File
+  ];
+
+  return (
+
+    <div style={{ height: 3000 }}>
+      <h1>Documents Demo</h1>
+
+      <DocViewer documents={docs} pluginRenderers={DocViewerRenderers} styles={{ height: 1000 }} />
+
+    </div>
+
+  );
+
+
+}
+
+export default App;

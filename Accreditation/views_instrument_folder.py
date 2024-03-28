@@ -3,18 +3,24 @@ from django.http import JsonResponse
 from django.views import View
 
 from Users.models import activity_log
-from .models import instrument_level, instrument_level_folder #Import the model for data retieving
+from .models import files, instrument_level, instrument_level_folder #Import the model for data retieving
 from .forms import Create_InstrumentDirectory_Form, SubmissionBin_Form
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
- 
+
+all_file_types = ['image/jpeg', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+                    'application/vnd.ms-excel', 'application/vnd.ms-powerpoint', 'image/png', 'image/gif', 'image/bmp', 'image/svg+xml', 'image/webp', 
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 
+                    'text/plain', 'audio/mp3', 'video/mp4', 'audio/ogg', 'video/webm', 'application/zip', 'application/x-rar-compressed', 'text/csv', 'text/html', 'text/css', 
+                    'application/javascript']
 @login_required
 def parent_landing_page(request, pk):
     #Getting the data from the API
     create_form = Create_InstrumentDirectory_Form(request.POST or None)
     submission_bin_form = SubmissionBin_Form(request.POST or None)
+    uploaded_files = files.objects.filter(instrument_level=pk, is_deleted=False)
     records = instrument_level_folder.objects.filter(is_deleted= False, instrument_level=pk, parent_directory= None) #Getting all the data inside the Program table and storing it to the context variable
     instrument_level_record = instrument_level.objects.select_related('instrument').get(id=pk, is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
 
@@ -34,7 +40,9 @@ def parent_landing_page(request, pk):
                 'details': details,
                 'instrument_level_record':instrument_level_record,
                 'pk': pk,
-                'submission_bin_form':submission_bin_form
+                'submission_bin_form':submission_bin_form,
+                'all_file_types': all_file_types,
+                'uploaded_files': uploaded_files,
                }  
 
     return render(request, 'accreditation-level-parent-directory/main-page/landing-page.html', context)
@@ -172,7 +180,8 @@ def child_landing_page(request, pk):
                 'create_form': create_form, 
                 'details': details,
                 'pk': pk,
-                'parent_folder': parent_folder
+                'parent_folder': parent_folder,
+                'all_file_types': all_file_types
                }  
 
     return render(request, 'accreditation-level-child-directory/main-page/landing-page.html', context)
@@ -255,11 +264,13 @@ def archive_child(request, pk, parent_id):
 @login_required
 def parent_recycle_bin(request, pk):
     records = instrument_level_folder.objects.filter(is_deleted= True, instrument_level=pk, parent_directory= None) #Getting all the data inside the Program table and storing it to the context variable
+    uploaded_files = files.objects.filter(instrument_level=pk, is_deleted=True)
     instrument_level_record = instrument_level.objects.select_related('instrument').get(id=pk, is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
 
     context =   {   'records': records,
                     'instrument_level_record': instrument_level_record,
-                    'pk':pk
+                    'pk':pk,
+                    'uploaded_files': uploaded_files,
                 }   #Getting all the data inside the type table and storing it to the context variable
     return render(request, 'accreditation-level-parent-directory/recycle-bin/landing-page.html', context)
 
@@ -267,7 +278,7 @@ def parent_recycle_bin(request, pk):
 def child_recycle_bin(request, pk):
     records = instrument_level_folder.objects.filter(is_deleted= True, parent_directory=pk) #Getting all the data inside the Program table and storing it to the context variable
     context =   {   'records': records,
-                    'pk':pk
+                    'pk':pk,
                 }   #Getting all the data inside the type table and storing it to the context variable
     return render(request, 'accreditation-level-child-directory/recycle-bin/landing-page.html', context)
 
@@ -370,3 +381,32 @@ def destroy(request, pk):
             return JsonResponse({'success': False, 'error': 'User not logged in'})
 
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+@login_required
+def archive_files(request, pk):
+    # Gets the records who have this ID
+    file_record = files.objects.get(id=pk)
+
+    #After getting that record, this code will delete it.
+    file_record.modified_by = request.user
+    file_record.is_deleted=True
+    file_record.deleted_at = timezone.now()
+    name = file_record.file_name
+    file_record.save()
+
+    # Create an instance of the ActivityLog model
+    activity_log_entry = activity_log()
+
+    # Set the attributes of the instance
+    activity_log_entry.module = "SUBMISSION BIN MODULE"
+    activity_log_entry.action = "Archived a File"
+    activity_log_entry.type = "ARCHIVE"
+    activity_log_entry.datetime_acted =  timezone.now()
+    activity_log_entry.acted_by = request.user
+    # Set other attributes as needed
+
+    # Save the instance to the database
+    activity_log_entry.save()
+
+    messages.success(request, f'The file named "{name}" is successfully archived!') 
+    return redirect('accreditations:instrument-level-directory', pk=file_record.instrument_level_id)

@@ -294,3 +294,95 @@
         });
     });
 </script> 
+
+{% comment %} -------------------------------[FILES MODULE CODES]------------------------------- {% endcomment %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var files = [];
+        var acceptedFileTypes = {{ all_file_types|safe }};
+        
+        FilePond.registerPlugin(FilePondPluginFileValidateSize);
+        FilePond.registerPlugin(FilePondPluginFileValidateType);
+        FilePond.registerPlugin(FilePondPluginImagePreview);
+        
+        FilePond.setOptions({
+            allowMultiple: true,
+            maxFiles: 100,
+            maxFileSize: '5000MB'
+        });
+        
+        const inputElement = document.querySelector('input[type="file"]');
+        var pond = FilePond.create(inputElement, {
+            acceptedFileTypes: acceptedFileTypes,
+            onaddfile: (err, fileItem) => {
+                if (!err && fileItem.file) {
+                    files.push(fileItem.file);
+                }
+            },
+            onremovefile: (err, fileItem) => {
+                const index = files.indexOf(fileItem.file);
+                if (index > -1) {
+                    files.splice(index, 1);
+                }
+            }
+        });
+
+        $("#upload-file-form").submit(function(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            if (files.length === 0) {
+                toastr.error("Please select at least one file to upload.");
+                return;
+            }
+
+            var url = "/accreditation/instrument/level/parent-directory/upload-files/{{ pk }}/";
+            var formData = new FormData();
+            
+            formData.append('length', files.length);
+            
+            for (var i = 0; i < files.length; i++) {
+                formData.append('files' + i, files[i]);
+            }
+            
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(error) {
+                    toastr.error(error.responseJSON.error);
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    $(".archive-button").click(function(event) {
+        var id = $(this).data('id');         //Get the Id of the record
+        var form = 'archive-form-'+id;      //Attaching the id of the record to this string for identifying the specific form
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This will be move and can be restore in the Recycle Bin!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, archive it!',
+            cancelButtonText: 'No, cancel!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Delete the file here
+                document.getElementById(form).submit();
+            }
+        })
+    });
+</script>

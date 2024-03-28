@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+<!-- PAGE TITLE FOR THIS PAGE -->
+{% block page-title %}
+    Recycle Bin Page
+{% endblock page-title %}
+
+
+<!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
+{% block page-title-actions %}
+        <input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search files..."/>
+        <a href="{% url "accreditations:submission-bin-page" pk=pk %}" class="btn btn-primary">
+          <!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l14 0"></path><path d="M5 12l6 6"></path><path d="M5 12l6 -6"></path></svg>
+          Back
+        </a>
+
+
+{% endblock page-title-actions %}
+
+{% block content %}
+    {% include "accreditation-submission-bin/recycle-bin/file-cards.html" %}
+{% endblock content %}
+
+
+{% block js_content %}
+    {% include "accreditation-submission-bin/recycle-bin/scripts.html" %}
+{% endblock js_content %}
+
+{% block css_content %}
+    {% include "accreditation-submission-bin/recycle-bin/styles.html" %}
+{% endblock css_content %}
+
+
+
+

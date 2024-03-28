@@ -1,0 +1,84 @@
+{% load custom_tags %}
+<!-- Modal -->
+<div class="modal modal-blur fade" id="view-modal-{{ file.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal-dialog modal-m">
+		<div class="modal-content"> 
+			<div class="modal-header">
+				<h5 class="modal-title">File Details</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<!-- Label and data from database -->
+				<ul class="list-unstyled space-y-3">
+
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>File Name</b></div>
+							<div class="col-6 text-break "> {{ file.file_name}} </div>
+						</div>
+					</li>
+					
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Type</b></div>
+							<div class="col-6 text-break ">
+								{% if file.file_name|slice:"-4:" == '.pdf' %}
+									PDF
+
+								{% elif file.file_name|slice:"-4:" == '.doc' or file.file_name|slice:"-4:" == 'docx'%}
+									Google Docs or Microsoft Word
+
+								{% elif file.file_name|slice:"-4:" == '.xls' or file.file_name|slice:"-4:" == 'xlsx'%}
+									Google sheet or Microsoft Excel
+
+								{% elif file.file_name|slice:"-4:" == '.jpg' or file.file_name|slice:"-4:" == 'jpeg' or file.file_name|slice:"-4:" == '.png' %}
+									Image
+								{% elif file.file_name|slice:"-4:" == '.mp4' or file.file_name|slice:"-4:" == 'webm' %}
+									Video
+						
+								{% endif %}
+							</div>
+						</div>
+					</li>
+
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Size</b></div>
+							<div class="col-6 text-break "> {{ file.file_path.size|sizify }} </div>
+						</div>
+					</li>
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Uploaded by</b></div>
+							<div class="col-6 text-break "> {{file.uploaded_by.first_name}} {{file.uploaded_by.last_name}}</div>
+						</div>
+					</li>
+
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Uploaded at</b></div>
+							<div class="col-6 text-break">{{file.uploaded_at|date:"F j, Y"}}</div>
+						</div>
+					</li>
+
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Last modified</b></div>
+							<div class="col-6 text-break">{{file.modified_at|date:"F j, Y"}}</div>
+						</div>
+					</li>
+
+					<li>
+						<div class="row">
+							<div class="col-4 offset-1"><b>Modified by</b></div>
+							<div class="col-6 text-break "> {{file.modified_by.first_name}} {{file.modified_by.last_name}}</div>
+						</div>
+					</li>
+				</div>
+			</ul>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>

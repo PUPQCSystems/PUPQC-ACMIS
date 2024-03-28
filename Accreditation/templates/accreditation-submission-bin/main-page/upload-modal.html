@@ -9,25 +9,22 @@
 <div class="modal modal-blur fade" id="upload-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-m">
       	<form class="modal-content"
-		    autocomplete="off" id="upload-file-form">
+		    autocomplete="off" 
+			id="upload-file-form">
         	<div class="modal-header">
-          		<h1 class="modal-title">Create new Accreditation Level</h1>
+          		<h1 class="modal-title">Add New Files</h1>
           		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         	</div>
         	<div class="modal-body">
 				{% csrf_token %}
-                {% comment %} <div class="card p-4 rounded-4" style= "margin-top: 20px" > {% endcomment %}
-                    <div class = "divide-y overflow-x">
-                        <div class="row">
-                            <input type="file" name="file_path" id="file-path" required="" multiple>
-                        </div>
-                    </div>
-                {% comment %} </div> {% endcomment %}
+				<div class="row">
+					<input type="file" name="file_path" id="file-path" required="" multiple>
+				</div>
 
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-				<button id="submit" type="submit" class="btn btn-primary">Submit</button>
+				<button id="submit-file" type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</form>
   	</div>

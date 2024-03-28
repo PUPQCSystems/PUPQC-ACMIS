@@ -20,7 +20,7 @@ all_file_types = ['image/jpeg', 'application/pdf', 'application/msword', 'applic
 def landing_page(request, pk):
     submission_bin_record = instrument_level_folder.objects.get(id=pk)
     parent_pk = submission_bin_record.instrument_level.id
-    uploaded_files = files.objects.filter(parent_directory=pk)
+    uploaded_files = files.objects.filter(parent_directory=pk, is_deleted=False)
     # This is for the accepted_file_type mapping. This is for making the file types more presentable
     file_type_mapping = {
         'image/jpeg': 'JPEG',
@@ -178,3 +178,182 @@ def update(request, pk):
         else:
             # Return a validation error using a JSON response
             return JsonResponse({'errors': update_form.errors}, status=400)
+        
+
+
+def create_files(request, pk):
+        try:
+            submission_bin = instrument_level_folder.objects.get(id=pk)
+        except instrument_level_folder.DoesNotExist:
+            return JsonResponse({'errors': 'Submission bin not found'}, status=404)
+
+        if request.method == 'POST':
+            length = request.POST.get('length')
+            length = int(length)
+
+            if length != 0:
+                if length <= submission_bin.accepted_file_count:
+                    submission_bin.status = "ur"
+                    submission_bin.save()
+                    print(submission_bin.accepted_file_count)
+                    for file_num in range(0, int(length)):
+                        print('File:', request.FILES.get(f'files{file_num}'))
+                        files.objects.create(
+                            parent_directory_id = pk ,
+                            uploaded_by = request.user,
+                            file_name =  request.FILES.get(f'files{file_num}'), 
+                            file_path=request.FILES.get(f'files{file_num}')
+                            
+                        )
+                    messages.success(request, f'Files Uploaded successfully!') 
+                    return JsonResponse({'status': 'success'}, status=200)
+                
+                else:
+                    return JsonResponse({'error': 'Please make sure to submit ' +str(submission_bin.accepted_file_count)+ ' file/s only.'}, status=400)
+        
+            else:
+                return JsonResponse({'error': 'Please attach a file before submitting the form.'}, status=400)
+
+
+def create_parent_folder_files(request, pk):
+    if request.method == 'POST':
+        length = request.POST.get('length')
+        length = int(length)
+
+        if length != 0:
+            for file_num in range(0, int(length)):
+                print('File:', request.FILES.get(f'files{file_num}'))
+                files.objects.create(
+                    instrument_level_id = pk ,
+                    uploaded_by = request.user,
+                    file_name =  request.FILES.get(f'files{file_num}'), 
+                    file_path=request.FILES.get(f'files{file_num}')
+                    
+                )
+            messages.success(request, f'Files Uploaded successfully!') 
+            return JsonResponse({'status': 'success'}, status=200)
+            
+        else:
+            return JsonResponse({'error': 'Please attach a file before submitting the form.'}, status=400)
+        
+        
+@login_required
+def archive(request, pk, bin_id):
+    # Gets the records who have this ID
+    file_record = files.objects.get(id=pk)
+
+    #After getting that record, this code will delete it.
+    file_record.modified_by = request.user
+    file_record.is_deleted=True
+    file_record.deleted_at = timezone.now()
+    name = file_record.file_name
+    file_record.save()
+
+    # Create an instance of the ActivityLog model
+    activity_log_entry = activity_log()
+
+    # Set the attributes of the instance
+    activity_log_entry.module = "SUBMISSION BIN MODULE"
+    activity_log_entry.action = "Archived a File"
+    activity_log_entry.type = "ARCHIVE"
+    activity_log_entry.datetime_acted =  timezone.now()
+    activity_log_entry.acted_by = request.user
+    # Set other attributes as needed
+
+    # Save the instance to the database
+    activity_log_entry.save()
+
+    messages.success(request, f'The file named "{name}" is successfully archived!') 
+    return redirect('accreditations:submission-bin-page', pk=bin_id)
+
+
+
+# ------------------------------------------------------------------[ RECYCLE BIN PAGE CODES]------------------------------------------------------------------#
+
+@login_required
+def recycle_bin(request, pk):
+    uploaded_files = files.objects.filter(is_deleted= True, parent_directory=pk) #Getting all the data inside the Program table and storing it to the context variable
+
+    context =   {   'uploaded_files': uploaded_files,
+                    'pk':pk,
+                }   #Getting all the data inside the type table and storing it to the context variable
+    return render(request, 'accreditation-submission-bin/recycle-bin/landing-page.html', context)
+
+
+@login_required
+def restore(request, pk):
+    # Gets the records who have this ID
+    folder_record =  files.objects.get(id=pk)
+
+    #After getting that record, this code will restore it.
+    folder_record.modified_by = request.user
+    folder_record.deleted_at = None
+    folder_record.is_deleted=False
+    name = folder_record.file_name
+    folder_record.save()
+
+    # Create an instance of the ActivityLog model
+    activity_log_entry = activity_log()
+
+    # Set the attributes of the instance
+    activity_log_entry.module = "RECYCLE BIN MODULE"
+    activity_log_entry.action = "Restored a folder"
+    activity_log_entry.type = "RESTORE"
+    activity_log_entry.datetime_acted =  timezone.now()
+    activity_log_entry.acted_by = request.user
+    # Set other attributes as needed
+
+    # Save the instance to the database
+    activity_log_entry.save()
+
+
+    if folder_record.parent_directory:
+        pk = folder_record.parent_directory_id
+        messages.success(request, f'The file named {name} is successfully restored!') 
+        return redirect('accreditations:submission-bin-recycle-bin-page', pk=pk)
+
+    elif folder_record.instrument_level:
+        pk = folder_record.instrument_level_id
+        messages.success(request, f'The file named {name} is successfully restored!') 
+        return redirect('accreditations:parent-folder-recycle-bin', pk=pk)
+
+
+
+
+@login_required
+def destroy(request, pk):
+    if request.method == 'POST':
+        entered_password = request.POST.get('password')
+        user = request.user
+
+        if user and user.is_authenticated:
+            if authenticate(email=user.email, password=entered_password):
+                # Gets the records who have this ID
+                file_record =  files.objects.get(id=pk)
+
+                #After getting that record, this code will delete it.
+                file_record.delete()
+
+                # Create an instance of the ActivityLog model
+                activity_log_entry = activity_log()
+
+                # Set the attributes of the instance
+                activity_log_entry.module = "RECYCLE BIN MODULE"
+                activity_log_entry.action = "Permanently deleted a File"
+                activity_log_entry.type = "DESTROY"
+                activity_log_entry.datetime_acted =  timezone.now()
+                activity_log_entry.acted_by = request.user
+                # Set other attributes as needed
+
+                # Save the instance to the database
+                activity_log_entry.save()
+
+                messages.success(request, f'The File is permanently deleted!') 
+                return JsonResponse({'success': True, }, status=200)
+            
+            else:
+                return JsonResponse({'success': False, 'error': 'Incorrect password'})
+        else:
+            return JsonResponse({'success': False, 'error': 'User not logged in'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request'})

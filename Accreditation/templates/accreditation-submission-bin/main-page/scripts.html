@@ -1,4 +1,5 @@
-<script>
+{% comment %} THIS IS THE OLD SCRIPT FOR UPLOADING FILE TO DATABASE {% endcomment %}
+{% comment %} <script>
     document.addEventListener('DOMContentLoaded', function() {
         var files = []
         var acceptedFileTypes = {{ submission_bin_record.accepted_file_type|safe }};
@@ -31,8 +32,8 @@
         } );
 
         var formData = new FormData();
-        $(document).on('click', '#upload-button', function(e) {
-            var url = "/accreditation/program-accreditation/area/parameter/upload-page/upload-evidences/"+{{ submission_bin_record.id }}+"/"+{{ parent_pk }}+"/";
+        $("#upload-file-form").submit(function(event) {
+            var url = "/accreditation/instrument/level/directory/submission-bin/upload-files/"+{{ pk }}+"/";
             formData.append('length', files.length)
             for (var i = 0; i < files.length; i++) {
                 formData.append('files' + i, files[i])
@@ -50,9 +51,10 @@
                 success: function(response) {
                     // Check if the server response contains a 'redirect_url' field
                     if (response.redirect_url) {
-                        // Redirect to the specified URL
-                        window.location.reload()
+                    // Redirect to the specified URL
+                    window.location.href = response.redirect_url;
                     }
+        
                 },
                 error: function(error) {
 
@@ -62,4 +64,95 @@
             })
         })
     })
-</script>  
+</script>   {% endcomment %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var files = [];
+        var acceptedFileTypes = {{ submission_bin_record.accepted_file_type|safe }};
+        
+        FilePond.registerPlugin(FilePondPluginFileValidateSize);
+        FilePond.registerPlugin(FilePondPluginFileValidateType);
+        FilePond.registerPlugin(FilePondPluginImagePreview);
+        
+        FilePond.setOptions({
+            allowMultiple: true,
+            maxFiles: {{ submission_bin_record.accepted_file_count }},
+            maxFileSize: '{{ submission_bin_record.accepted_file_size }}MB'
+        });
+        
+        const inputElement = document.querySelector('input[type="file"]');
+        var pond = FilePond.create(inputElement, {
+            acceptedFileTypes: acceptedFileTypes,
+            onaddfile: (err, fileItem) => {
+                if (!err && fileItem.file) {
+                    files.push(fileItem.file);
+                }
+            },
+            onremovefile: (err, fileItem) => {
+                const index = files.indexOf(fileItem.file);
+                if (index > -1) {
+                    files.splice(index, 1);
+                }
+            }
+        });
+
+        $("#upload-file-form").submit(function(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            if (files.length === 0) {
+                toastr.error("Please select at least one file to upload.");
+                return;
+            }
+
+            var url = "/accreditation/instrument/level/directory/submission-bin/upload-files/{{ pk }}/";
+            var formData = new FormData();
+            
+            formData.append('length', files.length);
+            
+            for (var i = 0; i < files.length; i++) {
+                formData.append('files' + i, files[i]);
+            }
+            
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(error) {
+                    toastr.error(error.responseJSON.error);
+                }
+            });
+        });
+    });
+</script>
+
+
+<script>
+    $(".archive-button").click(function(event) {
+        var id = $(this).data('id');         //Get the Id of the record
+        var form = 'archive-form-'+id;      //Attaching the id of the record to this string for identifying the specific form
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This will be move and can be restore in the Recycle Bin!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, archive it!',
+            cancelButtonText: 'No, cancel!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Delete the file here
+                document.getElementById(form).submit();
+            }
+        })
+    });
+</script>

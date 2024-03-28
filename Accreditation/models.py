@@ -123,10 +123,10 @@ class instrument_level_folder(models.Model):
     
 
 class files(models.Model):
-    parent_directory = models.ForeignKey(instrument_level_folder, on_delete=models.CASCADE)
+    instrument_level = models.ForeignKey(instrument_level, on_delete=models.CASCADE, null=True, blank=True) 
+    parent_directory = models.ForeignKey(instrument_level_folder, on_delete=models.CASCADE, null=True, blank=True)
     file_path = models.FileField(upload_to = 'uploaded-files/')
     file_name = models.CharField(max_length=100, null=True, blank=True)
-    size_in_mb = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     uploaded_at = models.DateTimeField(default=timezone.now)
     uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_upload_files', null=True, blank=True)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_upload_files', null=True, blank=True)
