@@ -3,74 +3,70 @@
 <!-- Modal -->
 <div class="modal register-modal modal-blur fade" id="register-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-      	<div class="modal-content">
+ 
+		<form method="POST" class="modal-content" autocomplete="off" id="register-user-form">
+			{% csrf_token %}
         	<div class="modal-header">
           		<h1 class="modal-title fs-5" id="staticBackdropLabel">Register New User</h1>
           		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         	</div>
         	<div class="modal-body">
-
-				<form method="POST"
-					autocomplete="off" id="register-user-form">
-					{% csrf_token %}
-					<div class="row">
-						<div class=" col">
-							{{ register_form.first_name|as_crispy_field }}
-						</div>
-
-						<div class=" col">
-							{{ register_form.middle_name|as_crispy_field }}
-						</div>
-
-						<div class=" col">
-							{{ register_form.last_name|as_crispy_field }}
-						</div>
-		
+				<div class="row">
+					<div class=" col">
+						{{ register_form.first_name|as_crispy_field }}
 					</div>
 
-						<div class="row">
-							<div class=" col">
-								{{ register_form.email|as_crispy_field }}
-							</div>
+					<div class=" col">
+						{{ register_form.middle_name|as_crispy_field }}
+					</div>
 
-							<div class="col">
-								<label class="form-label required">Select a User Role</label>
-								<select type="text" name="selected_group" id="id_select_group" class="form-select form-control" id="select-groups" value="">
-									<option value="" selected disabled>Please select a role</option>
-									{% if auth_groups %}
-										{% for group in auth_groups %}
-											<option value="{{ group.auth_group.id }}">{{ group.auth_group.name}}</option>
-										{% endfor %} 
-									
-									{% else %}
-										<option value="" selected disabled>No Groups</option>
+					<div class=" col">
+						{{ register_form.last_name|as_crispy_field }}
+					</div>
+	
+				</div>
 
-									{% endif %}
+				<div class="row">
+					<div class=" col">
+						{{ register_form.email|as_crispy_field }}
+					</div>
 
-								</select>
-							  </div>
+					<div class="col">
+						<label class="form-label required">Select a User Role</label>
+						<select type="text" name="selected_group" id="id_select_group" class="form-select form-control" id="select-groups">
+							<option value="" selected disabled>Please select a role</option>
+							{% if auth_groups %}
+								{% for group in auth_groups %}
+									<option value="{{ group.auth_group.id }}">{{ group.auth_group.name}}</option>
+								{% endfor %} 
+							
+							{% else %}
+								<option value="" selected disabled>No Groups</option>
 
+							{% endif %}
 
+						</select>
 						</div>
-						<div class="row">
-							<div class="col">
-								{{ register_form.password1|as_crispy_field }}
-							</div>
 
-							<div class="col">
-								{{ register_form.password2|as_crispy_field }}
-							</div>
-						</div>
+
+				</div>
+
+				<div class="row">
+					<div class="col">
+						{{ register_form.password1|as_crispy_field }}
+					</div>
+
+					<div class="col">
+						{{ register_form.password2|as_crispy_field }}
+					</div>
+				</div>
 			</div>
 
-					<div class="modal-footer">
-						<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-						<button id="register-user" type="button" class="btn btn-primary submit">Create User</button>
-					</div>
-
-				</form>
-
-    	</div>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+				<button id="register-user" type="submit" class="btn btn-primary submit">Create User</button>
+			</div>
+		</form>
   	</div>
 </div>
 

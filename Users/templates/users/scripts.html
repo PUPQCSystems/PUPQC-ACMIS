@@ -3,20 +3,7 @@
  <script>
     $(document).ready(function() {
         // Trigger the AJAX post request when Enter key is pressed
-        $('#register-user-form').keypress(function(e) {
-            if (e.which === 13) { // 13 is the keycode for Enter key
-                e.preventDefault(); // Prevent the default form submission
-                submitForm();
-            }
-        });
-
-        // Trigger the AJAX post request when the submit button is clicked
-        $('.submit').click(function() {
-            submitForm();
-        });
-
-        // Function to handle the AJAX post request
-        function submitForm() {
+        $('#register-user-form').submit(function(e) {   
             var serializedData = $("#register-user-form").serialize();
             const form = document.getElementById('register-user-form')
             event.preventDefault();
@@ -46,7 +33,8 @@
               }
   
             });
-        }
+        });
+        
     });
 </script>
 

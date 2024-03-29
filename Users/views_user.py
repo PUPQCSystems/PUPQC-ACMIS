@@ -47,8 +47,10 @@ def register(request):
             user_first_name = request.POST.get('first_name')
             user_last_name = request.POST.get('last_name')
 
+
             template = render_to_string('email-templates/register-email.html', 
                                         {'email': user_email, 'password': user_password, 'first_name': user_first_name, 'last_name': user_last_name})
+
             # Create a new group
             group = Group.objects.get(id=auth_group_id)
             register_form.instance.created_by = request.user
@@ -58,7 +60,7 @@ def register(request):
             # Add a user to the group
             user = CustomUser.objects.get(id=user_id)
             user.groups.add(group)
-
+  
 
             email = EmailMessage(
                 'Welcome to the Accreditation and Certification Management Information System!',
@@ -67,11 +69,18 @@ def register(request):
                 [user_email],
             )
 
-            email.fail_silently=False
-            email.send()
 
-            messages.success(request, 'Account was successfully created.')
-            return JsonResponse({'success': True}, status=200)
+            email.fail_silently=False
+
+            email_send = email.send()
+            if email_send:
+                messages.success(request, 'Account was successfully created.')
+                return JsonResponse({'success': True}, status=200)
+
+            else:
+                # Return a validation error using a JSON response
+                return JsonResponse({'error': 'There is an error sending the email'}, status=400)
+
         
         else:
             # Return a validation error using a JSON response
