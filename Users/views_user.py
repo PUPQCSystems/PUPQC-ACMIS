@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from .forms import UpdateForm, CreateUserForm
+from .forms import PasswordUpdateForm, UpdateForm, CreateUserForm
 from Users.models import CustomUser, auth_group_info
 from django.http import HttpResponseRedirect, JsonResponse
 from django.utils import timezone
@@ -16,6 +16,7 @@ from django.template.loader import render_to_string
 def landing_page(request):
     # Getting all the data inside the Program table and storing it in the context variable
     register_form = CreateUserForm()
+
     records = CustomUser.objects.filter(deactivated_at=None, is_active=True)
     auth_groups = auth_group_info.objects.select_related('auth_group').filter(is_deleted=False)
 
@@ -25,11 +26,12 @@ def landing_page(request):
     # Iterate through each record and create an update form for it
     for record in records:
         update_form = UpdateForm(instance=record)
+        password_form = PasswordUpdateForm(record, request.POST)
         created_by = record.created_by  # Get the user who created the record
         modified_by = record.modified_by  # Get the user who modified the record
-        details.append((record, update_form, created_by, modified_by))
+        details.append((record, update_form, created_by, modified_by, password_form))
 
-    context = {'register_form': register_form, 'details': details, 'auth_groups': auth_groups}   
+    context = {'register_form': register_form, 'details': details, 'auth_groups': auth_groups,}   
     return render(request, 'users/landing_page.html', context)
 
 
@@ -38,7 +40,6 @@ def register(request):
 
     register_form = CreateUserForm(request.POST)
     auth_group_id = request.POST.get('selected_group')
-    print('AUTH: ', auth_group_id)
 
     if auth_group_id:
         if register_form.is_valid():
@@ -71,15 +72,10 @@ def register(request):
 
 
             email.fail_silently=False
-
-            email_send = email.send()
-            if email_send:
-                messages.success(request, 'Account was successfully created.')
-                return JsonResponse({'success': True}, status=200)
-
-            else:
-                # Return a validation error using a JSON response
-                return JsonResponse({'error': 'There is an error sending the email'}, status=400)
+            # Send the email
+            email.send()
+            messages.success(request, 'Account was successfully created.')
+            return JsonResponse({'success': True}, status=200)
 
         
         else:
@@ -103,28 +99,108 @@ def update_account(request, pk):
     if request.method == 'POST':
         # Process the form submission with updated data
         update_form = UpdateForm(request.POST or None, instance=account)
+        password_form = PasswordUpdateForm(account, request.POST)
 
         if update_form.is_valid():
-            auth_group_id = request.POST.get('selected_group')
+            new_password1 = request.POST.get('new_password1')
+            new_password2 = request.POST.get('new_password2')
+            user_email = request.POST.get('email')
+            user_first_name = request.POST.get('first_name')
+            user_last_name = request.POST.get('last_name')
+            user_middle_name = request.POST.get('middle_name')
 
-            if auth_group_id:
-              # Assuming you have a user instance and a group instance
-                group = Group.objects.get(pk=auth_group_id)  # Replace new_group_id with the desired group ID
+            #------------------------[ SAVING THE DATA IF THERE IS A VALUE TO THE PASSWORD FIELDS ]------------------------
+            if new_password1 or new_password2:
+                if password_form.is_valid():
+                    auth_group_id = request.POST.get('selected_group')
 
-                # Clear existing groups and set the new group
-                account.groups.set([group])
-                # Save the updated data to the database
-                update_form.instance.modified_by = request.user
-                update_form.save()
-                email = update_form.cleaned_data.get('email')
+                    if auth_group_id:
+                    # Assuming you have a user instance and a group instance
+                        group = Group.objects.get(pk=auth_group_id)  # Replace new_group_id with the desired group ID
+                        user_role = group.name
 
-                # Provide a success message as a JSON response
-                messages.success(request, f'The account is successfully updated!') 
-                url_landing = "/user/"
-                return JsonResponse({'url_landing': url_landing}, status=200)
+                        template = render_to_string('email-templates/update-account-email.html', 
+                                            {'email': user_email
+                                             , 'password': new_password1
+                                             , 'first_name': user_first_name
+                                             , 'last_name': user_last_name
+                                             , 'middle_name': user_middle_name
+                                             , 'role': user_role})
+                        
+
+                        # Clear existing groups and set the new group
+                        account.groups.set([group])
+                        # Save the updated data to the database
+                        update_form.instance.modified_by = request.user
+                        update_form.save()
+                        password_form.save()
+
+                        #Codes for sending Email to the user's account email 
+                        email = EmailMessage(
+                            'Welcome to the Accreditation and Certification Management Information System!',
+                            template,
+                            settings.EMAIL_HOST_USER,
+                            [user_email],
+                        )
+                        email.fail_silently=False
+                        # Send the email
+                        email.send()
+
+                        # Provide a success message as a JSON response
+                        messages.success(request, f'The account is successfully updated!') 
+                        url_landing = "/user/"
+                        return JsonResponse({'url_landing': url_landing}, status=200)
+                    else:
+                        # Return a validation error using a JSON response
+                        return JsonResponse({'error': 'Please make sure that you assigned a Role to the user account before submitting the form.'}, status=400)
+
+                else:
+                    # Return a validation error as a JSON response
+                    return JsonResponse({'errors': password_form.errors}, status=400)
+                
+
+            # ------------------------[ SAVING THE DATE IF THERE IS NO VALUE IN THE PASSWORD FIELD ]------------------------
             else:
-                # Return a validation error using a JSON response
-                return JsonResponse({'error': 'Please make sure that you assigned a Role to the user account before submitting the form.'}, status=400)
+                auth_group_id = request.POST.get('selected_group')
+                if auth_group_id:
+                    # Assuming you have a user instance and a group instance
+                    group = Group.objects.get(pk=auth_group_id)  # Replace new_group_id with the desired group ID
+                    user_role = group.name
+
+                    template = render_to_string('email-templates/update-account-email.html', 
+                                            {   'email': user_email
+                                                , 'password': False
+                                                , 'first_name': user_first_name
+                                                , 'last_name': user_last_name
+                                                , 'middle_name': user_middle_name
+                                                , 'role': user_role
+                                             })
+                    
+
+                    # Clear existing groups and set the new group
+                    account.groups.set([group])
+                    # Save the updated data to the database
+                    update_form.instance.modified_by = request.user
+                    update_form.save()
+
+                    #Codes for sending Email to the user's account email 
+                    email = EmailMessage(
+                        'Welcome to the Accreditation and Certification Management Information System!',
+                        template,
+                        settings.EMAIL_HOST_USER,
+                        [user_email],
+                    )
+                    email.fail_silently=False
+                    # Send the email
+                    email.send()
+
+                    # Provide a success message as a JSON response
+                    messages.success(request, f'The account is successfully updated!') 
+                    url_landing = "/user/"
+                    return JsonResponse({'url_landing': url_landing}, status=200)
+                else:
+                    # Return a validation error using a JSON response
+                    return JsonResponse({'error': 'Please make sure that you assigned a Role to the user account before submitting the form.'}, status=400)
 
         else:
             # Return a validation error as a JSON response

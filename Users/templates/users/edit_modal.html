@@ -9,7 +9,7 @@
 		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		</div>
 		<div class="modal-body">
-			<form method="POST" class="needs-validation" novalidate
+			<form method="POST" class=""
 			autocomplete="off" id="update-user-form-{{ record.id }}">
 			{% csrf_token %}
 
@@ -49,10 +49,37 @@
 						{% endif %}
 
 					</select>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col">
+					<div id="div_id_new_password1" class="mb-3">
+						<label for="id_new_password1" class="form-label">
+							New password
+						</label>
+						<input type="password" name="new_password1" autocomplete="new-password" class="passwordinput form-control" aria-invalid="true" aria-describedby="id_new_password1_helptext" id="id_new_password1">
+						<div id="id_new_password1_helptext" class="form-text">The new password must meet the following criteria:
+							<ul>
+								<li>Can’t be too similar to your other personal information.</li>
+								<li>Must contain at least 8 characters.</li>
+								<li>Can’t be a commonly used password.</li>
+								<li>Can’t be entirely numeric.</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 
-				Forgot Password Button Here
+				<div class="col">
+					<div id="div_id_new_password2" class="mb-3">
+						<label for="id_new_password2" class="form-label">
+							New password confirmation
+						</label>
+						<input type="password" name="new_password2" autocomplete="new-password" class="passwordinput form-control" aria-invalid="true" id="id_new_password2">
+					</div>
+				</div>
+
+			</div>
 
 		</div>
 				<div class="modal-footer">
