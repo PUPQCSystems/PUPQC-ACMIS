@@ -1,5 +1,5 @@
 from django.urls import path
-from Accreditation import  views_instrument_folder, views_instrument_level, views_submission_bin
+from Accreditation import  views_accreditation, views_instrument_folder, views_instrument_level, views_submission_bin
 from . import views_level, views_bodies, views_instrument
 
 from Accreditation.views_instrument_level import *
@@ -77,6 +77,25 @@ urlpatterns = [
     path("instrument/level/directory/submission-bin/recycle-bin/<str:pk>/", views_submission_bin.recycle_bin, name='submission-bin-recycle-bin-page'),
     path("instrument/level/directory/submission-bin/recycle-bin/restore/<str:pk>/", views_submission_bin.restore, name='file-restore'),
     path("instrument/level/directory/submission-bin/recycle-bin/destroy/<str:pk>/", views_submission_bin.destroy, name='file-destroy'),
+
+
+    #------------------------------[ URLS FOR PROGRAM ACCREDITATION ]------------------------------#
+    path("filter-instrument-option/", views_accreditation.filter_instrument, name='filter-instument-option'),
+
+    path("", views_accreditation.landing_page, name='landing'),
+    path("create/", views_accreditation.create, name='accreditation-create'),
+    path("update/<str:pk>/", views_accreditation.update, name='accreditation-update'),
+    path("archive/<str:pk>/", views_accreditation.archive, name='accreditation-archive'),
+    path("archive-page/", views_accreditation.archive_landing, name='accreditation-archive-page'),
+    path("archive-page/restore/<str:pk>/", views_accreditation.restore, name='accreditation-restore'),
+    path("archive-page/destroy/<str:pk>/", views_accreditation.destroy, name='accreditation-destroy'),
+    path("passed-result/<str:pk>/", views_accreditation.result_passed, name='accreditation-result-passed'),
+    path("failed-result/<str:pk>/", views_accreditation.result_failed, name='accreditation-result-failed'),
+    path("revisit-result/<str:pk>/", views_accreditation.result_revisit, name='accreditation-result-revisit'),
+    path("certificate/destroy/<str:pk>/", views_accreditation.certificate_destroy, name='accreditation-certificate-destroy'),
+
+    path("result-page/<str:pk>/", views_accreditation.result_page, name='accreditation-result-page'),
+
 
 
 
