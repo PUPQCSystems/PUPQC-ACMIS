@@ -1,5 +1,6 @@
 import requests
 from rest_framework import generics, serializers
+from Accreditation.models import program_accreditation
 from Users.models import category_training, faculty_certificates, seminar_workshop_training
 from .serializers import CategorySerializer, FacultyCertificateSerializer, WorkshopsSerializer
 from rest_framework.decorators import api_view
@@ -53,12 +54,10 @@ def landing_page(request, program_accred_pk):
             # Pass data to template context
             # return render(request, 'my_template.html', {'api_data': data})
             # return JsonResponse({'api_data': data})
-            return render(request,'exhibit-page/landing-page.html' ,{'records': data, 'program_accred_pk':program_accred_pk})
+            return render(request,'exhibit-page/landing-page.html', {'records': data, 'program_accred_pk':program_accred_pk})
         else:
             # Handle unsuccessful request
             return JsonResponse({'error': f"Failed to fetch data from the API: {response.status_code}"}, status=500)
     except requests.RequestException as e:
         # Handle request exception
         return JsonResponse({'error': f"Request to API failed: {e}"}, status=500)
-
-

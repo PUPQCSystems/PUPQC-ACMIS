@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from Accreditation.models import instrument_level
+from Accreditation.models import instrument_level, program_accreditation
 from Programs.models import Programs
 from Users.models import CustomUser, category_training, faculty_certificates, seminar_workshop_training
 
@@ -14,7 +14,13 @@ class ProgramSerializer(serializers.ModelSerializer):
             model = Programs
             fields = ('__all__')
 
-
+class ProgramAccreditationSerializer(serializers.ModelSerializer):
+    program = ProgramSerializer(many=False, read_only=True)
+    instrument_level = InstrumentLevelSerializer(many=False, read_only=True)
+   
+    class Meta:
+        model = program_accreditation
+        fields = ('id', 'description', 'status', 'due_date', 'survey_visit_date', 'program','instrument_level')
 
 
 
@@ -57,4 +63,3 @@ class WorkshopsSerializer(serializers.ModelSerializer):
                   'created_by', 'created_at', 'modified_by', 
                   'modified_at', 'deleted_at', 'is_deleted', 'category_relation'
         )
-

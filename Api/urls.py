@@ -1,13 +1,13 @@
 from django.urls import path
 from Api import views_exhibits, views_fis, views_ris, views_esis, views_student_award
-from .views import CreateCategory, FacultyCertificateRecords, SeminarRecords
+from .views import CreateCategory, FacultyCertificateRecords, ProgramAccreditation, SeminarRecords
 from .views_esis import *
 from Api import views
 
 app_name = 'apis'
 
 urlpatterns = [
-    # path('program-accreditation-records/', ProgramAccreditation.as_view(), name='program-accreditaion'),
+    path('program-accreditation-records/', ProgramAccreditation.as_view(), name='program-accreditaion'),
 
     path('exhibit/<str:program_accred_pk>/', views_exhibits.landing_page, name='exhibit-page'),
     path('student-awards/<str:program_accred_pk>/', views_student_award.landing_page, name='student-award-page'),
