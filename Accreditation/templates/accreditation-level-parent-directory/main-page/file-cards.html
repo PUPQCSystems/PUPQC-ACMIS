@@ -3,7 +3,11 @@
     {% if uploaded_files %}
         <!-- For LOOP HERE-->
         {% for file in uploaded_files %}
+        {% if accred_program  %}
+            <div class="col-sm-4 col-lg-4">
+        {% else %}
             <div class="col-sm-4 col-lg-3">
+        {% endif %}
                 <div class="card  rounded-4" onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
                     <div class="card-body">
                         <div class="row">

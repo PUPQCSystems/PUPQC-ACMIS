@@ -93,7 +93,6 @@ urlpatterns = [
     path("failed-result/<str:pk>/", views_accreditation.result_failed, name='accreditation-result-failed'),
     path("revisit-result/<str:pk>/", views_accreditation.result_revisit, name='accreditation-result-revisit'),
     path("certificate/destroy/<str:pk>/", views_accreditation.certificate_destroy, name='accreditation-certificate-destroy'),
-
     path("result-page/<str:pk>/", views_accreditation.result_page, name='accreditation-result-page'),
 
 

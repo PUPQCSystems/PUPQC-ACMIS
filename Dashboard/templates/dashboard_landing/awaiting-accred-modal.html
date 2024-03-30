@@ -24,7 +24,7 @@
 					{% for record in awaiting_result_data.awaiting_result_records %}
 						<tr>
 							<td>
-								<a href="{% url 'accreditations:program-accreditation-area' pk=record.instrument_level.id accred_pk=record.id %}">
+								<a href="{% url 'accreditations:instrument-level-directory' pk=record.instrument_level.id %}">
 									{{ record.program }}
 								</a>
 							</td>

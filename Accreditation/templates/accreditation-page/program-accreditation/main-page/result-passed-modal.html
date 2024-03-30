@@ -140,8 +140,6 @@
 			formData.append('validity_date_from', document.getElementById('id_validity_date_from_'+{{ record.id }}).value);
 			formData.append('validity_date_to', document.getElementById('id_validity_date_to_'+{{ record.id }}).value);
 			
-
-			alert('Value: '+ document.getElementById('id_result_remarks').value);
             $.ajax({
                 type: 'POST',
                 url: url,

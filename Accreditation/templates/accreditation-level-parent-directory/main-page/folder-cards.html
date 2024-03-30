@@ -2,15 +2,20 @@
     {% if records %}
         <!-- For LOOP HERE-->
         {% for record, update_form, created_by, modified_by in details %}
+        {% if accred_program  %}
+            <div class="col-sm-4 col-lg-4">
+        {% else %}
             <div class="col-sm-4 col-lg-3">
+        {% endif %}
+
                 <div class="card  rounded-4" onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-11 text-truncate"
-                            data-bs-toggle="tooltip" 
-                            data-bs-html="true" 
-                            data-bs-placement="bottom"
-                            title="{{  record.name }}">
+                                data-bs-toggle="tooltip" 
+                                data-bs-html="true" 
+                                data-bs-placement="bottom"
+                                title="{{  record.name }}">
                             {% if record.is_submission_bin %}
                                 <a class="text-reset" href="{% url 'accreditations:submission-bin-page' pk=record.id %}">{{record.name}}</a>
                             {% else %}

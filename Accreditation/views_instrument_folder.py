@@ -3,8 +3,8 @@ from django.http import JsonResponse
 from django.views import View
 from django.core.exceptions import ObjectDoesNotExist
 from Users.models import activity_log
-from .models import files, instrument_level, instrument_level_folder, program_accreditation #Import the model for data retieving
-from .forms import Create_InstrumentDirectory_Form, SubmissionBin_Form
+from .models import accreditation_certificates, files, instrument_level, instrument_level_folder, program_accreditation #Import the model for data retieving
+from .forms import Create_InstrumentDirectory_Form, PassedResult_Form, RemarksResult_Form, RevisitResult_Form, SubmissionBin_Form
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
@@ -19,8 +19,12 @@ all_file_types = ['image/jpeg', 'application/pdf', 'application/msword', 'applic
 def parent_landing_page(request, pk):
     #Getting the data from the API
     create_form = Create_InstrumentDirectory_Form(request.POST or None)
+    passed_result_form = PassedResult_Form(request.POST or None)
+    revisit_result_form = RevisitResult_Form(request.POST or None)
+    remarks_result_form = RemarksResult_Form(request.POST or None)
     submission_bin_form = SubmissionBin_Form(request.POST or None)
     uploaded_files = files.objects.filter(instrument_level=pk, is_deleted=False)
+    certificates_records = accreditation_certificates.objects.select_related('accredited_program').filter(is_deleted= False) 
     records = instrument_level_folder.objects.filter(is_deleted= False, instrument_level=pk, parent_directory= None) #Getting all the data inside the Program table and storing it to the context variable
     instrument_level_record = instrument_level.objects.select_related('instrument').get(id=pk, is_deleted= False)
 
@@ -48,7 +52,11 @@ def parent_landing_page(request, pk):
                 'submission_bin_form':submission_bin_form,
                 'all_file_types': all_file_types,
                 'uploaded_files': uploaded_files,
-                'accred_program': accred_program
+                'accred_program': accred_program,
+                'passed_result_form': passed_result_form,
+                'revisit_result_form': revisit_result_form,
+                'remarks_result_form': remarks_result_form,
+                'certificates_records':  certificates_records 
                }  
 
     return render(request, 'accreditation-level-parent-directory/main-page/landing-page.html', context)
