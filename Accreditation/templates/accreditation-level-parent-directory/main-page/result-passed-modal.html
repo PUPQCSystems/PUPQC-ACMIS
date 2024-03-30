@@ -10,7 +10,10 @@
 			</div>
 
 			<div class="modal-body scrollable">
-				<form method="POST" autocomplete="off" id="result-passed-form">
+				<form method="POST" autocomplete="off" 
+					id="result-passed-form"
+					data-id='{{ accred_program.id }}'>
+					{% csrf_token %}
 
 					<div class="row">
 						<div class="col-lg-7">
@@ -69,7 +72,7 @@
 
 					<div class="modal-footer">
 						<button type="button" class="btn me-auto" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#result-modal">Close</button>
-						<button id="passed-button" type="button" class="btn btn-primary" data-id='{{ accred_program.id }}'>Save</button>
+						<button id="submit-passed-button" type="submit" class="btn btn-primary">Save</button>
 					</div>
 
 				</form>

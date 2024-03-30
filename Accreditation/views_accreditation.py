@@ -402,16 +402,14 @@ def result_page(request, pk):
     remarks_records = result_remarks.objects.select_related('accredited_program').filter( accredited_program_id=pk).order_by('created_at')
     remarks_counts = result_remarks.objects.filter( accredited_program_id=pk).count()
 
-
-
         
     context = { 
-               'passed_result_form': passed_result_form,
-               'revisit_result_form': revisit_result_form,
-               'records':  certificates_records,
-               'accred_program': accreditation_record,
-               'remarks_result_form': remarks_result_form,
-               'remarks_records':  remarks_records,
+                'passed_result_form': passed_result_form,
+                'revisit_result_form': revisit_result_form,
+                'records':  certificates_records,
+                'accred_program': accreditation_record,
+                'remarks_result_form': remarks_result_form,
+                'remarks_records':  remarks_records,
                 'remarks_counts':  remarks_counts
                }  #Getting all the data inside the type table and storing it to the context variable
     return render(request, 'accreditation-page/accreditation-certificates/main-page/landing-page.html', context)

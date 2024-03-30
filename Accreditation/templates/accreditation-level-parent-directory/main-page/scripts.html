@@ -390,7 +390,7 @@
 {% comment %} AJAX FOR POSTING REVISIT RESULT  {% endcomment %}
 <script>
     $(document).ready(function(){
-        $(".revisit-button").click(function(event) {
+        $("#result-revisit-form").submit(function(event) {
             var id = $(this).data('id');
             event.preventDefault();
             event.stopPropagation();
@@ -428,7 +428,7 @@
 {% comment %} AJAX FOR POSTING FAILED RESULT  {% endcomment %}
 <script>
     $(document).ready(function(){
-        $(".failed-button").click(function(event) {
+        $("#result-failed-form").submit(function(event) {
             var id = $(this).data('id');
             event.preventDefault();
             event.stopPropagation();
@@ -510,7 +510,9 @@
         } );
 
         var formData = new FormData();
-        $(document).on('click', '#passed-button', function(e) {
+		$("#result-passed-form").submit(function(event) {
+            event.preventDefault();
+            event.stopPropagation();
             var id = $(this).data('id');
             var url = "/accreditation/passed-result/"+id+"/";
             formData.append('length', files.length)

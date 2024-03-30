@@ -10,7 +10,11 @@
         </div>
         <div class="modal-body">
 
-			<form method="POST" autocomplete="off" id="update-accreditation-form-{{ record.id }}">
+			<form method="POST" 
+				autocomplete="off" 
+				id="update-accreditation-form-{{ record.id }}"
+				class="update-accreditation-form"
+				data-id={{ record.id }}>
 				{% csrf_token %}
 				<div class="mb-3">
 					<label class="form-label required">{{ update_form.program.label }}</label>
@@ -41,7 +45,7 @@
 		</div>
 				<div class="modal-footer">
 					<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-					<button id="save-changes" data-id={{ record.id }} type="button" class="btn btn-primary save-changes-button">Save Changes</button>
+					<button id="save-changes-{{ record.id }}" type="submit" class="btn btn-primary save-changes-button">Save Changes</button>
 				</div>
 			</form>
 		</div>

@@ -10,8 +10,11 @@
 			</div>
 
 			<div class="modal-body">
-				<form method="POST" autocomplete="off" id="result-passed-form-{{ record.id }}">
-
+				<form method="POST" autocomplete="off" 
+					id="result-passed-form-{{ record.id }}"
+					class="result-passed-form"
+					>
+					{% csrf_token %}
 					<div class="row">
 						<div class="col-lg-7">
 							<div class="mb-3">
@@ -70,7 +73,7 @@
 
 					<div class="modal-footer">
 						<button type="button" class="btn me-auto" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">Close</button>
-						<button id="passed-button-{{ record.id }}" type="button" class="btn btn-primary">Save</button>
+						<button id="passed-button-{{ record.id }}" type="submit" class="btn btn-primary">Save</button>
 					</div>
 
 				</form>
@@ -127,7 +130,9 @@
         } );
 
 		var formData = new FormData();
-        $(document).on('click', '#passed-button-'+{{ record.id }}, function(e) {
+		$(".result-passed-form").submit(function(event) {
+			event.preventDefault();
+            event.stopPropagation();
             var url = "/accreditation/passed-result/"+{{ record.id }}+"/";
             formData.append('length', files.length)
             for (var i = 0; i < files.length; i++) {
@@ -144,6 +149,7 @@
                 type: 'POST',
                 url: url,
                 data: formData,
+				headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
                 cache: false,
                 processData: false,
                 contentType: false,

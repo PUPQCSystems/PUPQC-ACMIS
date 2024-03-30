@@ -3,7 +3,7 @@
 <script>
     $(document).ready(function(){
 
-        $("#submit").click(function(event) {
+        $("#create-accreditation-form").submit(function(event) {
             var serializedData = $("#create-accreditation-form").serialize();
             const form = document.getElementById('create-accreditation-form')
             event.preventDefault();
@@ -36,7 +36,7 @@
 {% comment %} AJAX FOR UPDATING  {% endcomment %}
  <script>
     $(document).ready(function(){
-        $(".save-changes-button").click(function(event) {
+        $(".update-accreditation-form").submit(function(event) {
             var id = $(this).data('id');
             event.preventDefault();
             event.stopPropagation();
@@ -195,7 +195,7 @@
 {% comment %} AJAX FOR POSTING REVISIT RESULT  {% endcomment %}
 <script>
     $(document).ready(function(){
-        $(".revisit-button").click(function(event) {
+        $(".result-revisit-form").submit(function(event) {
             var id = $(this).data('id');
             event.preventDefault();
             event.stopPropagation();
@@ -233,7 +233,7 @@
 {% comment %} AJAX FOR POSTING FAILED RESULT  {% endcomment %}
 <script>
     $(document).ready(function(){
-        $(".failed-button").click(function(event) {
+        $(".result-failed-form").submit(function(event) {
             var id = $(this).data('id');
             event.preventDefault();
             event.stopPropagation();

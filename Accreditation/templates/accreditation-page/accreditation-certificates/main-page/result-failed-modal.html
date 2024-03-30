@@ -11,7 +11,9 @@
 	
         	<div class="modal-body">
 
-				<form method="POST" autocomplete="off" id="result-failed-form">
+				<form method="POST" autocomplete="off" 
+					id="result-failed-form"
+					data-id="{{ accred_program.id }}">
 					{% csrf_token %}
 
 					<div class="mb-3">
@@ -23,7 +25,7 @@
 
 					<div class="modal-footer">
 						<button type="button" class="btn me-auto" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#result-modal">Close</button>
-						<button type="button" class="btn btn-primary failed-button" data-id="{{ accred_program.id }}">Save</button>
+						<button type="submit" class="btn btn-primary failed-button">Save</button>
 					</div>
 
 				</form>

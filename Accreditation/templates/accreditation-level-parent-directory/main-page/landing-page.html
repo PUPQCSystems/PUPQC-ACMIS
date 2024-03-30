@@ -151,10 +151,12 @@
 		{% include "accreditation-submission-bin/main-page/upload-modal.html" %}
 	{% endif %}
 
-	{% include "accreditation-level-parent-directory/main-page/result-modal.html" %}
-    {% include "accreditation-level-parent-directory/main-page/result-passed-modal.html" %}
-    {% include "accreditation-level-parent-directory/main-page/result-revisit-modal.html" %}
-    {% include "accreditation-level-parent-directory/main-page/result-failed-modal.html" %}
+	{% if user.is_superuser == True %}
+		{% include "accreditation-level-parent-directory/main-page/result-modal.html" %}
+		{% include "accreditation-level-parent-directory/main-page/result-passed-modal.html" %}
+		{% include "accreditation-level-parent-directory/main-page/result-revisit-modal.html" %}
+		{% include "accreditation-level-parent-directory/main-page/result-failed-modal.html" %}
+	{% endif %}
 {% endblock modal_content %}
 
 

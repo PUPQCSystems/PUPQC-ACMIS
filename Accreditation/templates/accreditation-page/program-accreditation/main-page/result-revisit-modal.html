@@ -11,7 +11,10 @@
 	
         	<div class="modal-body">
 
-				<form method="POST" autocomplete="off" id="result-revisit-form-{{ record.id }}">
+				<form method="POST" autocomplete="off" 
+					id="result-revisit-form-{{ record.id }}"
+					class="result-revisit-form"
+					data-id={{ record.id }}>
 					{% csrf_token %}
 
 					<div class="mb-3">
@@ -28,7 +31,7 @@
 
 					<div class="modal-footer">
 						<button type="button" class="btn me-auto" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">Close</button>
-						<button id="submit" type="button" class="btn btn-primary revisit-button" data-id={{ record.id }}>Save</button>
+						<button id="submit-revisit-{{ record.id }}" type="submit" class="btn btn-primary revisit-button">Save</button>
 					</div>
 
 				</form>

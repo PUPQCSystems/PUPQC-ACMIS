@@ -11,7 +11,9 @@
 	
         	<div class="modal-body">
 
-				<form method="POST" autocomplete="off" id="result-revisit-form">
+				<form method="POST" autocomplete="off" 
+					id="result-revisit-form"
+				 	data-id="{{ accred_program.id }}">
 					{% csrf_token %}
 
 					<div class="mb-3">
@@ -29,7 +31,7 @@
 
 					<div class="modal-footer">
 						<button type="button" class="btn me-auto" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#result-modal">Close</button>
-						<button id="submit" type="button" class="btn btn-primary revisit-button" data-id={{ accred_program.id }}>Save</button>
+						<button id="submit-result-revisit" type="submit" class="btn btn-primary revisit-button">Save</button>
 					</div>
 
 				</form>

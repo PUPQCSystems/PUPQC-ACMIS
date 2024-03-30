@@ -16,7 +16,7 @@
 					  <option value="passed">Passed</option>
 					  <option value="sfr">Subject for Revisit</option>
 					{% if accred_program.revisit_date %}
-						{% if today > accred_program.revisit_date|date:"Y-m-d" %}
+						{% if today > accred_program.revisit_date|date:"Y-m-d" and accred_program.is_done == False %}
 							<option value="failed">Failed</option>
 						{% endif %}
 					  {% endif %}

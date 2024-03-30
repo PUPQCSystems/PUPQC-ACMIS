@@ -15,7 +15,7 @@
 					  <option selected>Open this select menu</option>
 					  <option value="passed">Passed</option>
 					  <option value="sfr">Subject for Revisit</option>
-					{% if today > record.revisit_date|date:"Y-m-d" %}
+					{% if today > record.revisit_date|date:"Y-m-d" and record.is_done == False %}
 					  <option value="failed">Failed</option>
 					{% endif %}
 					</select>

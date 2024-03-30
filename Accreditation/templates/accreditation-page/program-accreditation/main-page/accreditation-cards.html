@@ -56,7 +56,7 @@
                                         </button>
                                         <div class="dropdown-divider-top"></div>
 
-                                    {% elif record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date %}
+                                    {% elif user.is_superuser == True and record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date %}
                                         <button id="{{ record.id }}" class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
                                             Change Result 
                                             {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
