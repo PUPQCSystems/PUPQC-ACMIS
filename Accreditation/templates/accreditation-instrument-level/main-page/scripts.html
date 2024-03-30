@@ -4,7 +4,7 @@
 <script>
     $(document).ready(function(){
 
-        $("#submit").click(function(event) {
+        $("#instrument-level-form").submit(function(event) {
             var serializedData = $("#instrument-level-form").serialize();
             const form = document.getElementById("instrument-level-form")
             var id = $(this).data('id');
@@ -45,7 +45,7 @@
 {% comment %} AJAX FOR UPDATING  {% endcomment %}
  <script>
     $(document).ready(function(){
-        $(".save-changes").click(function(event) {
+        $(".update-instrument-level-form").submit(function(event) {
             var id = $(this).data('id');
             event.preventDefault();
             event.stopPropagation();

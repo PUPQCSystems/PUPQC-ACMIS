@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
-
+from django.core.exceptions import ObjectDoesNotExist
 from Users.models import activity_log
 from .models import files, instrument_level, instrument_level_folder, program_accreditation #Import the model for data retieving
 from .forms import Create_InstrumentDirectory_Form, SubmissionBin_Form
@@ -23,7 +23,11 @@ def parent_landing_page(request, pk):
     uploaded_files = files.objects.filter(instrument_level=pk, is_deleted=False)
     records = instrument_level_folder.objects.filter(is_deleted= False, instrument_level=pk, parent_directory= None) #Getting all the data inside the Program table and storing it to the context variable
     instrument_level_record = instrument_level.objects.select_related('instrument').get(id=pk, is_deleted= False)
-    accred_program = program_accreditation.objects.get(instrument_level_id=pk) #Getting all the data inside the Program table and storing it to the context variable
+
+    try:
+        accred_program = program_accreditation.objects.get(instrument_level_id=pk) #Getting all the data inside the Program table and storing it to the context variable
+    except ObjectDoesNotExist:
+        accred_program = False  # Set accred_program to False when the record does not exist
 
     # Initialize an empty list to store update forms for each record
     details = []

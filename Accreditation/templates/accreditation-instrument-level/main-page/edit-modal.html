@@ -2,11 +2,13 @@
 
 <!-- Modal -->
 <div class="modal  modal-blur fade" id="edit-modal-{{ record.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-m">
 		<form 
 			autocomplete="off" 
 			id="update-instrument-level-form-{{ record.id }}"
-			class="modal-content">
+			class="modal-content update-instrument-level-form"
+			data-id="{{ record.id }}">
+			{% csrf_token %}
 
 			<div class="modal-header">
 				<h1 class="modal-title">Update {{ record.name }} Instrument Level</h1>
@@ -17,7 +19,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-				<button type="button" data-id="{{ record.id }}" class="btn btn-primary save-changes">Save</button>
+				<button type="submit" id="submit-edit-{{ record.id }}" class="btn btn-primary save-changes">Save</button>
 			</div>
 
 		</form>

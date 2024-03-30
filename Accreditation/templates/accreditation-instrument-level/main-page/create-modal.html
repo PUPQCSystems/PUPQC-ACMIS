@@ -2,12 +2,13 @@
 
 	<!-- Modal -->
 	<div class="modal modal-blur fade" id="create-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		<div id='create-modal-dialog' class="modal-dialog modal-lg">
+		<div id='create-modal-dialog' class="modal-dialog modal-m">
 			<form 
 				autocomplete="off" 
 				id="instrument-level-form" 
+				data-id={{ pk }}
 				class = "modal-content">
-			{% csrf_token %}
+				{% csrf_token %}
 
 				<div class="modal-header">
 					<h1 class="modal-title">Create new instrument level</h1>
@@ -19,7 +20,7 @@
 
 				<div class="modal-footer">
 					<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-					<button type="submit" id="submit" data-id={{ pk }} class="btn btn-primary">Save</button>
+					<button type="submit" id="submit-create" class="btn btn-primary">Save</button>
 				</div>
 			</form>
 		</div>

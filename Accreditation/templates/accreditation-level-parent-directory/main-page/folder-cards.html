@@ -53,6 +53,18 @@
                             </div>
                         </div>
 
+                        {% if record.label %}
+                            <div class="row">
+                                <div class="text-truncate"
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-html="true" 
+                                    data-bs-placement="bottom"
+                                    title="{{  record.label }}">
+                                    <small class="card-text p-y-1 text-muted">{{  record.label }}</small>
+                                </div>
+                            </div>
+                        {% endif %}
+
                         <br>
                         {% if record.is_submission_bin %}
                             <a class="text-decoration-none" href="{% url 'accreditations:submission-bin-page' pk=record.id %}">

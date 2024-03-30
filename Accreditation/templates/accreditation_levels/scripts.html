@@ -3,7 +3,7 @@
 {% comment %} AJAX FOR CREATING {% endcomment %}
 <script>
     $(document).ready(function(){
-        $("#submit").click(function(event) {
+        $("#create-level-form").submit(function(event) {
             var serializedData = $("#create-level-form").serialize();
             const form = document.getElementById('create-level-form')
             event.preventDefault();
@@ -35,7 +35,7 @@
 {% comment %} AJAX FOR UPDATING  {% endcomment %}
  <script>
     $(document).ready(function(){
-        $(".save-changes-button").click(function(event) {
+        $(".update-level-form").submit(function(event) {
             var id = $(this).data('id');
             event.preventDefault();
             event.stopPropagation();

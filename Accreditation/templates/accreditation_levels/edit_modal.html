@@ -2,7 +2,7 @@
 
 <!-- Modal -->
 <div class="modal modal-blur fade" id="edit-modal-{{ record.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-m">
       	<div class="modal-content">
         	<div class="modal-header">
           	<h1 class="modal-title fs-5" id="staticBackdropLabel">Update {{ record.name }} Accreditation Level</h1>
@@ -10,7 +10,9 @@
         </div>
         <div class="modal-body">
 
-			<form method="POST" autocomplete="off" id="update-level-form-{{ record.id }}">
+			<form method="POST" autocomplete="off" id="update-level-form-{{ record.id }}"
+				class="update-level-form"
+				data-id={{ record.id }}>
 				{% csrf_token %}
 				<div class="mb-3">
 					{{ update_form|crispy }}
@@ -18,7 +20,7 @@
 		</div>
 				<div class="modal-footer">
 					<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-					<button id="save-changes" data-id={{ record.id }} type="button" class="btn btn-primary save-changes-button">Save Changes</button>
+					<button id="save-changes" type="button" class="btn btn-primary save-changes-button">Save Changes</button>
 				</div>
 			</form>
 

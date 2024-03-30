@@ -35,6 +35,18 @@
                             </div>
                         </div>
 
+                        {% if record.label %}
+                            <div class="row">
+                                <div class="text-truncate"
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-html="true" 
+                                    data-bs-placement="bottom"
+                                    title="{{  record.label }}">
+                                    <small class="card-text p-y-1 text-muted">{{  record.label }}</small>
+                                </div>
+                            </div>
+                        {% endif %}
+
                         <br>
                         <a class="text-decoration-none" href="{% url 'accreditations:instrument-level-child-directory' pk=record.id %}">
                             <div class="border  p-4 rounded-4 text-center">
