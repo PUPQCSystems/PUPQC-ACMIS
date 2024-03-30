@@ -61,10 +61,11 @@ def create(request, pk):
         description = create_form.cleaned_data.get('description')
         has_progress_bar = create_form.cleaned_data.get('has_progress_bar')
         has_assign_button = create_form.cleaned_data.get('has_assign_button')
+        can_be_reviewed = create_form.cleaned_data.get('can_be_reviewed')
         create_form.instance.created_by = request.user
         create_form.instance.instrument_level_id = pk
         create_form.instance.is_parent = True
-        if label or due_date or description or has_progress_bar or has_assign_button :
+        if label or due_date or description or has_progress_bar or has_assign_button or can_be_reviewed:
             create_form.instance.is_advance = True
         create_form.save()
 
@@ -110,9 +111,10 @@ def update(request, pk):
             description = update_form.cleaned_data.get('description')
             has_progress_bar = update_form.cleaned_data.get('has_progress_bar')
             has_assign_button = update_form.cleaned_data.get('has_assign_button')
+            can_be_reviewed = update_form.cleaned_data.get('can_be_reviewed')
             # Save the updated data to the database
             update_form.instance.modified_by = request.user
-            if label or due_date or description or has_progress_bar or has_assign_button :
+            if label or due_date or description or has_progress_bar or has_assign_button or can_be_reviewed :
                 update_form.instance.is_advance = True
             update_form.save()  
 
@@ -210,8 +212,9 @@ def create_child(request, pk):
         description = create_form.cleaned_data.get('description')
         has_progress_bar = create_form.cleaned_data.get('has_progress_bar')
         has_assign_button = create_form.cleaned_data.get('has_assign_button')
+        can_be_reviewed = create_form.cleaned_data.get('can_be_reviewed')
 
-        if label or due_date or description or has_progress_bar or has_assign_button :
+        if label or due_date or description or has_progress_bar or has_assign_button or can_be_reviewed:
             create_form.instance.is_advance = True
 
         create_form.instance.created_by = request.user

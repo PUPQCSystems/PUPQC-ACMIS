@@ -101,6 +101,7 @@ class instrument_level_folder(models.Model):
     is_advance = models.BooleanField(default=False)
     is_submission_bin = models.BooleanField(default=False)
     is_parent = models.BooleanField(default=False)
+    can_be_reviewed = models.BooleanField(default=False)
     accepted_file_type = models.CharField(max_length=1000, null=True ,blank=True)
     accepted_file_size = models.PositiveSmallIntegerField(blank=True, null=True)
     accepted_file_count = models.PositiveSmallIntegerField(blank=True, null=True)

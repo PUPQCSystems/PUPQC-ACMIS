@@ -78,7 +78,18 @@
                                     </svg>                                
                                 
                                 {% endif %}
-                                
+
+                                {% if record.is_advance %}
+                                <div>
+                                    <small class="card-text p-y-1 text-muted">Advance</small>
+                                </div>
+     
+                                {% elif record.is_submission_bin %}
+                                <div>
+                                    <small class="card-text p-y-1 text-muted">Submission Bin</small>
+                                </div>
+                                {% endif %}
+
                                     {% if record.due_date %}
                                         <div class="link-warning">
                                             <!-- Download SVG icon from http://tabler-icons.io/i/calendar -->

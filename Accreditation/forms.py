@@ -171,13 +171,18 @@ class Create_InstrumentDirectory_Form(forms.ModelForm):
         required=False
     )
 
+    can_be_reviewed = forms.BooleanField(
+        label="Can be reviewed by the Reviewer",
+        required=False
+    )
+
     due_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
                                                                         'class': 'form-control'}),
                                                                         required=False,)
     
     class Meta:
         model = instrument_level_folder
-        fields = ('name', 'label','due_date', 'description', 'has_progress_bar', 'has_assign_button')
+        fields = ('name', 'label','due_date', 'description', 'has_progress_bar', 'has_assign_button', 'can_be_reviewed')
 
 class SubmissionBin_Form(forms.ModelForm):
     name = forms.CharField(max_length=500, 

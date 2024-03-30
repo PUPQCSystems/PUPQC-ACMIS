@@ -39,18 +39,41 @@
                         <a class="text-decoration-none" href="{% url 'accreditations:instrument-level-child-directory' pk=record.id %}">
                             <div class="border  p-4 rounded-4 text-center">
                         
+                                {% if record.is_submission_bin %}
+                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="gray"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon folder-icon icon-tabler icons-tabler-outline icon-tabler-upload">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                                        <path d="M7 9l5 -5l5 5" />
+                                        <path d="M12 4l0 12" />
+                                    </svg>
+
+                                {% else %}
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="gray" class="icon folder-icon icon-tabler icons-tabler-filled icon-tabler-folder">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path d="M9 3a1 1 0 0 1 .608 .206l.1 .087l2.706 2.707h6.586a3 3 0 0 1 2.995 2.824l.005 .176v8a3 3 0 0 1 -2.824 2.995l-.176 .005h-14a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-11a3 3 0 0 1 2.824 -2.995l.176 -.005h4z" />
-                                    </svg>
+                                    </svg>                                
                                 
-                                    {% if record.due_date %}
-                                        <div class="link-warning">
-                                            <!-- Download SVG icon from http://tabler-icons.io/i/calendar -->
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M4 11h16"></path><path d="M11 15h1"></path><path d="M12 15v3"></path></svg>
-                                            {{ record.due_date|date:"M d, Y" }}
-                                        </div>
-                                    {% endif %}
+                                {% endif %}
+
+                                {% if record.is_advance %}
+                                <div>
+                                    <small class="card-text p-y-1 text-muted">Advance</small>
+                                </div>
+
+                                {% elif record.is_submission_bin %}
+                                <div>
+                                    <small class="card-text p-y-1 text-muted">Submission Bin</small>
+                                </div>
+                                {% endif %}
+
+                                
+                                {% if record.due_date %}
+                                    <div class="link-warning">
+                                        <!-- Download SVG icon from http://tabler-icons.io/i/calendar -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M4 11h16"></path><path d="M11 15h1"></path><path d="M12 15v3"></path></svg>
+                                        {{ record.due_date|date:"M d, Y" }}
+                                    </div>
+                                {% endif %}
                         
                             </div>
                         </a>
