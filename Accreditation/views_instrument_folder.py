@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.views import View
 
 from Users.models import activity_log
-from .models import files, instrument_level, instrument_level_folder #Import the model for data retieving
+from .models import files, instrument_level, instrument_level_folder, program_accreditation #Import the model for data retieving
 from .forms import Create_InstrumentDirectory_Form, SubmissionBin_Form
 from django.contrib import messages
 from django.utils import timezone
@@ -22,7 +22,8 @@ def parent_landing_page(request, pk):
     submission_bin_form = SubmissionBin_Form(request.POST or None)
     uploaded_files = files.objects.filter(instrument_level=pk, is_deleted=False)
     records = instrument_level_folder.objects.filter(is_deleted= False, instrument_level=pk, parent_directory= None) #Getting all the data inside the Program table and storing it to the context variable
-    instrument_level_record = instrument_level.objects.select_related('instrument').get(id=pk, is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
+    instrument_level_record = instrument_level.objects.select_related('instrument').get(id=pk, is_deleted= False)
+    accred_program = program_accreditation.objects.get(instrument_level_id=pk) #Getting all the data inside the Program table and storing it to the context variable
 
     # Initialize an empty list to store update forms for each record
     details = []
@@ -43,6 +44,7 @@ def parent_landing_page(request, pk):
                 'submission_bin_form':submission_bin_form,
                 'all_file_types': all_file_types,
                 'uploaded_files': uploaded_files,
+                'accred_program': accred_program
                }  
 
     return render(request, 'accreditation-level-parent-directory/main-page/landing-page.html', context)
@@ -61,6 +63,7 @@ def create(request, pk):
         has_assign_button = create_form.cleaned_data.get('has_assign_button')
         create_form.instance.created_by = request.user
         create_form.instance.instrument_level_id = pk
+        create_form.instance.is_parent = True
         if label or due_date or description or has_progress_bar or has_assign_button :
             create_form.instance.is_advance = True
         create_form.save()

@@ -199,3 +199,248 @@ class SubmissionBin_Form(forms.ModelForm):
                                                     message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Description Field!")]
                                                     }),
         }
+
+# ---------------------------- [ PROGRAM ACCREDITATION FORM] ----------------------------
+class ProgramAccreditation_Form(forms.ModelForm):
+    program = forms.ModelChoiceField(
+        label = "Program", 
+        queryset= Programs.objects.filter(is_deleted=False), 
+        required=True, 
+        empty_label="Select a Program",
+        error_messages={'required': "Please select a level before submitting the form."},
+        widget=forms.Select(attrs={'class': 'form-control form-select select'}))
+    
+    instrument_level = forms.ModelChoiceField(
+        label = "Instrument Level", 
+        queryset= instrument_level.objects.filter(is_deleted=False), 
+        required=True, 
+        empty_label="Select an Instrument Level",
+        error_messages={'required': "Please select an Instrument Level before submitting the form."},
+        widget=forms.Select(attrs={'class': 'form-control form-select select'}))
+    
+    mock_accred_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}),
+                                                                       required=True,
+                                                                        error_messages={'required': "Please set the mock accreditation date beefore submitting the form."})
+    
+    
+    survey_visit_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}), 
+                                                                     required=True,
+                                                                      error_messages={'required': "Please set the survey visit date before submitting the form."})
+
+    class Meta:
+        model = program_accreditation
+        fields = ('program', 'instrument_level', 'mock_accred_date', 'survey_visit_date', 'description')
+
+        widgets = {
+            'description': forms.Textarea(attrs={'required': False, 'class': 'form-control'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        mock_accred_date = cleaned_data.get('mock_accred_date')
+        survey_visit_date = cleaned_data.get('survey_visit_date')
+
+        if not survey_visit_date:
+            raise ValidationError("Please set the survey visit date before submitting the form. ")
+
+        if mock_accred_date and survey_visit_date:
+            # Check if mock_accred_date is equal to survey_visit_date
+            if mock_accred_date == survey_visit_date:
+                raise ValidationError("Mock Accreditation Date cannot be equal to the survey visit date. ")
+
+            # Check if mock_accred_date is after survey_visit_date
+            if mock_accred_date > survey_visit_date:
+                raise ValidationError("Mock Accreditation Date cannot be after the survey visit date. ")
+
+            # Check if mock_accred_date is before the current date
+            if mock_accred_date < timezone.now():
+                raise ValidationError("Mock Accreditation Date should be set in the future. ")
+
+        return cleaned_data
+    
+
+class ProgramAccreditation_UpdateForm(forms.ModelForm):
+    program = forms.ModelChoiceField(
+        label = "Program", 
+        queryset= Programs.objects.filter(is_deleted=False), 
+        required=True, 
+        empty_label="Select a Program",
+        error_messages={'required': "Please select a level before submitting the form."},
+        widget=forms.Select(attrs={'class': 'form-control form-select select edit-select-button',
+                               'id': 'id_program_update'}))
+    
+    instrument_level = forms.ModelChoiceField(
+        label = "Instrument Level", 
+        queryset= instrument_level.objects.filter(is_deleted=False), 
+        required=True, 
+        empty_label="Select an Instrument Level",
+        error_messages={'required': "Please select an Instrument Level before submitting the form."},
+        widget=forms.Select(attrs={'class': 'form-control form-select select edit-instrument-button',
+                                    'id': 'id_instrument_level_update'}))
+    
+    mock_accred_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}),
+                                                                       required=True,
+                                                                        error_messages={'required': "Please set the mock accreditation date beefore submitting the form."})
+    survey_visit_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}), 
+                                                                     required=True,
+                                                                      error_messages={'required': "Please set the survey visit date before submitting the form."})
+
+    class Meta:
+        model = program_accreditation
+        fields = ('program', 'instrument_level', 'mock_accred_date', 'survey_visit_date', 'description')
+
+        widgets = {
+            'description': forms.Textarea(attrs={'required': False, 'class': 'form-control'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        mock_accred_date = cleaned_data.get('mock_accred_date')
+        survey_visit_date = cleaned_data.get('survey_visit_date')
+
+        if not survey_visit_date:
+            raise ValidationError("Please set the survey visit date before submitting the form. ")
+
+        if mock_accred_date and survey_visit_date:
+            # Check if mock_accred_date is equal to survey_visit_date
+            if mock_accred_date == survey_visit_date:
+                raise ValidationError("Mock Accreditation Date cannot be equal to the survey visit date. ")
+
+            # Check if mock_accred_date is after survey_visit_date
+            if mock_accred_date > survey_visit_date:
+                raise ValidationError("Mock Accreditation Date cannot be after the survey visit date. ")
+
+            # Check if mock_accred_date is before the current date
+            if mock_accred_date < timezone.now():
+                raise ValidationError("Mock Accreditation Date should be set in the future. ")
+
+        return cleaned_data
+    
+
+# ---------------------------- [ REVIEW UPLOAD BIN FORM ] ---------------------------- #
+class ReviewUploadBin_Form(forms.ModelForm):
+    STATUS_CHOICES = [
+            ('approve', 'Approve'), 
+            ('rfr', 'Request for Resubmission')
+        ]   
+    
+    status = forms.ChoiceField(
+        label = "Status", 
+        choices = STATUS_CHOICES,
+        required = True, 
+        error_messages={'required': "Please select a status before submitting the form."},
+        widget=forms.Select(attrs={'class': 'form-control form-select select'}))
+
+
+    
+    class Meta:
+        model = instrument_level_folder
+        fields = ('status', 'remarks')
+
+    widgets = {
+        'remarks': forms.Textarea(attrs={'required': False}),
+        }
+
+
+# ---------------------------- [ File Upload FORM ] ---------------------------- #
+class FileUpload_Form(forms.ModelForm):
+   class Meta:
+        model = files
+        fields = ('file_path',)
+        widgets = {
+            'file_path': forms.FileInput(attrs={'id': 'file-path-{{ upload_bin.id }}'}),
+        }
+
+
+
+# ---------------------------- [ AREA ASSIGNMENT FORM ] ---------------------------- #
+class ChairManAssignedToFolder_Form(forms.ModelForm):
+    class Meta:
+        model = user_assigned_to_folder
+        fields = ['parent_directory', 'is_chairman']
+
+
+class CoChairUserAssignedToFolder_Form(forms.ModelForm):
+    class Meta:
+        model = user_assigned_to_folder
+        fields = ['parent_directory', 'is_cochairman']
+
+class MemberAssignedToFolder_Form(forms.ModelForm):
+    class Meta:
+        model = user_assigned_to_folder
+        fields = ['parent_directory','is_member']
+
+
+# ---------------------------- [ ACCREDITATION RESULT FORMS ] ---------------------------- #
+
+class PassedResult_Form(forms.ModelForm):
+    validity_date_from = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}),
+                                                                       required=True,
+                                                                        error_messages={'required': "Please set the validity date 'from' before submitting the form."})
+    validity_date_to = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}), 
+                                                                     required=True,
+                                                                      error_messages={'required': "Please set the validity date 'to' before submitting the form."})
+
+    class Meta:
+        model = program_accreditation
+        fields = ('validity_date_from', 'validity_date_to')
+
+    def clean(self):
+        cleaned_data = super().clean()
+        validity_date_from = cleaned_data.get('validity_date_from')
+        validity_date_to = cleaned_data.get('validity_date_to')
+
+        if  validity_date_from and  validity_date_to:
+            # Check if  validity_date_from is equal to  validity_date_to
+            if  validity_date_from ==  validity_date_to:
+                raise ValidationError("Validity Date 'from' cannot be equal to the survey visit date. ")
+
+            # Check if  validity_date_from is after  validity_date_to
+            if  validity_date_from >  validity_date_to:
+                raise ValidationError("Validity Date 'from' cannot be after the survey visit date. ")
+
+            # Check if  validity_date_from is before the current date
+            if  validity_date_from < timezone.now():
+                raise ValidationError("Validity Date 'from' should be set in the future. ")
+
+        return cleaned_data
+
+class RevisitResult_Form(forms.ModelForm):
+    revisit_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}),
+                                                                       required=True,
+                                                                        error_messages={'required': "Please set the mock accreditation date beefore submitting the form."})
+
+    class Meta:
+        model = program_accreditation
+        fields = ('revisit_date',)
+
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        revisit_date = cleaned_data.get('revisit_date')
+
+        if not revisit_date:
+            raise ValidationError("Please ensure that the survey revisit date is set before submitting the form.")
+
+        if revisit_date:
+            if revisit_date < timezone.now():
+                raise ValidationError("Revisit Date should be set in the future. ")
+
+        return cleaned_data
+    
+
+class RemarksResult_Form(forms.ModelForm):
+    class Meta:
+        model = result_remarks
+        fields = ('remarks',)
+        widgets = {
+            'remarks': forms.Textarea(attrs={'required': False, 'class': 'form-control'}),
+        }

@@ -100,6 +100,7 @@ class instrument_level_folder(models.Model):
     has_assign_button = models.BooleanField(default=False)
     is_advance = models.BooleanField(default=False)
     is_submission_bin = models.BooleanField(default=False)
+    is_parent = models.BooleanField(default=False)
     accepted_file_type = models.CharField(max_length=1000, null=True ,blank=True)
     accepted_file_size = models.PositiveSmallIntegerField(blank=True, null=True)
     accepted_file_count = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -140,3 +141,73 @@ class files(models.Model):
     def delete(self,*args, **kwargs):
         self.file_path.delete()
         super().delete(*args, **kwargs)
+
+
+
+class program_accreditation(models.Model):
+    program = models.ForeignKey(Programs, on_delete=models.CASCADE, null=True, blank=True, related_name='program_relation')
+    instrument_level = models.ForeignKey(instrument_level, on_delete=models.CASCADE, null=True, blank=True, related_name='instrument_level_relation')
+    description = models.CharField(max_length=5000, null=True, blank=True)
+    mock_accred_date = models.DateTimeField(auto_now=False, null=True, blank=True)
+    survey_visit_date = models.DateTimeField(auto_now=False, null=True, blank=True)
+    revisit_date = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_done = models.BooleanField(default=False)
+    is_failed = models.BooleanField(default=False)
+    status = models.CharField(max_length=50, null=True, blank=True)
+    entry_result_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    validity_date_from = models.DateTimeField(auto_now=False, null=True, blank=True)
+    validity_date_to = models.DateTimeField(auto_now=False, null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_program_accreditation', null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_program_accreditation', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('program', 'instrument_level')
+
+
+class result_remarks(models.Model):
+    accredited_program = models.ForeignKey(program_accreditation, on_delete=models.CASCADE, null=True, blank=True, related_name='program_remarks_relation')
+    remarks = models.CharField(max_length=5000, null=True, blank=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_result_remarks', null=True, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_result_remarks', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+
+class accreditation_certificates(models.Model):
+    accredited_program = models.ForeignKey(program_accreditation, related_name='accredited_program_certificate', on_delete=models.CASCADE, null=True, blank=True)
+    certificate_path = models.FileField(upload_to = 'accreditation-certifacates/', max_length=300)
+    certificate_name = models.CharField(max_length=300, null=True, blank=True)
+    description = models.CharField(max_length=5000, null=True, blank=True)
+    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_accreditation_certificate', null=True, blank=True)
+    uploaded_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_accreditation_certificate', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return(self.accredited_program.program)
+    
+    def delete(self,*args, **kwargs):
+        self.certificate_path.delete()
+        super().delete(*args, **kwargs)
+    
+class user_assigned_to_folder(models.Model):
+    assigned_user = models.ForeignKey(CustomUser, on_delete=models.PROTECT, related_name='assigned_user', null=False, blank=False)
+    parent_directory = models.ForeignKey(instrument_level_folder, related_name='assigned_parent_folder' ,on_delete=models.CASCADE, null=False, blank=False)
+    is_chairman = models.BooleanField(default=False)
+    is_cochairman = models.BooleanField(default=False)
+    is_member = models.BooleanField(default=False)
+    assigned_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='assigned_by', null=True, blank=True)
+    assigned_at = models.DateTimeField(default=timezone.now)
+    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_by_assignees', null=True, blank=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    removed_at = models.DateTimeField(auto_now=False, null=True, blank=True)
+    is_removed = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('assigned_user', 'parent_directory')
