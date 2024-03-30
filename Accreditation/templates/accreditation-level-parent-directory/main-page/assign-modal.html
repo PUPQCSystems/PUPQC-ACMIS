@@ -28,7 +28,7 @@
 						<div class="step{{ record.id }} step{{ record.id }}-1">
 							<!-- Step 1 form fields here -->
 							<h3>Step 1: Add Area Chairman</h3>
-								<input type="hidden" name="area" value="{{ record.id }}">
+								<input type="hidden" name="folder" value={{ record.id }}>
 								{% include "accreditation-page/instrument-area/main-page/area-chairman-table.html" %}
 							<br>
 							<button type="button" class="btn btn-primary next-step-{{ record.id }}">Next</button>
