@@ -478,5 +478,7 @@ def archive_files(request, pk):
     elif file_record.parent_directory:
         messages.success(request, f'The file named "{name}" is successfully archived!') 
         return redirect('accreditations:instrument-level-child-directory', pk=file_record.parent_directory_id)
-        
+
+
+
 
