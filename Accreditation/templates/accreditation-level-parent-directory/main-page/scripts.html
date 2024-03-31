@@ -607,3 +607,44 @@
     
     
 </script>
+
+{% comment %} AJAX FOR UPDATING  {% endcomment %}
+<script>
+    $(document).ready(function(){
+        $(".assign-button").click(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var serializedData = $("#assign-form-"+id).serialize();
+            var url = "/accreditation/directory/assign-user/";
+    
+            $.ajax({
+                url: url, 
+                data: serializedData,
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
+                type: "POST",
+                success: function(response) {
+                    location.reload();
+                    
+                },
+                error: function(error) {
+
+                    if (error.responseJSON && error.responseJSON.error) {
+                        // Handle the IntegrityError message
+                        toastr.error(error.responseJSON.error);
+                    }
+                    // Check for the errors field in the JSON response
+                    else if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> 

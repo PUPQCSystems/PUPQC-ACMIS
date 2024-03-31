@@ -28,8 +28,8 @@
 						<div class="step{{ record.id }} step{{ record.id }}-1">
 							<!-- Step 1 form fields here -->
 							<h3>Step 1: Add Area Chairman</h3>
-								<input type="hidden" name="folder" value={{ record.id }}>
-								{% include "accreditation-page/instrument-area/main-page/area-chairman-table.html" %}
+								<input type="hidden" name="parent_directory" value={{ record.id }}>
+								{% include "accreditation-level-parent-directory/main-page/folder-chairman-table.html" %}
 							<br>
 							<button type="button" class="btn btn-primary next-step-{{ record.id }}">Next</button>
 						</div>
@@ -41,7 +41,7 @@
 									<h3>Step 2: Add Co-chairman</h3>
 								</div>
 							</div>
-								{% include "accreditation-page/instrument-area/main-page/area-cochairman-table.html" %}
+								{% include "accreditation-level-parent-directory/main-page/folder-cochairman-table.html" %}
 							<br>
 							<button type="button" class="btn btn-primary prev-step-{{ record.id }}">Previous</button>
 							<button type="button" class="btn btn-primary next-step-{{ record.id }}">Next</button>
@@ -54,7 +54,7 @@
 									<h3>Step 3: Add Area Members</h3>
 								</div>
 							</div>
-								{% include "accreditation-page/instrument-area/main-page/area-members-table.html" %}
+								{% include "accreditation-level-parent-directory/main-page/folder-members-table.html" %}
 							<br>
 							<button type="button" class="btn btn-primary prev-step-{{ record.id }}">Previous</button>
 							<button type="button" class="btn btn-primary next-step-{{ record.id }}">Next</button>

@@ -1,5 +1,5 @@
 from django.urls import path
-from Accreditation import  views_accreditation, views_instrument_folder, views_instrument_level, views_submission_bin
+from Accreditation import  views_accreditation, views_assign_user, views_instrument_folder, views_instrument_level, views_submission_bin
 from . import views_level, views_bodies, views_instrument
 
 from Accreditation.views_instrument_level import *
@@ -94,6 +94,9 @@ urlpatterns = [
     path("revisit-result/<str:pk>/", views_accreditation.result_revisit, name='accreditation-result-revisit'),
     path("certificate/destroy/<str:pk>/", views_accreditation.certificate_destroy, name='accreditation-certificate-destroy'),
     path("result-page/<str:pk>/", views_accreditation.result_page, name='accreditation-result-page'),
+
+    path("directory/assign-user/", views_assign_user.assign_user, name='folder-assign-user'),
+
 
 
 

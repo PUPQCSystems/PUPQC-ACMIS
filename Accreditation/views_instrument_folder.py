@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
 from django.core.exceptions import ObjectDoesNotExist
+from Accreditation.models_views import UserGroupView
 from Users.models import activity_log
-from .models import accreditation_certificates, files, instrument_level, instrument_level_folder, program_accreditation #Import the model for data retieving
-from .forms import Create_InstrumentDirectory_Form, PassedResult_Form, RemarksResult_Form, RevisitResult_Form, SubmissionBin_Form
+from .models import accreditation_certificates, files, instrument_level, instrument_level_folder, program_accreditation, user_assigned_to_folder #Import the model for data retieving
+from .forms import ChairManAssignedToFolder_Form, CoChairUserAssignedToFolder_Form, Create_InstrumentDirectory_Form, MemberAssignedToFolder_Form, PassedResult_Form, RemarksResult_Form, RevisitResult_Form, SubmissionBin_Form
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
@@ -19,6 +20,11 @@ all_file_types = ['image/jpeg', 'application/pdf', 'application/msword', 'applic
 def parent_landing_page(request, pk):
     #Getting the data from the API
     create_form = Create_InstrumentDirectory_Form(request.POST or None)
+
+    chairman_form =ChairManAssignedToFolder_Form(request.POST or None)
+    cochairman_form = CoChairUserAssignedToFolder_Form(request.POST or None)
+    member_form = MemberAssignedToFolder_Form(request.POST or None)
+
     passed_result_form = PassedResult_Form(request.POST or None)
     revisit_result_form = RevisitResult_Form(request.POST or None)
     remarks_result_form = RemarksResult_Form(request.POST or None)
@@ -33,15 +39,18 @@ def parent_landing_page(request, pk):
     except ObjectDoesNotExist:
         accred_program = False  # Set accred_program to False when the record does not exist
 
+    user_records = UserGroupView.objects.all()
+
     # Initialize an empty list to store update forms for each record
     details = []
 
     # Iterate through each record and create an update form for it
     for record in records:
         update_form = Create_InstrumentDirectory_Form(instance=record)
+        assigned_user = user_assigned_to_folder.objects.filter(parent_directory_id=record.id).values_list('assigned_user_id', 'parent_directory_id', 'is_chairman', 'is_cochairman', 'is_member')
         created_by = record.created_by  # Get the user who created the record
         modified_by = record.modified_by  # Get the user who modified the record
-        details.append((record, update_form, created_by, modified_by))
+        details.append((record, update_form, created_by, modified_by, assigned_user))
 
     #Getting all the data inside the type table and storing it to the context variable
     context = { 'records': records, 
@@ -56,7 +65,11 @@ def parent_landing_page(request, pk):
                 'passed_result_form': passed_result_form,
                 'revisit_result_form': revisit_result_form,
                 'remarks_result_form': remarks_result_form,
-                'certificates_records':  certificates_records 
+                'certificates_records':  certificates_records,
+                'user_records': user_records,
+                'chairman_form': chairman_form,
+                'cochairman_form': cochairman_form,
+                'member_form': member_form,
                }  
 
     return render(request, 'accreditation-level-parent-directory/main-page/landing-page.html', context)

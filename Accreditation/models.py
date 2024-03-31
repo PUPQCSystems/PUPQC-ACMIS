@@ -199,10 +199,10 @@ class accreditation_certificates(models.Model):
     
 class user_assigned_to_folder(models.Model):
     assigned_user = models.ForeignKey(CustomUser, on_delete=models.PROTECT, related_name='assigned_user', null=False, blank=False)
-    parent_directory = models.ForeignKey(instrument_level_folder, related_name='assigned_parent_folder' ,on_delete=models.CASCADE, null=False, blank=False)
-    is_chairman = models.BooleanField(default=False)
-    is_cochairman = models.BooleanField(default=False)
-    is_member = models.BooleanField(default=False)
+    parent_directory = models.ForeignKey(instrument_level_folder, related_name='assigned_parent_folder', on_delete=models.CASCADE, null=False, blank=False)
+    is_chairman = models.BooleanField(default=False,  null=True, blank=True)
+    is_cochairman = models.BooleanField(default=False,  null=True, blank=True)
+    is_member = models.BooleanField(default=False,  null=True, blank=True)
     assigned_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='assigned_by', null=True, blank=True)
     assigned_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_by_assignees', null=True, blank=True)

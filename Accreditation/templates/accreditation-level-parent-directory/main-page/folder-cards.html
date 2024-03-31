@@ -1,7 +1,7 @@
 <div class="row row-cards">
     {% if records %}
         <!-- For LOOP HERE-->
-        {% for record, update_form, created_by, modified_by in details %}
+        {% for record, update_form, created_by, modified_by, assigned_user in details %}
         {% if accred_program  %}
             <div class="col-sm-4 col-lg-4">
         {% else %}
@@ -196,8 +196,8 @@
                     {% include "accreditation-level-parent-directory/main-page/edit-submission-bin-modal.html" %}
                 {% endif %}
 
-                {% if perms.Accreditation.add_user_assigned_to_area and perms.Accreditation.view_user_assigned_to_area and perms.Accreditation.change_user_assigned_to_area and perms.Accreditation.delete_user_assigned_to_area %}
-                    {% include "accreditation-page/instrument-area/main-page/assign-modal.html" %}
+                {% if perms.Accreditation.add_user_assigned_to_folder and perms.Accreditation.view_user_assigned_to_folder and perms.Accreditation.change_user_assigned_to_folder and perms.Accreditation.delete_user_assigned_to_folder %}
+                    {% include "accreditation-level-parent-directory/main-page/assign-modal.html" %}
                 {% endif %}
             {% endblock modal_content %}
 

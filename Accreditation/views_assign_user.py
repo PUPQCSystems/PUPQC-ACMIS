@@ -1,7 +1,7 @@
 from django.db import IntegrityError
 from django.http import JsonResponse
 from Users.models import CustomUser, activity_log
-from .models import instrument_level_area, instrument_level_folder, user_assigned_to_folder #Import the model for data retieving
+from .models import instrument_level_folder, user_assigned_to_folder #Import the model for data retieving
 from .forms import ChairManAssignedToFolder_Form, CoChairUserAssignedToFolder_Form, MemberAssignedToFolder_Form
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -17,10 +17,9 @@ def assign_user(request):
         try:
             with transaction.atomic():
                 chairman_val = request.POST.get('is_chairman')
-                print(chairman_val)
                 cochairman_val = request.POST.get('is_cochairman')
                 member_list = request.POST.getlist('is_member')
-                folder_pk = request.POST.get('folder')
+                folder_pk = request.POST.get('parent_directory')
                 folder = instrument_level_folder.objects.get(id=folder_pk)
         
                 existing_chairman = user_assigned_to_folder.objects.filter(parent_directory=folder, is_chairman=True).first()
@@ -50,7 +49,7 @@ def assign_user(request):
                     elif chairman_val and (not cochairman_val or cochairman_val == 'None') and bool(member_list) == False :
                         if existing_chairman.assigned_user_id == int(chairman_val) and bool(existing_members):
                             existing_members.delete()
-                            messages.success(request, "Area Managers are successfully assigned!")
+                            messages.success(request, "Folder Managers are successfully assigned!")
                             return JsonResponse({'status': 'success'}, status=200)
                             
                         elif existing_chairman.assigned_user_id == int(chairman_val):
@@ -75,26 +74,26 @@ def assign_user(request):
                             cochairman = CustomUser.objects.get(id=cochairman_val)
                             cochairman_instance = cochairman_form.save(commit=False)
                             cochairman_instance.assigned_user = cochairman
-                            cochairman_instance.area = area
+                            cochairman_instance.parent_directory = folder
                             cochairman_instance.is_cochairman = True
                             cochairman_instance.assigned_by = request.user
                             cochairman_instance.save()
 
                 if chairman_val is None:
-                    return JsonResponse({'error': 'Please select a Chairman for this Area.'}, status=400)
+                    return JsonResponse({'error': 'Please select a Chairman for this Folder.'}, status=400)
                 else:
-                    chairman = CustomUser.objects.get(id=int(chairman_val))
+                    # chairman = CustomUser.objects.get(id=int(chairman_val))
                     existing_chairmen = user_assigned_to_folder.objects.filter(parent_directory=folder, is_chairman=True)
-
+  
                     # Check if there are existing chairmen for the area
                     if existing_chairmen.exists():
-                        # If there are existing chairmen, remove them to ensure only one chairman per area
+                        # If there are existing chairmen, remove them to ensure only one chairman per folder
                         existing_chairmen.delete()
 
                     # Save the new chairman
                     chairman_instance = chairman_form.save(commit=False)
-                    chairman_instance.assigned_user = chairman
-                    chairman_instance.area = area
+                    chairman_instance.assigned_user_id = chairman_val
+                    chairman_instance.parent_directory = folder
                     chairman_instance.is_chairman = True
                     chairman_instance.assigned_by = request.user
                     chairman_instance.save()
@@ -111,7 +110,7 @@ def assign_user(request):
                     # Save the new co-chairman
                     cochairman_instance = cochairman_form.save(commit=False)
                     cochairman_instance.assigned_user = cochairman
-                    cochairman_instance.area = area
+                    cochairman_instance.parent_directory = folder
                     cochairman_instance.is_cochairman = True
                     cochairman_instance.assigned_by = request.user
                     cochairman_instance.save()
@@ -127,15 +126,15 @@ def assign_user(request):
                             member = CustomUser.objects.get(id=member_id)
                             member_form_instance = MemberAssignedToFolder_Form(request.POST)
                             member_form_instance.instance.assigned_user = member
-                            member_form_instance.instance.area = area
+                            member_form_instance.instance.parent_directory = folder
                             member_form_instance.instance.is_member = True
                             member_form_instance.instance.assigned_by = request.user
                             member_form_instance.save()
                     else:
-                        return JsonResponse({'error': 'The System can only accept up to five (5) members per area.'}, status=400)
+                        return JsonResponse({'error': 'The System can only accept up to five (5) members per folder.'}, status=400)
 
-            messages.success(request, "Area Managers are successfully assigned!")
+            messages.success(request, "Folder Managers are successfully assigned!")
             return JsonResponse({'status': 'success'}, status=200)
 
         except IntegrityError as e:
-            return JsonResponse({'error': 'Oops! It seems like you selected a user who is already assigned to this area. Please choose a different user.'}, status=400)
+            return JsonResponse({'error': 'Oops! It seems like you selected a user who is already assigned to this folder. Please choose a different user.'}, status=400)
