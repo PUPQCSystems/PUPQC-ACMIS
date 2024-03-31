@@ -43,14 +43,17 @@ def parent_landing_page(request, pk):
 
     # Initialize an empty list to store update forms for each record
     details = []
+    new_user_records = []
 
     # Iterate through each record and create an update form for it
     for record in records:
         update_form = Create_InstrumentDirectory_Form(instance=record)
-        assigned_user = user_assigned_to_folder.objects.filter(parent_directory_id=record.id).values_list('assigned_user_id', 'parent_directory_id', 'is_chairman', 'is_cochairman', 'is_member')
+        assigned_users = user_assigned_to_folder.objects.select_related('assigned_user').filter(parent_directory_id=record.id)
+        assigned_user_ids = user_assigned_to_folder.objects.filter(parent_directory_id=record.id).values_list('assigned_user_id', flat=True)
+        users_not_assigned = user_records.exclude(id__in=assigned_user_ids)
         created_by = record.created_by  # Get the user who created the record
         modified_by = record.modified_by  # Get the user who modified the record
-        details.append((record, update_form, created_by, modified_by, assigned_user))
+        details.append((record, update_form, created_by, modified_by, assigned_users, users_not_assigned))
 
     #Getting all the data inside the type table and storing it to the context variable
     context = { 'records': records, 

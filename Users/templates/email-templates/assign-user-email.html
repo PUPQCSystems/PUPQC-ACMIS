@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Folder Assignment Notification</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2 class="text-center">Folder Assignment Notification</h2>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col">
+                    <p>Dear {{ first_name }} {{ last_name }},</p>
+                    <p>We are pleased to inform you that you have been assigned to a folder in our system.</p>
+                    <p><strong>Folder Name:</strong> {{ folder_name }}</p>
+                    <p><strong>Role:</strong> {{ role }}</p>
+                    <p>Thank you for your continued contribution!</p>
+                    <p>Best regards,</p>
+                    <p><em>PUP QC's ACMIS</em></p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
