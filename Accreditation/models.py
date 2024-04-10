@@ -37,19 +37,7 @@ class accredbodies(models.Model):
         return '%s %s' % (self.name, '(' + self.abbreviation + ')')
     
     
-    
-class components(models.Model):
-    name = models.CharField(max_length=100, null=True, blank=True, unique=True)
-    description = models.TextField(null=True, blank=True)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_components', null=True, blank=True)
-    created_at = models.DateTimeField(default=timezone.now)
-    modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_components', null=True, blank=True)
-    modified_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(auto_now=False, null=True, blank=True)
-    is_deleted = models.BooleanField(default=False)
 
-    def __str__(self):
-        return(self.name)
     
 class instrument(models.Model):
     name = models.CharField(max_length=250, unique=True)

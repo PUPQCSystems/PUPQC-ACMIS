@@ -35,30 +35,6 @@ class Create_Level_Form(forms.ModelForm):
         model = accredlevel
         fields = ('name',)
 
-
-class Component_Form(forms.ModelForm):
-    name = forms.CharField(
-        max_length=100, 
-        min_length = 5,
-        required=True, 
-        error_messages={'required': "Please enter a component name before submitting the form."},
-        validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ0-9\s\'&()/-]*$', 
-                            message="Only Letters, Numbers, Apostrophe, Hyphen, Ampersand, and Parentheses are allowed in the Name Field!")]
-                            )
-    description = forms.CharField(widget=forms.Textarea(attrs={}), max_length=2000,  required=False)
-
-    class Meta:
-        model = components
-        fields = ('name', 'description')
-
-    def clean(self):
-        cleaned_data = super().clean()
-        
-        # Ensure 'name' is present before trying to access it
-        if 'name' in cleaned_data:
-            cleaned_data['name'] = cleaned_data['name'].upper()  # Convert to uppercase
-
-        return cleaned_data
     
 class Create_Bodies_Form(forms.ModelForm):
     name = forms.CharField( max_length=250, required=True,

@@ -561,7 +561,7 @@
 
 
 {% comment %} -------------------------------[ASSIGN USER TO A FOLDER CODES]------------------------------- {% endcomment %}
-<script>
+{% comment %} <script>
     $(document).ready(function(){
         $(".assign-user-form").submit(function(event) {
             var id = $(this).data('id');
@@ -599,4 +599,5 @@
             });
         });
     });
-</script> 
+</script>  {% endcomment %}
+

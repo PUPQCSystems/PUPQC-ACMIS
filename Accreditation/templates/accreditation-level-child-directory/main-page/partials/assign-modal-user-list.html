@@ -1,0 +1,326 @@
+
+<div id='create-modal-dialog' class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content ">
+
+        <div class="modal-header">
+            <h1 class="modal-title">Share Folder</h1>
+            <button type="button" class="btn btn-close btn-pill rounded-circle" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body assign-modal-dialog-{{record.id}}">
+
+            <div class="alert alert-info" role="alert">
+                <div class="d-flex">
+                  <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon alert-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        <polyline points="11 12 12 12 12 16 13 16"></polyline>
+                      </svg>
+                  </div>
+                  <div>
+                    <h4 class="alert-title">Member Assignment Information</h4>
+                    <div class="text-secondary">
+                        Below are the rules for assigning members to a folder:
+                        <ol class="list-styled">
+                            <li><small>- You can assign only one <b><u>Chairman</u></b> per folder.</small></li>
+                            <li><small>- You can assign only one <b><u>Co-chairman</u></b> per folder.</small></li>
+                            <li><small>- You can assign a maximum of eight <b><u>Members</u></b> per folder.</small></li>
+                        </ol>
+                    </div>
+                    
+                  </div>
+                </div>
+            </div>
+        
+            <form class="assign-user-form"
+                data-id="{{ record.id }}"
+                id="assign-user-form-{{ record.id }}"
+                hx-post="{% url 'accreditations:folder-assign-user' %}"
+                hx-trigger="submit"
+                hx-target="#assign-modal-{{ record.id }}"
+            >
+                {% csrf_token %}
+        
+                <input type="hidden" name="folder-id" value="{{ record.id }}">
+                <input type="hidden" name="is-child" value="1">
+        
+                <div class="row">
+                    <div class="col-7">
+                        <select type="text" class="form-select form-control" name="assigned-user" placeholder="Email address or name" id="assign-user-{{ record.id }}" value="" multiple>
+                            {% for user_record in user_not_assigned %}
+                                <option value="{{ user_record.id }}" data-custom-properties="&lt;span class=&quot;avatar avatar-xs&quot; style=&quot;background-image: url(./static/avatars/000m.jpg)&quot;&gt;&lt;/span&gt;">
+                                    {{ user_record.first_name }} {{ user_record.last_name }}
+                                </option>
+                            {% endfor %}
+        
+                        </select>
+                    </div>
+        
+                    <div class="col-3">
+                        <select class="form-select form-control" name="assign-selected-role" id="selected-role-{{ record.id }}">
+                            <option value="member" selected="">Member</option>
+                            <option value="chairman">Chairman</option>
+                            <option value="co-chairman">Co-chairman</option>
+                        </select>
+                    </div>
+        
+                    <div class="col-1">
+                        <button id="assign-button-{{record.id}}" type="submit" class="btn btn-primary">Assign</button>
+                    </div>
+                    
+                </div>
+        
+                <!-- Text area input field -->
+                <div class="row mt-2" id="textarea-row-{{record.id}}" style="display: none;">
+                    <div class="col-auto">
+                        <textarea class="form-control" name="message" id="additional-info-{{ record.id }}" rows="3" placeholder="Greetings! You're assigned to the '{{ record.name }}' folder."></textarea>
+                    </div>
+                </div>
+            </form>
+        
+            <br>
+        
+            <div class="row">
+                <div class="card card-borderless">
+                    <div class="list-group-flush list-group-hoverable">
+                        {% for user_assigned in assigned_users %}
+                            <div class="list-group-item p-2">
+                                <div class="row align-items-center"  id="list-of-user-div-{{ record.id }}">
+                                    <div class="col-auto">
+            
+                                    {% if user_assigned.assigned_user.profile_pic %}
+                                        <a href="#">
+                                            <span class="avatar" style="background-image: url(./static/avatars/000m.jpg)"></span>
+                                        </a>
+                                        
+                                    {% else %}
+                                        <span class="avatar rounded">{{ user_assigned.assigned_user.first_name|first|default:'' }} {{user_assigned.assigned_user.last_name|first|default:'' }}</span>
+                                    {% endif %}
+            
+                                    </div>
+                                    <div class="col text-truncate">
+                                        <a href="#" class="text-reset d-block">{{ user_assigned.assigned_user.first_name }} {{ user_assigned.assigned_user.last_name }}</a>
+                                    <div class="d-block text-muted text-truncate mt-n1">{{ user_assigned.assigned_user.email }}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="dropdown" id="div-to-refresh">
+            
+                                            <a href="#" class="btn dropdown-toggle rounded-3" data-bs-toggle="dropdown">
+                                                {% if user_assigned.is_chairman %}
+                                                    Chairman
+                                                
+                                                {% elif user_assigned.is_cochairman %}
+                                                    Co-chairman
+            
+                                                {% elif user_assigned.is_member %}
+                                                    Member
+                                                
+                                                {% endif %}
+                                            </a>
+                                    
+                                            <div class="dropdown-menu">
+            
+                                                <form id="change-to-chairman-form-{{ record.id }}-{{ user_assigned.assigned_user.id }}" >
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="is-child" value="1">
+                                                    <button class="dropdown-item {% if user_assigned.is_chairman %} active {% endif %} chairman-button" type="button" id="chairman-button-{{ record.id }}"
+                                                        hx-post="{% url 'accreditations:folder-assign-user-chairman' pk=user_assigned.assigned_user.id folder_pk=user_assigned.parent_directory.id %}" 
+                                                        hx-trigger="click"
+                                                        hx-target="#assign-modal-{{ user_assigned.parent_directory.id }}">
+                                                        Chairman
+                                                    </button>
+                                                </form>
+                                                
+                                                <form id="change-to-cochairman-form-{{ record.id }}-{{ user_assigned.assigned_user.id }}" >
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="is-child" value="1">
+                                                    <button class="dropdown-item {% if user_assigned.is_cochairman %} active {% endif %} cochairman-button" type="button" id="cochairman-button-{{ record.id }}"
+                                                        hx-post="{% url 'accreditations:folder-assign-user-cochairman' pk=user_assigned.assigned_user.id folder_pk=user_assigned.parent_directory.id %}" 
+                                                        hx-trigger="click"
+                                                        hx-target="#assign-modal-{{ user_assigned.parent_directory.id }}">
+                                                        Co-chairman
+                                                    </button>
+                                                </form>
+                                                
+                                                <form id="change-to-member-form-{{ record.id }}-{{ user_assigned.assigned_user.id }}" >
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="is-child" value="1">
+                                                    <button class="dropdown-item {% if user_assigned.is_member %} active {% endif %} member-button" type="button" id="member-button-{{ record.id }}"
+                                                        hx-post="{% url 'accreditations:folder-assign-user-member' pk=user_assigned.assigned_user.id folder_pk=user_assigned.parent_directory.id %}" 
+                                                        hx-trigger="click"
+                                                        hx-target="#assign-modal-{{ user_assigned.parent_directory.id }}">
+                                                        Member
+                                                    </button>
+                                                </form>
+                                                
+                                                <form id="remove-user-form-{{ record.id }}-{{ user_assigned.assigned_user.id }}">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="is-child" value="1">
+                                                    <button class="dropdown-item text-danger remove-button" type="button" id="remove-user-button-{{ record.id }}"
+                                                        hx-post="{% url 'accreditations:folder-remove-user' pk=user_assigned.assigned_user.id folder_pk=user_assigned.parent_directory.id %}" 
+                                                        hx-trigger="click"
+                                                        hx-target="#assign-modal-{{ user_assigned.parent_directory.id }}">
+                                                        Remove
+                                                    </button>
+                                                </form>
+                                                
+            
+                                            </div>
+                                        
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            
+                        {% endfor %}
+            
+                    </div>
+            
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>	
+
+{% block js_content %}
+<script>
+   {% comment %} // @formatter:off
+   document.addEventListener("DOMContentLoaded", function () {
+       var el;
+       window.TomSelect && (new TomSelect(el = document.getElementById('assign-user-{{ record.id }}'), {
+           copyClassesToDropdown: false,
+           dropdownParent: document.querySelector('.assign-modal-dialog-{{record.id}} form-control'),
+           controlInput: '<input>',
+           render:{
+               item: function(data,escape) {
+                   if( data.customProperties ){
+                       return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+                   }
+                   return '<div>' + escape(data.text) + '</div>';
+               },
+               option: function(data,escape){
+                   if( data.customProperties ){
+                       return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+                   }
+                   return '<div>' + escape(data.text) + '</div>';
+               },
+           },
+       }));
+   });
+   // @formatter:on {% endcomment %}
+
+
+   {% comment %} This code will run after the HTMX Post request {% endcomment %}
+   htmx.onLoad(function(content) {
+    var el;
+    window.TomSelect && (new TomSelect(el = document.getElementById('assign-user-{{ record.id }}'), {
+        copyClassesToDropdown: false,
+        dropdownParent: document.querySelector('.assign-modal-dialog-{{record.id}} form-control'),
+        controlInput: '<input>',
+        render:{
+            item: function(data,escape) {
+                if( data.customProperties ){
+                    return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+                }
+                return '<div>' + escape(data.text) + '</div>';
+            },
+            option: function(data,escape){
+                if( data.customProperties ){
+                    return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+                }
+                return '<div>' + escape(data.text) + '</div>';
+            },
+        },
+    }));
+    
+    })
+
+
+
+</script>
+
+<script>
+   // Function to check if all options are unselected
+   function allOptionsUnselected(selectElement) {
+       for (var i = 0; i < selectElement.options.length; i++) {
+           if (selectElement.options[i].selected) {
+               return false;
+           }
+       }
+       return true;
+   }
+
+   // Add event listeners for change and input events on the select field
+   var selectElement_{{ record.id }} = document.getElementById('assign-user-{{ record.id }}');
+   var textareaRow_{{ record.id }} = document.getElementById('textarea-row-{{ record.id }}');
+
+   selectElement_{{ record.id }}.addEventListener('change', function() {
+       var selectedOption = this.options[this.selectedIndex];
+       
+       // Show or hide the textarea based on the selected option
+       textareaRow_{{ record.id }}.style.display = selectedOption.value !== '' ? 'block' : 'none';
+   });
+
+   selectElement_{{ record.id }}.addEventListener('input', function() {
+       // Show or hide the textarea based on whether all options are unselected
+       textareaRow_{{ record.id }}.style.display = allOptionsUnselected(this) ? 'none' : 'block';
+   });
+</script> 
+
+<script>
+// Assuming you're using HTMX for making AJAX requests
+
+    document.getElementById('chairman-button-{{ record.id }}').addEventListener('htmx:responseError', function(event) {
+        var response = event.detail.xhr.response;
+        if (response) {
+            var jsonResponse = JSON.parse(response);
+            if (jsonResponse.error) {
+                toastr.error(jsonResponse.error);  // Display error message to the user
+            }
+        }
+    });
+
+    document.getElementById('cochairman-button-{{ record.id }}').addEventListener('htmx:responseError', function(event) {
+        var response = event.detail.xhr.response;
+        if (response) {
+            var jsonResponse = JSON.parse(response);
+            if (jsonResponse.error) {
+                toastr.error(jsonResponse.error);  // Display error message to the user
+            }
+        }
+    });
+
+    document.getElementById('member-button-{{ record.id }}').addEventListener('htmx:responseError', function(event) {
+        var response = event.detail.xhr.response;
+        if (response) {
+            var jsonResponse = JSON.parse(response);
+            if (jsonResponse.error) {
+                toastr.error(jsonResponse.error);  // Display error message to the user
+            }
+        }
+    });
+
+    document.getElementById('assign-user-form-{{ record.id }}').addEventListener('htmx:responseError', function(event) {
+        var response = event.detail.xhr.response;
+        if (response) {
+            var jsonResponse = JSON.parse(response);
+            if (jsonResponse.error) {
+                toastr.error(jsonResponse.error); // Display error message to the user
+            }
+        }
+    });
+
+</script>
+
+{% endblock js_content %}
+
+    
+    
+    
+
+
+    

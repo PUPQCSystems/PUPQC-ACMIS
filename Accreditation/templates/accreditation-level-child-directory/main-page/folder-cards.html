@@ -1,7 +1,7 @@
 <div class="row row-cards">
     {% if records %}
         <!-- For LOOP HERE-->
-        {% for record, update_form, created_by, modified_by in details %}
+        {% for record, update_form, created_by, modified_by, assigned_users, user_not_assigned  in details %}
             <div class="col-sm-4 col-lg-3">
                 <div class="card  rounded-4" onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
                     <div class="card-body">
@@ -189,8 +189,8 @@
                     {% include "accreditation-level-child-directory/main-page/edit-submission-bin-modal.html" %}
                 {% endif %}
 
-                {% if perms.Accreditation.add_user_assigned_to_area and perms.Accreditation.view_user_assigned_to_area and perms.Accreditation.change_user_assigned_to_area and perms.Accreditation.delete_user_assigned_to_area %}
-                    {% include "accreditation-page/instrument-area/main-page/assign-modal.html" %}
+                {% if perms.Accreditation.add_user_assigned_to_folder and perms.Accreditation.view_user_assigned_to_folder and perms.Accreditation.change_user_assigned_to_folder and perms.Accreditation.delete_user_assigned_to_folder %}
+                    {% include "accreditation-level-child-directory/main-page/assign-modal.html" %}
                 {% endif %}
             {% endblock modal_content %}
 

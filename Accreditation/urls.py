@@ -97,6 +97,11 @@ urlpatterns = [
 
     path("directory/assign-user/", views_assign_user.assign_user, name='folder-assign-user'),
 
+    path("directory/assign-user/chairman/<str:pk>/<str:folder_pk>/", views_assign_user.change_to_chairman, name='folder-assign-user-chairman'),   
+    path("directory/assign-user/co-chairman/<str:pk>/<str:folder_pk>/", views_assign_user.change_to_cochariman, name='folder-assign-user-cochairman'),
+    path("directory/assign-user/member/<str:pk>/<str:folder_pk>/", views_assign_user.change_to_member, name='folder-assign-user-member'),
+    path("directory/assign-user/remove-user/<str:pk>/<str:folder_pk>/", views_assign_user.removed_user_to_folder, name='folder-remove-user'),
+
 
 
 
