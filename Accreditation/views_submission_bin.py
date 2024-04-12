@@ -156,7 +156,14 @@ def update(request, pk):
         if update_form.is_valid():
             # Save the updated data to the database
             update_form.instance.modified_by = request.user
-            update_form.instance.accepted_file_type = request.POST.getlist('accepted_file_type')
+
+            if request.POST.getlist('accepted_file_type'):
+                update_form.instance.accepted_file_type = request.POST.getlist('accepted_file_type')
+            
+            else: 
+                update_form.instance.accepted_file_type = all_file_types
+
+
             update_form.instance.accepted_file_count = request.POST.get('accepted_file_count')
             update_form.instance.accepted_file_size = request.POST.get('accepted_file_size')
             update_form.save()   
@@ -165,7 +172,7 @@ def update(request, pk):
             # Create an instance of the ActivityLog model
             activity_log_entry = activity_log()
 
-            # Set the attributes of the instance
+            # Set the attributes of the instance    
             activity_log_entry.module = "INSTRUMENT LEVEL FOLDERS MODULE"
             activity_log_entry.action = "Modified a Folder"
             activity_log_entry.type = "UPDATE"

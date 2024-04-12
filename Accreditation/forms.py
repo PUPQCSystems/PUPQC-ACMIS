@@ -160,6 +160,17 @@ class Create_InstrumentDirectory_Form(forms.ModelForm):
         model = instrument_level_folder
         fields = ('name', 'label','due_date', 'description', 'has_progress_bar', 'has_assign_button', 'can_be_reviewed')
 
+
+    def clean(self):
+        cleaned_data = super().clean()
+        due_date = cleaned_data.get('due_date')
+
+        if due_date:
+            if due_date < timezone.now():
+                raise ValidationError("Due Date should be set in the future.")
+
+        return cleaned_data
+
 class SubmissionBin_Form(forms.ModelForm):
     name = forms.CharField(max_length=500, 
                            min_length = 5, 
