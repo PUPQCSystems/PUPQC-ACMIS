@@ -201,32 +201,50 @@ def archive(request, pk, level_id):
 
 @login_required
 def child_landing_page(request, pk):
+    def has_folder_access(user, folder):
+        # Check if the user is assigned to the given folder
+        if user_assigned_to_folder.objects.filter(parent_directory=folder, assigned_user=user).exists():
+            return True
+        
+        # Check if the user is assigned to any parent folders recursively
+        parent_folder = folder.parent_directory
+        while parent_folder:
+            if user_assigned_to_folder.objects.filter(parent_directory=parent_folder, assigned_user=user).exists():
+                return True
+            parent_folder = parent_folder.parent_directory
+        
+        return False
+
+
+
     #Getting the data from the API
     create_form = Create_InstrumentDirectory_Form(request.POST or None)
     uploaded_files = files.objects.filter(parent_directory=pk, is_deleted=False)
-    records = instrument_level_folder.objects.filter(is_deleted= False, parent_directory=pk) #Getting all the data inside the Program table and storing it to the context variable
-    parent_folder = instrument_level_folder.objects.get(is_deleted=False, id=pk) #Getting the data of the parent folder
+    records = instrument_level_folder.objects.filter(is_deleted= False, parent_directory=pk) #Getting all the data inside the table and storing it to the context variable
+    parent_folder = instrument_level_folder.objects.select_related('parent_directory').get(is_deleted=False, id=pk) #Getting the data of the parent folder
     # Initialize an empty list to store update forms for each record
     details = []
     user_records = UserGroupView.objects.all()
 
-    assigned_users = user_assigned_to_folder.objects.select_related('parent_directory', 'assigned_user').filter(id=pk)
-    chairman_users = user_assigned_to_folder.objects.select_related('parent_directory', 'assigned_user').filter()
 
+    # Check if the logged-in user has access to the parent folder or any of its subfolders
+    has_access = has_folder_access(request.user, parent_folder)
 
-    has_access = False
-    is_chairman = False
+    # Check if the user is a chairman of any folder
+    is_chairman = user_assigned_to_folder.objects.filter(assigned_user=request.user, is_chairman=True).exists()
     
-    for assigned_user in assigned_users:
-        if request.user.id == assigned_user.assigned_user_id:
-            has_access = True
-            break
 
-    for chairman_user in chairman_users:
-        if request.user.id == chairman_user.assigned_user_id:
-            if chairman_user.is_chairman == True:
-                is_chairman = True
-            break
+
+    # for assigned_user in assigned_users:
+    #     if request.user.id == assigned_user.assigned_user_id:
+    #         has_access = True
+    #         break
+
+    # for chairman_user in chairman_users:
+    #     if request.user.id == chairman_user.assigned_user_id:
+    #         if chairman_user.is_chairman == True:
+    #             is_chairman = True
+    #         break
 
     # Iterate through each record and create an update form for it
     for record in records:

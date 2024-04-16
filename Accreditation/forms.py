@@ -131,8 +131,8 @@ class Create_InstrumentDirectory_Form(forms.ModelForm):
     name = forms.CharField(
         label = "Name", 
         required=True, 
-        validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&0-9]*$', 
-        message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Name Field!")],
+        validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&0-9\-/\\]*$', 
+        message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, Parentheses, hyphen (-), forward slash (/), and backslash (\) are allowed in the Name Field!")],
         error_messages={'required': "Please enter a name before submitting the form."},
         widget=forms.TextInput(attrs={'class': 'form-control'}),)
 
@@ -175,8 +175,8 @@ class SubmissionBin_Form(forms.ModelForm):
     name = forms.CharField(max_length=500, 
                            min_length = 5, 
                            required=True,
-                            validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&0-9]*$', 
-                            message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Name Field!")],
+                            validators= [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&0-9\-/\\]*$', 
+                            message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, Parentheses, hyphen (-), forward slash (/), and backslash (\) are allowed in the Name Field!")],
                             error_messages={'required': "Please enter a name before submitting the form."})
 
     class Meta:
@@ -187,8 +187,8 @@ class SubmissionBin_Form(forms.ModelForm):
             'description': forms.Textarea(attrs={'required': False,
                                                  'max_length': 2000,
                                                  'min_length': 5,
-                                                 'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&0-9]*$', 
-                                                    message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Description Field!")]
+                                                 'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&0-9\-/\\]*$', 
+                                                                message="Only Letters, Numbers, Decimal Point, Comma, Apostrophe, Ampersand, Parentheses, hyphen (-), forward slash (/), and backslash (\) are allowed in the Name Field!")]
                                                     }),
         }
 
