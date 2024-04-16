@@ -209,6 +209,25 @@ def child_landing_page(request, pk):
     # Initialize an empty list to store update forms for each record
     details = []
     user_records = UserGroupView.objects.all()
+
+    assigned_users = user_assigned_to_folder.objects.select_related('parent_directory', 'assigned_user').filter(id=pk)
+    chairman_users = user_assigned_to_folder.objects.select_related('parent_directory', 'assigned_user').filter()
+
+
+    has_access = False
+    is_chairman = False
+    
+    for assigned_user in assigned_users:
+        if request.user.id == assigned_user.assigned_user_id:
+            has_access = True
+            break
+
+    for chairman_user in chairman_users:
+        if request.user.id == chairman_user.assigned_user_id:
+            if chairman_user.is_chairman == True:
+                is_chairman = True
+            break
+
     # Iterate through each record and create an update form for it
     for record in records:
         update_form = Create_InstrumentDirectory_Form(instance=record)
@@ -227,6 +246,8 @@ def child_landing_page(request, pk):
                 'parent_folder': parent_folder,
                 'all_file_types': all_file_types,
                 'uploaded_files': uploaded_files,
+                'has_access': has_access,
+                'is_chairman': is_chairman
                }  
 
     return render(request, 'accreditation-level-child-directory/main-page/landing-page.html', context)
