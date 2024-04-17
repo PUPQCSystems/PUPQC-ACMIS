@@ -24,6 +24,7 @@ def parent_landing_page(request, pk):
     chairman_form =ChairManAssignedToFolder_Form(request.POST or None)
     cochairman_form = CoChairUserAssignedToFolder_Form(request.POST or None)
     member_form = MemberAssignedToFolder_Form(request.POST or None)
+    review_form = ReviewUploadBin_Form(request.POST or None)
 
     passed_result_form = PassedResult_Form(request.POST or None)
     revisit_result_form = RevisitResult_Form(request.POST or None)
@@ -73,6 +74,7 @@ def parent_landing_page(request, pk):
                 'chairman_form': chairman_form,
                 'cochairman_form': cochairman_form,
                 'member_form': member_form,
+                'review_form': review_form
                }  
 
     return render(request, 'accreditation-level-parent-directory/main-page/landing-page.html', context)
@@ -219,6 +221,7 @@ def child_landing_page(request, pk):
 
     #Getting the data from the API
     create_form = Create_InstrumentDirectory_Form(request.POST or None)
+    review_form = ReviewUploadBin_Form(request.POST or None)
     uploaded_files = files.objects.filter(parent_directory=pk, is_deleted=False)
     records = instrument_level_folder.objects.filter(is_deleted= False, parent_directory=pk) #Getting all the data inside the table and storing it to the context variable
     parent_folder = instrument_level_folder.objects.select_related('parent_directory').get(is_deleted=False, id=pk) #Getting the data of the parent folder
@@ -233,20 +236,6 @@ def child_landing_page(request, pk):
     # Check if the user is a chairman of any folder
     is_chairman = user_assigned_to_folder.objects.filter(assigned_user=request.user, is_chairman=True).exists()
     
-
-
-    # for assigned_user in assigned_users:
-    #     if request.user.id == assigned_user.assigned_user_id:
-    #         has_access = True
-    #         break
-
-    # for chairman_user in chairman_users:
-    #     if request.user.id == chairman_user.assigned_user_id:
-    #         if chairman_user.is_chairman == True:
-    #             is_chairman = True
-    #         break
-
-    # Iterate through each record and create an update form for it
     for record in records:
         update_form = Create_InstrumentDirectory_Form(instance=record)
         assigned_users = user_assigned_to_folder.objects.select_related('assigned_user').filter(parent_directory_id=record.id)
@@ -265,7 +254,8 @@ def child_landing_page(request, pk):
                 'all_file_types': all_file_types,
                 'uploaded_files': uploaded_files,
                 'has_access': has_access,
-                'is_chairman': is_chairman
+                'is_chairman': is_chairman,
+                'review_form': review_form
                }  
 
     return render(request, 'accreditation-level-child-directory/main-page/landing-page.html', context)
