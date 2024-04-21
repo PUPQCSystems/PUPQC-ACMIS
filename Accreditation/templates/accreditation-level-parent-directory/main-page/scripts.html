@@ -494,7 +494,7 @@
         const inputElement = document.querySelector('input[type="file"]');  //Convert input types that are file types into filepond
         var pond = FilePond.create( inputElement, {
             // Customize status message for maximum total file size exceeded
-            labelMaxTotalFileSizeExceeded: 'Maximum total size exceeded'
+            labelMaxTotalFileSizeExceeded: 'Maximum total size exceeded',
             acceptedFileTypes:  accepted_file_types, // The lists are the accepted file types
             onaddfile: (err, fileItem) => {
                 if (!err) {
