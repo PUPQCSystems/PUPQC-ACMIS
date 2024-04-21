@@ -73,6 +73,7 @@ def create_submissionBin_parent(request, pk):
         submission_bin_form.instance.accepted_file_type = all_file_types
         submission_bin_form.instance.is_submission_bin = True
         submission_bin_form.instance.can_be_reviewed = True
+        submission_bin_form.instance.status= 'fr'
 
         # submission_bin_form.instance.accepted_file_count = request.POST.get('accepted_file_count')
         submission_bin_form.instance.accepted_file_count = 10
@@ -112,6 +113,7 @@ def create_submissionBin_child(request, pk):
         submission_bin_form.instance.accepted_file_type = all_file_types
         submission_bin_form.instance.is_submission_bin = True
         submission_bin_form.instance.can_be_reviewed = True
+        submission_bin_form.instance.status= 'fr'
 
         # submission_bin_form.instance.accepted_file_count = request.POST.get('accepted_file_count')
         submission_bin_form.instance.accepted_file_count = 10
