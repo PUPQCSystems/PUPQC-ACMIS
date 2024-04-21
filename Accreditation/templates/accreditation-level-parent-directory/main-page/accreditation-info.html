@@ -156,7 +156,7 @@
 								<span class="badge badge-outline text-green">{{ accred_program.instrument_level.level}} Certified</span>
 							</li>
 	
-						{% elif accred_program.is_done == True and accred_program.is_failed == True and accred_program.validity_date_from and accred_program.validity_date_to %}
+						{% elif accred_program.is_done == True and accred_program.is_failed == True %}
 							<li>
 								<span class="badge badge-outline text-red"> Failed </span>
 							</li>

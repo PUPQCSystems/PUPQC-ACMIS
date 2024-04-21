@@ -230,12 +230,9 @@ def result_passed(request, pk):
                 remarks_result_form.instance.accredited_program = accreditation_record
                 remarks_result_form.instance.created_by = request.user
 
-                # Get the modified datetime from the record
-  
-
-                # Make entry_result_at timezone-aware if it's not already
-                # if entry_result_at.tzinfo is None:
-                #     entry_result_at = entry_result_at.replace(tzinfo=timezone.utc)
+                # Check if the is_failed is True, if true change it to false
+                if accreditation_record.is_failed == True:
+                    passed_result_form.instance.is_failed = False
 
                 # Calculate the time difference
                 if entry_result_at:

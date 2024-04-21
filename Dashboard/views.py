@@ -21,7 +21,7 @@ def landing_page(request):
 	# upload_bins = component_upload_bin.objects.select_related('parameter_component').filter(is_deleted = False, status='ur')
 	# uploaded_records = uploaded_evidences.objects.select_related('upload_bin', 'uploaded_by').filter(is_deleted = False)
 
-	accredited_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted= False, is_done=True) 
+	accredited_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted= False, is_done=True, is_failed = False) 
 	accredited_program_count = program_accreditation.objects.filter(is_deleted= False, is_done=True).count() 
 
 	progress_percentage_result = progress_precentage_cacl(under_accred_records)
@@ -29,8 +29,11 @@ def landing_page(request):
 
 	survey_ready_data = survey_visit_ready()
 	awaiting_result_data = awaiting_result()
+	recieved_certification_data = recieved_certification()
+	survey_revisit_data = survey_revisit()
+	failed_result_data = failed_result()
 	progress_percentage_count = programs_progress_percentage_count(under_accred_records)
-	print(	progress_percentage_count)
+
 
 	context = { 'under_accred_records': under_accred_records,
 				'under_accred_programs_count': under_accred_programs_count,
@@ -41,6 +44,9 @@ def landing_page(request):
 				'survey_ready_data': survey_ready_data,
 				'awaiting_result_data': awaiting_result_data,
 				'progress_percentage_count': progress_percentage_count,
+				'recieved_certification_data': recieved_certification_data,
+				'survey_revisit_data': survey_revisit_data,
+				'failed_result_data': failed_result_data,
 				# 'upload_bins': upload_bins,
 				# 'uploaded_records':	uploaded_records,
 				'review_form': review_form 
@@ -134,6 +140,32 @@ def awaiting_result():
 	awaiting_result_data = {'awaiting_result_records': under_accred_records, 'awaiting_result_count': count}
 	return awaiting_result_data
 	
+
+def recieved_certification():
+	recieved_certification_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted=False, is_done=True, status="PASSED")
+	count = 0
+	for record in recieved_certification_records:
+		count += 1
+	recieved_certification_data = {'recieved_certification_records': recieved_certification_records, 'recieved_certification_count': count}
+	return recieved_certification_data
+
+def survey_revisit():
+	survey_revisit_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted=False, is_done=False, status="SUBJECT FOR SURVEY REVISIT")
+	count = 0
+	for record in survey_revisit_records:
+		count += 1
+	survey_revisit_data = {'survey_revisit_records': survey_revisit_records, 'survey_revisit_count': count}
+	return survey_revisit_data
+
+def failed_result():
+	failed_result_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted=False, is_done=True, is_failed=True, status="FAILED")
+	count = 0
+	for record in failed_result_records:
+		count += 1
+	failed_result_data = {'failed_result_records': failed_result_records, 'failed_result_count': count}
+	return failed_result_data
+
+
 
 
 def programs_progress_percentage_count(under_accred_records):
