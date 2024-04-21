@@ -37,15 +37,10 @@
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
 
                                         {% if perms.Accreditation.change_instrument_level_folder %}
-                                            {% if record.can_be_reviewed %}
-                                                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#review-modal-{{ record.id }}">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-file-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                        <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                                                        <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-                                                        <path d="M9 15l2 2l4 -4" />
-                                                    </svg>
+                                            {% if record.can_be_reviewed or record.is_submission_bin%}
+                                                <a class="dropdown-item position-relative" data-bs-toggle="modal" data-bs-target="#review-modal-{{ record.id }}">
                                                     Review
+                                                    <span class="badge bg-green ms-2 badge-blink">Active</span>
                                                 </a>
                                             {% endif %}
 
@@ -89,7 +84,8 @@
                         {% else %}
                             <a class="text-decoration-none" href="{% url 'accreditations:instrument-level-child-directory' pk=record.id %}">
                         {% endif %}
-                            <div class="border  p-4 rounded-4 text-center">
+                            <div class="border  p-2 rounded-4 text-center">
+                                
                                 {% if record.is_submission_bin %}
                                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="gray"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon folder-icon icon-tabler icons-tabler-outline icon-tabler-upload">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -108,24 +104,56 @@
 
                                 {% if record.is_advance %}
                                 <div>
-                                    <small class="card-text p-y-1 text-muted">Advance</small>
+                                    <small class="card-text p-y-1 text-muted">Advance
+
+                                        {% if record.can_be_reviewed %}
+                                            (Reviewable)
+                                        {% endif %}
+                                    </small>
                                 </div>
 
                                 {% elif record.is_submission_bin %}
                                 <div>
-                                    <small class="card-text p-y-1 text-muted">Submission Bin</small>
+                                    <small class="card-text p-y-1 text-muted">Submission Bin
+                                        {% if record.can_be_reviewed %}
+                                            (Reviewable)
+                                        {% endif %}
+
+                                    </small>
                                 </div>
+
+                                {% else %}
+                                <div>
+                                    <small class="card-text p-y-1 text-muted">
+                                        Simple
+                                    </small>
+                                </div>
+
                                 {% endif %}
 
                                 
-                                    {% if record.due_date %}
-                                        <div class="link-warning">
-                                            <!-- Download SVG icon from http://tabler-icons.io/i/calendar -->
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M4 11h16"></path><path d="M11 15h1"></path><path d="M12 15v3"></path></svg>
-                                            {{ record.due_date|date:"M d, Y" }}
-                                        </div>
+                                {% if record.due_date %}
+                                    <div class="link-warning">
+                                        <!-- Download SVG icon from http://tabler-icons.io/i/calendar -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M4 11h16"></path><path d="M11 15h1"></path><path d="M12 15v3"></path></svg>
+                                        {{ record.due_date|date:"M d, Y" }}
+                                    </div>
+                                {% endif %}
+
+                                {% if record.can_be_reviewed %}
+                                    {% if record.status == 'approve'%}
+                                        <span class="badge badge-outline text-green">Approved</span>
+                                    {% elif record.status == 'rfr' %}
+                                        <span class="badge badge-outline text-red">Request for Resubmission</span>
+
+                                    {% else %}
+                                        <span class="badge badge-outline text-cyan">Under Review</span>
+                          
+
                                     {% endif %}
-                        
+                                {% endif %}
+
+                                <br>
                             </div>
                         </a>
             

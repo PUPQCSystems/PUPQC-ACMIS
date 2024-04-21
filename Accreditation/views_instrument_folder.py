@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 all_file_types = ['image/jpeg', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
                     'application/vnd.ms-excel', 'application/vnd.ms-powerpoint', 'image/png', 'image/gif', 'image/bmp', 'image/svg+xml', 'image/webp', 
@@ -44,7 +45,6 @@ def parent_landing_page(request, pk):
 
     # Initialize an empty list to store update forms for each record
     details = []
-    new_user_records = []
 
     # Iterate through each record and create an update form for it
     for record in records:
@@ -99,6 +99,9 @@ def create(request, pk):
             create_form.instance.is_advance = True
         create_form.save()
 
+        new_record_id = create_form.instance.id
+        new_folder_obj = instrument_level_folder.objects.get(id=new_record_id)
+        update_progress(new_folder_obj)
 
         # Create an instance of the ActivityLog model
         activity_log_entry = activity_log()
@@ -113,6 +116,8 @@ def create(request, pk):
 
         # Save the instance to the database
         activity_log_entry.save()
+
+        
 
         
         messages.success(request, f'{name} is successfully created!') 
@@ -148,6 +153,8 @@ def update(request, pk):
                 update_form.instance.is_advance = True
             update_form.save()  
 
+            update_progress(folder_record)
+
             # Create an instance of the ActivityLog model
             activity_log_entry = activity_log()
 
@@ -182,6 +189,9 @@ def archive(request, pk, level_id):
     folder_record.deleted_at = timezone.now()
     name = folder_record.name
     folder_record.save()
+
+
+    update_progress(folder_record)
 
     # Create an instance of the ActivityLog model
     activity_log_entry = activity_log()
@@ -279,7 +289,18 @@ def create_child(request, pk):
 
         create_form.instance.created_by = request.user
         create_form.instance.parent_directory_id = pk
+        parent_folder_obj = instrument_level_folder.objects.get(id=pk)
+
+        if parent_folder_obj.is_parent == False:
+            parent_folder_obj.is_parent = True
+            parent_folder_obj.save()
         create_form.save()
+
+        # Get the ID of newly created Folder
+        new_record_id = create_form.instance.id
+        new_folder_obj = instrument_level_folder.objects.get(id=new_record_id)
+        update_progress(new_folder_obj)
+
         name = create_form.cleaned_data.get('name')
 
         # Create an instance of the ActivityLog model
@@ -316,6 +337,8 @@ def archive_child(request, pk, parent_id):
     name = folder_record.name
     folder_record.save()
 
+    update_progress(folder_record)
+    
     # Create an instance of the ActivityLog model
     activity_log_entry = activity_log()
 
@@ -373,6 +396,8 @@ def restore_parent(request, ins_pk ,pk):
     folder_record.is_deleted=False
     name = folder_record.name
     folder_record.save()
+    update_progress(folder_record)
+
 
     # Create an instance of the ActivityLog model
     activity_log_entry = activity_log()
@@ -388,6 +413,7 @@ def restore_parent(request, ins_pk ,pk):
     # Save the instance to the database
     activity_log_entry.save()
 
+
     messages.success(request, f'{name} The Folder is successfully restored!') 
     return redirect('accreditations:parent-folder-recycle-bin', pk=ins_pk)
 
@@ -401,6 +427,8 @@ def restore_child(request, parent_pk ,pk):
     folder_record.deleted_at = None
     folder_record.is_deleted=False
     name = folder_record.name
+
+    update_progress(folder_record)
     folder_record.save()
 
     # Create an instance of the ActivityLog model
@@ -526,91 +554,174 @@ def archive_files(request, pk):
     elif file_record.parent_directory:
         messages.success(request, f'The file named "{name}" is successfully archived!') 
         return redirect('accreditations:instrument-level-child-directory', pk=file_record.parent_directory_id)
+    
 
+# def calculate_progress(folder):
+#     # Get all child subfolders of the current folder
+#     child_subfolders = instrument_level_folder.objects.filter(parent_directory=folder, is_deleted=False)
 
+#     # Initialize counters for all and approved bins
+#     all_bins = 0
+#     approved_bins = 0
 
+#     # Iterate through each child subfolder
+#     for subfolder in child_subfolders:
+#         # If the child subfolder has children, recursively calculate progress
+#         if subfolder.is_parent:
+#             child_progress = calculate_progress(subfolder)
+#             all_bins += child_progress['all']
+#             approved_bins += child_progress['approved']
+#         else:
+#             # Count all and approved bins for the child subfolder
+#             all_bins += 1
+#             if subfolder.status == "approve":
+#                 approved_bins += 1
+
+#     return {'all': all_bins, 'approved': approved_bins}
+
+# def update_progress(folder):
+#     # Calculate progress for the folder
+#     progress_data = calculate_progress(folder)
+#     all_bins = progress_data['all']
+#     approved_bins = progress_data['approved']
+#     progress_percentage = (approved_bins / all_bins) * 100 if all_bins > 0 else 0
+
+#     # Update progress percentage for the folder
+#     folder.progress_percentage = progress_percentage
+#     folder.save()
+
+#     # Recursively update progress for parent subfolder, parent folder, and instrument level folder
+#     if folder.parent_directory:
+#         update_progress(folder.parent_directory)
+
+# # Assuming you have the instrument_level object available
+# def update_instrument_level_progress(instrument_level_id):
+#     # Get the instrument_level object
+#     instrument_level_record = instrument_level.objects.get(id=instrument_level_id)
+
+#     # Get all root folders associated with the instrument_level
+#     root_folders = instrument_level_folder.objects.filter(instrument_level=instrument_level_record, parent_directory=None, is_deleted=False)
+
+#     # Update progress for each root folder
+#     for root_folder in root_folders:
+#         update_progress(root_folder)
+
+# @login_required
+# def create_review(request, pk):
+#     try:
+#         subfolder = instrument_level_folder.objects.get(id=pk)
+#     except instrument_level_folder.DoesNotExist:
+#         return JsonResponse({'errors': 'Folder not found'}, status=404)
+
+#     if request.method == 'POST':
+#         review_form = ReviewUploadBin_Form(request.POST or None, instance=subfolder)
+#         if review_form.is_valid():
+#             review_form.instance.modified_by = request.user
+#             review_form.instance.reviewed_by = request.user
+#             review_form.instance.reviewed_at = timezone.now()
+#             review_form.save()
+
+#             # Update progress percentage for the current folder and its parent subfolder, parent folder, and instrument level folder recursively
+#             update_progress(subfolder)
+
+#             messages.success(request, f'Folder is successfully reviewed!')
+#             return JsonResponse({'status': 'success'}, status=200)
+#         else:
+#             return JsonResponse({'errors': review_form.errors}, status=400)
+#     else:
+#         return JsonResponse({'errors': 'Invalid request method'}, status=405)
+
+def calculate_progress(folder):
+    # Get all child subfolders of the current folder
+    # child_subfolders = instrument_level_folder.objects.filter(parent_directory=folder, is_deleted=False)
+    # Retrieve subfolders with either "has_progress_bar" or "can_be_reviewed" set to true
+    child_subfolders = instrument_level_folder.objects.filter(Q(has_progress_bar=True) | Q(can_be_reviewed=True), parent_directory=folder, is_deleted=False)
+
+    # Initialize counters for all and approved bins
+    all_bins = 0
+    approved_bins = 0
+
+    # Iterate through each child subfolder
+    for subfolder in child_subfolders:
+        # If the child subfolder has children, recursively calculate progress
+        if subfolder.is_parent:
+            child_progress = calculate_progress(subfolder)
+            all_bins += child_progress['all']
+            approved_bins += child_progress['approved']
+        else:
+            # Count all and approved bins for the child subfolder
+            all_bins += 1
+            if subfolder.status == "approve":
+                approved_bins += 1
+
+    return {'all': all_bins, 'approved': approved_bins}
+
+def update_progress(folder):
+    # Calculate progress for the folder
+    progress_data = calculate_progress(folder)
+    all_bins = progress_data['all']
+    approved_bins = progress_data['approved']
+    progress_percentage = (approved_bins / all_bins) * 100 if all_bins > 0 else 0
+
+    # Update progress percentage for the folder
+    folder.progress_percentage = progress_percentage
+    folder.save()
+
+    # Recursively update progress for parent subfolder
+    if folder.parent_directory:
+        update_progress(folder.parent_directory)
+
+    elif folder.instrument_level:
+        update_instrument_level_progress(folder.instrument_level_id)
+
+# Update progress for the instrument level folder
+def update_instrument_level_progress(instrument_level_id):
+
+    instrument_level_obj = instrument_level.objects.get(id=instrument_level_id)
+
+    # Count the number of approved subfolders for the instrument_level
+    subfolders = instrument_level_folder.objects.select_related('instrument_level').filter(instrument_level_id=instrument_level_id, has_progress_bar=True, is_deleted=False)
+
+    progress = 0.00
+    progress_percentage_result=0.00
+    overall_progress=0.00
+    count = 0
+    for record in subfolders:
+        if record.progress_percentage:
+            progress += float(record.progress_percentage)
+        count+=1
+	
+    overall_progress = 100 * count
+    if progress and overall_progress:
+        progress_percentage_result= (progress / overall_progress) * 100
+        progress_percentage_result = round(progress_percentage_result, 2)
+
+    # Update progress percentage for the instrument_level
+    print('progress_percentage_result: ', progress_percentage_result)
+    instrument_level_obj.progress_percentage = progress_percentage_result
+    instrument_level_obj.save()
 
 @login_required
 def create_review(request, pk):
-# Retrieve the type object with the given primary key (pk)
     try:
-        subfolder = instrument_level_folder.objects.get(id=pk)
+        subfolder = instrument_level_folder.objects.select_related('instrument_level').get(id=pk)
     except instrument_level_folder.DoesNotExist:
         return JsonResponse({'errors': 'Folder not found'}, status=404)
 
     if request.method == 'POST':
-        # Process the form submission with updated data
         review_form = ReviewUploadBin_Form(request.POST or None, instance=subfolder)
         if review_form.is_valid():
-            # Save the updated data to the database
             review_form.instance.modified_by = request.user
             review_form.instance.reviewed_by = request.user
             review_form.instance.reviewed_at = timezone.now()
-            review_form.save()  
+            review_form.save()
 
-    
-#----------------[ Codes for calculating program percentage of the program accreditation/ instument_level ]----------------#
-    parent_folder_id = subfolder.parent_directory_id
-    parent_folder_obj = instrument_level_folder.objects.select_related('parent_directory').get(id=parent_folder_id)
+            # Update progress percentage for the current folder and its parent subfolder recursively
+            update_progress(subfolder)
 
-    # Count all and approved upload bins for the component that are NOT soft deleted
-    all_subfolder_bins = instrument_level_folder.objects.filter(parent_directory_id=parent_folder_id, is_deleted=False).count()
-    approve_subfolder_bins = instrument_level_folder.objects.filter(parent_directory_id=parent_folder_id, status="approve", is_deleted=False).count()
-
-    # Calculate progress for the component
-    progress = 0.00
-    progress = (approve_subfolder_bins /  all_subfolder_bins) * 100
-
-    # Update the progress_percentage field of the component record
-    parent_folder_obj.progress_percentage = progress
-    parent_folder_obj.save()
-
-    print("Component Progress:", progress)
-    messages.success(request, f'Upload Bin is successfully reviewed!') 
-    return JsonResponse({'status': 'success'}, status=200)
-
-  #----------------[ Codes for calculating program percentage of the program accreditation/ instument_level ]----------------
-
-    #         instrument_id = area_record.instrument_level.id
-    #         instrument_record = instrument_level.objects.get(id = instrument_id)
-
-    #         # Get all child areas of the program accreditation/ instrument level
-    #         areas = instrument_level_area.objects.filter(instrument_level=instrument_record, is_deleted=False)
-
-    #         # Initialize counters
-    #         all_area_bins = 0
-    #         approved_area_bins = 0
-    #         for area_record in areas:
-    #             # Get all child parameters of the area
-    #             area_parameters = instrument_level_folder.objects.filter(instrument_level_area_id=area_record.id, is_deleted=False)
-
-    #             # Iterate through each parameter
-    #             for parameter in area_parameters:
-    #                 # Get all child parameter_components of the parameter
-    #                 area_parameter_components = parameter_components.objects.filter(area_parameter_id=parameter.id, is_deleted=False)
-
-    #                 # Count all and approved bins for each component
-    #                 all_bins = instrument_level_folder.objects.filter(parameter_component__in=area_parameter_components, is_deleted=False).count()
-    #                 approved_bins = instrument_level_folder.objects.filter(parameter_component__in=area_parameter_components, status="approve", is_deleted=False).count()
-
-    #                 # Increment counters
-    #                 all_area_bins += all_bins
-    #                 approved_area_bins += approved_bins
-
-    #         # Calculate progress
-    #         progress = 0.00
-    #         progress = (approved_area_bins / all_area_bins) * 100
-    #         print("Progress: ", progress)
-    #         # Update the progress_percentage field of the area record
-    #         instrument_record.progress_percentage = progress
-    #         instrument_record.save()
-            
-
-    #     # Provide a success message as a JSON response
-    #     messages.success(request, f'Upload Bin is successfully reviewed!') 
-    #     return JsonResponse({'status': 'success'}, status=200)
-
-    # else:
-    #     # Return a validation error as a JSON response
-    #     return JsonResponse({'errors': review_form.errors}, status=400)
-    
+            messages.success(request, f'Folder is successfully reviewed!')
+            return JsonResponse({'status': 'success'}, status=200)
+        else:
+            return JsonResponse({'errors': review_form.errors}, status=400)
+    else:
+        return JsonResponse({'errors': 'Invalid request method'}, status=405)

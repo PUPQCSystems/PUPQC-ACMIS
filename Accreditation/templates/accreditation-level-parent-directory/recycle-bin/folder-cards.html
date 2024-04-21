@@ -49,7 +49,7 @@
 
                         <br>
                         <a class="text-decoration-none" href="{% url 'accreditations:instrument-level-child-directory' pk=record.id %}">
-                            <div class="border  p-4 rounded-4 text-center">
+                            <div class="border  p-2 rounded-4 text-center">
                         
                                 {% if record.is_submission_bin %}
                                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="gray"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon folder-icon icon-tabler icons-tabler-outline icon-tabler-upload">
@@ -67,15 +67,32 @@
                                 
                                 {% endif %}
 
+
                                 {% if record.is_advance %}
-                                <div>
-                                    <small class="card-text p-y-1 text-muted">Advance</small>
-                                </div>
+                                    <div>
+                                        <small class="card-text p-y-1 text-muted">Advance
+
+                                            {% if record.can_be_reviewed %}
+                                                (Reviewable)
+                                            {% endif %}
+                                        </small>
+                                    </div>
 
                                 {% elif record.is_submission_bin %}
-                                <div>
-                                    <small class="card-text p-y-1 text-muted">Submission Bin</small>
-                                </div>
+                                    <div>
+                                        <small class="card-text p-y-1 text-muted">Submission Bin
+                                            {% if record.can_be_reviewed %}
+                                                (Reviewable)
+                                            {% endif %}
+                                        </small>
+                                    </div>
+
+                                {% else %}
+                                    <div>
+                                        <small class="card-text p-y-1 text-muted">
+                                            Simple
+                                        </small>
+                                    </div>
                                 {% endif %}
 
                                 
@@ -86,6 +103,19 @@
                                         {{ record.due_date|date:"M d, Y" }}
                                     </div>
                                 {% endif %}
+
+                                {% if record.can_be_reviewed %}
+                                    {% if record.status == 'approve'%}
+                                        <span class="badge badge-outline text-green">Approved</span>
+                                    {% elif record.status == 'rfr' %}
+                                        <span class="badge badge-outline text-red">Request for Resubmission</span>
+
+                                    {% else %}
+                                        <span class="badge badge-outline text-cyan">Under Review</span>
+                                    {% endif %}
+                                {% endif %}
+
+                                <br>
                         
                             </div>
                         </a>

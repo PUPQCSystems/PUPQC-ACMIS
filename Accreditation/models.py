@@ -80,7 +80,7 @@ class instrument_level_folder(models.Model):
     name = models.CharField(max_length=250, null=False, blank=False)
     label = models.CharField(max_length=1000, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-    instrument_level = models.ForeignKey(instrument_level, on_delete=models.CASCADE, null=True, blank=True)
+    instrument_level = models.ForeignKey(instrument_level, related_name='instrument_level_folder_relation', on_delete=models.CASCADE, null=True, blank=True)
     parent_directory = models.ForeignKey('self', on_delete=models.CASCADE, related_name='children_directory', null=True, blank=True)
     due_date = models.DateTimeField(auto_now=False, null=True, blank=True)
     progress_percentage  = models.DecimalField(max_digits=5 ,decimal_places=2, null=True, blank=True)
