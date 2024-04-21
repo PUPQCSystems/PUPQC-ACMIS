@@ -8,7 +8,82 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
 
-                        <div class="subheader"> {{ record.instrument_level.level }} </div>
+                        <div class="subheader"> {{ record.instrument_level.level }} 
+                            {% now "Y-m-d" as today %}
+
+                            {% if  today >= record.mock_accred_date|date:"Y-m-d" and today < record.survey_visit_date|date:"Y-m-d" %}
+                                <span class="badge badge-outline text-green">Mock Accreditation</span>
+
+                            {% elif today == record.survey_visit_date|date:"Y-m-d" %}
+                                <span class="badge badge-outline text-green">Actual Survey Visit</span>
+                        
+                            {% elif today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None %}
+                                <span class="badge badge-outline text-green">Certification</span>
+
+                                {% if record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None%}
+                                <span class="badge badge-outline text-blue">Awaiting Result</span>
+                
+                                {% elif record.revisit_date %}
+                                    <li class="text-blue">
+                                        <span class="badge badge-outline text-orange">Survey Revisit</span>
+                                    </li>
+
+                                {% elif record.is_done == True and record.validity_date_from and record.validity_date_to and record.revisit_date == None %}
+                                    <li>
+                                        <span class="badge badge-outline text-green">{{ record.instrument_level.level}} Certified </span>
+                                    </li>
+
+                                {% endif %}   
+                
+                            {% elif today < record.revisit_date|date:"Y-m-d" %}
+                                <span class="badge badge-outline text-green">Certification Result</span>
+
+                                {% if record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None%}
+                                        <span class="badge badge-outline text-blue">Awaiting Result</span>
+                
+                                {% elif record.revisit_date %}
+                                    <span class="badge badge-outline text-orange">Subject for Revisit</span>
+                            
+            
+                                {% elif record.is_done == True and record.validity_date_from and record.validity_date_to and record.revisit_date == None %}
+                                    <span class="badge badge-outline text-green">{{ record.instrument_level.level}} Certified </span>
+                        
+            
+                                {% endif %}    
+                
+                
+                            {% elif record.revisit_date %}
+                                {% if today <= record.revisit_date|date:"Y-m-d" %}
+                                    <span class="badge badge-outline text-green">Survery Revisit</span>
+
+                                    {% if today  >= record.revisit_date|date:"Y-m-d" %}
+                                        <span class="badge badge-outline text-blue">{{ record.revisit_date|date:"F j, Y" }}</span>
+
+                                    {% else %}
+                                        <span class="badge badge-outline text-muted">{{ record.revisit_date|date:"F j, Y" }}</span>
+                                    {% endif %}
+                                {% endif %}
+                
+                
+                                {% if today > record.revisit_date|date:"Y-m-d" %}
+                                    <span class="badge badge-outline text-green">Certification Result</span>
+                
+                                    {% if today > record.revisit_date|date:"Y-m-d" and record.is_done == False and record.is_failed == False %}
+                                        <span class="badge badge-outline text-blue">Awaiting Result</span>
+            
+                                    {% elif record.is_done == True and record.is_failed == False and record.validity_date_from and record.validity_date_to%}
+                                            <span class="badge badge-outline text-green">{{ record.instrument_level.level}} Certified</span>
+                       
+                                    {% elif record.is_done == True and record.is_failed == True and record.validity_date_from and record.validity_date_to %}
+                                            <span class="badge badge-outline text-red"> Failed </span>
+                       
+            
+                                    {% endif %}    
+                                {% endif %}
+                            {% endif %}
+
+
+                        </div>
 
                         <div class="ms-auto lh-1">
                             
@@ -35,7 +110,7 @@
 
                     </div>
 
-                    <a href="{% url 'accreditations:program-accreditation-area' pk=record.instrument_level.id accred_pk=record.id %}">
+                    <a href="{% url 'accreditations:instrument-level-directory' pk=record.instrument_level.id %}">
                         <div class="h3 mb-3">{{ record.program.program_name }}</div>
                     </a>
                     <div class="d-flex">
