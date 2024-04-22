@@ -554,7 +554,7 @@
   </script>
 
 
-  {% comment %} AJAX FOR REVIEWING AN UPLOAD BIN {% endcomment %}
+{% comment %} AJAX FOR REVIEWING AN UPLOAD BIN {% endcomment %}
 <script>
     $(document).ready(function(){
         $(".review-upload-button").click(function(event) {
@@ -562,7 +562,7 @@
             event.preventDefault();
             event.stopPropagation();
             var serializedData = $("#review-upload-form-"+id).serialize();
-            var url = "/accreditation/program-accreditation/area/parameter/review-upload/"+id+"/";
+            var url = "/accreditation/create-review/"+id+"/";
 
 
             $.ajax({

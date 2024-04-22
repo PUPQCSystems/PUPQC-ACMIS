@@ -14,22 +14,22 @@
             </tr>
           </thead>
           <tbody>
-            {% for upload_bin in upload_bins %}
+            {% for record in reviewable_folders %}
               <tr style="font-size: 10px">
                 <td>
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#review-modal-{{upload_bin.id}}">{{ upload_bin.title }}</a>
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#review-modal-{{record.id}}">{{ record.name }}</a>
                 </td>
 
                 <td class="text-nowrap text-muted">
-                  {{ upload_bin.parameter_component }}
+                  {{ record.instrument_level.instrument.program }}
                 </td>
 
                 <td class="text-nowrap text-muted">
-                  {{ upload_bin.parameter_component.area_parameter.parameter }}
+                  {{ record.instrument_level.instrument.name }}
                 </td>
 
                 <td class="text-nowrap text-muted">
-                  {{ upload_bin.parameter_component.area_parameter.instrument_level_area.area }}
+                  {{ record.instrument_level.level}}
                 </td>
             </tr>
 

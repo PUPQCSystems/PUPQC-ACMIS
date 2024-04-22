@@ -151,6 +151,10 @@ def update(request, pk):
             update_form.instance.modified_by = request.user
             if label or due_date or description or has_progress_bar or has_assign_button or can_be_reviewed :
                 update_form.instance.is_advance = True
+
+                if can_be_reviewed:
+                    update_form.instance.status = 'fr'
+
             update_form.save()  
 
             update_progress(folder_record)
@@ -287,9 +291,16 @@ def create_child(request, pk):
         if label or due_date or description or has_progress_bar or has_assign_button or can_be_reviewed:
             create_form.instance.is_advance = True
 
+            if can_be_reviewed:
+                create_form.instance.status = 'fr'
+
         create_form.instance.created_by = request.user
         create_form.instance.parent_directory_id = pk
         parent_folder_obj = instrument_level_folder.objects.get(id=pk)
+
+        # Check if the parent folder has instrument_level_id, if so get the id and assign it to child folder
+        if parent_folder_obj.instrument_level_id:
+            create_form.instance.instrument_level_id = parent_folder_obj.instrument_level_id
 
         if parent_folder_obj.is_parent == False:
             parent_folder_obj.is_parent = True
@@ -668,10 +679,10 @@ def update_progress(folder):
     folder.save()
 
     # Recursively update progress for parent subfolder
-    if folder.parent_directory:
+    if folder.parent_directory and folder.instrument_level:
         update_progress(folder.parent_directory)
 
-    elif folder.instrument_level:
+    elif folder.instrument_level and folder.parent_directory == None:
         update_instrument_level_progress(folder.instrument_level_id)
 
 # Update progress for the instrument level folder

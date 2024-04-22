@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from Accreditation.forms import ReviewUploadBin_Form
 # from Accreditation.models import component_upload_bin, uploaded_evidences
-from Accreditation.models import program_accreditation
+from Accreditation.models import files, instrument_level_folder, program_accreditation
 from datetime import datetime, timedelta
 from django.db.models import F
 from django.db.models import F, ExpressionWrapper, DurationField
@@ -15,11 +15,12 @@ from django.utils import timezone
 def landing_page(request):
 	review_form = ReviewUploadBin_Form(request.POST or None)
 	
+	records = instrument_level_folder.objects.select_related('instrument_level', 'parent_directory').filter(is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
 	#Getting all the data inside the Program table and storing it to the context variable
 	under_accred_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted= False, is_done=False) 
 	under_accred_programs_count = program_accreditation.objects.filter(is_deleted= False, is_done=False).count() 	#This code counts the programs taht under accreditation
-	# upload_bins = component_upload_bin.objects.select_related('parameter_component').filter(is_deleted = False, status='ur')
-	# uploaded_records = uploaded_evidences.objects.select_related('upload_bin', 'uploaded_by').filter(is_deleted = False)
+	reviewable_folders = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').filter(is_deleted = False, status='fr', can_be_reviewed=True)
+	uploaded_files = files.objects.select_related('instrument_level', 'parent_directory').filter(is_deleted = False)
 
 	accredited_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted= False, is_done=True, is_failed = False) 
 	accredited_program_count = program_accreditation.objects.filter(is_deleted= False, is_done=True).count() 
@@ -47,7 +48,9 @@ def landing_page(request):
 				'recieved_certification_data': recieved_certification_data,
 				'survey_revisit_data': survey_revisit_data,
 				'failed_result_data': failed_result_data,
-				# 'upload_bins': upload_bins,
+				'reviewable_folders': reviewable_folders,
+				'uploaded_files': uploaded_files,
+				'records': records,
 				# 'uploaded_records':	uploaded_records,
 				'review_form': review_form 
 			}  #Getting all the data inside the type table and storing it to the context variable
@@ -231,3 +234,25 @@ def programs_progress_percentage_count(under_accred_records):
 	}
 
 	return data
+
+
+@login_required
+def folder_view(request, pk, record_id):
+   
+    #Getting the data from the API
+    uploaded_files = files.objects.filter(parent_directory=pk, is_deleted=False)
+    records = instrument_level_folder.objects.select_related('instrument_level', 'parent_directory').filter(is_deleted= False, parent_directory=pk) #Getting all the data inside the table and storing it to the context variable
+    parent_folder = instrument_level_folder.objects.select_related('parent_directory').get(is_deleted=False, id=pk) #Getting the data of the parent folder
+
+
+    #Getting all the data inside the type table and storing it to the context variable
+    context = { 'records': records, 
+                'pk': pk,
+                'parent_folder': parent_folder,
+                'uploaded_files': uploaded_files,
+				'is_child': True,
+				'record_id': record_id
+               }  
+
+    return render(request, 'dashboard_landing/folder-cards.html', context)
+
