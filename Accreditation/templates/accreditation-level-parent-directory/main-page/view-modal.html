@@ -3,7 +3,7 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">{{ record.area }} Details</h5>
+				<h5 class="modal-title">Folder Details</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
@@ -12,42 +12,181 @@
 					
 					<li>
 						<div class="row">
-							<div class="col-4 offset-1"><b>Created by</b></div>
-							<div class="col-6 text-break ">{{ created_by.first_name }} {{ created_by.last_name }} </div>
+							<div class="col-4 offset-1"><b>Folder Name</b></div>
+							<div class="col-6 text-break "><b>{{ record.name }}</b>{% if record.label %}: {{record.label}} 
+								{% endif %}
+							</div>
 						</div>
 					</li>
 
 					<li>
 						<div class="row">
-							<div class="col-4 offset-1"><b>Created at</b></div>
-							<div class="col-6 text-break "> {{record.created_at}} </div>
+							<div class="col-4 offset-1"><b>Type</b></div>
+							<div class="col-6 text-break "> 
+								
+								{% if record.is_submission_bin %}
+									Folder: Submission Bin
+								{% elif record.is_advance and record.can_be_reviewed %}
+									Folder: Advance(Reviewable)
+								{% elif record.is_advance and record.can_be_reviewed == False %}
+									Folder: Advance
+								{% else %}
+									Folder: Simple
+								
+								{% endif %} 
+							
+							</div>
 						</div>
 					</li>
+
+					{% if record.is_submission_bin %}
+
+						{% if record.accepted_file_size %}
+							<li>
+								<div class="row">
+									<div class="col-4 offset-1"><b>File Size in mb</b></div>
+									<div class="col-6 text-break "> {{ record.accepted_file_size }}
+									</div>
+								</div>
+							</li>
+						{% endif %}
+
+						{% if record.accepted_file_count %}
+							<li>
+								<div class="row">
+									<div class="col-4 offset-1"><b>File count</b></div>
+									<div class="col-6 text-break "> {{ record.accepted_file_count }}
+									</div>
+								</div>
+							</li>
+						{% endif %}
+
+						{% if record.accepted_file_type %}
+							<li>
+								<div class="row">
+									<div class="col-4 offset-1"><b>Accepted File Type</b></div>
+									<div class="col-6 text-break "> {{ record.accepted_file_type }}
+									</div>
+								</div>
+							</li>
+						{% endif %}
+					
+					
+					{% endif %}
+
+
+
+
+					{% if record.is_advance %}
+						{% if record.due_date %}
+							<li>
+								<div class="row">
+									<div class="col-4 offset-1"><b>Due Date</b></div>
+									<div class="col-6 text-break link-warning">
+										<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M4 11h16"></path><path d="M11 15h1"></path><path d="M12 15v3"></path></svg>
+										{{ record.due_date|date:"M d, Y" }}
+									</div>
+								</div>
+							</li>
+						{% endif %}
+
+						{% if record.can_be_reviewed %}
+							<li>
+								<div class="row">
+									<div class="col-4 offset-1"><b>Status</b></div>
+									<div class="col-6 text-break ">
+										{% if record.status == 'approve'%}
+											<span class="badge badge-outline text-green">Approved</span>
+										{% elif record.status == 'rfr' %}
+											<span class="badge badge-outline text-red">Request for Resubmission</span>
+			
+										{% else %}
+											<span class="badge badge-outline text-cyan">For Review</span>
+										{% endif %}
+									</div>
+								</div>
+							</li>
+						{% endif %}
+
+						{% if record.has_progress_bar %}
+							<li>
+								<div class="row">
+									<div class="col-4 offset-1"><b>Progress</b></div>
+									<div class="col-6 text-break ">
+										<div class="row align-items-center">
+											<div class="col-12 col-lg-auto">{{ record.progress_percentage }}% Complete</div>
+											<div class="col">
+											  <div class="progress" style="width: 5rem">
+												<div class="progress-bar" style="width: {{ record.progress_percentage }}%" role="progressbar" aria-valuenow="{{ record.progress_percentage }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ record.progress_percentage }}% Complete">
+												  <span class="visually-hidden">{{ record.progress_percentage }}% Complete</span>
+												</div>
+											  </div>
+											</div>
+										  </div>
+									</div>
+								</div>
+							</li>
+						{% endif %}
+
+					{% endif %} 
+
+
+
+
+					{% if record.description %}
+						<li>
+							<div class="row">
+								<div class="col-4 offset-1"><b>Description</b></div>
+								<div class="col-6 text-break ">{{ record.description }}</div>
+						</li>
+					{% endif %}
+
+
 					<li>
 						<div class="row">
-							<div class="col-4 offset-1"><b>Modified by</b></div>
-							<div class="col-6 text-break "> {{modified_by.first_name}} {{modified_by.last_name}}</div>
+							<div class="col-4 offset-1"><b>Created</b></div>
+							<div class="col-6 text-break "> Created by {{ record.created_by.first_name }} {{ record.created_by.last_name }} at {{ record.created_at }}</div>
 						</div>
 					</li>
 
 					<li>
 						<div class="row">
-							<div class="col-4 offset-1"><b>Last modified</b></div>
-							<div class="col-6 text-break">{{record.modified_at}}</div>
+							<div class="col-4 offset-1"><b>Modified</b></div>
+							<div class="col-6 text-break">
+								{% if record.modified_at %}
+									Modified by {{ record.modified_by.first_name }} {{ record.modified_by.last_name }} at {{ record.modified_at }}
+								{% endif %}
+							</div>
 						</div>
 					</li>
 
 					<li>
 						<div class="row">
-							<div class="col-4 offset-1"><b>Area Number</b></div>
-							<div class="col-6  text-break"><b>{{ record.area }}</b>: {{ record.label }}</div>
-						</div>
-					</li>
-
-					<li>
-						<div class="row">
-							<div class="col-4 offset-1"><b>Area Description</b></div>
-							<div class="col-6  text-break">{{ record.description }}</div>
+							<div class="col-4 offset-1"><b>Members</b></div>
+							<div class="col-6  text-break">
+								<div>
+									<div class="avatar-list avatar-list-stacked">
+										{% for user_assigned in assigned_users %}
+											{% if user_assigned.assigned_user.profile_pic %}
+												<span class="avatar avatar-sm rounded" 
+													style="background-image: url(./static/avatars/000m.jpg)"
+													data-bs-toggle="tooltip" 
+													data-bs-html="true" 
+													data-bs-placement="bottom"
+													title="{{ user_assigned.assigned_user.first_name }} {{ user_assigned.assigned_user.last_name }} ({{ user_assigned.assigned_user.email }})"></span>
+											{% else %}
+												<span class="avatar avatar-sm rounded"
+														data-bs-toggle="tooltip" 
+														data-bs-html="true" 
+														data-bs-placement="bottom"
+														title="<small>{{ user_assigned.assigned_user.first_name }} {{ user_assigned.assigned_user.last_name }} ({{ user_assigned.assigned_user.email }})</small>">
+														{{ user_assigned.assigned_user.first_name|first|default:'' }} {{user_assigned.assigned_user.last_name|first|default:'' }}
+												</span>
+											{% endif %}
+										{% endfor %}
+									</div>
+								</div>
+							</div>
 						</div>
 					</li>
 

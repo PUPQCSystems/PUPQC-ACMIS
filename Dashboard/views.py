@@ -7,9 +7,9 @@ from Accreditation.forms import ReviewUploadBin_Form
 # from Accreditation.models import component_upload_bin, uploaded_evidences
 from Accreditation.models import files, instrument_level_folder, program_accreditation
 from datetime import datetime, timedelta
-from django.db.models import F
-from django.db.models import F, ExpressionWrapper, DurationField
 from django.utils import timezone
+from django.db.models import Q
+import datetime
 # Create your views here.
 @login_required
 def landing_page(request):
@@ -126,16 +126,19 @@ def survey_visit_ready():
 
 # This functions get the records with survey_visit_date greater than or equal to one week from now
 def awaiting_result():
-# Calculate the date seven days ago
-	one_days_ago = timezone.now() - timedelta(days=1)
+	current_datetime = timezone.now()
+	one_day_after = current_datetime + timezone.timedelta(days=1)
+	current_date = current_datetime.date()
 
-	# Filter records where the survey visit date is seven days or more in the past
+	# Filter records based on conditions
 	under_accred_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(
-		is_deleted=False,
-		is_done=False,
-		survey_visit_date__lte=one_days_ago
+		(
+			Q(revisit_date__isnull=True, survey_visit_date__lte=one_day_after) | 
+			Q(revisit_date__lte=one_day_after)
+		) & 
+		 ~Q(revisit_date__date=current_date),  # Exclude records where revisit_date is the same as current_datetime
+		is_deleted=False, is_done=False, is_failed=False
 	)
-
 	count = 0
 	for record in under_accred_records:
 		count += 1
@@ -153,7 +156,19 @@ def recieved_certification():
 	return recieved_certification_data
 
 def survey_revisit():
-	survey_revisit_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted=False, is_done=False, status="SUBJECT FOR SURVEY REVISIT")
+	# Get the current date and time
+	current_datetime = timezone.now()
+
+	# Filter records based on conditions
+	survey_revisit_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(
+		is_deleted=False,
+		is_done=False,
+		status="SUBJECT FOR SURVEY REVISIT",
+		revisit_date__gte=datetime.date.today()  # Updated line
+	)
+
+
+	# survey_revisit_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted=False, is_done=False, status="SUBJECT FOR SURVEY REVISIT")
 	count = 0
 	for record in survey_revisit_records:
 		count += 1
