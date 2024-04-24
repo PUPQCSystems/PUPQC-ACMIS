@@ -11,6 +11,7 @@ from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+import ast
 
 all_file_types = ['image/jpeg', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
                     'application/vnd.ms-excel', 'application/vnd.ms-powerpoint', 'image/png', 'image/gif', 'image/bmp', 'image/svg+xml', 'image/webp', 
@@ -52,9 +53,14 @@ def parent_landing_page(request, pk):
         assigned_users = user_assigned_to_folder.objects.select_related('assigned_user').filter(parent_directory_id=record.id)
         assigned_user_ids = user_assigned_to_folder.objects.filter(parent_directory_id=record.id).values_list('assigned_user_id', flat=True)
         users_not_assigned = user_records.exclude(id__in=assigned_user_ids)
+        # Convert the string to a Python list
+        if record.accepted_file_type:
+            converted_file_types = ast.literal_eval(record.accepted_file_type)
+        else:
+            converted_file_types = None
         created_by = record.created_by  # Get the user who created the record
         modified_by = record.modified_by  # Get the user who modified the record
-        details.append((record, update_form, created_by, modified_by, assigned_users, users_not_assigned))
+        details.append((record, update_form, created_by, modified_by, assigned_users, users_not_assigned, converted_file_types))
 
     #Getting all the data inside the type table and storing it to the context variable
     context = { 'records': records, 
@@ -257,7 +263,12 @@ def child_landing_page(request, pk):
         users_not_assigned = user_records.exclude(id__in=assigned_user_ids)
         created_by = record.created_by  # Get the user who created the record
         modified_by = record.modified_by  # Get the user who modified the record
-        details.append((record, update_form, created_by, modified_by, assigned_users, users_not_assigned))
+        # Convert the string to a Python list
+        if record.accepted_file_type:
+            converted_file_types = ast.literal_eval(record.accepted_file_type)
+        else:
+            converted_file_types = None
+        details.append((record, update_form, created_by, modified_by, assigned_users, users_not_assigned, converted_file_types))
 
     #Getting all the data inside the type table and storing it to the context variable
     context = { 'records': records, 
@@ -654,16 +665,19 @@ def calculate_progress(folder):
 
     # Iterate through each child subfolder
     for subfolder in child_subfolders:
+        # Count all and approved bins for the child subfolder
+        all_bins += 1
+        if subfolder.status == "approve":
+            approved_bins += 1
+                
+    # Iterate through each child subfolder
+    for subfolder in child_subfolders:
         # If the child subfolder has children, recursively calculate progress
         if subfolder.is_parent:
             child_progress = calculate_progress(subfolder)
             all_bins += child_progress['all']
             approved_bins += child_progress['approved']
-        else:
-            # Count all and approved bins for the child subfolder
-            all_bins += 1
-            if subfolder.status == "approve":
-                approved_bins += 1
+
 
     return {'all': all_bins, 'approved': approved_bins}
 

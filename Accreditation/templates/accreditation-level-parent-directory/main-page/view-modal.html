@@ -65,7 +65,81 @@
 							<li>
 								<div class="row">
 									<div class="col-4 offset-1"><b>Accepted File Type</b></div>
-									<div class="col-6 text-break "> {{ record.accepted_file_type }}
+									<div class="col-6 text-break "> 
+										{% for file_type in converted_file_types %}
+											{% if file_type == 'image/jpeg' %}
+												<span class="badge ms-2">JPEG</span>
+											{% endif %}
+											{% if file_type == 'image/png' %}
+												<span class="badge ms-2">PNG</span>
+											{% endif %}
+											{% if file_type == 'image/gif' %}
+												<span class="badge ms-2">GIF</span>
+											{% endif %}
+											{% if file_type == 'image/bmp' %}
+												<span class="badge ms-2">BMP</span>
+											{% endif %}
+											{% if file_type == 'image/svg+xml' %}
+												<span class="badge ms-2">SVG</span>
+											{% endif %}
+											{% if file_type == 'image/webp' %}
+												<span class="badge ms-2">WebP</span>
+											{% endif %}
+											{% if file_type == 'application/pdf' %}
+												<span class="badge ms-2">PDF</span>
+											{% endif %}
+											{% if file_type == 'application/msword' %}
+												<span class="badge ms-2">Microsoft Word (DOC)</span>
+											{% endif %}
+											{% if file_type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' %}
+												<span class="badge ms-2">Microsoft Word (DOCX)</span>
+											{% endif %}
+											{% if file_type == 'application/vnd.ms-excel' %}
+												<span class="badge ms-2">Microsoft Excel (XLS)</span>
+											{% endif %}
+											{% if file_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' %}
+												<span class="badge ms-2">Microsoft Excel (XLSX)</span>
+											{% endif %}
+											{% if file_type == 'application/vnd.ms-powerpoint' %}
+												<span class="badge ms-2">Microsoft PowerPoint (PPT)</span>
+											{% endif %}
+											{% if file_type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation' %}
+												<span class="badge ms-2">Microsoft PowerPoint (PPTX)</span>
+											{% endif %}
+											{% if file_type == 'text/plain' %}
+												<span class="badge ms-2">Plain Text (TXT)</span>
+											{% endif %}
+											{% if file_type == 'audio/mp3' %}
+												<span class="badge ms-2">MP3</span>
+											{% endif %}
+											{% if file_type == 'video/mp4' %}
+												<span class="badge ms-2">MP4</span>
+											{% endif %}
+											{% if file_type == 'audio/ogg' %}
+												<span class="badge ms-2">Ogg</span>
+											{% endif %}
+											{% if file_type == 'video/webm' %}
+												<span class="badge ms-2">WebM</span>
+											{% endif %}
+											{% if file_type == 'application/zip' %}
+												<span class="badge ms-2">ZIP</span>
+											{% endif %}
+											{% if file_type == 'application/x-rar-compressed' %}
+												<span class="badge ms-2">RAR</span>
+											{% endif %}
+											{% if file_type == 'text/csv' %}
+												<span class="badge ms-2">CSV</span>
+											{% endif %}
+											{% if file_type == 'text/html' %}
+												<span class="badge ms-2">HTML</span>
+											{% endif %}
+											{% if file_type == 'text/css' %}
+												<span class="badge ms-2">CSS</span>
+											{% endif %}
+											{% if file_type == 'application/javascript' %}
+												<span class="badge ms-2">JavaScript</span>
+											{% endif %}
+										{% endfor %}
 									</div>
 								</div>
 							</li>
@@ -160,35 +234,41 @@
 						</div>
 					</li>
 
-					<li>
-						<div class="row">
-							<div class="col-4 offset-1"><b>Members</b></div>
-							<div class="col-6  text-break">
-								<div>
-									<div class="avatar-list avatar-list-stacked">
-										{% for user_assigned in assigned_users %}
-											{% if user_assigned.assigned_user.profile_pic %}
-												<span class="avatar avatar-sm rounded" 
-													style="background-image: url(./static/avatars/000m.jpg)"
-													data-bs-toggle="tooltip" 
-													data-bs-html="true" 
-													data-bs-placement="bottom"
-													title="{{ user_assigned.assigned_user.first_name }} {{ user_assigned.assigned_user.last_name }} ({{ user_assigned.assigned_user.email }})"></span>
-											{% else %}
-												<span class="avatar avatar-sm rounded"
+					{% if record.is_submission_bin %}
+					{% else %}
+						<li>
+							<div class="row">
+								<div class="col-4 offset-1"><b>Members</b></div>
+								<div class="col-6  text-break">
+									<div>
+										<div class="avatar-list avatar-list-stacked">
+											{% for user_assigned in assigned_users %}
+												{% if user_assigned.assigned_user.profile_pic %}
+													<span class="avatar avatar-sm rounded" 
+														style="background-image: url(./static/avatars/000m.jpg)"
 														data-bs-toggle="tooltip" 
 														data-bs-html="true" 
 														data-bs-placement="bottom"
-														title="<small>{{ user_assigned.assigned_user.first_name }} {{ user_assigned.assigned_user.last_name }} ({{ user_assigned.assigned_user.email }})</small>">
-														{{ user_assigned.assigned_user.first_name|first|default:'' }} {{user_assigned.assigned_user.last_name|first|default:'' }}
-												</span>
-											{% endif %}
-										{% endfor %}
+														title="{{ user_assigned.assigned_user.first_name }} {{ user_assigned.assigned_user.last_name }} ({{ user_assigned.assigned_user.email }})"></span>
+												{% else %}
+													<span class="avatar avatar-sm rounded"
+															data-bs-toggle="tooltip" 
+															data-bs-html="true" 
+															data-bs-placement="bottom"
+															title="<small>{{ user_assigned.assigned_user.first_name }} {{ user_assigned.assigned_user.last_name }} ({{ user_assigned.assigned_user.email }})</small>">
+															{{ user_assigned.assigned_user.first_name|first|default:'' }} {{user_assigned.assigned_user.last_name|first|default:'' }}
+													</span>
+												{% endif %}
+											{% endfor %}
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					</li>
+						</li>
+
+					{% endif %}
+
+
 
 					
 				</div>

@@ -1,7 +1,7 @@
 <div class="row row-cards">
     {% if records %}
         <!-- For LOOP HERE-->
-        {% for record, update_form, created_by, modified_by, assigned_users, user_not_assigned in details %}
+        {% for record, update_form, created_by, modified_by, assigned_users, user_not_assigned, converted_file_types in details %}
         {% if accred_program  %}
             <div class="col-sm-6 col-lg-4">
         {% else %}
