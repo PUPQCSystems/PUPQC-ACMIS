@@ -22,5 +22,7 @@ urlpatterns = [
     path('faculty/seminars-workshops-trainings/records/', SeminarRecords.as_view(), name='seminars-workshops-trainings'),
     path('faculty/category/records/', CreateCategory.as_view(), name='category'),
 
+    path('faculty-development/data/', views_fis.FacultyDevelopmentAPI.as_view(), name='api-faculty-development')
+
 
 ] 
