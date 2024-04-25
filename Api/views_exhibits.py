@@ -40,15 +40,15 @@ def landing_page(request, program_accred_pk):
 
             print(data)
             # Codes for converting keys with spaces to no spaces
-            for item in data:
-                new_data = {}
-                # Iterate over the key-value pairs in the current dictionary
-                for key, value in item.items():
-                    # Remove spaces from the key and assign the value to the new key
-                    new_key = key.replace(' ', '')
-                    new_data[new_key] = value
-                # Replace the old dictionary with the new one in the list
-                data[data.index(item)] = new_data
+            # for item in data:
+            #     new_data = {}
+            #     # Iterate over the key-value pairs in the current dictionary
+            #     for key, value in item.items():
+            #         # Remove spaces from the key and assign the value to the new key
+            #         new_key = key.replace(' ', '')
+            #         new_data[new_key] = value
+            #     # Replace the old dictionary with the new one in the list
+            #     data[data.index(item)] = new_data
 
 
             # Pass data to template context
