@@ -11,7 +11,7 @@
                             data-bs-html="true" 
                             data-bs-placement="bottom"
                             title="{{  record.name }}">
-                                <a class="text-reset" href=" {% url 'accreditations:instrument-level-child-directory' pk=record.id %}">{{  record.name }}</a>
+                                <a class="text-reset" data-bs-toggle="modal" data-bs-target="#restore-modal-{{record.id}}">{{  record.name }}</a>
                             </div>
                             <div class="col-1 ms-auto lh-1">
                                 <div class="dropdown">
@@ -48,7 +48,7 @@
                         {% endif %}
 
                         <br>
-                        <a class="text-decoration-none" href="{% url 'accreditations:instrument-level-child-directory' pk=record.id %}">
+                        <a class="text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#restore-modal-{{record.id}}">
                             <div class="border  p-2 rounded-4 text-center">
                         
                                 {% if record.is_submission_bin %}
@@ -193,6 +193,7 @@
             
             {% block modal_content %}
                 {% include "accreditation-level-parent-directory/main-page/view-modal.html" %}
+                {% include "accreditation-level-parent-directory/recycle-bin/restore-modal.html" %}
             {% endblock modal_content %}
 
         {% endfor %}
