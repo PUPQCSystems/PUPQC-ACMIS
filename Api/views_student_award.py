@@ -17,7 +17,7 @@ def landing_page(request, program_accred_pk):
 
 
     # API endpoint URL
-    api_url = 'https://student-performance-70l3.onrender.com/api/v1/university-admin/student/achievement/?$skip=0&$top=1000'
+    api_url = 'https://student-performance-1.onrender.com/api/v1/university-admin/student/achievement/?$skip=0&$top=1000'
 
 
     # Authorization header with bearer token
