@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from Accreditation.models_views import UserGroupView
 from Users.models import activity_log
 from .models import accreditation_certificates, files, instrument_level, instrument_level_folder, program_accreditation, user_assigned_to_folder #Import the model for data retieving
-from .forms import ChairManAssignedToFolder_Form, CoChairUserAssignedToFolder_Form, Create_InstrumentDirectory_Form, MemberAssignedToFolder_Form, PassedResult_Form, RemarksResult_Form, ReviewUploadBin_Form, RevisitResult_Form, SubmissionBin_Form
+from .forms import ChairManAssignedToFolder_Form, CoChairUserAssignedToFolder_Form, Create_InstrumentDirectory_Form, MemberAssignedToFolder_Form, PassedResult_Form, RemarksResult_Form, ReviewFile_Form, ReviewUploadBin_Form, RevisitResult_Form, SubmissionBin_Form
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
@@ -106,7 +106,7 @@ def create(request, pk):
         create_form.save()
 
         new_record_id = create_form.instance.id
-        new_folder_obj = instrument_level_folder.objects.get(id=new_record_id)
+        new_folder_obj = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=new_record_id)
         update_progress(new_folder_obj)
 
         # Create an instance of the ActivityLog model
@@ -137,7 +137,7 @@ def create(request, pk):
 def update(request, pk):
     # Retrieve the type object with the given primary key (pk)
     try:
-        folder_record = instrument_level_folder.objects.get(id=pk)
+        folder_record = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=pk)
     except instrument_level_folder.DoesNotExist:
         return JsonResponse({'errors': 'Folder is not found!'}, status=404)
 
@@ -317,7 +317,7 @@ def create_child(request, pk):
 
         # Get the ID of newly created Folder
         new_record_id = create_form.instance.id
-        new_folder_obj = instrument_level_folder.objects.get(id=new_record_id)
+        new_folder_obj = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=new_record_id)
         update_progress(new_folder_obj)
 
         name = create_form.cleaned_data.get('name')
@@ -347,7 +347,7 @@ def create_child(request, pk):
 @login_required
 def archive_child(request, pk, parent_id):
     # Gets the records who have this ID
-    folder_record = instrument_level_folder.objects.get(id=pk)
+    folder_record = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=pk)
 
     #After getting that record, this code will delete it.
     folder_record.modified_by = request.user
@@ -407,7 +407,7 @@ def child_recycle_bin(request, pk):
 @login_required
 def restore_parent(request, ins_pk ,pk):
     # Gets the records who have this ID
-    folder_record =  instrument_level_folder.objects.get(id=pk)
+    folder_record =  instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=pk)
 
     #After getting that record, this code will restore it.
     folder_record.modified_by = request.user
@@ -439,7 +439,7 @@ def restore_parent(request, ins_pk ,pk):
 @login_required
 def restore_child(request, parent_pk ,pk):
     # Gets the records who have this ID
-    folder_record =  instrument_level_folder.objects.get(id=pk)
+    folder_record =  instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=pk)
 
     #After getting that record, this code will restore it.
     folder_record.modified_by = request.user
@@ -614,7 +614,8 @@ def update_progress(folder):
 
     # Recursively update progress for parent subfolder
     if folder.parent_directory and folder.instrument_level:
-        update_progress(folder.parent_directory)
+        parent_folder = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=folder.parent_directory_id, is_deleted=False)
+        update_progress(parent_folder)
 
     elif folder.instrument_level and folder.parent_directory == None:
         update_instrument_level_progress(folder.instrument_level_id)
@@ -647,7 +648,7 @@ def update_instrument_level_progress(instrument_level_id):
     instrument_level_obj.save()
 
 @login_required
-def create_review(request, pk):
+def create_folder_review(request, pk):
     try:
         subfolder = instrument_level_folder.objects.select_related('instrument_level', 'parent_directory').get(id=pk)
     except instrument_level_folder.DoesNotExist:
@@ -665,6 +666,30 @@ def create_review(request, pk):
             update_progress(subfolder)
 
             messages.success(request, f'Folder is successfully reviewed!')
+            return JsonResponse({'status': 'success'}, status=200)
+        else:
+            return JsonResponse({'errors': review_form.errors}, status=400)
+    else:
+        return JsonResponse({'errors': 'Invalid request method'}, status=405)
+
+
+
+@login_required
+def create_file_review(request, pk):
+    try:
+        file_record = files.objects.select_related('parent_directory').get(id=pk)
+    except instrument_level_folder.DoesNotExist:
+        return JsonResponse({'errors': 'File not found'}, status=404)
+
+    if request.method == 'POST':
+        review_form = ReviewFile_Form(request.POST or None, instance=file_record)
+        if review_form.is_valid():
+            review_form.instance.modified_by = request.user
+            review_form.instance.reviewed_by = request.user
+            review_form.instance.reviewed_at = timezone.now()
+            review_form.save()
+
+            messages.success(request, f'File is successfully reviewed!')
             return JsonResponse({'status': 'success'}, status=200)
         else:
             return JsonResponse({'errors': review_form.errors}, status=400)

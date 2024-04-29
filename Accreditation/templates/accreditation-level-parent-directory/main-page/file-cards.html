@@ -30,6 +30,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end " id="dropdownMenu-{{ file.id }}">
+                                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#review-file-modal-{{ file.id }}">Review</button>
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ file.id }}">Details</button>
                                         <a class="dropdown-item" href="{{ file.file_path.url }}" download="{{  file.file_name }}">Download</a>
                                         {% if perms.Accreditation.delete_instrument_level %}           
@@ -120,6 +121,15 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M4 11h16"></path><path d="M11 15h1"></path><path d="M12 15v3"></path></svg>
                                     {{ file.uploaded_at|date:"M d, Y" }}
                                 </div>
+
+                                {% if file.status == 'approve'%}
+                                    <span class="badge badge-outline text-green">Approved</span>
+                                {% elif file.status == 'rfr' %}
+                                    <span class="badge badge-outline text-red">Request for Resubmission</span>
+
+                                {% else %}
+                                    <span class="badge badge-outline text-cyan">For Review</span>
+                                {% endif %}
         
                         
                             </div>
@@ -131,7 +141,8 @@
             </div>
             
             {% block modal_content %}
-                {% include "accreditation-submission-bin/main-page/view-modal.html" %}
+                {% include "accreditation-level-parent-directory/main-page/partials/details-modal.html" %}
+                {% include "accreditation-level-child-directory/main-page/partials/review-file-modal.html" %}
             {% endblock modal_content %}
 
         {% endfor %}

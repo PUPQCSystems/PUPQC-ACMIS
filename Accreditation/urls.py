@@ -103,7 +103,8 @@ urlpatterns = [
     path("directory/assign-user/remove-user/<str:pk>/<str:folder_pk>/", views_assign_user.removed_user_to_folder, name='folder-remove-user'),
 
 
-    path("create-review/<str:pk>/", views_instrument_folder.create_review, name='folder-create-review'),
+    path("create-review/<str:pk>/", views_instrument_folder.create_folder_review, name='folder-create-review'),
+    path("create-file-review/<str:pk>/", views_instrument_folder.create_file_review, name='file-create-review'),
 
 
 
