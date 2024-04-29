@@ -1,0 +1,61 @@
+
+<div class="card rounded-3">
+    <div class="card-header">
+    <h3 class="card-title">Approval Status</h3>
+    <button type="button" class="btn btn-outline-info  ms-auto position-relative" data-bs-toggle="modal" data-bs-target="#parent-review-modal">Review</button>
+    
+    </div>
+    <div class="card-body">
+
+              
+        <div class="row">
+
+            {% if parent_folder.reviewed_by %}
+                <div class="col">
+         
+                    <div class="">
+                        <div class="small text-muted">Reviewed by</div>
+                        <div>{{ parent_folder.reviewed_by.first_name }} {{ parent_folder.reviewed_by.last_name }} 
+                            <small class="text-muted">({{parent_folder.reviewed_by.email}})</small>
+                            </div>
+                    </div>
+                    
+                    <br>
+
+                    <div class="">
+                        <div class="small text-muted">Date Reviewed</div>
+                        <div>{{ parent_folder.reviewed_at }} </div>
+                    </div>
+                     
+                </div> 
+            
+            {% endif %}
+
+
+            <div class="col">
+                <div class="">
+                    <div class="small text-muted">Status</div>
+                    <div>
+                        {% if parent_folder.status == 'approve'%}
+                            <span class="badge badge-outline text-green">Approved</span>
+                        {% elif parent_folder.status == 'rfr' %}
+                            <span class="badge badge-outline text-red">Request for Resubmission</span>
+
+                        {% else %}
+                            <span class="badge badge-outline text-cyan">For Review</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <br>
+                
+                <div class="">
+                    <div class="small text-muted">Remarks</div>
+                    <div>{{ parent_folder.remarks|safe }} </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

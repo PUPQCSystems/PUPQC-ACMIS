@@ -2,88 +2,34 @@
 
 <!-- Modal -->
 <div class="modal modal-blur fade" id="review-modal-{{ record.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-lg">
 		<form 
 			autocomplete="off" 
 			id="review-upload-form-{{ record.id }}"
-			class="modal-content">
+			data-id="{{ record.id }}"
+			class="modal-content review-upload-form">
 
 			<div class="modal-header">
 				<h1 class="modal-title">Review Evidence</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<div = class="row row-cards">
 
-					<div class="col">
-						<div class="card" style="height: 28rem">
-							<div class="card-body card-body-scrollable card-body-scrollable-shadow">
-								<div class="divide-y">
-
-
-									{% for uploaded_record in uploaded_records %}
-										{% if upload_bin.id == uploaded_record.upload_bin_id %}
-											<div>
-												<div class="row">
-												<div class="col-auto">
-													<span class="avatar">
-														<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pdf" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-															<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-															<path d="M10 8v8h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-2z" />
-															<path d="M3 12h2a2 2 0 1 0 0 -4h-2v8" />
-															<path d="M17 12h3" />
-															<path d="M21 8h-4v8" />
-														</svg>
-													</span>
-												</div>
-												<div class="col">
-													<div class="">
-													<strong>{{ uploaded_record.uploaded_by.first_name }} {{ uploaded_record.uploaded_by.last_name }}</strong> submitted 
-													
-													<a href="#" class="" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#file-modal-{{ uploaded_record.id  }}">								
-															{{ uploaded_record.file_name }}
-													</a>
-													</div>
-													<div class="text-muted">{{ uploaded_record.uploaded_at|date:"F j, Y g:i A" }}</div>
-												</div>
-												<div class="col-auto align-self-center">
-													<div class="badge bg-primary"></div>
-												</div>
-												</div>
-											</div>
-										{% endif %}
-									{% endfor %}
-								
-								</div>
-							</div>
-						</div>
-
-					</div>
-
-					<div class="col">
-						<div class="card"  style="height: 28rem">
-							<div class="card-body">
-
-									<div class="mb-3">
-										<label class="form-label required">{{ review_form.status.label }}</label>
-										{{ review_form.status }}
-									</div>
-
-									<div class="mb-3">
-										<label class="form-label">{{ review_form.remarks.label }}</label>
-										<textarea class="form-control" id="id_remarks" name="remarks" placeholder="Input your remarks here..."
-										style="height: 15rem"></textarea>
-									</div>
-							
-							</div>
-						</div>
-					</div>	
+				<div class="mb-3">
+					<label class="form-label required">{{ review_form.status.label }}</label>
+					{{ review_form.status }}
 				</div>
-				
+
+				<div class="mb-3">
+					<label class="form-label">{{ review_form.remarks.label }}</label>
+					<textarea class="form-control" id="id_remarks" name="remarks" placeholder="Input your remarks here..."
+					style="height: 15rem"></textarea>
+				</div>
+					
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-				<button type="button" data-id="{{ record.id }}" class="btn btn-primary review-upload-button">Submit</button>
+				<button type="submit"  class="btn btn-primary">Submit</button>
 			</div>
 
 		</form>

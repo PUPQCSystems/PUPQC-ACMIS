@@ -65,50 +65,63 @@
 {% endblock page-title-actions %}
 
 {% block content %}
-	{% if is_chairman or has_access or user.is_superuser %}
-		{% if perms.Accreditation.view_instrument_level_folder %}
-			<div class="card rounded-3">
-				<div class="card-header">
-					<ul class="nav nav-tabs card-header-tabs bg-transparent rounded-3" data-bs-toggle="tabs">
-						<li class="nav-item">
-							<a href="#tabs-home-8" class="nav-link active" data-bs-toggle="tab">Folders</a>
-						</li>
-						<li class="nav-item">
-							<a href="#tabs-profile-8" class="nav-link" data-bs-toggle="tab">Files</a>
-						</li>
-					</ul>
-				</div>
-				<div class="card-body">
-					<div class="tab-content">
-						<div class="tab-pane fade active show" id="tabs-home-8">
-							<h4>Folders</h4>
-							{% include "accreditation-level-child-directory/main-page/folder-cards.html" %}
-						</div>
+	<div class="row row-cards">
+		{% if parent_folder.can_be_reviewed %}
+			{% include "accreditation-level-child-directory/main-page/partials/parent-approval-info.html" %}
+		{% endif %}
 
-						<div class="tab-pane fade" id="tabs-profile-8">
-							<h4>Files</h4>
-							{% include "accreditation-level-child-directory/main-page/file-cards.html" %}
+
+		{% if is_chairman or has_access or user.is_superuser %}
+			{% if perms.Accreditation.view_instrument_level_folder %}
+				<div class="card rounded-3">
+					<div class="card-header">
+						<ul class="nav nav-tabs card-header-tabs bg-transparent rounded-3" data-bs-toggle="tabs">
+							<li class="nav-item">
+								<a href="#tabs-home-8" class="nav-link active" data-bs-toggle="tab">Folders</a>
+							</li>
+							<li class="nav-item">
+								<a href="#tabs-profile-8" class="nav-link" data-bs-toggle="tab">Files</a>
+							</li>
+						</ul>
+					</div>
+					<div class="card-body">
+						<div class="tab-content">
+							<div class="tab-pane fade active show" id="tabs-home-8">
+								<h4>Folders</h4>
+								{% include "accreditation-level-child-directory/main-page/folder-cards.html" %}
+							</div>
+
+							<div class="tab-pane fade" id="tabs-profile-8">
+								<h4>Files</h4>
+								{% include "accreditation-level-child-directory/main-page/file-cards.html" %}
+							</div>
 						</div>
 					</div>
 				</div>
+			{% endif %}
+	
+	
+		{% else %}
+			<div class="empty">
+				<div class="empty-header">403</div>
+				<p class="empty-title">Oops… You don't have access to this page</p>
+				<p class="empty-subtitle text-muted">
+					It seems you are not assigned to this area. Please contact your administrator for assistance.
+				</p>
+				<div class="empty-action">
+				<a href="{% url 'accreditations:instrument-level-directory' pk=parent_folder.instrument_level_id %}" class="btn btn-primary">
+					<!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
+					<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
+					Go back
+				</a>
+				</div>
 			</div>
 		{% endif %}
-	{% else %}
-		<div class="empty">
-			<div class="empty-header">403</div>
-			<p class="empty-title">Oops… You don't have access to this page</p>
-			<p class="empty-subtitle text-muted">
-				It seems you are not assigned to this area. Please contact your administrator for assistance.
-			</p>
-			<div class="empty-action">
-			<a href="{% url 'accreditations:instrument-level-directory' pk=parent_folder.instrument_level_id %}" class="btn btn-primary">
-				<!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
-				<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
-				Go back
-			</a>
-			</div>
-		</div>
-	{% endif %}
+
+	</div>
+
+
+
 {% endblock content %}
 
 
@@ -117,6 +130,7 @@
 	{% include "accreditation-level-child-directory/main-page/create-simple-modal.html" %}
 	{% include "accreditation-level-child-directory/main-page/create-submission-bin-modal.html" %}
 	{% include "accreditation-level-child-directory/main-page/edit-submission-bin-modal.html" %}
+	{% include "accreditation-level-child-directory/main-page/partials/parent-review-modal.html" %}
 	{% include "accreditation-submission-bin/main-page/upload-modal.html" %}
 {% endblock modal_content %}
 

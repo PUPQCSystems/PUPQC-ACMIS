@@ -1,17 +1,19 @@
-from django.shortcuts import render, redirect
+import os
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.views import View
 from django.core.exceptions import ObjectDoesNotExist
 from Accreditation.models_views import UserGroupView
 from Users.models import activity_log
 from .models import accreditation_certificates, files, instrument_level, instrument_level_folder, program_accreditation, user_assigned_to_folder #Import the model for data retieving
-from .forms import ChairManAssignedToFolder_Form, CoChairUserAssignedToFolder_Form, Create_InstrumentDirectory_Form, MemberAssignedToFolder_Form, PassedResult_Form, RemarksResult_Form, ReviewFile_Form, ReviewUploadBin_Form, RevisitResult_Form, SubmissionBin_Form
+from .forms import ChairManAssignedToFolder_Form, CoChairUserAssignedToFolder_Form, Create_InstrumentDirectory_Form, MemberAssignedToFolder_Form, PassedResult_Form, RemarksResult_Form, RenameFileForm, ReviewFile_Form, ReviewUploadBin_Form, RevisitResult_Form, SubmissionBin_Form
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 import ast
+
 
 all_file_types = ['image/jpeg', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
                     'application/vnd.ms-excel', 'application/vnd.ms-powerpoint', 'image/png', 'image/gif', 'image/bmp', 'image/svg+xml', 'image/webp', 
@@ -22,6 +24,7 @@ all_file_types = ['image/jpeg', 'application/pdf', 'application/msword', 'applic
 def parent_landing_page(request, pk):
     #Getting the data from the API
     create_form = Create_InstrumentDirectory_Form(request.POST or None)
+    rename_form = RenameFileForm()
 
     chairman_form =ChairManAssignedToFolder_Form(request.POST or None)
     cochairman_form = CoChairUserAssignedToFolder_Form(request.POST or None)
@@ -80,7 +83,8 @@ def parent_landing_page(request, pk):
                 'chairman_form': chairman_form,
                 'cochairman_form': cochairman_form,
                 'member_form': member_form,
-                'review_form': review_form
+                'review_form': review_form,
+                'rename_form': rename_form
                }  
 
     return render(request, 'accreditation-level-parent-directory/main-page/landing-page.html', context)
@@ -242,6 +246,7 @@ def child_landing_page(request, pk):
     #Getting the data from the API
     create_form = Create_InstrumentDirectory_Form(request.POST or None)
     review_form = ReviewUploadBin_Form(request.POST or None)
+    rename_form = RenameFileForm()
     uploaded_files = files.objects.filter(parent_directory=pk, is_deleted=False)
     records = instrument_level_folder.objects.filter(is_deleted= False, parent_directory=pk) #Getting all the data inside the table and storing it to the context variable
     parent_folder = instrument_level_folder.objects.select_related('parent_directory').get(is_deleted=False, id=pk) #Getting the data of the parent folder
@@ -280,7 +285,8 @@ def child_landing_page(request, pk):
                 'uploaded_files': uploaded_files,
                 'has_access': has_access,
                 'is_chairman': is_chairman,
-                'review_form': review_form
+                'review_form': review_form,
+                'rename_form': rename_form
                }  
 
     return render(request, 'accreditation-level-child-directory/main-page/landing-page.html', context)
@@ -656,11 +662,16 @@ def create_folder_review(request, pk):
 
     if request.method == 'POST':
         review_form = ReviewUploadBin_Form(request.POST or None, instance=subfolder)
+        review =  request.POST.get('status')
         if review_form.is_valid():
             review_form.instance.modified_by = request.user
             review_form.instance.reviewed_by = request.user
             review_form.instance.reviewed_at = timezone.now()
             review_form.save()
+
+            # Call this function to review child records of the parent folder
+            review_parent_contents(pk, review)
+
 
             # Update progress percentage for the current folder and its parent subfolder recursively
             update_progress(subfolder)
@@ -672,7 +683,26 @@ def create_folder_review(request, pk):
     else:
         return JsonResponse({'errors': 'Invalid request method'}, status=405)
 
+def review_parent_contents(parent_folder_id, review):
+    child_folders = instrument_level_folder.objects.filter(parent_directory_id=parent_folder_id)
+    child_files = files.objects.filter(parent_directory_id=parent_folder_id)
 
+    if child_files:
+        for file in child_files:
+            file.status = review
+            file.save()
+
+
+    if child_folders:
+        for folder in child_folders:
+            if folder.has_progress_bar == True or folder.can_be_reviewed == True:
+                folder.status = review
+                if review == 'rfr':
+                    folder.progress_percentage = 0.00
+                elif review == 'approve':
+                        folder.progress_percentage = 100.00
+                folder.save()
+    return
 
 @login_required
 def create_file_review(request, pk):
@@ -693,5 +723,42 @@ def create_file_review(request, pk):
             return JsonResponse({'status': 'success'}, status=200)
         else:
             return JsonResponse({'errors': review_form.errors}, status=400)
+    else:
+        return JsonResponse({'errors': 'Invalid request method'}, status=405)
+
+
+
+
+
+# FUNCTION IN RENAMING A FILE
+def rename_file(request, pk):
+    file_obj = get_object_or_404(files, pk=pk)
+    file_name = file_obj.file_name
+    # Get the extension of the file
+    _, extension = os.path.splitext(file_name) 
+
+    if request.method == 'POST':
+        form = RenameFileForm(request.POST)
+        if form.is_valid():
+            new_name = form.cleaned_data['new_file_name'] + extension
+
+            # Get the records of all files that have the same parent id
+            file_records = files.objects.filter(parent_directory_id=file_obj.parent_directory_id)
+            count = 0
+            for file in file_records:
+                # Check if there is a file name that is already existing in the database
+                if file.file_name == new_name:
+                    # Increment 1 to count variable if there is already existing in the database
+                    count+=1
+
+            if count > 0:
+                return JsonResponse({'error': 'File name already exists. Please use a different file name.'}, status=405)
+
+            else:
+
+                file_obj.file_name = new_name
+                file_obj.save()
+                messages.success(request, f'The File is successfully renamed to {new_name}!')
+                return JsonResponse({'status': 'success'}, status=200)
     else:
         return JsonResponse({'errors': 'Invalid request method'}, status=405)

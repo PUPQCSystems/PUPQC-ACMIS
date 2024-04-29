@@ -1,0 +1,43 @@
+{% load crispy_forms_tags %}
+
+<!-- Modal -->
+<div class="modal modal-blur fade" id="parent-review-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+		<form 
+			autocomplete="off" 
+			id="review-upload-form-{{ parent_folder.id }}"
+			data-id="{{ parent_folder.id }}"
+			class="modal-content review-upload-form">
+
+			<div class="modal-header">
+				<h1 class="modal-title">Review {{ parent_folder.name}}</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+
+				<div class="mb-3">
+					<label class="form-label required">{{ review_form.status.label }}</label>
+					{{ review_form.status }}
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label">{{ review_form.remarks.label }}</label>
+					<textarea class="form-control" id="id_remarks" name="remarks" placeholder="Input your remarks here..."
+					style="height: 15rem"></textarea>
+				</div>
+					
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+				<button type="submit"  class="btn btn-primary">Submit</button>
+			</div>
+
+		</form>
+	</div>
+</div>
+
+{% for uploaded_record in uploaded_records %}
+	{% if upload_bin.id == uploaded_record.upload_bin_id %}
+		{% include "accreditation-page/instrument-component/main-page/file-view-modal.html" %}
+	{% endif %}
+{% endfor %}

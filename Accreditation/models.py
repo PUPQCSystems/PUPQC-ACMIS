@@ -1,9 +1,11 @@
+import os
 import uuid
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from Programs.models import Programs
 from django.contrib.postgres.fields import ArrayField
+from django.core.files.storage import default_storage # Import for renaming the file
 
 
 from Users.models import CustomUser
@@ -94,7 +96,7 @@ class instrument_level_folder(models.Model):
     accepted_file_size = models.PositiveSmallIntegerField(blank=True, null=True)
     accepted_file_count = models.PositiveSmallIntegerField(blank=True, null=True)
     status  = models.CharField(max_length=50, null=True, blank=True)
-    remarks =  models.CharField(max_length=2000, null=True, blank=True)
+    remarks =  models.TextField(null=True, blank=True)
     reviewed_at = models.DateTimeField(auto_now=False, null=True, blank=True)
     reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='reviewed_submission_bin', null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_instrument_level_directory', null=True, blank=True)
@@ -134,6 +136,30 @@ class files(models.Model):
     def delete(self,*args, **kwargs):
         self.file_path.delete()
         super().delete(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        new_file_name = self.file_name  
+        old_file_path = self.file_path.name
+
+        # Rename with extension preservation:
+        if self.pk and old_file_path and new_file_name != os.path.basename(old_file_path):
+            old_directory, old_base = os.path.split(old_file_path) # Split into dir and file
+            old_extension = os.path.splitext(old_base)[1]
+
+            # Only add extension if the new name doesn't have one
+            if not os.path.splitext(new_file_name)[1]:
+                new_file_name += old_extension
+
+            new_file_path = os.path.join(old_directory, new_file_name) # Use the original directory
+
+            try:
+                default_storage.save(new_file_path, default_storage.open(old_file_path))
+                self.file_path = new_file_path
+                default_storage.delete(old_file_path)
+            except:  
+                pass  # Handle potential errors gracefully
+
+        super().save(*args, **kwargs)
 
 
 
@@ -188,6 +214,31 @@ class accreditation_certificates(models.Model):
     def delete(self,*args, **kwargs):
         self.certificate_path.delete()
         super().delete(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        new_file_name = self.file_name  
+        old_file_path = self.file_path.name
+
+        # Rename with extension preservation:
+        if self.pk and old_file_path and new_file_name != os.path.basename(old_file_path):
+            old_directory, old_base = os.path.split(old_file_path) # Split into dir and file
+            old_extension = os.path.splitext(old_base)[1]
+
+            # Only add extension if the new name doesn't have one
+            if not os.path.splitext(new_file_name)[1]:
+                new_file_name += old_extension
+
+            new_file_path = os.path.join(old_directory, new_file_name) # Use the original directory
+
+            try:
+                default_storage.save(new_file_path, default_storage.open(old_file_path))
+                self.file_path = new_file_path
+                default_storage.delete(old_file_path)
+            except:  
+                pass  # Handle potential errors gracefully
+
+        super().save(*args, **kwargs)
+
     
 class user_assigned_to_folder(models.Model):
     assigned_user = models.ForeignKey(CustomUser, on_delete=models.PROTECT, related_name='assigned_user', null=False, blank=False)

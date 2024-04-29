@@ -105,6 +105,7 @@ urlpatterns = [
 
     path("create-review/<str:pk>/", views_instrument_folder.create_folder_review, name='folder-create-review'),
     path("create-file-review/<str:pk>/", views_instrument_folder.create_file_review, name='file-create-review'),
+    path("file-rename/<str:pk>/", views_instrument_folder.rename_file, name='rename-file'),
 
 
 

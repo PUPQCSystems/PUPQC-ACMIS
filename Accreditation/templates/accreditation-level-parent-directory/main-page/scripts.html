@@ -564,7 +564,7 @@
 {% comment %} AJAX FOR REVIEWING AN UPLOAD BIN {% endcomment %}
 <script>
     $(document).ready(function(){
-        $(".review-upload-button").click(function(event) {
+        $(".review-upload-form").submit(function(event) {
             var id = $(this).data('id');
             event.preventDefault();
             event.stopPropagation();
@@ -597,48 +597,6 @@
         });
     });
 </script> 
-
-
-{% comment %} -------------------------------[ASSIGN USER TO A FOLDER CODES]------------------------------- {% endcomment %}
-{% comment %} <script>
-    $(document).ready(function(){
-        $(".assign-user-form").submit(function(event) {
-            var id = $(this).data('id');
-            event.preventDefault();
-            event.stopPropagation();
-            var serializedData = $("#assign-user-form-"+id).serialize();
-            var url = "/accreditation/directory/assign-user/";
-    
-            $.ajax({
-                url: url, 
-                data: serializedData,
-                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
-                type: "POST",
-                success: function(response) {
-                    location.reload();
-                    
-                },
-                error: function(error) {
-
-                    if (error.responseJSON && error.responseJSON.error) {
-                        // Handle the IntegrityError message
-                        toastr.error(error.responseJSON.error);
-                    }
-                    // Check for the errors field in the JSON response
-                    else if (error.responseJSON && error.responseJSON.errors) {
-                        // Iterate over the errors field and display the validation errors to the user
-                        for (var field in error.responseJSON.errors) {
-                            toastr.error(error.responseJSON.errors[field]);
-                        }
-                    } else {
-                        toastr.error('Something went wrong. Please try again later.');
-                    }
-                }
-
-            });
-        });
-    });
-</script>  {% endcomment %}
 
 
 
@@ -707,3 +665,44 @@
     })
     // @formatter:on
   </script>
+
+
+  {% comment %} AJAX FOR RENAMING A FILE  {% endcomment %}
+<script>
+    $(document).ready(function(){
+        $(".file-rename-form").submit(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var serializedData = $("#file-rename-form-"+id).serialize();
+            var url = "/accreditation/file-rename/"+id+"/";
+    
+            $.ajax({
+                url: url, 
+                data: serializedData,
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
+                type: "POST",
+                success: function(response) {
+                    location.reload();
+                    
+                },
+                error: function(error) {
+                    if (error.responseJSON && error.responseJSON.error) {
+                        // Handle the other error message
+                        toastr.error(error.responseJSON.error);
+                    }
+                    // Check for the errors field in the JSON response
+                    else if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                    
+                }
+            });
+        });
+    });
+</script> 

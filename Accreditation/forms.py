@@ -489,3 +489,8 @@ class ReviewFile_Form(forms.ModelForm):
         'remarks': forms.Textarea(attrs={'required': False}),
         }
 
+
+
+
+class RenameFileForm(forms.Form):
+    new_file_name = forms.CharField(label="New File Name", max_length=250)
