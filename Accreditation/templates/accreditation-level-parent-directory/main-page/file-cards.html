@@ -30,10 +30,31 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end " id="dropdownMenu-{{ file.id }}">
-                                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#review-file-modal-{{ file.id }}">Review</button>
-                                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#rename-file-modal-{{ file.id }}">Rename</button>
+                                        {% if perms.Accreditation.change_file %} 
+                                            {% if file.can_be_reviewed %}
+                                                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#review-file-modal-{{ file.id }}">Review</button>
+                                            {% endif %}
+                                        {% endif %}
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ file.id }}">Details</button>
+                                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#rename-file-modal-{{ file.id }}">Rename</button>
                                         <a class="dropdown-item" href="{{ file.file_path.url }}" download="{{  file.file_name }}">Download</a>
+                                        <div class="dropdown-divider"></div>
+                                        {% if perms.Accreditation.change_file %}     
+                                            {% if file.can_be_reviewed %}
+                                                <form method="POST" action="{% url 'accreditations:change-to-unreviewable' pk=file.id %}" id="change-to-unreviewable-{{file.id}}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="dropdown-item" data-id="{{ file.id }}">Make Unreviewable</button>
+                                                </form>
+                                            
+                                            {% else %}
+                                                <form method="POST" action="{% url 'accreditations:change-to-reviewable' pk=file.id %}" id="change-to-reviewable-{{file.id}}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="dropdown-item" data-id="{{ file.id }}">Make Reviewable</button>
+                                                </form>
+                                            {% endif %}      
+                                           
+                                        {% endif %}
+
                                         {% if perms.Accreditation.delete_instrument_level %}           
                                             <form method="POST" action="{% url 'accreditations:parent-directory-file-archive' pk=file.id %}" id="archive-form-{{ file.id }}">
                                                 {% csrf_token %}
@@ -128,7 +149,7 @@
                                 {% elif file.status == 'rfr' %}
                                     <span class="badge badge-outline text-red">Request for Resubmission</span>
 
-                                {% else %}
+                                {% elif file.status == 'fr' %}
                                     <span class="badge badge-outline text-cyan">For Review</span>
                                 {% endif %}
         

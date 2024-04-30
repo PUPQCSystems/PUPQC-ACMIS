@@ -118,7 +118,8 @@ class files(models.Model):
     instrument_level = models.ForeignKey(instrument_level, on_delete=models.CASCADE, null=True, blank=True) 
     parent_directory = models.ForeignKey(instrument_level_folder, on_delete=models.CASCADE, null=True, blank=True)
     file_path = models.FileField(upload_to = 'uploaded-files/')
-    file_name = models.CharField(max_length=100, null=True, blank=True)
+    file_name = models.CharField(max_length=300, null=True, blank=True)
+    can_be_reviewed = models.BooleanField(default=True)
     status  = models.CharField(max_length=50, null=True, blank=True)
     remarks = models.TextField(null=True, blank=True)
     reviewed_at = models.DateTimeField(auto_now=False, null=True, blank=True)
@@ -137,7 +138,7 @@ class files(models.Model):
         self.file_path.delete()
         super().delete(*args, **kwargs)
 
-    def save(self, *args, **kwargs):
+    def rename_save(self, *args, **kwargs):
         new_file_name = self.file_name  
         old_file_path = self.file_path.name
 

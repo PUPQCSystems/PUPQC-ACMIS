@@ -107,6 +107,9 @@ urlpatterns = [
     path("create-file-review/<str:pk>/", views_instrument_folder.create_file_review, name='file-create-review'),
     path("file-rename/<str:pk>/", views_instrument_folder.rename_file, name='rename-file'),
 
+    path("file/change/reviewable/<str:pk>/", views_instrument_folder.change_to_reviewable_file, name='change-to-reviewable'),
+    path("file/change/unreviewable/<str:pk>/", views_instrument_folder.change_to_not_reviewable_file, name='change-to-unreviewable'),
+
 
 
 

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
-
+from Accreditation.views_instrument_folder import check_status
 from Users.models import activity_log
 from .models import files, instrument_level, instrument_level_folder #Import the model for data retieving
 from .forms import Create_InstrumentDirectory_Form, SubmissionBin_Form
@@ -241,9 +241,11 @@ def create_parent_folder_files(request, pk):
                     instrument_level_id = pk ,
                     uploaded_by = request.user,
                     file_name =  request.FILES.get(f'files{file_num}'), 
-                    file_path=request.FILES.get(f'files{file_num}')
+                    file_path=request.FILES.get(f'files{file_num}'),
+                    status="fr"
                     
                 )
+
             messages.success(request, f'Files Uploaded successfully!') 
             return JsonResponse({'status': 'success'}, status=200)
             
@@ -262,9 +264,13 @@ def create_child_folder_files(request, pk):
                     parent_directory_id = pk ,
                     uploaded_by = request.user,
                     file_name =  request.FILES.get(f'files{file_num}'), 
-                    file_path=request.FILES.get(f'files{file_num}')
+                    file_path=request.FILES.get(f'files{file_num}'),
+                    status="fr"
                     
                 )
+            # Call this function to check if there are existing child records with 'rfr'or 'fr'
+            check_status(pk)
+
             messages.success(request, f'Files Uploaded successfully!') 
             return JsonResponse({'status': 'success'}, status=200)
             

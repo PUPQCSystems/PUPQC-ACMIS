@@ -111,7 +111,6 @@ def create(request, pk):
 
         new_record_id = create_form.instance.id
         new_folder_obj = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=new_record_id)
-        update_progress(new_folder_obj)
 
         # Create an instance of the ActivityLog model
         activity_log_entry = activity_log()
@@ -167,7 +166,7 @@ def update(request, pk):
 
             update_form.save()  
 
-            update_progress(folder_record)
+    
 
             # Create an instance of the ActivityLog model
             activity_log_entry = activity_log()
@@ -205,7 +204,6 @@ def archive(request, pk, level_id):
     folder_record.save()
 
 
-    update_progress(folder_record)
 
     # Create an instance of the ActivityLog model
     activity_log_entry = activity_log()
@@ -324,7 +322,6 @@ def create_child(request, pk):
         # Get the ID of newly created Folder
         new_record_id = create_form.instance.id
         new_folder_obj = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=new_record_id)
-        update_progress(new_folder_obj)
 
         name = create_form.cleaned_data.get('name')
 
@@ -362,7 +359,6 @@ def archive_child(request, pk, parent_id):
     name = folder_record.name
     folder_record.save()
 
-    update_progress(folder_record)
     
     # Create an instance of the ActivityLog model
     activity_log_entry = activity_log()
@@ -421,7 +417,6 @@ def restore_parent(request, ins_pk ,pk):
     folder_record.is_deleted=False
     name = folder_record.name
     folder_record.save()
-    update_progress(folder_record)
 
 
     # Create an instance of the ActivityLog model
@@ -453,7 +448,6 @@ def restore_child(request, parent_pk ,pk):
     folder_record.is_deleted=False
     name = folder_record.name
 
-    update_progress(folder_record)
     folder_record.save()
 
     # Create an instance of the ActivityLog model
@@ -581,87 +575,15 @@ def archive_files(request, pk):
         return redirect('accreditations:instrument-level-child-directory', pk=file_record.parent_directory_id)
     
 
-
-def calculate_progress(folder):
-    # Get all child subfolders of the current folder
-    # Retrieve subfolders with either "has_progress_bar" or "can_be_reviewed" set to true
-    child_subfolders = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').filter(Q(has_progress_bar=True) | Q(can_be_reviewed=True), parent_directory=folder, is_deleted=False)
-
-    # Initialize counters for all and approved bins
-    all_bins = 0
-    approved_bins = 0
-
-    # Iterate through each child subfolder
-    for subfolder in child_subfolders:
-        # If the child subfolder has children, recursively calculate progress
-        if subfolder.is_parent:
-            child_progress = calculate_progress(subfolder)
-            all_bins += child_progress['all']
-            approved_bins += child_progress['approved']
-            
-        else:
-            # Count all and approved bins for the child subfolder
-            all_bins += 1
-            if subfolder.status == "approve":
-                approved_bins += 1
-                    
-    return {'all': all_bins, 'approved': approved_bins}
-
-def update_progress(folder):
-    # Calculate progress for the folder
-    progress_data = calculate_progress(folder)
-    all_bins = progress_data['all']
-    approved_bins = progress_data['approved']
-    progress_percentage = (approved_bins / all_bins) * 100 if all_bins > 0 else 0
-
-    # Update progress percentage for the folder
-    folder.progress_percentage = progress_percentage
-    folder.save()
-
-    # Recursively update progress for parent subfolder
-    if folder.parent_directory and folder.instrument_level:
-        parent_folder = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=folder.parent_directory_id, is_deleted=False)
-        update_progress(parent_folder)
-
-    elif folder.instrument_level and folder.parent_directory == None:
-        update_instrument_level_progress(folder.instrument_level_id)
-
-# Update progress for the instrument level folder
-def update_instrument_level_progress(instrument_level_id):
-
-    instrument_level_obj = instrument_level.objects.get(id=instrument_level_id)
-
-    # Count the number of approved subfolders for the instrument_level
-    subfolders = instrument_level_folder.objects.select_related('instrument_level').filter(instrument_level_id=instrument_level_id, has_progress_bar=True, is_deleted=False)
-
-    progress = 0.00
-    progress_percentage_result=0.00
-    overall_progress=0.00
-    count = 0
-    for record in subfolders:
-        if record.progress_percentage:
-            progress += float(record.progress_percentage)
-        count+=1
-	
-    overall_progress = 100 * count
-    if progress and overall_progress:
-        progress_percentage_result= (progress / overall_progress) * 100
-        progress_percentage_result = round(progress_percentage_result, 2)
-
-    # Update progress percentage for the instrument_level
-    print('progress_percentage_result: ', progress_percentage_result)
-    instrument_level_obj.progress_percentage = progress_percentage_result
-    instrument_level_obj.save()
-
 @login_required
 def create_folder_review(request, pk):
     try:
-        subfolder = instrument_level_folder.objects.select_related('instrument_level', 'parent_directory').get(id=pk)
+        folder = instrument_level_folder.objects.select_related('instrument_level', 'parent_directory').get(id=pk)
     except instrument_level_folder.DoesNotExist:
         return JsonResponse({'errors': 'Folder not found'}, status=404)
 
     if request.method == 'POST':
-        review_form = ReviewUploadBin_Form(request.POST or None, instance=subfolder)
+        review_form = ReviewUploadBin_Form(request.POST or None, instance=folder)
         review =  request.POST.get('status')
         if review_form.is_valid():
             review_form.instance.modified_by = request.user
@@ -672,9 +594,12 @@ def create_folder_review(request, pk):
             # Call this function to review child records of the parent folder
             review_parent_contents(pk, review)
 
+            # Call this function to check if there are existing child records with 'rfr'
+            check_status(folder.parent_directory_id)
 
-            # Update progress percentage for the current folder and its parent subfolder recursively
-            update_progress(subfolder)
+
+            # Update progress percentage for the current folder and its parent folder recursively
+            
 
             messages.success(request, f'Folder is successfully reviewed!')
             return JsonResponse({'status': 'success'}, status=200)
@@ -684,8 +609,8 @@ def create_folder_review(request, pk):
         return JsonResponse({'errors': 'Invalid request method'}, status=405)
 
 def review_parent_contents(parent_folder_id, review):
-    child_folders = instrument_level_folder.objects.filter(parent_directory_id=parent_folder_id)
-    child_files = files.objects.filter(parent_directory_id=parent_folder_id)
+    child_folders = instrument_level_folder.objects.filter(Q(has_progress_bar=True) | Q(can_be_reviewed=True), parent_directory_id=parent_folder_id, is_deleted=False)
+    child_files = files.objects.filter(can_be_reviewed=True, parent_directory_id=parent_folder_id, is_deleted=False)
 
     if child_files:
         for file in child_files:
@@ -704,6 +629,92 @@ def review_parent_contents(parent_folder_id, review):
                 folder.save()
     return
 
+
+def check_status(parent_folder_id):
+    # Get the record
+    parent_folder = instrument_level_folder.objects.get(id=parent_folder_id)
+
+    # Get the child records of the parent folder with a 'rfr' status
+    child_folders_rfr = instrument_level_folder.objects.filter(parent_directory_id=parent_folder_id, status='rfr', is_deleted=False).exists()
+    child_files_rfr = files.objects.filter(parent_directory_id=parent_folder_id, status='rfr',  is_deleted=False).exists()
+
+    # Get the child records of the parent folder with a 'fr' status
+    child_folders_fr = instrument_level_folder.objects.filter(parent_directory_id=parent_folder_id, status='fr',  is_deleted=False).exists()
+    child_files_fr = files.objects.filter(parent_directory_id=parent_folder_id, status='fr', is_deleted=False).exists()
+
+    # Check if there are existing records that have 'rfr' status
+    if child_files_rfr or child_folders_rfr:
+        # If so, change the status of the parent folder to 'rfr' and save it
+        parent_folder.status='rfr'
+        parent_folder.save()
+
+    elif child_files_fr or child_folders_fr:
+        # If so, change the status of the parent folder to 'fr' and save it
+        parent_folder.status='fr'
+        parent_folder.save()
+
+    else:
+        # Else, change the status of the parent folder to 'approve' and then save it
+        parent_folder.status='approve'
+        parent_folder.save()
+
+   
+    return
+
+def change_to_reviewable_file(request, pk):
+    try:
+        file_record = files.objects.select_related('parent_directory').get(id=pk)
+    except instrument_level_folder.DoesNotExist:
+        return JsonResponse({'errors': 'File not found'}, status=404)
+
+    if request.method == 'POST':
+        file_record.can_be_reviewed = True
+        file_record.status = 'fr'
+        file_record.modified_by = request.user
+        file_record.save()
+
+        if file_record.parent_directory_id:
+            # Call this function to check if there are existing child records with 'rfr'
+            check_status(file_record.parent_directory_id)
+
+
+        messages.success(request, f'File is successfully change to reviewable file!')
+
+        if file_record.parent_directory_id == None and file_record.instrument_level_id:
+            return redirect('accreditations:instrument-level-directory', pk=file_record.instrument_level_id)
+        else:
+            return redirect('accreditations:instrument-level-child-directory', pk=file_record.parent_directory_id)
+
+    else:
+        return JsonResponse({'errors': 'Invalid request method'}, status=405)
+
+def change_to_not_reviewable_file(request, pk):
+    try:
+        file_record = files.objects.get(id=pk)
+    except instrument_level_folder.DoesNotExist:
+        return JsonResponse({'errors': 'File not found'}, status=404)
+
+    if request.method == 'POST':
+        file_record.can_be_reviewed = False
+        file_record.status = None
+        file_record.modified_by = request.user
+        file_record.save()
+
+        if file_record.parent_directory_id:
+            # Call this function to check if there are existing child records with 'rfr'
+            check_status(file_record.parent_directory_id)
+
+        messages.success(request, f'File is successfully change to unreviewable file!')
+        if file_record.parent_directory_id == None and file_record.instrument_level_id:
+            return redirect('accreditations:instrument-level-directory', pk=file_record.instrument_level_id)
+        else:
+            return redirect('accreditations:instrument-level-child-directory', pk=file_record.parent_directory_id)
+
+    else:
+        return JsonResponse({'errors': 'Invalid request method'}, status=405)
+
+
+
 @login_required
 def create_file_review(request, pk):
     try:
@@ -713,11 +724,18 @@ def create_file_review(request, pk):
 
     if request.method == 'POST':
         review_form = ReviewFile_Form(request.POST or None, instance=file_record)
+        review =  request.POST.get('status')
         if review_form.is_valid():
             review_form.instance.modified_by = request.user
             review_form.instance.reviewed_by = request.user
             review_form.instance.reviewed_at = timezone.now()
             review_form.save()
+
+            # Call this function to review child records of the parent folder
+            review_parent_contents(pk, review)
+
+            # Call this function to check if there are existing child records with 'rfr'
+            check_status(file_record.parent_directory_id)
 
             messages.success(request, f'File is successfully reviewed!')
             return JsonResponse({'status': 'success'}, status=200)
@@ -742,6 +760,7 @@ def rename_file(request, pk):
         if form.is_valid():
             new_name = form.cleaned_data['new_file_name'] + extension
 
+
             # Get the records of all files that have the same parent id
             file_records = files.objects.filter(parent_directory_id=file_obj.parent_directory_id)
             count = 0
@@ -757,8 +776,36 @@ def rename_file(request, pk):
             else:
 
                 file_obj.file_name = new_name
-                file_obj.save()
+                file_obj.modified_by = request.user
+                file_obj.rename_save()
                 messages.success(request, f'The File is successfully renamed to {new_name}!')
                 return JsonResponse({'status': 'success'}, status=200)
     else:
         return JsonResponse({'errors': 'Invalid request method'}, status=405)
+        
+
+# ---------------------------------------[ FUNCTIONS FOR PROGRESS CALCULATIONS OF FOLDERS ]---------------------------------------#
+def calculate_progress(folder_id):
+    # Get the record who has the if of folder_id
+    folder_record = instrument_level_folder.objects.get(id=folder_id)
+
+    # Get the child files and child folders that has a "approved" status
+    approved_child_folders = instrument_level_folder.objects.filter(Q(can_be_reviewed=True) | Q(has_progress_bar=True), parent_directory_id=folder_id, status='approve').count()
+    approved_child_files = files.objects.filter(can_be_reviewed=True, parent_directory_id=folder_id, status='approve').count()
+
+    # The all the child files and folders that has can_be_reviewed equals to true 
+    all_child_folders = instrument_level_folder.objects.filter(can_be_reviewed=True, parent_directory_id=folder_id).count()
+    all_child_files = files.objects.filter(can_be_reviewed=True, parent_directory_id=folder_id).count()
+
+
+    all_approved_files_folder = approved_child_files + approved_child_folders
+    all_files_folder = all_child_files + all_child_folders
+
+    progress_percentage = all_approved_files_folder / all_files_folder * 100
+
+    folder_record.progress_percentage = progress_percentage
+    folder_record.save()
+
+    return
+
+

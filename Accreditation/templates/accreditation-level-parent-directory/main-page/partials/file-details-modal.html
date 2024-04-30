@@ -76,51 +76,52 @@
 					</div>
 
 
-					<div class="card">
-						<div class="card-status-top bg-cyan"></div>
-						<div class="card-body">
-							<h3 class="card-title">Approval Status</h3>
+					{% if file.can_be_reviewed %}
+						<div class="card">
+							<div class="card-status-top bg-cyan"></div>
+							<div class="card-body">
+								<h3 class="card-title">Approval Status</h3>
 
-						{% if file.reviewed_by %}
-							<div class="row p-2">
-								<div class="col-4 "><b>Reviewed by</b></div>
-								<div class="col-6 text-break "> {{ file.reviewed_by.first_name }}  {{ file.reviewed_by.last_name }}
+							{% if file.reviewed_by %}
+								<div class="row p-2">
+									<div class="col-4 "><b>Reviewed by</b></div>
+									<div class="col-6 text-break "> {{ file.reviewed_by.first_name }}  {{ file.reviewed_by.last_name }}
+									</div>
 								</div>
-							</div>
 
-							<div class="row  p-2">
-								<div class="col-4"><b>Review date</b></div>
-								<div class="col-6 text-break "> {{ file.reviewed_at }}
+								<div class="row  p-2">
+									<div class="col-4"><b>Review date</b></div>
+									<div class="col-6 text-break "> {{ file.reviewed_at }}
+									</div>
 								</div>
-							</div>
-						
-						{% endif %}
+							
+							{% endif %}
 
 
-							<div class="row p-2">
-								<div class="col-4"><b>Status</b></div>
-								<div class="col-6 text-break ">
-									{% if file.status == 'approve'%}
-										<span class="badge badge-outline text-green">Approved</span>
-									{% elif file.status == 'rfr' %}
-										<span class="badge badge-outline text-red">Request for Resubmission</span>
+								<div class="row p-2">
+									<div class="col-4"><b>Status</b></div>
+									<div class="col-6 text-break ">
+										{% if file.status == 'approve'%}
+											<span class="badge badge-outline text-green">Approved</span>
+										{% elif file.status == 'rfr' %}
+											<span class="badge badge-outline text-red">Request for Resubmission</span>
 
-									{% else %}
-										<span class="badge badge-outline text-cyan">For Review</span>
-									{% endif %}
+										{% elif file.status == 'fr' %}
+											<span class="badge badge-outline text-cyan">For Review</span>
+										{% endif %}
 
+									</div>
 								</div>
-							</div>
 
-							<div class="row  p-2">
-								<div class="col-4"><b>Remarks</b></div>
-								<div class="col-6 text-break "> {{ file.remarks|safe }}
+								<div class="row  p-2">
+									<div class="col-4"><b>Remarks</b></div>
+									<div class="col-6 text-break "> {{ file.remarks|safe }}
+									</div>
 								</div>
-							</div>
 
+							</div>
 						</div>
-					</div>
-
+					{% endif %}
 					
 
 				</div>
