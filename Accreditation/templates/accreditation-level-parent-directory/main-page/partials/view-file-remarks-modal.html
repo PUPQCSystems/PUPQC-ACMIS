@@ -1,0 +1,43 @@
+{% load custom_tags %}
+<!-- Modal -->
+<div class="modal modal-blur fade" id="view-file-remarks-modal-{{file.id}}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content"> 
+			<div class="modal-header">
+				<h5 class="modal-title">Reviewer Remarks</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+						<div class="small text-muted">Reviewer</div>
+						<div>{{file.reviewed_by.first_name }} {{file.reviewed_by.last_name }} 
+							<small>({{file.reviewed_by.email }})</small>
+						</div>
+				</div>
+
+				<br>
+
+				<div class="row">
+					<div class="small text-muted">Date Reviewed</div>
+					<div>{{file.reviewed_at|date:"F j, Y g:i A" }}</div> 
+				</div>
+
+				<br>
+
+				<div class="row">
+					<div class="text-muted">Remarks</div>
+					<div class="px-4">{{file.remarks|safe }}
+						
+					</div>
+
+				</div>
+
+					
+			</div>
+	
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal"  data-bs-toggle="modal" data-bs-target="#view-modal-{{ file.id }}">Back</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -4,7 +4,7 @@ from django.views import View
 from Accreditation.views_instrument_folder import check_status
 from Users.models import activity_log
 from .models import files, instrument_level, instrument_level_folder #Import the model for data retieving
-from .forms import Create_InstrumentDirectory_Form, SubmissionBin_Form
+from .forms import Create_InstrumentDirectory_Form, ReviewUploadBin_Form, SubmissionBin_Form
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
@@ -21,6 +21,7 @@ all_file_types = ['image/jpeg', 'application/pdf', 'application/msword', 'applic
 @permission_required("Accreditation.view_instrument_level_folder", raise_exception=True)
 def landing_page(request, pk):
     submission_bin_record = instrument_level_folder.objects.get(id=pk)
+    review_form = ReviewUploadBin_Form(request.POST or None)
     parent_pk = ''
     if submission_bin_record.instrument_level:
             parent_pk = submission_bin_record.instrument_level.id
@@ -57,8 +58,9 @@ def landing_page(request, pk):
     context = {     'pk':pk
                     , 'submission_bin_record': submission_bin_record
                     , 'file_type_mapping': file_type_mapping
-                    , 'uploaded_files': uploaded_files,
-                    'parent_pk': parent_pk
+                    , 'uploaded_files': uploaded_files
+                    , 'parent_pk': parent_pk
+                    , 'review_form': review_form
                     
                     }  #Getting all the data inside the type table and storing it to the context variable
 
@@ -76,7 +78,7 @@ def create_submissionBin_parent(request, pk):
         submission_bin_form.instance.accepted_file_type = all_file_types
         submission_bin_form.instance.is_submission_bin = True
         submission_bin_form.instance.can_be_reviewed = True
-        submission_bin_form.instance.status= 'fr'
+        submission_bin_form.instance.status = 'fr'
 
         # submission_bin_form.instance.accepted_file_count = request.POST.get('accepted_file_count')
         submission_bin_form.instance.accepted_file_count = 10
@@ -88,7 +90,7 @@ def create_submissionBin_parent(request, pk):
         activity_log_entry = activity_log()
 
         # Set the attributes of the instance
-        activity_log_entry.module = "INSTRUMENT LEVEL FOLDERS MODUL"
+        activity_log_entry.module = "INSTRUMENT LEVEL FOLDERS MODULE"
         activity_log_entry.action = "Created a Submission Bin"
         activity_log_entry.type = "CREATE"
         activity_log_entry.datetime_acted =  timezone.now()
@@ -117,7 +119,7 @@ def create_submissionBin_child(request, pk):
         submission_bin_form.instance.accepted_file_type = all_file_types
         submission_bin_form.instance.is_submission_bin = True
         submission_bin_form.instance.can_be_reviewed = True
-        submission_bin_form.instance.status= 'fr'
+        submission_bin_form.instance.status = 'fr'
 
         # submission_bin_form.instance.accepted_file_count = request.POST.get('accepted_file_count')
         submission_bin_form.instance.accepted_file_count = 10
@@ -213,7 +215,7 @@ def create_files(request, pk):
 
             if length != 0:
                 if length <= submission_bin.accepted_file_count:
-                    submission_bin.status = "ur"
+                    submission_bin.status = "fr"
                     submission_bin.save()
                     print(submission_bin.accepted_file_count)
                     for file_num in range(0, int(length)):
@@ -222,7 +224,8 @@ def create_files(request, pk):
                             parent_directory_id = pk ,
                             uploaded_by = request.user,
                             file_name =  request.FILES.get(f'files{file_num}'), 
-                            file_path=request.FILES.get(f'files{file_num}')
+                            file_path=request.FILES.get(f'files{file_num}'),
+                            can_be_reviewed = False
                             
                         )
 
@@ -455,3 +458,60 @@ def destroy(request, pk):
             return JsonResponse({'success': False, 'error': 'User not logged in'})
 
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+
+@login_required
+@permission_required("Accreditation.change_files", raise_exception=True)
+def change_to_reviewable_file(request, pk):
+    try:
+        file_record = files.objects.select_related('parent_directory').get(id=pk)
+    except files.DoesNotExist:
+        return JsonResponse({'errors': 'File not found'}, status=404)
+
+    if request.method == 'POST':
+        file_record.can_be_reviewed = True
+        file_record.status = 'fr'
+        file_record.modified_by = request.user
+        file_record.save()
+
+        if file_record.parent_directory_id:
+            # Call this function to check if there are existing child records with 'rfr'
+            check_status(file_record.parent_directory_id)
+
+
+        messages.success(request, f'File is successfully change to reviewable file!')
+
+        if file_record.parent_directory_id == None and file_record.instrument_level_id:
+            return redirect('accreditations:submission-bin-page', pk=file_record.instrument_level_id)
+        else:
+            return redirect('accreditations:submission-bin-page', pk=file_record.parent_directory_id)
+
+    else:
+        return JsonResponse({'errors': 'Invalid request method'}, status=405)
+
+@login_required
+@permission_required("Accreditation.change_files", raise_exception=True)
+def change_to_not_reviewable_file(request, pk):
+    try:
+        file_record = files.objects.get(id=pk)
+    except files.DoesNotExist:
+        return JsonResponse({'errors': 'File not found'}, status=404)
+
+    if request.method == 'POST':
+        file_record.can_be_reviewed = False
+        file_record.status = None
+        file_record.modified_by = request.user
+        file_record.save()
+
+        if file_record.parent_directory_id:
+            # Call this function to check if there are existing child records with 'rfr'
+            check_status(file_record.parent_directory_id)
+
+        messages.success(request, f'File is successfully change to unreviewable file!')
+        if file_record.parent_directory_id == None and file_record.instrument_level_id:
+            return redirect('accreditations:submission-bin-page', pk=file_record.instrument_level_id)
+        else:
+            return redirect('accreditations:submission-bin-page', pk=file_record.parent_directory_id)
+
+    else:
+        return JsonResponse({'errors': 'Invalid request method'}, status=405)

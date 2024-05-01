@@ -219,12 +219,14 @@
             
             {% block modal_content %}
                 {% include "accreditation-level-parent-directory/main-page/view-modal.html" %}
+                {% include "accreditation-level-parent-directory/main-page/partials/view-remarks-modal.html" %}
 
                 {% if perms.Accreditation.change_instrument_level_folder %}
                     {% include "accreditation-level-parent-directory/main-page/change-advance-modal.html" %}
                     {% include "accreditation-level-parent-directory/main-page/edit-simple-modal.html" %}
                     {% include "accreditation-level-parent-directory/main-page/edit-submission-bin-modal.html" %}
                     {% include "accreditation-level-child-directory/main-page/partials/review-modal.html" %}
+
                 {% endif %}
 
                 {% if perms.Accreditation.add_user_assigned_to_folder and perms.Accreditation.view_user_assigned_to_folder and perms.Accreditation.change_user_assigned_to_folder and perms.Accreditation.delete_user_assigned_to_folder %}

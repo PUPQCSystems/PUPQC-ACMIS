@@ -644,13 +644,14 @@ def create_folder_review(request, pk):
     else:
         return JsonResponse({'errors': 'Invalid request method'}, status=405)
 
-@login_required
+
 def review_parent_contents(parent_folder_id, review):
     try:
         child_folders = instrument_level_folder.objects.filter(Q(has_progress_bar=True) | Q(can_be_reviewed=True), parent_directory_id=parent_folder_id, is_deleted=False)
         child_files = files.objects.filter(can_be_reviewed=True, parent_directory_id=parent_folder_id, is_deleted=False)
     except instrument_level_folder.DoesNotExist:
         return
+    
 
     if child_files:
         for file in child_files:
@@ -669,7 +670,6 @@ def review_parent_contents(parent_folder_id, review):
                 folder.save()
     return
 
-@login_required
 def check_status(parent_folder_id):
     # Get the record
     try:
@@ -710,7 +710,7 @@ def check_status(parent_folder_id):
 def change_to_reviewable_file(request, pk):
     try:
         file_record = files.objects.select_related('parent_directory').get(id=pk)
-    except instrument_level_folder.DoesNotExist:
+    except files.DoesNotExist:
         return JsonResponse({'errors': 'File not found'}, status=404)
 
     if request.method == 'POST':
@@ -739,7 +739,7 @@ def change_to_reviewable_file(request, pk):
 def change_to_not_reviewable_file(request, pk):
     try:
         file_record = files.objects.get(id=pk)
-    except instrument_level_folder.DoesNotExist:
+    except files.DoesNotExist:
         return JsonResponse({'errors': 'File not found'}, status=404)
 
     if request.method == 'POST':
@@ -842,7 +842,7 @@ def rename_file(request, pk):
         
 
 
-@login_required
+
 def parent_calculate_progress(instrument_level_id):
     # Get the record who has the if of instrument_level_id
     instrument_level_record = instrument_level.objects.get(id=instrument_level_id)
@@ -911,7 +911,7 @@ def parent_calculate_progress(instrument_level_id):
 
 
 
-@login_required
+
 def calculate_progress(folder_id):
     folder_record = instrument_level_folder.objects.get(id=folder_id)
 

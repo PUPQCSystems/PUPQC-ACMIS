@@ -1,70 +1,4 @@
 {% comment %} THIS IS THE OLD SCRIPT FOR UPLOADING FILE TO DATABASE {% endcomment %}
-{% comment %} <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var files = []
-        var acceptedFileTypes = {{ submission_bin_record.accepted_file_type|safe }};
-        // Now acceptedFileTypes is a JavaScript array
-
-        FilePond.registerPlugin(FilePondPluginFileValidateSize);    //Register plugin to validate file size
-        FilePond.registerPlugin(FilePondPluginFileValidateType);    //Register plugin to validate file type
-        FilePond.registerPlugin(FilePondPluginImagePreview);
-        FilePond.setOptions({
-            allowMultiple:true,
-            maxFiles:{{ submission_bin_record.accepted_file_count }},             //It sets the max file counts
-            maxFileSize: '{{ submission_bin_record.accepted_file_size }}MB'      //It sets the accepted max storage size
-        })
-        const inputElement = document.querySelector('input[type="file"]');  //Convert input types that are file types into filepond
-        var pond = FilePond.create( inputElement, {
-            acceptedFileTypes:  acceptedFileTypes, // The lists are the accepted file types
-            onaddfile: (err, fileItem) => {
-                if (!err) {
-                files.push(fileItem.file)
-                }
-                console.log(files)
-            },
-            onremovefile: (err, fileItem) => {
-                const index = files.indexOf(fileItem.file)
-                if (index > -1) {
-                    files.splice(index, 1)
-                }
-                console.log(files)
-            }
-        } );
-
-        var formData = new FormData();
-        $("#upload-file-form").submit(function(event) {
-            var url = "/accreditation/instrument/level/directory/submission-bin/upload-files/"+{{ pk }}+"/";
-            formData.append('length', files.length)
-            for (var i = 0; i < files.length; i++) {
-                formData.append('files' + i, files[i])
-            }
-            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
-
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: formData,
-                cache: false,
-                processData: false,
-                contentType: false,
-                enctype: 'multipart/form-data',
-                success: function(response) {
-                    // Check if the server response contains a 'redirect_url' field
-                    if (response.redirect_url) {
-                    // Redirect to the specified URL
-                    window.location.href = response.redirect_url;
-                    }
-        
-                },
-                error: function(error) {
-
-                    toastr.error(error.responseJSON.error);
-                    
-                }
-            })
-        })
-    })
-</script>   {% endcomment %}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -156,3 +90,118 @@
         })
     });
 </script>
+
+  {% comment %} AJAX FOR RENAMING A FILE  {% endcomment %}
+  <script>
+    $(document).ready(function(){
+        $(".file-rename-form").submit(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var serializedData = $("#file-rename-form-"+id).serialize();
+            var url = "/accreditation/file-rename/"+id+"/";
+    
+            $.ajax({
+                url: url, 
+                data: serializedData,
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
+                type: "POST",
+                success: function(response) {
+                    location.reload();
+                    
+                },
+                error: function(error) {
+                    if (error.responseJSON && error.responseJSON.error) {
+                        // Handle the other error message
+                        toastr.error(error.responseJSON.error);
+                    }
+                    // Check for the errors field in the JSON response
+                    else if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                    
+                }
+            });
+        });
+    });
+</script> 
+
+{% comment %} AJAX FOR REVIEWING A FILE {% endcomment %}
+<script>
+    $(document).ready(function(){
+        $(".review-file-form").submit(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var serializedData = $("#review-file-form-"+id).serialize();
+            var url = "/accreditation/create-file-review/"+id+"/";
+
+
+            $.ajax({
+                url: url, 
+                data: serializedData,
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
+                type: "POST",
+                success: function(response) {
+                    location.reload();
+                    
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> 
+
+
+{% comment %} AJAX FOR REVIEWING AN UPLOAD BIN {% endcomment %}
+<script>
+    $(document).ready(function(){
+        $(".review-upload-form").submit(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var serializedData = $("#review-upload-form-"+id).serialize();
+            var url = "/accreditation/create-review/"+id+"/";
+
+
+            $.ajax({
+                url: url, 
+                data: serializedData,
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
+                type: "POST",
+                success: function(response) {
+                    location.reload();
+                    
+                },
+                error: function(error) {
+                    // Check for the errors field in the JSON response
+                    if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                }
+
+            });
+        });
+    });
+</script> 

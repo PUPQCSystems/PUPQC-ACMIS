@@ -275,8 +275,10 @@
 									<div class="col-4"><b>Remarks</b></div>
 									<div class="col-6 text-break "> 
 										{% if record.remarks %}
-											{{ record.remarks|safe }}
+											<a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#view-remarks-modal-{{ record.id }}">Click to view Remarks</a>
+
 										{% else %}
+											<p class="text-muted">No remarks</p>
 										{% endif %}
 								
 									</div>

@@ -77,6 +77,8 @@ urlpatterns = [
     path("instrument/level/directory/submission-bin/recycle-bin/<str:pk>/", views_submission_bin.recycle_bin, name='submission-bin-recycle-bin-page'),
     path("instrument/level/directory/submission-bin/recycle-bin/restore/<str:pk>/", views_submission_bin.restore, name='file-restore'),
     path("instrument/level/directory/submission-bin/recycle-bin/destroy/<str:pk>/", views_submission_bin.destroy, name='file-destroy'),
+    path("submission-bin/file/change/reviewable/<str:pk>/", views_submission_bin.change_to_reviewable_file, name='submission-bin-change-to-reviewable'),
+    path("submission-bin/file/change/unreviewable/<str:pk>/", views_submission_bin.change_to_not_reviewable_file, name='submission-bin-change-to-unreviewable'),
 
 
     #------------------------------[ URLS FOR PROGRAM ACCREDITATION ]------------------------------#

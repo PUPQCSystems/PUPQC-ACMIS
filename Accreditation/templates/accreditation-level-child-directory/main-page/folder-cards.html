@@ -208,6 +208,7 @@
             </div>
             {% block modal_content %}
                 {% include "accreditation-level-parent-directory/main-page/view-modal.html" %}
+                {% include "accreditation-level-parent-directory/main-page/partials/view-remarks-modal.html" %}
 
                 {% if perms.Accreditation.change_instrument_level_folder %}
                     {% include "accreditation-level-child-directory/main-page/change-advance-modal.html" %}
