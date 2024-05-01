@@ -443,7 +443,8 @@ class RemarksResult_Form(forms.ModelForm):
 class ReviewUploadBin_Form(forms.ModelForm):
     STATUS_CHOICES = [
             ('approve', 'Approve'), 
-            ('rfr', 'Request for Resubmission')
+            ('rfr', 'Request for Resubmission'),
+            ('fr', 'For Review')
         ]   
     
     status = forms.ChoiceField(
@@ -469,7 +470,8 @@ class ReviewUploadBin_Form(forms.ModelForm):
 class ReviewFile_Form(forms.ModelForm):
     STATUS_CHOICES = [
             ('approve', 'Approve'), 
-            ('rfr', 'Request for Resubmission')
+            ('rfr', 'Request for Resubmission'),
+            ('fr', 'For Review')
         ]   
     
     status = forms.ChoiceField(
