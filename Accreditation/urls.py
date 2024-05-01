@@ -1,5 +1,5 @@
 from django.urls import path
-from Accreditation import  views_accreditation, views_assign_user, views_instrument_folder, views_instrument_level, views_submission_bin
+from Accreditation import  views_accreditation, views_accreditation_result, views_assign_user, views_instrument_folder, views_instrument_level, views_submission_bin
 from . import views_level, views_bodies, views_instrument
 
 from Accreditation.views_instrument_level import *
@@ -91,26 +91,34 @@ urlpatterns = [
     path("archive-page/", views_accreditation.archive_landing, name='accreditation-archive-page'),
     path("archive-page/restore/<str:pk>/", views_accreditation.restore, name='accreditation-restore'),
     path("archive-page/destroy/<str:pk>/", views_accreditation.destroy, name='accreditation-destroy'),
-    path("passed-result/<str:pk>/", views_accreditation.result_passed, name='accreditation-result-passed'),
-    path("failed-result/<str:pk>/", views_accreditation.result_failed, name='accreditation-result-failed'),
-    path("revisit-result/<str:pk>/", views_accreditation.result_revisit, name='accreditation-result-revisit'),
-    path("certificate/destroy/<str:pk>/", views_accreditation.certificate_destroy, name='accreditation-certificate-destroy'),
-    path("result-page/<str:pk>/", views_accreditation.result_page, name='accreditation-result-page'),
 
+
+    #------------------------------[ URLS FOR ASSIGNING USER TO A FOLDER ]------------------------------#
     path("directory/assign-user/", views_assign_user.assign_user, name='folder-assign-user'),
-
     path("directory/assign-user/chairman/<str:pk>/<str:folder_pk>/", views_assign_user.change_to_chairman, name='folder-assign-user-chairman'),   
     path("directory/assign-user/co-chairman/<str:pk>/<str:folder_pk>/", views_assign_user.change_to_cochariman, name='folder-assign-user-cochairman'),
     path("directory/assign-user/member/<str:pk>/<str:folder_pk>/", views_assign_user.change_to_member, name='folder-assign-user-member'),
     path("directory/assign-user/remove-user/<str:pk>/<str:folder_pk>/", views_assign_user.removed_user_to_folder, name='folder-remove-user'),
 
 
+    #------------------------------[ URLS FOR REVIEWING FILES AND FOLDERS ]------------------------------#
     path("create-review/<str:pk>/", views_instrument_folder.create_folder_review, name='folder-create-review'),
     path("create-file-review/<str:pk>/", views_instrument_folder.create_file_review, name='file-create-review'),
-    path("file-rename/<str:pk>/", views_instrument_folder.rename_file, name='rename-file'),
 
+    #------------------------------[ URLS FOR EDITING FILES ]------------------------------#
+    path("file-rename/<str:pk>/", views_instrument_folder.rename_file, name='rename-file'),
     path("file/change/reviewable/<str:pk>/", views_instrument_folder.change_to_reviewable_file, name='change-to-reviewable'),
     path("file/change/unreviewable/<str:pk>/", views_instrument_folder.change_to_not_reviewable_file, name='change-to-unreviewable'),
+
+
+    #------------------------------[ URLS FOR ACCREDITATION RESULTS ]------------------------------#
+    path("result-page/<str:pk>/", views_accreditation_result.result_page, name='accreditation-result-page'),
+    path("passed-result/<str:pk>/", views_accreditation_result.result_passed, name='accreditation-result-passed'),
+    path("failed-result/<str:pk>/", views_accreditation_result.result_failed, name='accreditation-result-failed'),
+    path("revisit-result/<str:pk>/", views_accreditation_result.result_revisit, name='accreditation-result-revisit'),
+    path("certificate/destroy/<str:pk>/", views_accreditation_result.certificate_destroy, name='accreditation-certificate-destroy'),
+
+    path("accreditation-result/upload-file/<str:pk>/", views_accreditation_result.upload_files, name='accreditation-result-upload-file'),
 
 
 

@@ -216,9 +216,9 @@ class accreditation_certificates(models.Model):
         self.certificate_path.delete()
         super().delete(*args, **kwargs)
 
-    def save(self, *args, **kwargs):
-        new_file_name = self.file_name  
-        old_file_path = self.file_path.name
+    def rename_save(self, *args, **kwargs):
+        new_file_name = self.certificate_name  
+        old_file_path = self.certificate_path.name
 
         # Rename with extension preservation:
         if self.pk and old_file_path and new_file_name != os.path.basename(old_file_path):

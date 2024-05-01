@@ -68,29 +68,31 @@
     });
 </script>
 
+{% if perms.Accreditation.delete_files %}
+    <script>
+        $(".archive-button").click(function(event) {
+            var id = $(this).data('id');         //Get the Id of the record
+            var form = 'archive-form-'+id;      //Attaching the id of the record to this string for identifying the specific form
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This will be move and can be restore in the Recycle Bin!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, archive it!',
+                cancelButtonText: 'No, cancel!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Delete the file here
+                    document.getElementById(form).submit();
+                }
+            })
+        });
+    </script>
+{% endif %}
 
-<script>
-    $(".archive-button").click(function(event) {
-        var id = $(this).data('id');         //Get the Id of the record
-        var form = 'archive-form-'+id;      //Attaching the id of the record to this string for identifying the specific form
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "This will be move and can be restore in the Recycle Bin!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, archive it!',
-            cancelButtonText: 'No, cancel!',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Delete the file here
-                document.getElementById(form).submit();
-            }
-        })
-    });
-</script>
-
+{% if perms.Accreditation.change_files %}
   {% comment %} AJAX FOR RENAMING A FILE  {% endcomment %}
   <script>
     $(document).ready(function(){
@@ -130,6 +132,8 @@
         });
     });
 </script> 
+
+{% endif %}
 
 {% comment %} AJAX FOR REVIEWING A FILE {% endcomment %}
 <script>
@@ -205,3 +209,31 @@
         });
     });
 </script> 
+
+<script>
+    // @formatter:off
+    document.addEventListener("DOMContentLoaded", function () {
+      let options = {
+        selector: '#id_remarks',
+        height: 300,
+        menubar: false,
+        statusbar: false,
+        plugins: [
+          'advlist autolink lists link image charmap print preview anchor',
+          'searchreplace visualblocks code fullscreen',
+          'insertdatetime media table paste code help wordcount'
+        ],
+        toolbar: 'undo redo | formatselect | ' +
+          'bold italic backcolor | alignleft aligncenter ' +
+          'alignright alignjustify | bullist numlist outdent indent | ' +
+          'removeformat',
+        content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; -webkit-font-smoothing: antialiased; }'
+      }
+      if (localStorage.getItem("tablerTheme") === 'dark') {
+        options.skin = 'oxide-dark';
+        options.content_css = 'dark';
+      }
+      tinyMCE.init(options);
+    })
+    // @formatter:on
+</script>

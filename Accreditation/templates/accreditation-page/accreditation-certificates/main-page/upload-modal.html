@@ -1,0 +1,33 @@
+
+
+
+
+
+{% load crispy_forms_tags %}
+
+<!-- Modal -->
+<div class="modal modal-blur fade" id="upload-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-m">
+      	<form class="modal-content"
+		    autocomplete="off" 
+			id="upload-file-form"
+			data-id="{{ accred_program.id }}">
+        	<div class="modal-header">
+          		<h1 class="modal-title">Add New Files</h1>
+          		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        	</div>
+        	<div class="modal-body">
+				{% csrf_token %}
+				<div class="row">
+					<input type="file" name="file_path" id="file-path" required="" multiple>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+				<button id="submit-file" type="submit" class="btn btn-primary">Submit</button>
+			</div>
+		</form>
+  	</div>
+</div>
+  
