@@ -387,7 +387,7 @@ def result_failed(request, pk):
         
 
 @login_required
-@permission_required("Accreditation.view_program_accreditation", raise_exception=True)
+@permission_required("Accreditation.view_accreditation_certificates", raise_exception=True)
 def result_page(request, pk):
     #Getting the data from the API
     passed_result_form = PassedResult_Form(request.POST or None)
@@ -414,7 +414,7 @@ def result_page(request, pk):
 # --------------------------------- [ACCREDITATION RESULT CODES] --------------------------------- #
 
 @login_required
-@permission_required("Accreditation.delete_program_accreditation", raise_exception=True)
+@permission_required("Accreditation.delete_accreditation_certificates", raise_exception=True)
 def certificate_destroy(request, pk):
     if request.method == 'POST':
 

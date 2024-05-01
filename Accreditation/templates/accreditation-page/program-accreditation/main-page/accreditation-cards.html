@@ -10,16 +10,6 @@
 
                         <div class="subheader"> {{ record.instrument_level.level }} 
                             {% now "Y-m-d" as today %}
-                            {% comment %} {% if record.instrument_level.progress_percentage == 100 %}
-                                <span class="badge badge-outline text-green">Ready</span>
-                            {% else %}
-                                <span class="badge badge-outline text-red">Not Ready</span>
-                                {% if record.survey_visit_date|date:"Y-m-d" < today %}
-                                    <span class="badge badge-outline text-red">Overdue</span>
-                                {% endif %}
-                          
-                            {% endif %} {% endcomment %}
-
 
 
                             {% if  today >= record.mock_accred_date|date:"Y-m-d" and today < record.survey_visit_date|date:"Y-m-d" %}
@@ -105,45 +95,63 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
 
-                                    {% if user.is_superuser == True and record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None %}
-                                        <button id="{{ record.id }}" class="dropdown-item position-relative text-green" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
-                                            Add Result 
-                                            {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
-                                            <span class="badge bg-green ms-auto badge-blink" style="font-size: 10px">Active</span>
-                                        </button>
-                                        <div class="dropdown-divider-top"></div>
+                                    {% comment %} Permissions code for accreditation result feature {% endcomment %}
+                                	{% if perms.Accreditation.view_accreditation_certificates and perms.Accreditation.add_accreditation_certificates and perms.Accreditation.change_accreditation_certificates and perms.Accreditation.delete_accreditation_certificates %}
+                                        
+                                        {% if user.is_superuser == True and record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None %}
+                                            <button id="{{ record.id }}" class="dropdown-item position-relative text-green" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
+                                                Add Result 
+                                                {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
+                                                <span class="badge bg-green ms-auto badge-blink" style="font-size: 10px">Active</span>
+                                            </button>
+                                            <div class="dropdown-divider-top"></div>
 
-                                    {% elif user.is_superuser == True and record.is_done == True and record.is_failed == True %}
-                                        <button id="{{ record.id }}" class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
-                                            Change Result 
-                                            {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
-                                            <span class="badge bg-blue ms-auto badge-blink" style="font-size: 10px">Active</span>
-                                        </button>
-                                        <div class="dropdown-divider-top"></div>
+                                        {% elif user.is_superuser == True and record.is_done == True and record.is_failed == True %}
+                                            <button id="{{ record.id }}" class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
+                                                Change Result 
+                                                {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
+                                                <span class="badge bg-blue ms-auto badge-blink" style="font-size: 10px">Active</span>
+                                            </button>
+                                            <div class="dropdown-divider-top"></div>
 
-                                    {% elif user.is_superuser == True and record.is_done == True and record.is_failed == False %}
-                                        <button id="{{ record.id }}" class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
-                                            Change Result 
-                                            {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
-                                            <span class="badge bg-blue ms-auto badge-blink" style="font-size: 10px">Active</span>
-                                        </button>
-                                        <div class="dropdown-divider-top"></div>
+                                        {% elif user.is_superuser == True and record.is_done == True and record.is_failed == False %}
+                                            <button id="{{ record.id }}" class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
+                                                Change Result 
+                                                {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
+                                                <span class="badge bg-blue ms-auto badge-blink" style="font-size: 10px">Active</span>
+                                            </button>
+                                            <div class="dropdown-divider-top"></div>
 
-                                    {% elif user.is_superuser == True and record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date %}
-                                        <button id="{{ record.id }}" class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
-                                            Change Result 
-                                            {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
-                                            <span class="badge bg-blue ms-auto badge-blink" style="font-size: 10px">Active</span>
-                                        </button>
-                                        <div class="dropdown-divider-top"></div>
+                                        {% elif user.is_superuser == True and record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date %}
+                                            <button id="{{ record.id }}" class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
+                                                Change Result 
+                                                {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
+                                                <span class="badge bg-blue ms-auto badge-blink" style="font-size: 10px">Active</span>
+                                            </button>
+                                            <div class="dropdown-divider-top"></div>
 
 
-                                    {% elif user.is_superuser == True and record.is_done == False and today < record.survey_visit_date|date:"Y-m-d" and record.revisit_date  == None %}
-                                        <button id="{{ record.id }}" class="dropdown-item position-relative" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}" disabled>
+                                        {% elif user.is_superuser == True and record.is_done == False and today < record.survey_visit_date|date:"Y-m-d" and record.revisit_date  == None %}
+                                            <button id="{{ record.id }}" class="dropdown-item position-relative" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}" disabled>
+                                                Add Result
+                                                <span class="badge bg-secondary ms-auto" style="font-size: 10px">Inactive</span>
+                                            </button>
+                                            <div class="dropdown-divider-top"></div>
+
+                                        {% endif %}
+
+                                    {% else %}
+                                        <button id="{{ record.id }}" class="dropdown-item position-relative" 
+                                            data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}" disabled
+                                            data-bs-toggle="tooltip" 
+                                            data-bs-html="true" 
+                                            data-bs-placement="bottom"
+                                            title="You don't have the permissions to access this button.">
                                             Add Result
                                             <span class="badge bg-secondary ms-auto" style="font-size: 10px">Inactive</span>
                                         </button>
                                         <div class="dropdown-divider-top"></div>
+
 
                                     {% endif %}
 

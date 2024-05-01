@@ -10,7 +10,7 @@ from .forms import ChairManAssignedToFolder_Form, CoChairUserAssignedToFolder_Fo
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Q
 import ast
 
@@ -21,6 +21,7 @@ all_file_types = ['image/jpeg', 'application/pdf', 'application/msword', 'applic
                     'text/plain', 'audio/mp3', 'video/mp4', 'audio/ogg', 'video/webm', 'application/zip', 'application/x-rar-compressed', 'text/csv', 'text/html', 'text/css', 
                     'application/javascript']
 @login_required
+@permission_required("Accreditation.view_instrument_level_folder", raise_exception=True)
 def parent_landing_page(request, pk):
     #Getting the data from the API
     create_form = Create_InstrumentDirectory_Form(request.POST or None)
@@ -91,6 +92,7 @@ def parent_landing_page(request, pk):
 
 
 @login_required
+@permission_required("Accreditation.add_instrument_level_folder", raise_exception=True)
 def create(request, pk):
     create_form = Create_InstrumentDirectory_Form(request.POST or None)
 
@@ -137,6 +139,7 @@ def create(request, pk):
     
 
 @login_required
+@permission_required("Accreditation.change_instrument_level_folder", raise_exception=True)
 def update(request, pk):
     # Retrieve the type object with the given primary key (pk)
     try:
@@ -200,6 +203,7 @@ def update(request, pk):
         
 
 @login_required
+@permission_required("Accreditation.delete_instrument_level_folder", raise_exception=True)
 def archive(request, pk, level_id):
     # Gets the records who have this ID
     folder_record = instrument_level_folder.objects.get(id=pk)
@@ -232,6 +236,7 @@ def archive(request, pk, level_id):
 
 
 @login_required
+@permission_required("Accreditation.view_instrument_level_folder", raise_exception=True)
 def child_landing_page(request, pk):
     def has_folder_access(user, folder):
         # Check if the user is assigned to the given folder
@@ -299,6 +304,7 @@ def child_landing_page(request, pk):
 
 
 @login_required
+@permission_required("Accreditation.add_instrument_level_folder", raise_exception=True)
 def create_child(request, pk):
     create_form = Create_InstrumentDirectory_Form(request.POST or None)
 
@@ -356,6 +362,7 @@ def create_child(request, pk):
 
 
 @login_required
+@permission_required("Accreditation.delete_instrument_level_folder", raise_exception=True)
 def archive_child(request, pk, parent_id):
     # Gets the records who have this ID
     folder_record = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=pk)
@@ -389,6 +396,7 @@ def archive_child(request, pk, parent_id):
 # ------------------------------------------------------------------[ RECYCLE BIN PAGE CODES]------------------------------------------------------------------#
 
 @login_required
+@permission_required("Accreditation.delete_instrument_level_folder", raise_exception=True)
 def parent_recycle_bin(request, pk):
     records = instrument_level_folder.objects.filter(is_deleted= True, instrument_level=pk, parent_directory= None) #Getting all the data inside the Program table and storing it to the context variable
     uploaded_files = files.objects.filter(instrument_level=pk, is_deleted=True)
@@ -401,7 +409,9 @@ def parent_recycle_bin(request, pk):
                 }   #Getting all the data inside the type table and storing it to the context variable
     return render(request, 'accreditation-level-parent-directory/recycle-bin/landing-page.html', context)
 
+
 @login_required
+@permission_required("Accreditation.delete_instrument_level_folder", raise_exception=True)
 def child_recycle_bin(request, pk):
     uploaded_files = files.objects.filter(parent_directory=pk, is_deleted=True)
     records = instrument_level_folder.objects.filter(is_deleted= True, parent_directory=pk) #Getting all the data inside the Program table and storing it to the context variable
@@ -415,6 +425,7 @@ def child_recycle_bin(request, pk):
 
 
 @login_required
+@permission_required("Accreditation.delete_instrument_level_folder", raise_exception=True)
 def restore_parent(request, ins_pk ,pk):
     # Gets the records who have this ID
     folder_record =  instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=pk)
@@ -446,6 +457,7 @@ def restore_parent(request, ins_pk ,pk):
     return redirect('accreditations:parent-folder-recycle-bin', pk=ins_pk)
 
 @login_required
+@permission_required("Accreditation.delete_instrument_level_folder", raise_exception=True)
 def restore_child(request, parent_pk ,pk):
     # Gets the records who have this ID
     folder_record =  instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=pk)
@@ -476,6 +488,7 @@ def restore_child(request, parent_pk ,pk):
     return redirect('accreditations:child-folder-recycle-bin', pk=parent_pk)
 
 @login_required
+@permission_required("Accreditation.delete_files", raise_exception=True)
 def restore_child_file(request, pk):
     # Gets the records who have this ID
     file_record = files.objects.get(id=pk)
@@ -511,6 +524,7 @@ def restore_child_file(request, pk):
 
 
 @login_required
+@permission_required("Accreditation.delete_instrument_level_folder", raise_exception=True)
 def destroy(request, pk):
     if request.method == 'POST':
         entered_password = request.POST.get('password')
@@ -549,6 +563,7 @@ def destroy(request, pk):
     return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 @login_required
+@permission_required("Accreditation.delete_files", raise_exception=True)
 def archive_files(request, pk):
     # Gets the records who have this ID
     file_record = files.objects.get(id=pk)
@@ -584,6 +599,7 @@ def archive_files(request, pk):
     
 
 @login_required
+@permission_required("Accreditation.change_instrument_level_folder", raise_exception=True)
 def create_folder_review(request, pk):
     try:
         folder = instrument_level_folder.objects.select_related('instrument_level', 'parent_directory').get(id=pk)
@@ -628,6 +644,7 @@ def create_folder_review(request, pk):
     else:
         return JsonResponse({'errors': 'Invalid request method'}, status=405)
 
+@login_required
 def review_parent_contents(parent_folder_id, review):
     try:
         child_folders = instrument_level_folder.objects.filter(Q(has_progress_bar=True) | Q(can_be_reviewed=True), parent_directory_id=parent_folder_id, is_deleted=False)
@@ -652,7 +669,7 @@ def review_parent_contents(parent_folder_id, review):
                 folder.save()
     return
 
-
+@login_required
 def check_status(parent_folder_id):
     # Get the record
     try:
@@ -688,6 +705,8 @@ def check_status(parent_folder_id):
    
     return
 
+@login_required
+@permission_required("Accreditation.change_files", raise_exception=True)
 def change_to_reviewable_file(request, pk):
     try:
         file_record = files.objects.select_related('parent_directory').get(id=pk)
@@ -715,6 +734,8 @@ def change_to_reviewable_file(request, pk):
     else:
         return JsonResponse({'errors': 'Invalid request method'}, status=405)
 
+@login_required
+@permission_required("Accreditation.change_files", raise_exception=True)
 def change_to_not_reviewable_file(request, pk):
     try:
         file_record = files.objects.get(id=pk)
@@ -743,6 +764,7 @@ def change_to_not_reviewable_file(request, pk):
 
 
 @login_required
+@permission_required("Accreditation.change_files", raise_exception=True)
 def create_file_review(request, pk):
     try:
         file_record = files.objects.select_related('parent_directory').get(id=pk)
@@ -782,6 +804,8 @@ def create_file_review(request, pk):
 
 
 # FUNCTION IN RENAMING A FILE
+@login_required
+@permission_required("Accreditation.change_files", raise_exception=True)
 def rename_file(request, pk):
     file_obj = get_object_or_404(files, pk=pk)
     file_name = file_obj.file_name
@@ -817,45 +841,8 @@ def rename_file(request, pk):
         return JsonResponse({'errors': 'Invalid request method'}, status=405)
         
 
-# ---------------------------------------[ FUNCTIONS FOR PROGRESS CALCULATIONS OF FOLDERS ]---------------------------------------#
-# def calculate_progress(folder_id):
-#     # Get the record who has the if of folder_id
-#     folder_record = instrument_level_folder.objects.get(id=folder_id)
 
-#     # Get the child files and child folders that has a "approved" status
-#     approved_child_folders = instrument_level_folder.objects.filter(Q(can_be_reviewed=True) | Q(has_progress_bar=True), Q(progress_percentage=100.00) | Q(status='approve'), parent_directory_id=folder_id, is_deleted=False).count()
-#     approved_child_files = files.objects.filter(can_be_reviewed=True, parent_directory_id=folder_id, status='approve', is_deleted=False).count()
-
-#     # The all the child files and folders that has can_be_reviewed equals to true 
-#     all_child_folders = instrument_level_folder.objects.filter(Q(can_be_reviewed=True) | Q(has_progress_bar=True), parent_directory_id=folder_id, is_deleted=False).count()
-#     all_child_files = files.objects.filter(can_be_reviewed=True, parent_directory_id=folder_id, is_deleted=False).count()
-
-#     # Sum up the approved_child_files and approved_child_folders
-#     all_approved_files_folder = approved_child_files + approved_child_folders
-#     all_files_folder = all_child_files + all_child_folders
-
-#     # Calculating the progress percentage of the folder 
-#     progress_percentage = all_approved_files_folder / all_files_folder * 100
-
-#     folder_record.progress_percentage = progress_percentage
-
-#     if progress_percentage == 100.0:
-#         folder_record.status = 'approve'
-
-#     else:
-#         folder_record.status = 'fr'
-
-#     folder_record.save()
-
-#     if folder_record.parent_directory_id:
-#         calculate_progress(folder_record.parent_directory_id)
-
-#     elif folder_record.parent_directory_id == None and folder_record.instrument_level_id:
-#         parent_calculate_progress(folder_record.instrument_level_id)
-    
-#     return
-
-
+@login_required
 def parent_calculate_progress(instrument_level_id):
     # Get the record who has the if of instrument_level_id
     instrument_level_record = instrument_level.objects.get(id=instrument_level_id)
@@ -924,7 +911,7 @@ def parent_calculate_progress(instrument_level_id):
 
 
 
-
+@login_required
 def calculate_progress(folder_id):
     folder_record = instrument_level_folder.objects.get(id=folder_id)
 

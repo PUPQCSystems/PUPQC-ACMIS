@@ -27,7 +27,7 @@ class accredlevel(models.Model):
 class accredbodies(models.Model):
     name = models.CharField(max_length=250, unique=True)
     abbreviation = models.CharField(max_length=20, unique=True)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_bodies', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_bodies', null=True, blank=True)
@@ -43,7 +43,7 @@ class accredbodies(models.Model):
     
 class instrument(models.Model):
     name = models.CharField(max_length=250, unique=True)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     accredbodies = models.ForeignKey(accredbodies, on_delete=models.CASCADE, related_name='accredbodies_instrument')
     program = models.ForeignKey(Programs, on_delete=models.CASCADE, related_name='programs_instrument')
     created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_instrument', null=True, blank=True)
@@ -190,7 +190,7 @@ class program_accreditation(models.Model):
 
 class result_remarks(models.Model):
     accredited_program = models.ForeignKey(program_accreditation, on_delete=models.CASCADE, null=True, blank=True, related_name='program_remarks_relation')
-    remarks = models.CharField(max_length=5000, null=True, blank=True)
+    remarks = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_result_remarks', null=True, blank=True)
     created_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_result_remarks', null=True, blank=True)
@@ -201,7 +201,7 @@ class accreditation_certificates(models.Model):
     accredited_program = models.ForeignKey(program_accreditation, related_name='accredited_program_certificate', on_delete=models.CASCADE, null=True, blank=True)
     certificate_path = models.FileField(upload_to = 'accreditation-certifacates/', max_length=300)
     certificate_name = models.CharField(max_length=300, null=True, blank=True)
-    description = models.CharField(max_length=5000, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_accreditation_certificate', null=True, blank=True)
     uploaded_at = models.DateTimeField(default=timezone.now)
     modified_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='modified_accreditation_certificate', null=True, blank=True)
