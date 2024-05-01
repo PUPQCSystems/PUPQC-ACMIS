@@ -193,7 +193,7 @@
 
 
 {% comment %} AJAX FOR POSTING REVISIT RESULT  {% endcomment %}
-<script>
+{% comment %} <script>
     $(document).ready(function(){
         $(".result-revisit-form").submit(function(event) {
             var id = $(this).data('id');
@@ -227,11 +227,11 @@
             });
         });
     });
-</script> 
+</script>  {% endcomment %}
 
 
 {% comment %} AJAX FOR POSTING FAILED RESULT  {% endcomment %}
-<script>
+{% comment %} <script>
     $(document).ready(function(){
         $(".result-failed-form").submit(function(event) {
             var id = $(this).data('id');
@@ -264,4 +264,10 @@
             });
         });
     });
-</script> 
+</script>  {% endcomment %}
+
+
+
+
+
+

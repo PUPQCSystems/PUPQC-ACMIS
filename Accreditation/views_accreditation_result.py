@@ -337,7 +337,7 @@ def certificate_destroy(request, pk):
 
 # FUNCTION IN RENAMING A FILE
 @login_required
-@permission_required("Accreditation.change_files", raise_exception=True)
+@permission_required("Accreditation.accreditation_certificates", raise_exception=True)
 def rename_file(request, pk):
     file_obj = get_object_or_404(accreditation_certificates, pk=pk)
     file_name = file_obj.certificate_name
@@ -352,21 +352,17 @@ def rename_file(request, pk):
 
             # Get the records of all accreditation_certificates that have the same parent id
             file_records = accreditation_certificates.objects.filter(accredited_program_id=file_obj.accredited_program_id)
-            count = 0
+
             for file in file_records:
                 # Check if there is a file name that is already existing in the database
                 if file.certificate_name == new_name:
-                    # Increment 1 to count variable if there is already existing in the database
-                    count+=1
-
-            if count > 0:
-                return JsonResponse({'error': 'File name already exists. Please use a different file name.'}, status=405)
+                    return JsonResponse({'error': 'File name already exists. Please use a different file name.'}, status=405)
 
             else:
 
                 file_obj.certificate_name = new_name
                 file_obj.modified_by = request.user
-                file_obj.certificate_rename_save()
+                file_obj.rename_save()
                 messages.success(request, f'The File is successfully renamed to {new_name}!')
                 return JsonResponse({'status': 'success'}, status=200)
     else:

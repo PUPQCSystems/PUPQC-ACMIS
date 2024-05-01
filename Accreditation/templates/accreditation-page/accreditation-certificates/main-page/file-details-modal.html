@@ -1,0 +1,87 @@
+{% load custom_tags %}
+<!-- Modal -->
+<div class="modal modal-blur fade" id="view-modal-{{ file.id }}" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content"> 
+			<div class="modal-header">
+				<h5 class="modal-title">File Details</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="row row-cards">
+
+					<div class="card">
+						<div class="card-status-top bg-cyan"></div>
+						<div class="card-body">
+							<h3 class="card-title">{{ file.certificate_name }}</h3>
+						
+							<div class="datagrid">
+
+								<div class="datagrid-item">
+									<div class="datagrid-title">Uploaded by</div>
+									<div class="datagrid-content">{{file.uploaded_by.first_name}} {{file.uploaded_by.last_name}}</div>
+								</div>
+
+								
+								<div class="datagrid-item">
+									<div class="datagrid-title">Uploaded at</div>
+									<div class="datagrid-content">{{file.uploaded_at|date:"F j, Y"}}</div>
+								</div>
+
+								<div class="datagrid-item">
+									<div class="datagrid-title">Modified by</div>
+									<div class="datagrid-content">{{file.modified_by.first_name}} {{file.modified_by.last_name}}</div>
+								</div>
+
+								<div class="datagrid-item">
+									<div class="datagrid-title">Last Modified</div>
+									<div class="datagrid-content">{{file.modified_at|date:"F j, Y"}}</div>
+								</div>
+
+								<div class="datagrid-item">
+									<div class="datagrid-title">Type</div>
+									<div class="datagrid-content">
+										{% if file.certificate_name|slice:"-4:" == '.pdf' %}
+											<span class="badge">PDF</span>
+
+										{% elif file.certificate_name|slice:"-4:" == '.doc' or file.certificate_name|slice:"-4:" == 'docx'%}
+											<span class="badge">Google Docs or Microsoft Word</span>
+
+										{% elif file.certificate_name|slice:"-4:" == '.xls' or file.certificate_name|slice:"-4:" == 'xlsx'%}
+											<span class="badge">Google sheet or Microsoft Excel</span>
+
+										{% elif file.certificate_name|slice:"-4:" == '.jpg' or file.certificate_name|slice:"-4:" == 'jpeg' or file.certificate_name|slice:"-4:" == '.png' %}
+									
+											<span class="badge">Image</span>
+
+										{% elif file.certificate_name|slice:"-4:" == '.mp4' or file.certificate_name|slice:"-4:" == 'webm' %}
+											<span class="badge">Video</span>
+								
+										{% endif %}
+									</div>
+								</div>
+
+								<div class="datagrid-item">
+									<div class="datagrid-title">Size</div>
+									<div class="datagrid-content">{{ file.certificate_path.size|sizify }} </div>
+								</div>
+
+								
+
+
+							</div>
+
+						</div>
+					</div>
+
+					
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+			</div>
+
+		</div>
+	</div>
+</div>

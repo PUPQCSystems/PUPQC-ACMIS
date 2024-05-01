@@ -140,6 +140,7 @@ class files(models.Model):
 
     def rename_save(self, *args, **kwargs):
         new_file_name = self.file_name  
+        print('HAHAHAHAHA:', new_file_name)
         old_file_path = self.file_path.name
 
         # Rename with extension preservation:
@@ -217,7 +218,7 @@ class accreditation_certificates(models.Model):
         self.certificate_path.delete()
         super().delete(*args, **kwargs)
 
-    def certificate_rename_save(self, *args, **kwargs):
+    def rename_save(self, *args, **kwargs):
         new_file_name = self.certificate_name  
         old_file_path = self.certificate_path.name
 
@@ -234,7 +235,7 @@ class accreditation_certificates(models.Model):
 
             try:
                 default_storage.save(new_file_path, default_storage.open(old_file_path))
-                self.file_path = new_file_path
+                self.certificate_path = new_file_path
                 default_storage.delete(old_file_path)
             except:  
                 pass  # Handle potential errors gracefully

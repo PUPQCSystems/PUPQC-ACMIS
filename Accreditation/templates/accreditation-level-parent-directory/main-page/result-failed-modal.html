@@ -5,7 +5,7 @@
     <div class="modal-dialog modal-lg">
       	<div class="modal-content">
         	<div class="modal-header">
-          		<h1 class="modal-title">Carry out Accreditation for a Program</h1>
+          		<h1 class="modal-title">Please Upload the Accreditation Result</h1>
           		<button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#result-modal" aria-label="Close"></button>
         	</div>
 	
@@ -16,9 +16,36 @@
 					data-id="{{ accred_program.id }}">
 					{% csrf_token %}
 
+					<div class="row">
+						<div class="col">
+							<label class="form-label">Upload File Here <small class="text-muted">(Optional)</small></label>
+					
+							<div class="row">
+								<input type="file" name="failed_certificate_path" id="failed-certificate-path" multiple>
+							</div>
+						</div>
+
+
+						<div class="col">
+							<label class="form-label">Files</label>
+							<div class="divide-y scrollable" style="height: 10rem">
+
+								{% for file in records %}
+									{% if file.accredited_program_id == accred_program.id %}
+										<div class="row">
+											<div class="col">
+												<a href="#" class="text-muted" style="font-size: 10px">{{ file.certificate_name }}</a>
+											</div>
+										</div>
+									{% endif %}
+								{% endfor %} 
+							</div>
+						</div>
+					</div>
+
 					<div class="mb-3">
-						<label class="form-label required">Result Remarks</label>
-						{{ remarks_result_form.remarks }}
+						<label class="form-label">Result Remarks <small class="text-muted">(Optional)</small></label>
+						<textarea name="remarks" cols="40" rows="10" class="form-control" id="id-failed-remarks"></textarea>
 					</div>
 
 			</div>

@@ -29,7 +29,7 @@
 						
 								<div class = "" >
 									<div class="row">
-										<input type="file" name="certificate_path" id="certification-path" multiple>
+										<input type="file" name="certificate_path" id="id-certification-path-{{record.id}}" multiple>
 									</div>
 
 									<div class="divide-y scrollable" style="height: 10rem">
@@ -40,9 +40,6 @@
 													<div class="col">
 														<a href="#" class="text-muted" style="font-size: 10px">{{ file.certificate_name }}</a>
 													</div>
-													{% comment %} <div class="col-auto">
-														<span class="badge bg-red badge-pill"></span>
-													</div> {% endcomment %}
 												</div>
 											{% endif %}
 										{% endfor %} 
@@ -111,7 +108,7 @@
             maxFiles: 5,             //It sets the max file counts
             maxFileSize: '100MB'      //It sets the accepted max storage size
         })
-        const inputElement = document.querySelector('input[type="file"]');  //Convert input types that are file types into filepond
+        const inputElement = document.querySelector('#id-certification-path-'+{{record.id}});  //Convert input types that are file types into filepond
         var pond = FilePond.create( inputElement, {
             acceptedFileTypes:  accepted_file_types, // The lists are the accepted file types
             onaddfile: (err, fileItem) => {
@@ -130,7 +127,7 @@
         } );
 
 		var formData = new FormData();
-		$(".result-passed-form").submit(function(event) {
+		$("#result-passed-form-"+{{ record.id }}).submit(function(event) {
 			event.preventDefault();
             event.stopPropagation();
             var url = "/accreditation/passed-result/"+{{ record.id }}+"/";

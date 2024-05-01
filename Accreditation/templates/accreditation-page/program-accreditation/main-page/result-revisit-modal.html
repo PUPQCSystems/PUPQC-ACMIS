@@ -2,7 +2,7 @@
 
 <!-- Modal -->
 <div class="modal modal-blur fade" id="result-revisit-modal-{{record.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-m">
+    <div class="modal-dialog modal-lg">
       	<div class="modal-content">
         	<div class="modal-header">
           		<h1 class="modal-title">Set the Survey Revisit Date</h1>
@@ -17,14 +17,53 @@
 					data-id={{ record.id }}>
 					{% csrf_token %}
 
-					<div class="mb-3">
-						<label class="form-label required">Revisit Date</label>
-						{{ revisit_result_form.revisit_date }}
-					</div>
+					<div class="row">
+						<div class="col-lg-7">
+							<div class="mb-3">
+								<label class="form-label">Result Remarks <small class="text-muted">(Optional)</small></label>
+								<textarea name="remarks" cols="40" rows="12" class="form-control" maxlength="5000" id="id_revisit_remarks_{{record.id}}"></textarea>
+							</div>
+						</div>
 
-					<div class="mb-3">
-						<label class="form-label required">Result Remarks</label>
-						{{ remarks_result_form.remarks }}
+						<div class="col-lg-5">
+							<label class="form-label">Upload File Here <small class="text-muted">(Optional)</small></label>
+						
+								<div class = "" >
+									<div class="row">
+										<input type="file" name="revisit_certificate_path" id="revisit-certification-path-{{record.id}}" multiple>
+									</div>
+
+									<div class="divide-y scrollable" style="height: 10rem">
+
+										{% for file in certificates_records %}
+											{% if file.accredited_program_id == record.id %}
+												<div class="row">
+													<div class="col">
+														<a href="#" class="text-muted" style="font-size: 10px">{{ file.certificate_name }}</a>
+													</div>
+												</div>
+											{% endif %}
+										{% endfor %} 
+									</div>
+	
+								</div>
+				   
+					
+						</div>
+					</div>
+					
+					<br>
+
+					<div class="mb-3 row">
+						<div class="col">
+							<label class="form-label required">Revisit Date</label>
+							<input type="datetime-local" name="revisit_date"  class="form-control" required="" id="id_revisit_date_{{record.id}}">
+						</div>
+
+						<div class="col">
+							<label class="form-label required">Revisit Compliance Deadline</label>
+							<input type="datetime-local" name="revisit_date"  class="form-control" required="" id="id_revisit_compliance_deadline_{{record.id}}">
+						</div>
 					</div>
 
 			</div>
@@ -38,4 +77,102 @@
     	</div>
   	</div>
 </div>
+
+
+{% comment %} CODES FOR REVISIT RESULTS {% endcomment %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var accepted_file_types = [ 
+            'image/jpeg',
+            'image/png',
+            'image/gif',
+            'image/bmp',
+            'image/svg+xml',
+            'image/webp',
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+            ]
+        var files = []
+        // Now acceptedFileTypes is a JavaScript array
+
+        FilePond.registerPlugin(FilePondPluginFileValidateSize);    //Register plugin to validate file size
+        FilePond.registerPlugin(FilePondPluginFileValidateType);    //Register plugin to validate file type
+        FilePond.registerPlugin(FilePondPluginImagePreview);
+        FilePond.setOptions({
+            allowMultiple:true,
+            maxFiles: 5,             //It sets the max file counts
+            maxFileSize: '100MB'      //It sets the accepted max storage size
+        })
+        const inputElement = document.querySelector('#revisit-certification-path-'+{{record.id}});  //Convert input types that are file types into filepond
+        var pond = FilePond.create( inputElement, {
+            acceptedFileTypes:  accepted_file_types, // The lists are the accepted file types
+            onaddfile: (err, fileItem) => {
+                if (!err) {
+                files.push(fileItem.file)
+                }
+                console.log(files)
+            },
+            onremovefile: (err, fileItem) => {
+                const index = files.indexOf(fileItem.file)
+                if (index > -1) {
+                    files.splice(index, 1)
+                }
+                console.log(files)
+            }
+        } );
+
+        var formData = new FormData();
+        $("#result-revisit-form-"+{{ record.id }}).submit(function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var url = "/accreditation/revisit-result/"+{{record.id}}+"/";
+            formData.append('length', files.length)
+            for (var i = 0; i < files.length; i++) {
+                formData.append('files' + i, files[i])
+            }
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+
+            // Combine formData and serializedData
+            formData.append('remarks', document.getElementById('id_revisit_remarks_'+{{record.id}}).value);
+            formData.append('revisit_date', document.getElementById('id_revisit_date_'+{{record.id}}).value);
+            formData.append('revisit_compliance_deadline', document.getElementById('id_revisit_compliance_deadline_'+{{record.id}}).value);
+            
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                success: function(response) {
+                    location.reload();
+
+                },
+                error: function(error) {
+                    if (error.responseJSON && error.responseJSON.error) {
+                        // Handle the other error message
+                        toastr.error(error.responseJSON.error);
+                    }
+                    // Check for the errors field in the JSON response
+                    else if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                    
+                }
+            })
+        })
+    })
+</script>  
   

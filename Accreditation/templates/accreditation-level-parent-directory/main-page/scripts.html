@@ -387,81 +387,6 @@
     });
 </script>
 
-{% comment %} AJAX FOR POSTING REVISIT RESULT  {% endcomment %}
-<script>
-    $(document).ready(function(){
-        $("#result-revisit-form").submit(function(event) {
-            var id = $(this).data('id');
-            event.preventDefault();
-            event.stopPropagation();
-            var serializedData = $("#result-revisit-form").serialize();
-            var url = "/accreditation/revisit-result/"+id+"/";
-
-
-            $.ajax({
-                url: url, 
-                data: serializedData,
-                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
-                type: "POST",
-                success: function(response) {
-                    location.reload();
-                    
-                },
-                error: function(error) {
-                    // Check for the errors field in the JSON response
-                    if (error.responseJSON && error.responseJSON.errors) {
-                        // Iterate over the errors field and display the validation errors to the user
-                        for (var field in error.responseJSON.errors) {
-                            toastr.error(error.responseJSON.errors[field]);
-                        }
-                    } else {
-                        toastr.error('Something went wrong. Please try again later.');
-                    }
-                }
-
-            });
-        });
-    });
-</script> 
-
-
-{% comment %} AJAX FOR POSTING FAILED RESULT  {% endcomment %}
-<script>
-    $(document).ready(function(){
-        $("#result-failed-form").submit(function(event) {
-            var id = $(this).data('id');
-            event.preventDefault();
-            event.stopPropagation();
-            var serializedData = $("#result-failed-form").serialize();
-            var url = "/accreditation/failed-result/"+id+"/";
-
-            $.ajax({
-                url: url, 
-                data: serializedData,
-                headers: { 'X-CSRFToken': '{{ csrf_token }}' }, 
-                type: "POST",
-                success: function(response) {
-                    location.reload();
-                    
-                },
-                error: function(error) {
-                    // Check for the errors field in the JSON response
-                    if (error.responseJSON && error.responseJSON.errors) {
-                        // Iterate over the errors field and display the validation errors to the user
-                        for (var field in error.responseJSON.errors) {
-                            toastr.error(error.responseJSON.errors[field]);
-                        }
-                    } else {
-                        toastr.error('Something went wrong. Please try again later.');
-                    }
-                }
-
-            });
-        });
-    });
-</script> 
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -491,7 +416,7 @@
             maxFiles: 100,             //It sets the max file counts
             maxFileSize: '10000MB'      //It sets the accepted max storage size
         })
-        const inputElement = document.querySelector('input[type="file"]');  //Convert input types that are file types into filepond
+        const inputElement = document.querySelector('#passed-certificate-path');  //Convert input types that are file types into filepond
         var pond = FilePond.create( inputElement, {
             // Customize status message for maximum total file size exceeded
             labelMaxTotalFileSizeExceeded: 'Maximum total size exceeded',
@@ -524,7 +449,7 @@
             formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
 
             // Combine formData and serializedData
-            formData.append('remarks', document.getElementById('id_remarks').value);
+            formData.append('remarks', document.getElementById('id_passed_remarks').value);
             formData.append('validity_date_from', document.getElementById('id_validity_date_from').value);
             formData.append('validity_date_to', document.getElementById('id_validity_date_to').value);
             
@@ -706,3 +631,202 @@
         });
     });
 </script> 
+
+
+
+
+{% comment %} CODES FOR REVISIT RESULTS {% endcomment %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var accepted_file_types = [ 
+            'image/jpeg',
+            'image/png',
+            'image/gif',
+            'image/bmp',
+            'image/svg+xml',
+            'image/webp',
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+            ]
+        var files = []
+        // Now acceptedFileTypes is a JavaScript array
+
+        FilePond.registerPlugin(FilePondPluginFileValidateSize);    //Register plugin to validate file size
+        FilePond.registerPlugin(FilePondPluginFileValidateType);    //Register plugin to validate file type
+        FilePond.registerPlugin(FilePondPluginImagePreview);
+        FilePond.setOptions({
+            allowMultiple:true,
+            maxFiles: 5,             //It sets the max file counts
+            maxFileSize: '100MB'      //It sets the accepted max storage size
+        })
+        const inputElement = document.querySelector('#revisit-certification-path');  //Convert input types that are file types into filepond
+        var pond = FilePond.create( inputElement, {
+            acceptedFileTypes:  accepted_file_types, // The lists are the accepted file types
+            onaddfile: (err, fileItem) => {
+                if (!err) {
+                files.push(fileItem.file)
+                }
+                console.log(files)
+            },
+            onremovefile: (err, fileItem) => {
+                const index = files.indexOf(fileItem.file)
+                if (index > -1) {
+                    files.splice(index, 1)
+                }
+                console.log(files)
+            }
+        } );
+
+        var formData = new FormData();
+        $("#result-revisit-form").submit(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var url = "/accreditation/revisit-result/"+id+"/";
+            formData.append('length', files.length)
+            for (var i = 0; i < files.length; i++) {
+                formData.append('files' + i, files[i])
+            }
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+
+            // Combine formData and serializedData
+            formData.append('remarks', document.getElementById('id_revisit_remarks').value);
+            formData.append('revisit_date', document.getElementById('id_revisit_date').value);
+            formData.append('revisit_compliance_deadline', document.getElementById('id_revisit_compliance_deadline').value);
+            
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                success: function(response) {
+                    location.reload();
+
+                },
+                error: function(error) {
+                    if (error.responseJSON && error.responseJSON.error) {
+                        // Handle the other error message
+                        toastr.error(error.responseJSON.error);
+                    }
+                    // Check for the errors field in the JSON response
+                    else if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                    
+                }
+            })
+        })
+    })
+</script>  
+
+
+
+{% comment %} CODES FOR FAILED RESULTS {% endcomment %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var accepted_file_types = [ 
+            'image/jpeg',
+            'image/png',
+            'image/gif',
+            'image/bmp',
+            'image/svg+xml',
+            'image/webp',
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+            ]
+        var files = []
+        // Now acceptedFileTypes is a JavaScript array
+
+        FilePond.registerPlugin(FilePondPluginFileValidateSize);    //Register plugin to validate file size
+        FilePond.registerPlugin(FilePondPluginFileValidateType);    //Register plugin to validate file type
+        FilePond.registerPlugin(FilePondPluginImagePreview);
+        FilePond.setOptions({
+            allowMultiple:true,
+            maxFiles: 5,             //It sets the max file counts
+            maxFileSize: '100MB'      //It sets the accepted max storage size
+        })
+        const inputElement = document.querySelector('#failed-certificate-path');  //Convert input types that are file types into filepond
+        var pond = FilePond.create( inputElement, {
+            acceptedFileTypes:  accepted_file_types, // The lists are the accepted file types
+            onaddfile: (err, fileItem) => {
+                if (!err) {
+                files.push(fileItem.file)
+                }
+                console.log(files)
+            },
+            onremovefile: (err, fileItem) => {
+                const index = files.indexOf(fileItem.file)
+                if (index > -1) {
+                    files.splice(index, 1)
+                }
+                console.log(files)
+            }
+        } );
+
+        var formData = new FormData();
+        $("#result-failed-form").submit(function(event) {
+            var id = $(this).data('id');
+            event.preventDefault();
+            event.stopPropagation();
+            var url = "/accreditation/failed-result/"+id+"/";
+            formData.append('length', files.length)
+            for (var i = 0; i < files.length; i++) {
+                formData.append('files' + i, files[i])
+            }
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}')
+
+            // Combine formData and serializedData
+            formData.append('remarks', document.getElementById('id-failed-remarks').value);
+            
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                success: function(response) {
+                    location.reload();
+
+                },
+                error: function(error) {
+                    if (error.responseJSON && error.responseJSON.error) {
+                        // Handle the other error message
+                        toastr.error(error.responseJSON.error);
+                    }
+                    // Check for the errors field in the JSON response
+                    else if (error.responseJSON && error.responseJSON.errors) {
+                        // Iterate over the errors field and display the validation errors to the user
+                        for (var field in error.responseJSON.errors) {
+                            toastr.error(error.responseJSON.errors[field]);
+                        }
+                    } else {
+                        toastr.error('Something went wrong. Please try again later.');
+                    }
+                    
+                }
+            })
+        })
+    })
+</script>  
