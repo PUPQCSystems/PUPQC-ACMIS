@@ -407,24 +407,36 @@ class RevisitResult_Form(forms.ModelForm):
     revisit_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
                                                                      'class': 'form-control'}),
                                                                        required=True,
-                                                                        error_messages={'required': "Please set the mock accreditation date beefore submitting the form."})
+                                                                        error_messages={'required': "Please set the survey revisit date before submitting the form."})
+    
+    revisit_compliance_deadline = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 
+                                                                     'class': 'form-control'}),
+                                                                       required=True,
+                                                                        error_messages={'required': "Please set the deadline for revisit compliance before submitting the form."})
 
     class Meta:
         model = program_accreditation
-        fields = ('revisit_date',)
+        fields = ('revisit_date', 'revisit_compliance_deadline')
 
 
 
     def clean(self):
         cleaned_data = super().clean()
         revisit_date = cleaned_data.get('revisit_date')
+        revisit_compliance_deadline = cleaned_data.get('revisit_compliance_deadline')
 
+        # Existing validations...
         if not revisit_date:
             raise ValidationError("Please ensure that the survey revisit date is set before submitting the form.")
 
         if revisit_date:
             if revisit_date < timezone.now():
                 raise ValidationError("Revisit Date should be set in the future. ")
+
+        # New validation
+        if revisit_date and revisit_compliance_deadline:
+            if revisit_date >= revisit_compliance_deadline:
+                raise ValidationError("Revisit compliance deadline must be after the revisit date.")
 
         return cleaned_data
     

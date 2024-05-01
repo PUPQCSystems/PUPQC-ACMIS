@@ -117,6 +117,7 @@ urlpatterns = [
     path("failed-result/<str:pk>/", views_accreditation_result.result_failed, name='accreditation-result-failed'),
     path("revisit-result/<str:pk>/", views_accreditation_result.result_revisit, name='accreditation-result-revisit'),
     path("certificate/destroy/<str:pk>/", views_accreditation_result.certificate_destroy, name='accreditation-certificate-destroy'),
+    path("certificate-rename/<str:pk>/", views_accreditation_result.rename_file, name='rename-certificate'),
 
     path("accreditation-result/upload-file/<str:pk>/", views_accreditation_result.upload_files, name='accreditation-result-upload-file'),
 

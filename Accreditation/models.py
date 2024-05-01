@@ -171,6 +171,7 @@ class program_accreditation(models.Model):
     mock_accred_date = models.DateTimeField(auto_now=False, null=True, blank=True)
     survey_visit_date = models.DateTimeField(auto_now=False, null=True, blank=True)
     revisit_date = models.DateTimeField(auto_now=False, null=True, blank=True)
+    revisit_compliance_deadline = models.DateTimeField(auto_now=False, null=True, blank=True)
     is_done = models.BooleanField(default=False)
     is_failed = models.BooleanField(default=False)
     status = models.CharField(max_length=50, null=True, blank=True)
@@ -199,7 +200,7 @@ class result_remarks(models.Model):
 
 class accreditation_certificates(models.Model):
     accredited_program = models.ForeignKey(program_accreditation, related_name='accredited_program_certificate', on_delete=models.CASCADE, null=True, blank=True)
-    certificate_path = models.FileField(upload_to = 'accreditation-certifacates/', max_length=300)
+    certificate_path = models.FileField(upload_to = 'accreditation-certificates/', max_length=300)
     certificate_name = models.CharField(max_length=300, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_accreditation_certificate', null=True, blank=True)
@@ -216,7 +217,7 @@ class accreditation_certificates(models.Model):
         self.certificate_path.delete()
         super().delete(*args, **kwargs)
 
-    def rename_save(self, *args, **kwargs):
+    def certificate_rename_save(self, *args, **kwargs):
         new_file_name = self.certificate_name  
         old_file_path = self.certificate_path.name
 
@@ -239,7 +240,6 @@ class accreditation_certificates(models.Model):
                 pass  # Handle potential errors gracefully
 
         super().save(*args, **kwargs)
-
     
 class user_assigned_to_folder(models.Model):
     assigned_user = models.ForeignKey(CustomUser, on_delete=models.PROTECT, related_name='assigned_user', null=False, blank=False)

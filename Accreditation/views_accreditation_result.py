@@ -1,12 +1,43 @@
+import os
 from django.utils import timezone
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import JsonResponse, QueryDict
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from Accreditation.forms import PassedResult_Form, RemarksResult_Form, RevisitResult_Form
+from Accreditation.forms import PassedResult_Form, RemarksResult_Form, RenameFileForm, RevisitResult_Form
 from Accreditation.models import accreditation_certificates, program_accreditation, result_remarks
 from django.contrib.auth import authenticate
 from datetime import timedelta
+
+
+
+@login_required
+@permission_required("Accreditation.view_accreditation_certificates", raise_exception=True)
+def result_page(request, pk):
+    #Getting the data from the API
+    passed_result_form = PassedResult_Form(request.POST or None)
+    revisit_result_form = RevisitResult_Form(request.POST or None)
+    remarks_result_form = RemarksResult_Form(request.POST or None)
+    rename_form = RenameFileForm()
+
+    accreditation_record = program_accreditation.objects.get(id=pk)
+    certificates_records = accreditation_certificates.objects.select_related('accredited_program').filter( accredited_program_id=pk, is_deleted= False)
+    remarks_records = result_remarks.objects.select_related('accredited_program').filter( accredited_program_id=pk).order_by('created_at')
+    remarks_counts = result_remarks.objects.filter( accredited_program_id=pk).count()
+
+        
+    context = { 
+                'passed_result_form': passed_result_form,
+                'revisit_result_form': revisit_result_form,
+                'records':  certificates_records,
+                'accred_program': accreditation_record,
+                'remarks_result_form': remarks_result_form,
+                'remarks_records':  remarks_records,
+                'remarks_counts':  remarks_counts,
+                'rename_form': rename_form
+               }  #Getting all the data inside the type table and storing it to the context variable
+    return render(request, 'accreditation-page/accreditation-certificates/main-page/landing-page.html', context)
+
 
 
 @login_required
@@ -71,42 +102,44 @@ def result_passed(request, pk):
 
             length = request.POST.get('length')
             length = int(length)
-            if length != 0:
-                # Get the current datetime in UTC timezone
-                entry_result_at = accreditation_record.entry_result_at
-                current_datetime = timezone.now()
-                passed_result_form.instance.is_done = True
-                passed_result_form.instance.is_visited = True
-                passed_result_form.instance.entry_result_at = current_datetime
-                passed_result_form.instance.status = 'PASSED'
-                remarks_result_form.instance.accredited_program = accreditation_record
-                remarks_result_form.instance.created_by = request.user
 
-                # Check if the is_failed is True, if true change it to false
-                if accreditation_record.is_failed == True:
-                    passed_result_form.instance.is_failed = False
+            # Get the current datetime in UTC timezone
+            entry_result_at = accreditation_record.entry_result_at
+            current_datetime = timezone.now()
+            passed_result_form.instance.is_done = True
+            passed_result_form.instance.is_visited = True
+            passed_result_form.instance.entry_result_at = current_datetime
+            passed_result_form.instance.status = 'PASSED'
+            remarks_result_form.instance.accredited_program = accreditation_record
+            remarks_result_form.instance.created_by = request.user
 
-                # Calculate the time difference
-                if entry_result_at:
-                    time_difference = current_datetime - entry_result_at
+            # Check if the is_failed is True, if true change it to false
+            if accreditation_record.is_failed == True:
+                passed_result_form.instance.is_failed = False
 
-                    # Check if the time difference is less than or equal to 24 hours and if the date today is less than the revisit date
-                    if accreditation_record.revisit_date:
-                        if time_difference <= timedelta(hours=24) and current_datetime < accreditation_record.revisit_date:
-                            passed_result_form.instance.revisit_date = None
-                            remarks_record = result_remarks.objects.filter(accredited_program_id=pk).order_by('-created_at').first()
-                            remarks_record.delete()
+            # Calculate the time difference
+            if entry_result_at:
+                time_difference = current_datetime - entry_result_at
 
-                        
+                # Check if the time difference is less than or equal to 24 hours and if the date today is less than the revisit date
+                if accreditation_record.revisit_date:
+                    if time_difference <= timedelta(hours=24) and current_datetime < accreditation_record.revisit_date:
+                        passed_result_form.instance.revisit_date = None
+                        passed_result_form.instance.revisit_compliance_deadline = None
+                        remarks_record = result_remarks.objects.filter(accredited_program_id=pk).order_by('-created_at').first()
+                        remarks_record.delete()
 
-                passed_result_form.save()
-                if remarks_counts == 2:
-                    latest_remark = result_remarks.objects.filter(accredited_program_id=pk).latest('created_at')
-                    latest_remark.remarks =  remarks_result_form.cleaned_data.get('remarks')
-                    latest_remark.save()
-                else:
-                    remarks_result_form.save()
+                    
 
+            passed_result_form.save()
+            if remarks_counts == 2:
+                latest_remark = result_remarks.objects.filter(accredited_program_id=pk).latest('created_at')
+                latest_remark.remarks =  remarks_result_form.cleaned_data.get('remarks')
+                latest_remark.save()
+            else:
+                remarks_result_form.save()
+
+            if length > 0:
                 for file_num in range(0, int(length)):
                     print('File:', request.FILES.get(f'files{file_num}'))
                     accreditation_certificates.objects.create(
@@ -116,11 +149,10 @@ def result_passed(request, pk):
                         certificate_path=request.FILES.get(f'files{file_num}')
                         
                     ) 
-                # Provide a success message as a JSON response
-                messages.success(request, f'The Accreditation Result is successfully posted!') 
-                return JsonResponse({"status": "success"}, status=200)
-            else:
-                return JsonResponse({'error': 'Please attach a file before submitting the form.'}, status=400)
+            # Provide a success message as a JSON response
+            messages.success(request, f'The Accreditation Result is successfully posted!') 
+            return JsonResponse({"status": "success"}, status=200)
+
             
 
 
@@ -151,6 +183,11 @@ def result_revisit(request, pk):
         if revisit_result_form.is_valid():
             remarks_counts = result_remarks.objects.filter( accredited_program_id=pk).count()
             entry_result_at = accreditation_record.entry_result_at
+            length = request.POST.get('length')
+            length = int(length)
+
+            print("LENGTH:", length)
+
             # Save the updated data to the database
             revisit_result_form.instance.modified_by = request.user
             revisit_result_form.instance.is_done = False
@@ -180,6 +217,18 @@ def result_revisit(request, pk):
                 latest_remark.save()
             else:
                 remarks_result_form.save()
+
+            # Saving the files
+            if length > 0:
+                for file_num in range(0, length):
+                    print('File:', request.FILES.get(f'files{file_num}'))
+                    accreditation_certificates.objects.create(
+                        accredited_program_id = pk ,
+                        uploaded_by = request.user,
+                        certificate_name =  request.FILES.get(f'files{file_num}'), 
+                        certificate_path=request.FILES.get(f'files{file_num}')
+                        
+                    ) 
             
 
             # Provide a success message as a JSON response
@@ -211,6 +260,11 @@ def result_failed(request, pk):
 
         if remarks_result_form.is_valid():
             remarks_counts = result_remarks.objects.filter( accredited_program_id=pk).count()
+            length = request.POST.get('length')
+            length = int(length)
+
+            print("LENGTH:", length)
+
             # Save the updated data to the database
             accreditation_record.modified_by = request.user
             accreditation_record.is_failed = True
@@ -229,6 +283,19 @@ def result_failed(request, pk):
             else:
                 remarks_result_form.save()
 
+
+                            # Saving the files
+            if length > 0:
+                for file_num in range(0, length):
+                    print('File:', request.FILES.get(f'files{file_num}'))
+                    accreditation_certificates.objects.create(
+                        accredited_program_id = pk ,
+                        uploaded_by = request.user,
+                        certificate_name =  request.FILES.get(f'files{file_num}'), 
+                        certificate_path=request.FILES.get(f'files{file_num}')
+                        
+                    ) 
+
             # Provide a success message as a JSON response
             messages.success(request, f'The Accreditation Result is successfully posted!') 
             return JsonResponse({"status": "success"}, status=200)
@@ -238,30 +305,6 @@ def result_failed(request, pk):
             return JsonResponse({'errors': remarks_result_form.errors}, status=400)
         
 
-@login_required
-@permission_required("Accreditation.view_accreditation_certificates", raise_exception=True)
-def result_page(request, pk):
-    #Getting the data from the API
-    passed_result_form = PassedResult_Form(request.POST or None)
-    revisit_result_form = RevisitResult_Form(request.POST or None)
-    remarks_result_form = RemarksResult_Form(request.POST or None)
-
-    accreditation_record = program_accreditation.objects.get(id=pk)
-    certificates_records = accreditation_certificates.objects.select_related('accredited_program').filter( accredited_program_id=pk, is_deleted= False)
-    remarks_records = result_remarks.objects.select_related('accredited_program').filter( accredited_program_id=pk).order_by('created_at')
-    remarks_counts = result_remarks.objects.filter( accredited_program_id=pk).count()
-
-        
-    context = { 
-                'passed_result_form': passed_result_form,
-                'revisit_result_form': revisit_result_form,
-                'records':  certificates_records,
-                'accred_program': accreditation_record,
-                'remarks_result_form': remarks_result_form,
-                'remarks_records':  remarks_records,
-                'remarks_counts':  remarks_counts
-               }  #Getting all the data inside the type table and storing it to the context variable
-    return render(request, 'accreditation-page/accreditation-certificates/main-page/landing-page.html', context)
 
 # --------------------------------- [ACCREDITATION RESULT CODES] --------------------------------- #
 
@@ -290,3 +333,42 @@ def certificate_destroy(request, pk):
             return JsonResponse({'success': False, 'error': 'User not logged in'})
 
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+
+# FUNCTION IN RENAMING A FILE
+@login_required
+@permission_required("Accreditation.change_files", raise_exception=True)
+def rename_file(request, pk):
+    file_obj = get_object_or_404(accreditation_certificates, pk=pk)
+    file_name = file_obj.certificate_name
+    # Get the extension of the file
+    _, extension = os.path.splitext(file_name) 
+
+    if request.method == 'POST':
+        form = RenameFileForm(request.POST)
+        if form.is_valid():
+            new_name = form.cleaned_data['new_file_name'] + extension
+
+
+            # Get the records of all accreditation_certificates that have the same parent id
+            file_records = accreditation_certificates.objects.filter(accredited_program_id=file_obj.accredited_program_id)
+            count = 0
+            for file in file_records:
+                # Check if there is a file name that is already existing in the database
+                if file.certificate_name == new_name:
+                    # Increment 1 to count variable if there is already existing in the database
+                    count+=1
+
+            if count > 0:
+                return JsonResponse({'error': 'File name already exists. Please use a different file name.'}, status=405)
+
+            else:
+
+                file_obj.certificate_name = new_name
+                file_obj.modified_by = request.user
+                file_obj.certificate_rename_save()
+                messages.success(request, f'The File is successfully renamed to {new_name}!')
+                return JsonResponse({'status': 'success'}, status=200)
+    else:
+        return JsonResponse({'errors': 'Invalid request method'}, status=405)
+        
