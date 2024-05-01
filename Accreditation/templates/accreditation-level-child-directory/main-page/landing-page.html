@@ -24,101 +24,112 @@
 {% block page-title-actions %}
 	{% if has_access or user.is_superuser %}
 		<input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search files or folders..."/>
-		{% if perms.Accreditation.add_instrument_level_area %}
-					<div class="dropdown">
-						<a href="#" class="btn btn-primary d-none d-sm-inline-block dropdown-toggle " data-bs-toggle="dropdown">
-								<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-										<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-										<path d="M12 5l0 14"></path><path d="M5 12l14 0"></path>
-								</svg>
-								Create
-						</a>
-						<div class="dropdown-menu">
-							<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-simple-modal">
-								New Folder (Simple)
-							</a>
-							<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-advance-modal">
-								New Folder (Advance)
-							</a>
-							<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-submission-bin-modal">
-			Submission Bin
-			</a>
-			<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#upload-modal">
-			File Upload
-			</a>
-						</div>
-					</div>
-		{% endif %}
-
-		<a href="{% url 'accreditations:child-folder-recycle-bin' pk=pk %}" class="btn btn-green d-none d-sm-inline-block">
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
-						<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-						<path d="M4 7l16 0" />
-						<path d="M10 11l0 6" />
-						<path d="M14 11l0 6" />
-						<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-						<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-				</svg>
-				Recycle Bin
-		</a>
-	{% endif %}
-{% endblock page-title-actions %}
-
-{% block content %}
-	<div class="row row-cards">
-		{% if parent_folder.can_be_reviewed %}
-			{% include "accreditation-level-child-directory/main-page/partials/parent-approval-info.html" %}
-		{% endif %}
-
-
-		{% if is_chairman or has_access or user.is_superuser %}
-			{% if perms.Accreditation.view_instrument_level_folder %}
-				<div class="card rounded-3">
-					<div class="card-header">
-						<ul class="nav nav-tabs card-header-tabs bg-transparent rounded-3" data-bs-toggle="tabs">
-							<li class="nav-item">
-								<a href="#tabs-home-8" class="nav-link active" data-bs-toggle="tab">Folders</a>
-							</li>
-							<li class="nav-item">
-								<a href="#tabs-profile-8" class="nav-link" data-bs-toggle="tab">Files</a>
-							</li>
-						</ul>
-					</div>
-					<div class="card-body">
-						<div class="tab-content">
-							<div class="tab-pane fade active show" id="tabs-home-8">
-								<h4>Folders</h4>
-								{% include "accreditation-level-child-directory/main-page/folder-cards.html" %}
-							</div>
-
-							<div class="tab-pane fade" id="tabs-profile-8">
-								<h4>Files</h4>
-								{% include "accreditation-level-child-directory/main-page/file-cards.html" %}
-							</div>
-						</div>
-					</div>
-				</div>
-			{% endif %}
-	
-	
-		{% else %}
-			<div class="empty">
-				<div class="empty-header">403</div>
-				<p class="empty-title">Oops… You don't have access to this page</p>
-				<p class="empty-subtitle text-muted">
-					It seems you are not assigned to this area. Please contact your administrator for assistance.
-				</p>
-				<div class="empty-action">
-				<a href="{% url 'accreditations:instrument-level-directory' pk=parent_folder.instrument_level_id %}" class="btn btn-primary">
-					<!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
-					<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
-					Go back
+		{% if perms.Accreditation.add_instrument_level_folder or perms.Accreditation.add_files %}
+			<div class="dropdown">
+				<a href="#" class="btn btn-primary d-none d-sm-inline-block dropdown-toggle " data-bs-toggle="dropdown">
+						<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+								<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+								<path d="M12 5l0 14"></path><path d="M5 12l14 0"></path>
+						</svg>
+						Create
 				</a>
+				<div class="dropdown-menu">
+					{% if perms.Accreditation.add_instrument_level_folder %}
+						<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-simple-modal">
+							New Folder (Simple)
+						</a>
+						<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-advance-modal">
+							New Folder (Advance)
+						</a>
+						<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-submission-bin-modal">
+							Submission Bin
+						</a>
+					{% endif %}
+
+					{% if perms.Accreditation.add_files %}
+						<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#upload-modal">
+							File Upload
+						</a>
+					{% endif %}
+					
 				</div>
 			</div>
 		{% endif %}
 
-	</div>
+		{% if perms.Accreditation.delete_instrument_level_folder or perms.Accreditation.delete_files %}
+			<a href="{% url 'accreditations:child-folder-recycle-bin' pk=pk %}" class="btn btn-green d-none d-sm-inline-block">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+							<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+							<path d="M4 7l16 0" />
+							<path d="M10 11l0 6" />
+							<path d="M14 11l0 6" />
+							<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+							<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+					</svg>
+					Recycle Bin
+			</a>
+		{% endif %}
+
+	{% endif %}
+{% endblock page-title-actions %}
+
+{% block content %}
+	{% if perms.Accreditation.view_instrument_level_folder %}
+		<div class="row row-cards">
+			{% if parent_folder.can_be_reviewed %}
+				{% include "accreditation-level-child-directory/main-page/partials/parent-approval-info.html" %}
+			{% endif %}
+
+
+			{% if is_chairman or has_access or user.is_superuser %}
+				{% if perms.Accreditation.view_instrument_level_folder %}
+					<div class="card rounded-3">
+						<div class="card-header">
+							<ul class="nav nav-tabs card-header-tabs bg-transparent rounded-3" data-bs-toggle="tabs">
+								<li class="nav-item">
+									<a href="#tabs-home-8" class="nav-link active" data-bs-toggle="tab">Folders</a>
+								</li>
+								<li class="nav-item">
+									<a href="#tabs-profile-8" class="nav-link" data-bs-toggle="tab">Files</a>
+								</li>
+							</ul>
+						</div>
+						<div class="card-body">
+							<div class="tab-content">
+								<div class="tab-pane fade active show" id="tabs-home-8">
+									<h4>Folders</h4>
+									{% include "accreditation-level-child-directory/main-page/folder-cards.html" %}
+								</div>
+
+								<div class="tab-pane fade" id="tabs-profile-8">
+									<h4>Files</h4>
+									{% include "accreditation-level-child-directory/main-page/file-cards.html" %}
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endif %}
+		
+		
+			{% else %}
+				<div class="empty">
+					<div class="empty-header">403</div>
+					<p class="empty-title">Oops… You don't have access to this page</p>
+					<p class="empty-subtitle text-muted">
+						It seems you are not assigned to this area. Please contact your administrator for assistance.
+					</p>
+					<div class="empty-action">
+					<a href="{% url 'accreditations:instrument-level-directory' pk=parent_folder.instrument_level_id %}" class="btn btn-primary">
+						<!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
+						<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
+						Go back
+					</a>
+					</div>
+				</div>
+			{% endif %}
+
+		</div>
+	{% endif %}
 
 
 

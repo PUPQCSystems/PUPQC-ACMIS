@@ -16,8 +16,9 @@
 <!-- ACTION BUTTONS/ELEMENTS INLINE TO THE PAGE TITLE -->
 {% block page-title-actions %}
 		<input type="search" class="form-control d-inline-block w-9 me-3" placeholder="Search files or folders..."/>
-		{% if perms.Accreditation.add_instrument_level_area %}
+		{% if perms.Accreditation.add_instrument_level_folder or perms.Accreditation.add_files %}
 			  <div class="dropdown">
+
 				<a href="#" class="btn btn-primary d-none d-sm-inline-block dropdown-toggle " data-bs-toggle="dropdown">
 					<svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
 						<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -26,34 +27,42 @@
 					Create
 				</a>
 				<div class="dropdown-menu">
-				  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-simple-modal">
-					New Folder (Simple)
-				  </a>
-				  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-advance-modal">
-					New Folder (Advance)
-				  </a>
-				  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-submission-bin-modal">
-					Submission Bin
-				  </a>
+				{% if perms.Accreditation.add_instrument_level_folder %}
+					<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-simple-modal">
+						New Folder (Simple)
+					</a>
+					<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-advance-modal">
+						New Folder (Advance)
+					</a>
+					<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-submission-bin-modal">
+						Submission Bin
+					</a>
+				{% endif %}
+
+				{% if perms.Accreditation.add_files %}
 				  <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#upload-modal">
 					File Upload
 				  </a>
+				{% endif %}
 				  
 				</div>
 			  </div>
 		{% endif %}
 
-		<a href="{% url 'accreditations:parent-folder-recycle-bin' pk=pk %}" class="btn btn-green d-none d-sm-inline-block">
-			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
-				<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-				<path d="M4 7l16 0" />
-				<path d="M10 11l0 6" />
-				<path d="M14 11l0 6" />
-				<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-				<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-			</svg>
-			Recycle Bin
-		</a>
+
+		{% if perms.Accreditation.delete_instrument_level_folder or perms.Accreditation.delete_files %}
+			<a href="{% url 'accreditations:parent-folder-recycle-bin' pk=pk %}" class="btn btn-green d-none d-sm-inline-block">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash">
+					<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+					<path d="M4 7l16 0" />
+					<path d="M10 11l0 6" />
+					<path d="M14 11l0 6" />
+					<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+					<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+				</svg>
+				Recycle Bin
+			</a>
+		{% endif %}
 
 {% endblock page-title-actions %}
 
@@ -61,80 +70,80 @@
 	{% if perms.Accreditation.view_instrument_level_folder %}
 
 		{% if accred_program %}
-		<div class="row g-4 row-cards">
-			<div class="col-2">
-					<div class="subheader mb-2">Navigations</div>
-					<div class="list-group list-group-transparent mb-2">
-						<a class="list-group-item d-flex align-items-center" href="{% url "apis:exhibit-page" program_accred_pk=accred_program.id%}">
-							EXHIBITS
-						</a>
+			<div class="row g-4 row-cards">
+				<div class="col-2">
+						<div class="subheader mb-2">Navigations</div>
+						<div class="list-group list-group-transparent mb-2">
+							<a class="list-group-item d-flex align-items-center" href="{% url "apis:exhibit-page" program_accred_pk=accred_program.id%}">
+								EXHIBITS
+							</a>
 
-						<a class="list-group-item d-flex align-items-center" href="{% url "accreditations:accreditation-result-page" accred_program.id %}">
-							ACCREDITATION RESULT
-						</a>
-					</div>
-			</div>
-			<div class="row row-cards">
-				{% include "accreditation-level-parent-directory/main-page/accreditation-info.html" %}
+							{% if perms.Accreditation.view_accreditation_certificates %}
+								<a class="list-group-item d-flex align-items-center" href="{% url "accreditations:accreditation-result-page" accred_program.id %}">
+									ACCREDITATION RESULT
+								</a>
+							{% endif %}
+						</div>
+				</div>
+				<div class="row row-cards">
+					{% include "accreditation-level-parent-directory/main-page/accreditation-info.html" %}
 
-				<div class="card rounded-3">
-					<div class="card-header">
-						<ul class="nav nav-tabs card-header-tabs rounded-3 bg-transparent" data-bs-toggle="tabs">
-							<li class="nav-item">
-								<a href="#tabs-home-8" class="nav-link active" data-bs-toggle="tab">Folders</a>
-							</li>
-							<li class="nav-item">
-								<a href="#tabs-profile-8" class="nav-link" data-bs-toggle="tab">Files</a>
-							</li>
-						</ul>
-					</div>
-					<div class="card-body">
-						<div class="tab-content">
-							<div class="tab-pane fade active show" id="tabs-home-8">
-								<h4>Folders</h4>
-								{% include "accreditation-level-parent-directory/main-page/folder-cards.html" %}
-							</div>
-		
-							<div class="tab-pane fade" id="tabs-profile-8">
-								<h4>Files</h4>
-								{% include "accreditation-level-parent-directory/main-page/file-cards.html" %}
+					<div class="card rounded-3">
+						<div class="card-header">
+							<ul class="nav nav-tabs card-header-tabs rounded-3 bg-transparent" data-bs-toggle="tabs">
+								<li class="nav-item">
+									<a href="#tabs-home-8" class="nav-link active" data-bs-toggle="tab">Folders</a>
+								</li>
+								<li class="nav-item">
+									<a href="#tabs-profile-8" class="nav-link" data-bs-toggle="tab">Files</a>
+								</li>
+							</ul>
+						</div>
+						<div class="card-body">
+							<div class="tab-content">
+								<div class="tab-pane fade active show" id="tabs-home-8">
+									<h4>Folders</h4>
+									{% include "accreditation-level-parent-directory/main-page/folder-cards.html" %}
+								</div>
+			
+								<div class="tab-pane fade" id="tabs-profile-8">
+									<h4>Files</h4>
+									{% include "accreditation-level-parent-directory/main-page/file-cards.html" %}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 
+				</div>
 			</div>
-		</div>
 
 		{% else %}
-		<div class="card rounded-3">
-			<div class="card-header">
-				<ul class="nav nav-tabs card-header-tabs bg-transparent rounded-3" data-bs-toggle="tabs">
-					<li class="nav-item">
-						<a href="#tabs-home-8" class="nav-link active" data-bs-toggle="tab">Folders</a>
-					</li>
-					<li class="nav-item">
-						<a href="#tabs-profile-8" class="nav-link" data-bs-toggle="tab">Files</a>
-					</li>
-				</ul>
-			</div>
-			<div class="card-body">
-				<div class="tab-content">
-					<div class="tab-pane fade active show" id="tabs-home-8">
-						<h4>Folders</h4>
-						{% include "accreditation-level-parent-directory/main-page/folder-cards.html" %}
-					</div>
+			<div class="card rounded-3">
+				<div class="card-header">
+					<ul class="nav nav-tabs card-header-tabs bg-transparent rounded-3" data-bs-toggle="tabs">
+						<li class="nav-item">
+							<a href="#tabs-home-8" class="nav-link active" data-bs-toggle="tab">Folders</a>
+						</li>
+						<li class="nav-item">
+							<a href="#tabs-profile-8" class="nav-link" data-bs-toggle="tab">Files</a>
+						</li>
+					</ul>
+				</div>
+				<div class="card-body">
+					<div class="tab-content">
+						<div class="tab-pane fade active show" id="tabs-home-8">
+							<h4>Folders</h4>
+							{% include "accreditation-level-parent-directory/main-page/folder-cards.html" %}
+						</div>
 
-					<div class="tab-pane fade" id="tabs-profile-8">
-						<h4>Files</h4>
-						{% include "accreditation-level-parent-directory/main-page/file-cards.html" %}
+						<div class="tab-pane fade" id="tabs-profile-8">
+							<h4>Files</h4>
+							{% include "accreditation-level-parent-directory/main-page/file-cards.html" %}
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 		{% endif %}
-
-
 
 
 	{% endif %}
@@ -151,7 +160,7 @@
 
 
 {% block modal_content %}
-	{% if perms.Accreditation.add_instrument_level_area %}
+	{% if perms.Accreditation.add_instrument_level_folder or perms.Accreditation.add_files%}
 		{% include "accreditation-level-parent-directory/main-page/create-advance-modal.html" %}
 		{% include "accreditation-level-parent-directory/main-page/create-simple-modal.html" %}
 		{% include "accreditation-level-parent-directory/main-page/create-submission-bin-modal.html" %}

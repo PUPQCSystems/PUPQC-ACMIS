@@ -2,11 +2,11 @@
     {% if records %}
         <!-- For LOOP HERE-->
         {% for record, update_form, created_by, modified_by, assigned_users, user_not_assigned, converted_file_types in details %}
-        {% if accred_program  %}
-            <div class="col-sm-6 col-lg-4">
-        {% else %}
-            <div class="col-sm-4 col-lg-3">
-        {% endif %}
+            {% if accred_program  %}
+                <div class="col-sm-6 col-lg-4">
+            {% else %}
+                <div class="col-sm-4 col-lg-3">
+            {% endif %}
 
                 <div class="card rounded-4" onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
                     <div class="card-body">
@@ -34,11 +34,13 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end " id="dropdownMenu-{{ record.id }}">
-                                        {% if record.can_be_reviewed or record.is_submission_bin%}
-                                            <a class="dropdown-item position-relative" data-bs-toggle="modal" data-bs-target="#review-modal-{{ record.id }}">
-                                                Review
-                                                <span class="badge bg-green ms-2 badge-blink">Active</span>
-                                            </a>
+                                        {% if perms.Accreditation.change_instrument_level_folder %}
+                                            {% if record.can_be_reviewed or record.is_submission_bin%}
+                                                <a class="dropdown-item position-relative" data-bs-toggle="modal" data-bs-target="#review-modal-{{ record.id }}">
+                                                    Review
+                                                    <span class="badge bg-green ms-2 badge-blink">Active</span>
+                                                </a>
+                                            {% endif %}
                                         {% endif %}
 
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">Details</button>
@@ -56,10 +58,12 @@
                                         {% endif %}
 
           
-                                        <form method="POST" action="{% url 'accreditations:instrument-directory-archive' pk=record.id level_id=pk %}" id="archive-form-{{ record.id }}">
-                                            {% csrf_token %}
-                                            <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
-                                        </form>
+                                        {% if perms.Accreditation.delete_instrument_level_folder %}
+                                            <form method="POST" action="{% url 'accreditations:instrument-directory-archive' pk=record.id level_id=pk %}" id="archive-form-{{ record.id }}">
+                                                {% csrf_token %}
+                                                <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
+                                            </form>
+                                        {% endif %}
                         
                                     </div>
                                 </div>
@@ -239,22 +243,31 @@
           You can create a record if you like. Just click the 'create' button and save the details.
         </p>
         <div class="empty-action">
-            {% if perms.Accreditation.add_instrument_level_folder %}
+            {% if perms.Accreditation.add_instrument_level_folder or perms.Accreditation.add_files %}
                 <div class="dropdown">
-                    <a href="#" class="btn btn-primary d-none d-sm-inline-block dropdown-toggle " data-bs-toggle="dropdown">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <path d="M12 5l0 14"></path><path d="M5 12l14 0"></path>
-                        </svg>
-                        Create
-                    </a>
-                    <div class="dropdown-menu">
+
+                    {% if perms.Accreditation.add_instrument_level_folder %}
+                        <a href="#" class="btn btn-primary d-none d-sm-inline-block dropdown-toggle " data-bs-toggle="dropdown">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M12 5l0 14"></path><path d="M5 12l14 0"></path>
+                            </svg>
+                            Create
+                        </a>
+                        <div class="dropdown-menu">
                         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-simple-modal">
-                        New Folder (Simple)
+                            New Folder (Simple)
                         </a>
                         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-advance-modal">
-                        New Folder (Advance)
+                            New Folder (Advance)
                         </a>
+                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-submission-bin-modal">
+                            Submission Bin
+                        </a>
+                    {% endif %}
+
+        
+                    
                     </div>
                 </div>
 
@@ -262,7 +275,8 @@
             <a href="#" class="btn btn-primary d-none d-sm-inline-block dropdown-toggle " data-bs-toggle="dropdown"
                 data-bs-toggle="tooltip" 
                 data-bs-html="true" 
-                title="You do not have permission to create a new folder. Please contact the administrator.">
+                title="You do not have the permission to create a new folder. Please contact the system administrator."
+                disabled>
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                     <path d="M12 5l0 14"></path><path d="M5 12l14 0"></path>

@@ -8,7 +8,7 @@ from .forms import Create_InstrumentDirectory_Form, SubmissionBin_Form
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import authenticate
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 
 all_file_types = ['image/jpeg', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
@@ -17,6 +17,8 @@ all_file_types = ['image/jpeg', 'application/pdf', 'application/msword', 'applic
                     'text/plain', 'audio/mp3', 'video/mp4', 'audio/ogg', 'video/webm', 'application/zip', 'application/x-rar-compressed', 'text/csv', 'text/html', 'text/css', 
                     'application/javascript']
  
+@login_required
+@permission_required("Accreditation.view_instrument_level_folder", raise_exception=True)
 def landing_page(request, pk):
     submission_bin_record = instrument_level_folder.objects.get(id=pk)
     parent_pk = ''
@@ -63,6 +65,7 @@ def landing_page(request, pk):
     return render(request, 'accreditation-submission-bin/main-page/landing-page.html', context)
 
 @login_required
+@permission_required("Accreditation.add_instrument_level_folder", raise_exception=True)
 def create_submissionBin_parent(request, pk):
     submission_bin_form = SubmissionBin_Form(request.POST or None)
 
@@ -103,6 +106,7 @@ def create_submissionBin_parent(request, pk):
         return JsonResponse({'errors': submission_bin_form.errors}, status=400)
     
 @login_required
+@permission_required("Accreditation.add_instrument_level_folder", raise_exception=True)
 def create_submissionBin_child(request, pk):
     submission_bin_form = SubmissionBin_Form(request.POST or None)
     
@@ -144,6 +148,7 @@ def create_submissionBin_child(request, pk):
     
 
 @login_required
+@permission_required("Accreditation.change_instrument_level_folder", raise_exception=True)
 def update(request, pk):
     # Retrieve the type object with the given primary key (pk)
     try:
@@ -194,7 +199,8 @@ def update(request, pk):
             return JsonResponse({'errors': update_form.errors}, status=400)
         
 
-
+@login_required
+@permission_required("Accreditation.add_files", raise_exception=True)
 def create_files(request, pk):
         try:
             submission_bin = instrument_level_folder.objects.get(id=pk)
@@ -219,6 +225,20 @@ def create_files(request, pk):
                             file_path=request.FILES.get(f'files{file_num}')
                             
                         )
+
+                    # Create an instance of the ActivityLog model
+                    activity_log_entry = activity_log()
+
+                    # Set the attributes of the instance
+                    activity_log_entry.module = "INSTRUMENT LEVEL FOLDERS MODULE"
+                    activity_log_entry.action = "Uploaded file/s"
+                    activity_log_entry.type = "CREATE"
+                    activity_log_entry.datetime_acted =  timezone.now()
+                    activity_log_entry.acted_by = request.user
+                    # Set other attributes as needed
+
+                    # Save the instance to the database
+                    activity_log_entry.save()
                     messages.success(request, f'Files Uploaded successfully!') 
                     return JsonResponse({'status': 'success'}, status=200)
                 
@@ -228,7 +248,8 @@ def create_files(request, pk):
             else:
                 return JsonResponse({'error': 'Please attach a file before submitting the form.'}, status=400)
 
-
+@login_required
+@permission_required("Accreditation.add_files", raise_exception=True)
 def create_parent_folder_files(request, pk):
     if request.method == 'POST':
         length = request.POST.get('length')
@@ -246,12 +267,28 @@ def create_parent_folder_files(request, pk):
                     
                 )
 
+            # Create an instance of the ActivityLog model
+            activity_log_entry = activity_log()
+
+            # Set the attributes of the instance
+            activity_log_entry.module = "INSTRUMENT LEVEL FOLDERS MODULE"
+            activity_log_entry.action = "Uploaded file/s"
+            activity_log_entry.type = "CREATE"
+            activity_log_entry.datetime_acted =  timezone.now()
+            activity_log_entry.acted_by = request.user
+            # Set other attributes as needed
+
+            # Save the instance to the database
+            activity_log_entry.save()
+
             messages.success(request, f'Files Uploaded successfully!') 
             return JsonResponse({'status': 'success'}, status=200)
             
         else:
             return JsonResponse({'error': 'Please attach a file before submitting the form.'}, status=400)
         
+@login_required
+@permission_required("Accreditation.add_files", raise_exception=True)
 def create_child_folder_files(request, pk):
     if request.method == 'POST':
         length = request.POST.get('length')
@@ -271,6 +308,20 @@ def create_child_folder_files(request, pk):
             # Call this function to check if there are existing child records with 'rfr'or 'fr'
             check_status(pk)
 
+            # Create an instance of the ActivityLog model
+            activity_log_entry = activity_log()
+
+            # Set the attributes of the instance
+            activity_log_entry.module = "INSTRUMENT LEVEL FOLDERS MODULE"
+            activity_log_entry.action = "Uploaded file/s"
+            activity_log_entry.type = "CREATE"
+            activity_log_entry.datetime_acted =  timezone.now()
+            activity_log_entry.acted_by = request.user
+            # Set other attributes as needed
+
+            # Save the instance to the database
+            activity_log_entry.save()
+
             messages.success(request, f'Files Uploaded successfully!') 
             return JsonResponse({'status': 'success'}, status=200)
             
@@ -278,7 +329,9 @@ def create_child_folder_files(request, pk):
             return JsonResponse({'error': 'Please attach a file before submitting the form.'}, status=400)
         
         
+
 @login_required
+@permission_required("Accreditation.delete_files", raise_exception=True)
 def archive(request, pk, bin_id):
     # Gets the records who have this ID
     file_record = files.objects.get(id=pk)
@@ -294,8 +347,8 @@ def archive(request, pk, bin_id):
     activity_log_entry = activity_log()
 
     # Set the attributes of the instance
-    activity_log_entry.module = "SUBMISSION BIN MODULE"
-    activity_log_entry.action = "Archived a File"
+    activity_log_entry.module = "INSTRUMENT LEVEL FOLDERS MODULE"
+    activity_log_entry.action = f"Archived a file named {name}"
     activity_log_entry.type = "ARCHIVE"
     activity_log_entry.datetime_acted =  timezone.now()
     activity_log_entry.acted_by = request.user
@@ -312,6 +365,7 @@ def archive(request, pk, bin_id):
 # ------------------------------------------------------------------[ RECYCLE BIN PAGE CODES]------------------------------------------------------------------#
 
 @login_required
+@permission_required("Accreditation.delete_files", raise_exception=True)
 def recycle_bin(request, pk):
     uploaded_files = files.objects.filter(is_deleted= True, parent_directory=pk) #Getting all the data inside the Program table and storing it to the context variable
 
@@ -322,23 +376,24 @@ def recycle_bin(request, pk):
 
 
 @login_required
+@permission_required("Accreditation.delete_files", raise_exception=True)
 def restore(request, pk):
     # Gets the records who have this ID
-    folder_record =  files.objects.get(id=pk)
+    file_record =  files.objects.get(id=pk)
 
     #After getting that record, this code will restore it.
-    folder_record.modified_by = request.user
-    folder_record.deleted_at = None
-    folder_record.is_deleted=False
-    name = folder_record.file_name
-    folder_record.save()
+    file_record.modified_by = request.user
+    file_record.deleted_at = None
+    file_record.is_deleted=False
+    name = file_record.file_name
+    file_record.save()
 
     # Create an instance of the ActivityLog model
     activity_log_entry = activity_log()
 
     # Set the attributes of the instance
     activity_log_entry.module = "RECYCLE BIN MODULE"
-    activity_log_entry.action = "Restored a folder"
+    activity_log_entry.action = f"Restored a file named {name}"
     activity_log_entry.type = "RESTORE"
     activity_log_entry.datetime_acted =  timezone.now()
     activity_log_entry.acted_by = request.user
@@ -348,13 +403,13 @@ def restore(request, pk):
     activity_log_entry.save()
 
 
-    if folder_record.parent_directory:
-        pk = folder_record.parent_directory_id
+    if file_record.parent_directory:
+        pk = file_record.parent_directory_id
         messages.success(request, f'The file named {name} is successfully restored!') 
         return redirect('accreditations:submission-bin-recycle-bin-page', pk=pk)
 
-    elif folder_record.instrument_level:
-        pk = folder_record.instrument_level_id
+    elif file_record.instrument_level:
+        pk = file_record.instrument_level_id
         messages.success(request, f'The file named {name} is successfully restored!') 
         return redirect('accreditations:parent-folder-recycle-bin', pk=pk)
 
@@ -362,6 +417,7 @@ def restore(request, pk):
 
 
 @login_required
+@permission_required("Accreditation.delete_files", raise_exception=True)
 def destroy(request, pk):
     if request.method == 'POST':
         entered_password = request.POST.get('password')
@@ -371,6 +427,7 @@ def destroy(request, pk):
             if authenticate(email=user.email, password=entered_password):
                 # Gets the records who have this ID
                 file_record =  files.objects.get(id=pk)
+                name = file_record.file_name
 
                 #After getting that record, this code will delete it.
                 file_record.delete()
@@ -380,7 +437,7 @@ def destroy(request, pk):
 
                 # Set the attributes of the instance
                 activity_log_entry.module = "RECYCLE BIN MODULE"
-                activity_log_entry.action = "Permanently deleted a File"
+                activity_log_entry.action = f"Permanently deleted a file named {name}"
                 activity_log_entry.type = "DESTROY"
                 activity_log_entry.datetime_acted =  timezone.now()
                 activity_log_entry.acted_by = request.user
