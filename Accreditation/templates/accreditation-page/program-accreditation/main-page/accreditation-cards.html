@@ -19,7 +19,6 @@
                                 <span class="badge badge-outline text-green">Ongoing Actual Survey Visit</span>
                         
                             {% elif today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None %}
-                                <span class="badge badge-outline text-green">Certification</span>
 
                                 {% if record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None%}
                                     <span class="badge badge-outline text-blue">Awaiting Result</span>
@@ -35,7 +34,6 @@
                                 {% endif %}   
                 
                             {% elif today < record.revisit_date|date:"Y-m-d" %}
-                                <span class="badge badge-outline text-green">Certification Result</span>
 
                                 {% if record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None%}
                                         <span class="badge badge-outline text-blue">Awaiting Result</span>
@@ -73,7 +71,6 @@
                                 {% endif %}
                 
                                 {% if today > record.revisit_compliance_deadline|date:"Y-m-d" %}
-                                    <span class="badge badge-outline text-green">Certification Result</span>
                 
                                     {% if today > record.revisit_compliance_deadline|date:"Y-m-d" and record.is_done == False and record.is_failed == False %}
                                         <span class="badge badge-outline text-blue">Awaiting Result</span>

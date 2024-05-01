@@ -8,7 +8,7 @@
 			</div>
 			<div class="modal-body">
 				<div class="card">
-                    <div class="card-status-top bg-danger"></div>
+                    <div class="card-status-top bg-info"></div>
 					<div class="card-header">
 					    <h3 class="card-title">Program Accreditation Info</h3>
 					</div>
@@ -46,17 +46,83 @@
                             <div class="datagrid-item">
                                 <div class="datagrid-title">status</div>
                                 <div class="datagrid-content">
+                                    {% now "Y-m-d" as today %}
 
-                                    {% if record.status == "ONGOING"  %}
-                                        <span class="status status-blue">
-                                            {{record.status}}
-                                        </span>
-
-                                    {% elif   record.status == "DONE" %}
-                                        <span class="status status-green">
-                                            {{record.status}}
-                                        </span>
-
+                                    {% if  today >= record.mock_accred_date|date:"Y-m-d" and today < record.survey_visit_date|date:"Y-m-d" %}
+                                        <span class="badge badge-outline text-green">Ongoing Mock Accreditation</span>
+        
+                                    {% elif today == record.survey_visit_date|date:"Y-m-d" %}
+                                        <span class="badge badge-outline text-green">Ongoing Actual Survey Visit</span>
+                                
+                                    {% elif today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None %}
+        
+                                        {% if record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None%}
+                                            <span class="badge badge-outline text-blue">Awaiting Result</span>
+                        
+                                        {% elif record.revisit_date %}
+                                            <span class="badge badge-outline text-orange">Survey Revisit</span>
+                                        
+        
+                                        {% elif record.is_done == True and record.validity_date_from and record.validity_date_to and record.revisit_date == None %}
+                                            <span class="badge badge-outline text-green">{{ record.instrument_level.level}} Certified </span>
+                   
+        
+                                        {% endif %}   
+                        
+                                    {% elif today < record.revisit_date|date:"Y-m-d" %}
+        
+                                        {% if record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None%}
+                                                <span class="badge badge-outline text-blue">Awaiting Result</span>
+                        
+                                        {% elif record.revisit_date %}
+                                            <span class="badge badge-outline text-orange">Subject for Revisit</span>
+                                    
+                    
+                                        {% elif record.is_done == True and record.validity_date_from and record.validity_date_to and record.revisit_date == None %}
+                                            <span class="badge badge-outline text-green">{{ record.instrument_level.level}} Certified </span>
+                                
+                    
+                                        {% endif %}    
+                        
+                        
+                                    {% elif record.revisit_date %}
+                                        {% if today <= record.revisit_date|date:"Y-m-d" %}
+                                            <span class="badge badge-outline text-green">Survery Revisit</span>
+        
+                                            {% if today  == record.revisit_date|date:"Y-m-d" %}
+                                                <span class="badge badge-outline text-blue">{{ record.revisit_date|date:"F j, Y" }}</span>
+        
+                                            {% else %}
+                                                <span class="badge badge-outline text-muted">{{ record.revisit_date|date:"F j, Y" }}</span>
+                                            {% endif %}
+                                        {% endif %}
+        
+                                        {% if today <= record.revisit_compliance_deadline|date:"Y-m-d" and  today > record.revisit_date|date:"Y-m-d" %}
+                                            <span class="badge badge-outline text-green">Revisit Compliance Deadline</span>
+                                            {% if today  == record.revisit_compliance_deadline|date:"Y-m-d" %}
+                                                <span class="badge badge-outline text-warning">{{ record.revisit_compliance_deadline|date:"F j, Y" }}</span>
+                                            {% else %}
+                                                <span class="badge badge-outline text-muted">{{ record.revisit_compliance_deadline|date:"F j, Y" }}</span>
+                                            {% endif %}
+                                        {% endif %}
+                        
+                                        {% if today > record.revisit_compliance_deadline|date:"Y-m-d" %} 
+                                            {% if today > record.revisit_compliance_deadline|date:"Y-m-d" and record.is_done == False and record.is_failed == False %}
+                                                <span class="badge badge-outline text-blue">Awaiting Result</span>
+                    
+                                            {% elif record.is_done == True and record.is_failed == False and record.validity_date_from and record.validity_date_to %}
+                                                    <span class="badge badge-outline text-green">{{ record.instrument_level.level}} Certified</span>
+                               
+                                            {% elif record.is_done == True and record.is_failed == True %}
+                                                    <span class="badge badge-outline text-red"> Failed </span>
+                               
+                    
+                                            {% endif %}    
+                                        {% endif %}
+        
+                                    {% else %}
+                                    <span class="badge badge-outline text-blue">Ongoing Document Preparation</span>
+        
                                     {% endif %}
                                     
                                 </div>
