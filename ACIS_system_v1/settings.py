@@ -131,24 +131,24 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        'NAME': 'NEW-ACIS-Database',
-        'USER': 'ACIS',
-        'PASSWORD': 'acis' ,
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         'NAME': 'NEW-ACIS-Database',
+#         'USER': 'ACIS',
+#         'PASSWORD': 'acis' ,
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
 
 
 # Database settings for render deployment
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         default='postgresql://acmisdb_owner:Vj7SNqxk2Orw@ep-cool-frog-a1vcnry3.ap-southeast-1.aws.neon.tech/acmisdb?sslmode=require',
-#     )
-# }
+DATABASES = {
+    'default': dj_database_url.config(
+        default='postgresql://acmisdb_owner:Vj7SNqxk2Orw@ep-cool-frog-a1vcnry3.ap-southeast-1.aws.neon.tech/acmisdb?sslmode=require',
+    )
+}
 
 
 # Password validation
