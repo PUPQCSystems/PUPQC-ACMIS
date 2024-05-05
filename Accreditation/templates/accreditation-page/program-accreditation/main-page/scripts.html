@@ -70,7 +70,7 @@
 </script> 
 
 
-<script>
+{% comment %} <script>
     $(document).ready(function () {
         
         // On program selection change
@@ -118,6 +118,65 @@
                     error: function (error) {
                         console.log('Error:', error);
                     }
+                });
+            });
+  
+    });
+</script> {% endcomment %}
+
+
+<script>
+    $(document).ready(function () {
+        
+        // On program selection change
+        $('#id_program').change(function () {
+            var programId = $(this).val();
+
+            // Make an AJAX request to get instrument_level choices based on the selected program
+            $.ajax({
+                url: '/accreditation/filter-instrument-option/',  // Change this to the actual URL in your Django project
+                data: {'program_id': programId},
+                dataType: 'json',
+                success: function (data) {
+                    $('#id_instrument_level').empty();
+
+                    // Populate instrument_level options
+                    $.each(data.instrument_levels, function (key, value) {
+                        $('#id_instrument_level').append('<option value="' + key + '">' + value + '</option>');
+                    });
+                },
+               error: function(error) {
+                    // Check for the errors field in the JSON response
+                    toastr.error(error.responseJSON.errors);
+                    $('#id_instrument_level').empty();
+                        
+                }
+            });
+        });
+
+
+
+            // On program selection change
+            $('.edit-select-button').change(function () {
+                var programId = $(this).val();
+
+                // Make an AJAX request to get instrument_level choices based on the selected program
+                $.ajax({
+                    url: '/accreditation/filter-instrument-option/',  // Change this to the actual URL in your Django project
+                    data: {'program_id': programId},
+                    dataType: 'json',
+                    success: function (data) {
+                        $('.edit-instrument-button').empty();
+
+                        // Populate instrument_level options
+                        $.each(data.instrument_levels, function (key, value) {
+                            $('.edit-instrument-button').append('<option value="' + key + '">' + value + '</option>');
+                        });
+                    },
+                    error: function(error) {
+                        toastr.error(error.responseJSON.errors);
+                        $('.edit-instrument-button').empty();
+                }
                 });
             });
   

@@ -9,16 +9,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
-class InstrumentLevelList(PermissionRequiredMixin, View):
+class InstrumentLevelList(View):
     
-    # Permission for GET requests
-    permission_required = "Accreditation.view_instrument_level"
-
-    def get_permission_required(self):
-        # Dynamic permission for POST requests
-        if self.request.method == "POST":
-            return "Accreditation.add_instrument_level"
-        return super().get_permission_required()
 
     def get(self, request, pk):
         #Getting the data from the API
@@ -64,7 +56,7 @@ class InstrumentLevelList(PermissionRequiredMixin, View):
             return JsonResponse({'instrumentlevel_errors': instrumentlevel_form.errors, 'formset_errors': formset.errors}, status=400)
 
 @login_required
-@permission_required("Accreditation.change_instrument_level", raise_exception=True)
+# @permission_required("Accreditation.change_instrument_level", raise_exception=True)
 def update(request, pk):
 # Retrieve the type object with the given primary key (pk)
     try:
@@ -91,7 +83,7 @@ def update(request, pk):
             return JsonResponse({'errors': update_form.errors}, status=400)
         
 @login_required
-@permission_required("Accreditation.delete_instrument_level", raise_exception=True)
+# @permission_required("Accreditation.delete_instrument_level", raise_exception=True)
 def archive(request, ins_pk, pk):
     # Gets the records who have this ID
     accreditation_instrument = instrument_level.objects.get(id=pk)
@@ -107,7 +99,7 @@ def archive(request, ins_pk, pk):
 
 #------------------------------------------------------------[ ARCHIVE PAGE CODES ]------------------------------------------------------------#
 @login_required
-@permission_required("Accreditation.delete_instrument_level", raise_exception=True)
+# @permission_required("Accreditation.delete_instrument_level", raise_exception=True)
 def archive_landing(request, pk):
     records = instrument_level.objects.select_related('instrument').filter(instrument=pk, is_deleted= True)
 
@@ -123,7 +115,7 @@ def archive_landing(request, pk):
     return render(request, 'accreditation-instrument-level/archive-page/landing-page.html', context)
 
 @login_required
-@permission_required("Accreditation.delete_instrument_level", raise_exception=True)
+# @permission_required("Accreditation.delete_instrument_level", raise_exception=True)
 def restore(request, ins_pk, pk):
     # Gets the records who have this ID
     accreditation_instrumentlevel = instrument_level.objects.get(id=pk)
@@ -138,7 +130,7 @@ def restore(request, ins_pk, pk):
     return redirect('accreditations:instrument-level-archive-page', pk=ins_pk)
 
 @login_required
-@permission_required("Accreditation.delete_instrument_level", raise_exception=True)
+# @permission_required("Accreditation.delete_instrument_level", raise_exception=True)
 def destroy(request, pk):
     if request.method == 'POST':
         entered_password = request.POST.get('password')

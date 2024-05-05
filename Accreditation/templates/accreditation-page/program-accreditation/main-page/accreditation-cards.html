@@ -43,18 +43,18 @@
                     <a href="{% url 'accreditations:program-accreditation-area' pk=record.instrument_level.id %}">
                         <div class="h3 mb-3">{{ record.program.program_name }}</div>
                     </a>
-                    <div class="d-flex">
+                    {% comment %} <div class="d-flex">
                         <div class="subheader">Accreditation Progress</div>
                         <div class="ms-auto">
                             <span class="text-green d-inline-flex align-items-center lh-1 subheader">
                                 15% Done
                         </div>
-                    </div>
-                    <div class="progress progress-sm">
+                    </div> {% endcomment %}
+                    {% comment %} <div class="progress progress-sm">
                         <div class="progress-bar bg-primary" style="width: 15%" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" aria-label="15% Complete">
                             <span class="visually-hidden">15% Complete</span>
                         </div>
-                    </div>
+                    </div> {% endcomment %}
                 </div>
             </div>
         </div>
