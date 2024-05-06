@@ -169,7 +169,7 @@
                                         <button class="dropdown-item edit-button"  data-id={{ record.id }} data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>           
                                     {% endif %}
 
-                                    {% if perms.Accreditation.view_program_accreditation %}
+                                    {% if perms.Accreditation.delete_program_accreditation %}
                                         <form method="POST" action="{% url 'accreditations:accreditation-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
                                             {% csrf_token %}
                                             <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
