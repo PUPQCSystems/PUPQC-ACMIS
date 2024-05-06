@@ -21,7 +21,7 @@
                             {% elif today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None %}
 
                                 {% if record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None%}
-                                    <span class="badge badge-outline text-blue">Awaiting Result</span>
+                                    <span class="badge badge-outline text-blue badge-blink">Awaiting Result</span>
                 
                                 {% elif record.revisit_date %}
                                     <span class="badge badge-outline text-orange">Survey Revisit</span>
@@ -33,10 +33,10 @@
 
                                 {% endif %}   
                 
-                            {% elif today < record.revisit_date|date:"Y-m-d" %}
+                            {% elif today < record.revisit_compliance_deadline|date:"Y-m-d" %}
 
-                                {% if record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None%}
-                                        <span class="badge badge-outline text-blue">Awaiting Result</span>
+                                {% if record.is_done == False and today > record.revisit_compliance_deadline|date:"Y-m-d" and record.revisit_date == None%}
+                                        <span class="badge badge-outline text-blue badge-blink">Awaiting Result</span>
                 
                                 {% elif record.revisit_date %}
                                     <span class="badge badge-outline text-orange">Subject for Revisit</span>
@@ -50,30 +50,31 @@
                 
                 
                             {% elif record.revisit_date %}
-                                {% if today <= record.revisit_date|date:"Y-m-d" %}
+
+                                {% if today == record.revisit_compliance_deadline|date:"Y-m-d" and today < record.revisit_date|date:"Y-m-d" %}
+                                    <span class="badge badge-outline text-green">Revisit Compliance Deadline</span>
+                                    {% if today  == record.revisit_compliance_deadline|date:"Y-m-d" %}
+                                        <span class="badge badge-outline text-warning badge-blink">{{ record.revisit_compliance_deadline|date:"F j, Y" }}</span>
+                                    {% else %}
+                                        <span class="badge badge-outline text-muted">{{ record.revisit_compliance_deadline|date:"F j, Y" }}</span>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if today <= record.revisit_date|date:"Y-m-d" and today > record.revisit_compliance_deadline|date:"Y-m-d" %}
                                     <span class="badge badge-outline text-green">Survery Revisit</span>
 
                                     {% if today  == record.revisit_date|date:"Y-m-d" %}
-                                        <span class="badge badge-outline text-blue">{{ record.revisit_date|date:"F j, Y" }}</span>
+                                        <span class="badge badge-outline text-blue badge-blink">{{ record.revisit_date|date:"F j, Y" }}</span>
 
                                     {% else %}
                                         <span class="badge badge-outline text-muted">{{ record.revisit_date|date:"F j, Y" }}</span>
                                     {% endif %}
                                 {% endif %}
-
-                                {% if today <= record.revisit_compliance_deadline|date:"Y-m-d" and  today > record.revisit_date|date:"Y-m-d" %}
-                                    <span class="badge badge-outline text-green">Revisit Compliance Deadline</span>
-                                    {% if today  == record.revisit_compliance_deadline|date:"Y-m-d" %}
-                                        <span class="badge badge-outline text-warning">{{ record.revisit_compliance_deadline|date:"F j, Y" }}</span>
-                                    {% else %}
-                                        <span class="badge badge-outline text-muted">{{ record.revisit_compliance_deadline|date:"F j, Y" }}</span>
-                                    {% endif %}
-                                {% endif %}
                 
-                                {% if today > record.revisit_compliance_deadline|date:"Y-m-d" %}
+                                {% if today > record.revisit_date|date:"Y-m-d" %}
                 
                                     {% if today > record.revisit_compliance_deadline|date:"Y-m-d" and record.is_done == False and record.is_failed == False %}
-                                        <span class="badge badge-outline text-blue">Awaiting Result</span>
+                                        <span class="badge badge-outline text-blue badge-blink">Awaiting Result</span>
             
                                     {% elif record.is_done == True and record.is_failed == False and record.validity_date_from and record.validity_date_to %}
                                             <span class="badge badge-outline text-green">{{ record.instrument_level.level}} Certified</span>

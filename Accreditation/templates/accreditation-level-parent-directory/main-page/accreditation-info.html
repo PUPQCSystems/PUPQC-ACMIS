@@ -72,7 +72,7 @@
 				<ul>
 					<li class="small">Mock Accreditation</li>
 					{% if today  >= accred_program.mock_accred_date|date:"Y-m-d" %}
-						<li class="small"><span class="badge badge-outline text-warning">{{ accred_program.mock_accred_date|date:"F j, Y" }}</span>
+						<li class="small"><span class="badge badge-outline text-blue">{{ accred_program.mock_accred_date|date:"F j, Y" }}</span>
 						</li>
 					{% else %}
 						<li class="small"><span class="badge badge-outline text-muted">{{ accred_program.mock_accred_date|date:"F j, Y" }}</span>
@@ -107,7 +107,7 @@
 			{% if today > accred_program.survey_visit_date|date:"Y-m-d" and accred_program.revisit_date == None %}
 				<li class="step-item active">
 
-            {% elif today < accred_program.revisit_date|date:"Y-m-d" %}
+            {% elif today < accred_program.revisit_compliance_deadline|date:"Y-m-d" %}
                 <li class="step-item active">
 
 			{% else %}
@@ -118,7 +118,7 @@
 
 					{% if accred_program.is_done == False and today > accred_program.survey_visit_date|date:"Y-m-d" and accred_program.revisit_date == None%}
 						<li class="small">
-							<span class="badge badge-outline text-blue small">Awaiting Result</span>
+							<span class="badge badge-outline text-blue badge-blink small">Awaiting Result</span>
 						</li>
 
 					{% elif accred_program.revisit_date %}
@@ -138,7 +138,31 @@
 
 
 			{% if accred_program.revisit_date %}
-                {% if today <= accred_program.revisit_date|date:"Y-m-d" or today < accred_program.revisit_compliance_deadline|date:"Y-m-d" %}
+
+				{% if today >= accred_program.revisit_compliance_deadline|date:"Y-m-d" and today < accred_program.revisit_date|date:"Y-m-d" %}
+					<li class="step-item active">
+				{% else %}
+					<li class="step-item">
+				{% endif %}
+
+					<ul>
+						<li class="small">Compliance Deadline</li>
+						{% if today  >= accred_program.revisit_compliance_deadline|date:"Y-m-d" %}
+							<li class="small">	
+								<span class="badge badge-outline text-blue small">{{ accred_program.revisit_compliance_deadline|date:"F j, Y" }}</span>
+							</li>
+						
+						{% else %}
+							<li class="small">	
+								<span class="badge badge-outline text-muted small">{{ accred_program.revisit_compliance_deadline|date:"F j, Y" }}</span>
+							</li>
+
+						{% endif %}
+					</ul>
+				</li>
+
+
+				{% if today == accred_program.revisit_date|date:"Y-m-d" and today > accred_program.revisit_compliance_deadline|date:"Y-m-d" %}
                     <li class="step-item active">
                 {% else %}
                     <li class="step-item">
@@ -161,31 +185,8 @@
                     </li>
 
 
-				{% if today == accred_program.revisit_compliance_deadline|date:"Y-m-d" and today > accred_program.revisit_date|date:"Y-m-d" %}
-                    <li class="step-item active">
-                {% else %}
-                    <li class="step-item">
-                {% endif %}
 
-                        <ul>
-                            <li class="small">Compliance Deadline</li>
-                            {% if today  >= accred_program.revisit_compliance_deadline|date:"Y-m-d" %}
-								<li class="small">	
-									<span class="badge badge-outline text-warning small">{{ accred_program.revisit_compliance_deadline|date:"F j, Y" }}</span>
-								</li>
-							
-                            {% else %}
-								<li class="small">	
-									<span class="badge badge-outline text-muted small">{{ accred_program.revisit_compliance_deadline|date:"F j, Y" }}</span>
-								</li>
-
-                            {% endif %}
-                        </ul>
-                    </li>
-
-
-
-                {% if today > accred_program.revisit_compliance_deadline|date:"Y-m-d" %}
+                {% if today >  accred_program.revisit_date|date:"Y-m-d" %}
                     <li class="step-item active">
                 {% else %}
                     <li class="step-item">
@@ -193,9 +194,9 @@
 					<ul>
 						<li class="small">Certification</li>
 	
-						{% if today > accred_program.revisit_compliance_deadline|date:"Y-m-d" and accred_program.is_done == False and accred_program.is_failed == False %}
+						{% if today > accred_program.revisit_date|date:"Y-m-d" and accred_program.is_done == False and accred_program.is_failed == False %}
 							<li class="small">	
-								<span class="badge badge-outline text-blue small">Awaiting Result</span>
+								<span class="badge badge-outline text-blue small badge-blink">Awaiting Result</span>
 							</li>
 						{% elif accred_program.is_done == True and accred_program.is_failed == False and accred_program.validity_date_from and accred_program.validity_date_to%}
 							<li class="small">

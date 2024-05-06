@@ -436,8 +436,8 @@ class RevisitResult_Form(forms.ModelForm):
 
         # New validation
         if revisit_date and revisit_compliance_deadline:
-            if revisit_date >= revisit_compliance_deadline:
-                raise ValidationError("Revisit compliance deadline must be after the revisit date.")
+            if revisit_compliance_deadline >= revisit_date:
+                raise ValidationError("The Revisit Date must be after the Revisit Compliance Deadline.")
 
         return cleaned_data
     
