@@ -96,10 +96,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
-                                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
-                                    {% if perms.Accreditation.change_program_accreditation %}
-                                        <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>
-                                    {% endif %}
+                                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">Details</button>
 
                                     {% if perms.Accreditation.delete_program_accreditation %}
                                         <a  href={% url 'accreditations:accreditation-restore' pk=record.id %} class="dropdown-item">Restore</a>
@@ -114,7 +111,7 @@
 
                     </div>
 
-                    <a href="{% url 'accreditations:instrument-level-directory' pk=record.instrument_level.id %}">
+                    <a class="" href="#" data-bs-toggle="modal" data-bs-target="#restore-modal-{{record.id}}">
                         <div class="h3 mb-3">{{ record.program.program_name }}</div>
                     </a>
                     <div class="d-flex">
@@ -142,10 +139,8 @@
         </div>
 
         {% include "accreditation-page/program-accreditation/main-page/view-modal.html" %}
+        {% include "accreditation-page/program-accreditation/archive-page/restore-modal.html" %}
 
-        {% if perms.Accreditation.change_program_accreditation %}
-            {% include "accreditation-page/program-accreditation/main-page/edit-modal.html" %}
-        {% endif %}
 
     {% endfor %}
 </div>

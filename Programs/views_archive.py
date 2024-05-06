@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 #-----------------------------[Archive Page Functions]----------------------------#
 @login_required
-@permission_required("Programs.change_programs | Programs.delete_programs", raise_exception=True)
+@permission_required("Programs.delete_programs", raise_exception=True)
 def landing_page(request):
     records = Programs.objects.filter(is_deleted=True)
 

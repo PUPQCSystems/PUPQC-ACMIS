@@ -1,0 +1,35 @@
+<div class="modal modal-blur fade" id="restore-modal-{{record.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <form class="modal-content"
+        method="POST"
+        action="{% url 'accreditations:accreditation-restore' pk=record.id %}"
+      >
+      {% csrf_token %}
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-success"></div>
+        <div class="modal-body text-center py-4">
+          <!-- Download SVG icon from http://tabler-icons.io/i/circle-check -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-restore icon-lg text-green">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M3.06 13a9 9 0 1 0 .49 -4.087" />
+            <path d="M3 4.001v5h5" />
+            <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+          </svg>
+          <h3>This accreditation record is in the recycle bin.</h3>
+          <div class="text-muted">To view its contents, you'll need to restore it from the recycle bin.</div>
+        </div>
+        <div class="modal-footer">
+          <div class="w-100">
+            <div class="row">
+              <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">
+                  Cancel
+                </a></div>
+              <div class="col"><button type="submit" class="btn btn-success w-100">
+                  Restore
+                </button></div>
+            </div>
+          </div>
+        </div>
+    </form>
+    </div>
+  </div>

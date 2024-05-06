@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
-from Accreditation.views_instrument_folder import check_status
+from Accreditation.views_instrument_folder import calculate_progress, check_status, parent_calculate_progress
 from Users.models import activity_log
 from .models import files, instrument_level, instrument_level_folder #Import the model for data retieving
 from .forms import Create_InstrumentDirectory_Form, ReviewUploadBin_Form, SubmissionBin_Form
 from django.contrib import messages
 from django.utils import timezone
+from . import views_instrument_folder
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required, permission_required
 
@@ -100,6 +101,24 @@ def create_submissionBin_parent(request, pk):
         # Save the instance to the database
         activity_log_entry.save()
 
+        new_record_id = submission_bin_form.instance.id
+        folder = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=new_record_id)
+        if folder.parent_directory_id:
+            # Call this function to check if there are existing child records with 'rfr'
+            check_status(folder.parent_directory_id)
+            calculate_progress(folder.parent_directory_id)
+
+        elif folder.parent_directory_id == None and folder.instrument_level_id:
+            parent_calculate_progress(folder.instrument_level_id)
+
+        if folder.parent_directory_id:
+            # Call this function to check if there are existing child records with 'rfr'
+            check_status(folder.parent_directory_id)
+            calculate_progress(folder.parent_directory_id)
+
+        elif folder.parent_directory_id == None and folder.instrument_level_id:
+            parent_calculate_progress(folder.instrument_level_id)
+
  
         messages.success(request, f'The Submission Bin is successfully created!') 
         return JsonResponse({'status': 'success'}, status=200)
@@ -142,6 +161,18 @@ def create_submissionBin_child(request, pk):
         activity_log_entry.save()
 
  
+        new_record_id = submission_bin_form.instance.id
+        folder = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=new_record_id)
+        if folder.parent_directory_id:
+            # Call this function to check if there are existing child records with 'rfr'
+            check_status(folder.parent_directory_id)
+            calculate_progress(folder.parent_directory_id)
+
+        elif folder.parent_directory_id == None and folder.instrument_level_id:
+            parent_calculate_progress(folder.instrument_level_id)
+
+
+
         messages.success(request, f'The Submission Bin is successfully created!') 
         return JsonResponse({'status': 'success'}, status=200)
     else:
@@ -242,6 +273,17 @@ def create_files(request, pk):
 
                     # Save the instance to the database
                     activity_log_entry.save()
+
+                    if submission_bin.parent_directory_id:
+                        # Call this function to check if there are existing child records with 'rfr'
+                        check_status(submission_bin.parent_directory_id)
+                        calculate_progress(submission_bin.parent_directory_id)
+
+                    elif submission_bin.parent_directory_id == None and submission_bin.instrument_level_id:
+                        parent_calculate_progress(submission_bin.instrument_level_id)
+
+
+                    
                     messages.success(request, f'Files Uploaded successfully!') 
                     return JsonResponse({'status': 'success'}, status=200)
                 
@@ -283,6 +325,11 @@ def create_parent_folder_files(request, pk):
 
             # Save the instance to the database
             activity_log_entry.save()
+            
+        
+            parent_calculate_progress(pk)
+
+
 
             messages.success(request, f'Files Uploaded successfully!') 
             return JsonResponse({'status': 'success'}, status=200)
@@ -308,8 +355,6 @@ def create_child_folder_files(request, pk):
                     status="fr"
                     
                 )
-            # Call this function to check if there are existing child records with 'rfr'or 'fr'
-            check_status(pk)
 
             # Create an instance of the ActivityLog model
             activity_log_entry = activity_log()
@@ -324,6 +369,20 @@ def create_child_folder_files(request, pk):
 
             # Save the instance to the database
             activity_log_entry.save()
+
+
+            folder = instrument_level_folder.objects.get(id=pk)
+            folder.status = 'fr'
+            folder.save()
+
+            if folder.parent_directory_id:
+                # Call this function to check if there are existing child records with 'rfr'
+                check_status(folder.parent_directory_id)
+                calculate_progress(folder.parent_directory_id)
+
+            elif folder.parent_directory_id == None and folder.instrument_level_id:
+                parent_calculate_progress(folder.instrument_level_id)
+            
 
             messages.success(request, f'Files Uploaded successfully!') 
             return JsonResponse({'status': 'success'}, status=200)
@@ -359,6 +418,7 @@ def archive(request, pk, bin_id):
 
     # Save the instance to the database
     activity_log_entry.save()
+    
 
     messages.success(request, f'The file named "{name}" is successfully archived!') 
     return redirect('accreditations:submission-bin-page', pk=bin_id)
@@ -404,6 +464,15 @@ def restore(request, pk):
 
     # Save the instance to the database
     activity_log_entry.save()
+
+
+    if file_record.parent_directory_id:
+        # Call this function to check if there are existing child records with 'rfr'
+        check_status(file_record.parent_directory_id)
+        calculate_progress(file_record.parent_directory_id)
+
+    elif file_record.parent_directory_id == None and file_record.instrument_level_id:
+        parent_calculate_progress(file_record.instrument_level_id)
 
 
     if file_record.parent_directory:
@@ -477,6 +546,10 @@ def change_to_reviewable_file(request, pk):
         if file_record.parent_directory_id:
             # Call this function to check if there are existing child records with 'rfr'
             check_status(file_record.parent_directory_id)
+            calculate_progress(file_record.parent_directory_id)
+
+        elif file_record.parent_directory_id == None and file_record.instrument_level_id:
+            parent_calculate_progress(file_record.instrument_level_id)
 
 
         messages.success(request, f'File is successfully change to reviewable file!')
@@ -506,8 +579,13 @@ def change_to_not_reviewable_file(request, pk):
         if file_record.parent_directory_id:
             # Call this function to check if there are existing child records with 'rfr'
             check_status(file_record.parent_directory_id)
+            calculate_progress(file_record.parent_directory_id)
+
+        elif file_record.parent_directory_id == None and file_record.instrument_level_id:
+            parent_calculate_progress(file_record.instrument_level_id)
 
         messages.success(request, f'File is successfully change to unreviewable file!')
+        
         if file_record.parent_directory_id == None and file_record.instrument_level_id:
             return redirect('accreditations:submission-bin-page', pk=file_record.instrument_level_id)
         else:

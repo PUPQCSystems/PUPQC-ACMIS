@@ -140,7 +140,6 @@ class files(models.Model):
 
     def rename_save(self, *args, **kwargs):
         new_file_name = self.file_name  
-        print('HAHAHAHAHA:', new_file_name)
         old_file_path = self.file_path.name
 
         # Rename with extension preservation:

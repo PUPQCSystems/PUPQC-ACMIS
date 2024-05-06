@@ -6,8 +6,8 @@ from django.utils import timezone
  # Create your models here.
 
 class Programs(models.Model):
-    program_name = models.CharField(max_length=100, unique=True)
-    abbreviation = models.CharField(max_length=10)
+    program_name = models.CharField(max_length=300, unique=True)
+    abbreviation = models.CharField(max_length=50)
     description = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey( settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='created_programs')
     created_at = models.DateTimeField(default=timezone.now)
@@ -19,3 +19,4 @@ class Programs(models.Model):
 
     def __str__(self):
         return '%s %s' % (self.program_name, '(' + self.abbreviation + ')')
+    

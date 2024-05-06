@@ -111,9 +111,6 @@ def create(request, pk):
             create_form.instance.is_advance = True
         create_form.save()
 
-        new_record_id = create_form.instance.id
-        new_folder_obj = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=new_record_id)
-
         # Create an instance of the ActivityLog model
         activity_log_entry = activity_log()
 
@@ -128,7 +125,15 @@ def create(request, pk):
         # Save the instance to the database
         activity_log_entry.save()
 
-        
+        new_record_id = create_form.instance.id
+        folder = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=new_record_id)
+        if folder.parent_directory_id:
+            # Call this function to check if there are existing child records with 'rfr'
+            check_status(folder.parent_directory_id)
+            calculate_progress(folder.parent_directory_id)
+
+        elif folder.parent_directory_id == None and folder.instrument_level_id:
+            parent_calculate_progress(folder.instrument_level_id)
 
         
         messages.success(request, f'{name} is successfully created!') 
@@ -193,6 +198,15 @@ def update(request, pk):
             # Save the instance to the database
             activity_log_entry.save()
 
+          
+            if folder_record.parent_directory_id:
+                # Call this function to check if there are existing child records with 'rfr'
+                check_status(folder_record.parent_directory_id)
+                calculate_progress(folder_record.parent_directory_id)
+
+            elif folder_record.parent_directory_id == None and folder_record.instrument_level_id:
+                parent_calculate_progress(folder_record.instrument_level_id)
+
             # Provide a success message as a JSON response
             messages.success(request, f'{name} is successfully updated!') 
             return JsonResponse({'status': 'success'}, status=200)
@@ -215,8 +229,6 @@ def archive(request, pk, level_id):
     name = folder_record.name
     folder_record.save()
 
-
-
     # Create an instance of the ActivityLog model
     activity_log_entry = activity_log()
 
@@ -230,6 +242,16 @@ def archive(request, pk, level_id):
 
     # Save the instance to the database
     activity_log_entry.save()
+
+
+
+    if folder_record.parent_directory_id:
+        # Call this function to check if there are existing child records with 'rfr'
+        check_status(folder_record.parent_directory_id)
+        calculate_progress(folder_record.parent_directory_id)
+
+    elif folder_record.parent_directory_id == None and folder_record.instrument_level_id:
+        parent_calculate_progress(folder_record.instrument_level_id)
 
     messages.success(request, f'The folder named "{name}" is successfully archived!') 
     return redirect('accreditations:instrument-level-directory', pk=level_id)
@@ -333,10 +355,6 @@ def create_child(request, pk):
 
         create_form.save()
 
-        # Get the ID of newly created Folder
-        new_record_id = create_form.instance.id
-        new_folder_obj = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=new_record_id)
-
         name = create_form.cleaned_data.get('name')
 
         # Create an instance of the ActivityLog model
@@ -352,6 +370,19 @@ def create_child(request, pk):
 
         # Save the instance to the database
         activity_log_entry.save()
+
+
+       # Get the ID of newly created Folder
+        new_record_id = create_form.instance.id
+        folder = instrument_level_folder.objects.get(id=new_record_id)
+
+        if folder.parent_directory_id:
+            # Call this function to check if there are existing child records with 'rfr'
+            check_status(folder.parent_directory_id)
+            calculate_progress(folder.parent_directory_id)
+
+        elif folder.parent_directory_id == None and folder.instrument_level_id:
+            parent_calculate_progress(folder.instrument_level_id)
 
         
         messages.success(request, f'{name} is successfully created!') 
@@ -388,6 +419,15 @@ def archive_child(request, pk, parent_id):
 
     # Save the instance to the database
     activity_log_entry.save()
+
+    if folder_record.parent_directory_id:
+        # Call this function to check if there are existing child records with 'rfr'
+        check_status(folder_record.parent_directory_id)
+        calculate_progress(folder_record.parent_directory_id)
+
+    elif folder_record.parent_directory_id == None and folder_record.instrument_level_id:
+        parent_calculate_progress(folder_record.instrument_level_id)
+
 
     messages.success(request, f'The folder named "{name}" is successfully archived!') 
     return redirect('accreditations:instrument-level-child-directory', pk=parent_id)
@@ -453,6 +493,15 @@ def restore_parent(request, ins_pk ,pk):
     activity_log_entry.save()
 
 
+    if folder_record.parent_directory_id:
+        # Call this function to check if there are existing child records with 'rfr'
+        check_status(folder_record.parent_directory_id)
+        calculate_progress(folder_record.parent_directory_id)
+
+    elif folder_record.parent_directory_id == None and folder_record.instrument_level_id:
+        parent_calculate_progress(folder_record.instrument_level_id)
+
+
     messages.success(request, f'{name} The Folder is successfully restored!') 
     return redirect('accreditations:parent-folder-recycle-bin', pk=ins_pk)
 
@@ -484,7 +533,16 @@ def restore_child(request, parent_pk ,pk):
     # Save the instance to the database
     activity_log_entry.save()
 
-    messages.success(request, f'{name} The Folder is successfully restored!') 
+
+    if folder_record.parent_directory_id:
+        # Call this function to check if there are existing child records with 'rfr'
+        check_status(folder_record.parent_directory_id)
+        calculate_progress(folder_record.parent_directory_id)
+
+    elif folder_record.parent_directory_id == None and folder_record.instrument_level_id:
+        parent_calculate_progress(folder_record.instrument_level_id)
+
+    messages.success(request, f'The Folder named {name} is successfully restored!') 
     return redirect('accreditations:child-folder-recycle-bin', pk=parent_pk)
 
 @login_required
@@ -515,9 +573,18 @@ def restore_child_file(request, pk):
     activity_log_entry.save()
 
 
-    pk = file_record.parent_directory_id
+
+    if file_record.parent_directory_id:
+        # Call this function to check if there are existing child records with 'rfr'
+        check_status(file_record.parent_directory_id)
+        calculate_progress(file_record.parent_directory_id)
+
+    elif file_record.parent_directory_id == None and file_record.instrument_level_id:
+        parent_calculate_progress(file_record.instrument_level_id)
+
+
     messages.success(request, f'The file named {name} is successfully restored!') 
-    return redirect('accreditations:child-folder-recycle-bin', pk=pk)
+    return redirect('accreditations:child-folder-recycle-bin', pk=file_record.parent_directory_id)
 
 
 
@@ -589,6 +656,15 @@ def archive_files(request, pk):
     # Save the instance to the database
     activity_log_entry.save()
 
+
+    if file_record.parent_directory_id:
+        # Call this function to check if there are existing child records with 'rfr'
+        check_status(file_record.parent_directory_id)
+        calculate_progress(file_record.parent_directory_id)
+
+    elif file_record.parent_directory_id == None and file_record.instrument_level_id:
+        parent_calculate_progress(file_record.instrument_level_id)
+
     if file_record.instrument_level:
         messages.success(request, f'The file named "{name}" is successfully archived!') 
         return redirect('accreditations:instrument-level-directory', pk=file_record.instrument_level_id)
@@ -621,6 +697,9 @@ def create_folder_review(request, pk):
                 review_form.instance.progress_percentage = 100.00
 
             elif review == 'rfr':
+                review_form.instance.progress_percentage = 0.00
+
+            elif review == 'fr':
                 review_form.instance.progress_percentage = 0.00
 
             review_form.save()
@@ -722,6 +801,10 @@ def change_to_reviewable_file(request, pk):
         if file_record.parent_directory_id:
             # Call this function to check if there are existing child records with 'rfr'
             check_status(file_record.parent_directory_id)
+            calculate_progress(file_record.parent_directory_id)
+
+        elif file_record.parent_directory_id == None and file_record.instrument_level_id:
+            parent_calculate_progress(file_record.instrument_level_id)
 
 
         messages.success(request, f'File is successfully change to reviewable file!')
@@ -751,6 +834,11 @@ def change_to_not_reviewable_file(request, pk):
         if file_record.parent_directory_id:
             # Call this function to check if there are existing child records with 'rfr'
             check_status(file_record.parent_directory_id)
+            calculate_progress(file_record.parent_directory_id)
+
+        elif file_record.parent_directory_id == None and file_record.instrument_level_id:
+            parent_calculate_progress(file_record.instrument_level_id)
+
 
         messages.success(request, f'File is successfully change to unreviewable file!')
         if file_record.parent_directory_id == None and file_record.instrument_level_id:
@@ -864,11 +952,19 @@ def parent_calculate_progress(instrument_level_id):
     # Get the sum of the progress percentage of all files and folders
     for folder in child_folders:
         if folder.has_progress_bar and folder.can_be_reviewed:
-             folder_percentage_sum += float(folder.progress_percentage)
+            if folder.progress_percentage:
+                folder_percentage_sum += float(folder.progress_percentage)
+
+            else:
+                folder_percentage_sum += 0.00
 
 
         elif folder.has_progress_bar == True and folder.can_be_reviewed == False:
-            folder_percentage_sum += float(folder.progress_percentage)
+            if folder.progress_percentage:
+                folder_percentage_sum += float(folder.progress_percentage)
+
+            else:
+                folder_percentage_sum += 0.00
 
         elif folder.has_progress_bar == False and folder.can_be_reviewed:
             if folder.status == 'approve':
@@ -895,7 +991,11 @@ def parent_calculate_progress(instrument_level_id):
 
     overall_percentage_sum = file_percentage_sum + folder_percentage_sum
 
-    progress_percentage = overall_percentage_sum / overall_percentage * 100
+    if overall_percentage_sum:
+        progress_percentage = overall_percentage_sum / overall_percentage * 100
+
+    else:
+        progress_percentage = 0.00
     
     instrument_level_record.progress_percentage = progress_percentage
 
@@ -932,7 +1032,11 @@ def calculate_progress(folder_id):
     # Get the sum of the progress percentage of all files and folders
     for folder in child_folders:
         if folder.has_progress_bar and folder.can_be_reviewed:
-             folder_percentage_sum += float(folder.progress_percentage)
+            if folder.progress_percentage:
+                folder_percentage_sum += float(folder.progress_percentage)
+
+            else:
+                folder_percentage_sum += 0.00
 
 
         elif folder.has_progress_bar == False and folder.can_be_reviewed:
@@ -959,8 +1063,11 @@ def calculate_progress(folder_id):
                 file_percentage_sum += 0.00
 
     overall_percentage_sum = file_percentage_sum + folder_percentage_sum
-    
-    progress_percentage = overall_percentage_sum / overall_percentage * 100
+    if overall_percentage_sum:
+        progress_percentage = overall_percentage_sum / overall_percentage * 100
+
+    else:
+        progress_percentage = 0.00
     
     folder_record.progress_percentage = progress_percentage
 

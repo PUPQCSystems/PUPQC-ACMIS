@@ -211,6 +211,33 @@
                                     {% endif %}
                                 {% endif %}
                             </div>
+
+                            <div class="row ">
+                                <div class="avatar-list avatar-list-stacked text-left">
+                                    {% if assigned_users %}
+                                        {% for user_assigned in assigned_users %}
+                                            {% if user_assigned.assigned_user.profile_pic %}
+                                            <span class="avatar me-auto position-relative avatar-sm rounded" 
+                                                style="background-image: url(./static/avatars/000m.jpg)"
+                                                data-bs-toggle="tooltip" 
+                                                data-bs-html="true" 
+                                                data-bs-placement="bottom"
+                                                title="{{ user_assigned.assigned_user.first_name }} {{ user_assigned.assigned_user.last_name }} ({{ user_assigned.assigned_user.email }})"></span>
+                                            {% else %}
+                                            <span class="avatar avatar-sm rounded"
+                                                    data-bs-toggle="tooltip" 
+                                                    data-bs-html="true" 
+                                                    data-bs-placement="bottom"
+                                                    title="<small>{{ user_assigned.assigned_user.first_name }} {{ user_assigned.assigned_user.last_name }} ({{ user_assigned.assigned_user.email }})</small>">
+                                                    {{ user_assigned.assigned_user.first_name|first|default:'' }} {{user_assigned.assigned_user.last_name|first|default:'' }}
+                                            </span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    
+                                    {% endif %}
+
+                                </div>
+                            </div>
                         </div>
                
                     </div>

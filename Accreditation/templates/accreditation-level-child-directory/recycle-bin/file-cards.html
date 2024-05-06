@@ -13,7 +13,7 @@
                             data-bs-placement="bottom"
                             title="{{  file.file_name }}">
                         
-                                <a class="text-reset" href="#">{{file.file_name}}</a>
+                                <a class="text-reset" href="#" data-bs-toggle="modal" data-bs-target="#view-modal-{{ file.id }}">{{file.file_name}}</a>
                             </div>
                             <div class="col-1 ms-auto lh-1">
                                 <div class="dropdown">
@@ -36,7 +36,7 @@
                         </div>
 
                         <br>
-                        <a class="text-decoration-none text-reset" href="#">
+                        <a class="text-decoration-none text-reset" href="#" data-bs-toggle="modal" data-bs-target="#view-modal-{{ file.id }}">
                             <div class="border  p-4 rounded-4 text-center">
                                 {% if file.file_name|slice:"-4:" == '.pdf' %}
                                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="#DE3B38"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="file-icon icon icon-tabler icons-tabler-outline icon-tabler-file-type-pdf">
@@ -112,6 +112,15 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z"></path><path d="M16 3v4"></path><path d="M8 3v4"></path><path d="M4 11h16"></path><path d="M11 15h1"></path><path d="M12 15v3"></path></svg>
                                     {{ file.uploaded_at|date:"M d, Y" }}
                                 </div>
+
+                                {% if file.status == 'approve'%}
+                                    <span class="badge badge-outline text-green">Approved</span>
+                                {% elif file.status == 'rfr' %}
+                                    <span class="badge badge-outline text-red">Request for Resubmission</span>
+
+                                {% elif file.status == 'fr' %}
+                                    <span class="badge badge-outline text-cyan">For Review</span>
+                                {% endif %}
         
                         
                             </div>
@@ -123,7 +132,7 @@
             </div>
             
             {% block modal_content %}
-                {% include "accreditation-submission-bin/main-page/view-modal.html" %}
+                {% include "accreditation-level-parent-directory/main-page/partials/file-details-modal.html" %}
             {% endblock modal_content %}
 
         {% endfor %}
