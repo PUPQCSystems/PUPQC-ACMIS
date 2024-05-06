@@ -1,3 +1,4 @@
+{% load custom_tags %}
 <div class="row row-cards">
 
     <!-- For LOOP HERE-->
@@ -10,7 +11,13 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center">
 
-                            <div class="subheader">{{ record.accredbodies.abbreviation }}</div>
+                            <div class="subheader" 
+                                data-bs-toggle="tooltip" 
+                                data-bs-html="true" 
+                                data-bs-placement="bottom"
+                                title="{{  record.accredbodies.name }}">
+                                {{ record.accredbodies.abbreviation }}
+                            </div>
 
                             <div class="ms-auto lh-1">
                                 
@@ -32,9 +39,28 @@
                             </div>
 
                         </div>
-                        <a href="{% url 'accreditations:instrument-level' pk=record.id %}">
-                            <div class="h3 mb-3">{{ record.name }}</div>
-                        </a>
+                 
+                        <div>
+                            <a href="{% url 'accreditations:instrument-level' pk=record.id %}">
+                                <div class="h3 mb-3 text-truncate" 
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-html="true" 
+                                    data-bs-placement="bottom"
+                                    title="{{  record.name }}">
+                                    {{ record.name }}
+                                </div>
+                            </a>
+                        </div>
+
+                        <div>
+                            {% for instrument_level in instrument_level_records|sort_alphabetically %}
+                                {% if instrument_level.instrument_id == record.id %}
+                                    <span class="badge badge-outline text-cyan">{{ instrument_level.level.name}}</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                    
                     </div>
 
             </div>

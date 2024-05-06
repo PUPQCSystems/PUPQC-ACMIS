@@ -185,7 +185,13 @@
 
                     
                     <a href="{% url 'accreditations:instrument-level-directory' pk=record.instrument_level.id %}">
-                        <div class="h3 mb-3">{{ record.program.program_name }}</div>
+                        <div class="h3 mb-3 text-truncate"
+                            data-bs-toggle="tooltip" 
+                            data-bs-html="true" 
+                            data-bs-placement="bottom"
+                            title="{{  record.program.program_name }}">
+                            {{ record.program.program_name }}
+                        </div>
                     </a>
                     <div class="d-flex">
                         <div class="subheader">Accreditation Progress</div>

@@ -19,6 +19,7 @@ class InstrumentList(View):
         instrument_form = Create_Instrument_Form(request.POST or None)
         instrumentlevel_form = Create_InstrumentLevel_Form(request.POST or None)
         records =instrument.objects.select_related('accredbodies').filter(is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
+        instrument_level_records = instrument_level.objects.filter(is_deleted= False) #Getting all the data inside the Program table and storing it to the context variable
 
         # Initialize an empty list to store update forms for each record
         details = []
@@ -30,7 +31,12 @@ class InstrumentList(View):
             modified_by = record.modified_by  # Get the user who modified the record
             details.append((record, update_form, created_by, modified_by))
             
-        context = { 'records': records, 'instrument_form': instrument_form, 'details': details, 'instrumentlevel_form':  instrumentlevel_form }  #Getting all the data inside the type table and storing it to the context variable
+        context = { 'records': records, 
+                   'instrument_form': instrument_form, 
+                   'details': details, 
+                   'instrumentlevel_form':  instrumentlevel_form,
+                   'instrument_level_records': instrument_level_records
+                   }  #Getting all the data inside the type table and storing it to the context variable
 
         return render(request, 'accreditation-instrument/main-page/landing_page.html', context)
     

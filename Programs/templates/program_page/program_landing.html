@@ -24,13 +24,18 @@
 <!-- THE CONTENTS -->
 {% block content %}
     <!-- PROGRAM CARDS -->
-    {% if perms.Programs.view_programs or perms.Programs.change_programs or perms.Programs.add_programs or perms.Programs.delete_programs%}
+    {% if perms.Programs.view_programs %}
         {% include "program_page/program_cards.html" %}
     {% endif %}
 
     {% if perms.Programs.add_programs %}
         <!-- MODALS-->
         {% include "program_page/create_modal.html" %}
+    {% endif %}
+
+    {% if perms.Programs.view_programs %}
+        {% include "program_page/scripts.html" %} 
+        {% include "program_page/styles.html" %} 
     {% endif %}
 
 {% endblock content %}

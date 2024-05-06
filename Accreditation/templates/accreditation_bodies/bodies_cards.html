@@ -8,7 +8,13 @@
                 <div class="card-status-start bg-green"></div>
                 <div class="card-body">
                     <div class="d-flex align-items-center">
-                        <div class="h1 mb-1">{{ record.abbreviation }}</div>
+                        <div class="h1 mb-1"
+                            data-bs-toggle="tooltip" 
+                            data-bs-html="true" 
+                            data-bs-placement="bottom"
+                            title="{{  record.name }}">
+                            {{ record.abbreviation }}
+                        </div>
                         <div class="ms-auto lh-1">
 
                             
@@ -29,13 +35,24 @@
                         </div>
 
                     </div>
-                    <div class="subheader">{{ record.name }}</div> 
-                    <hr class = "card-divider-line">
-                    <small class="card-text p-y-1 text-muted">Created by: </small><small class="card-text p-y-1">{{ created_by.first_name }} {{ created_by.last_name }}</small><br>
-                    <small class="card-text p-y-1 text-muted">Date Created: </small><small class="card-text p-y-1">{{ record.created_at }}</small><br>
-                    <small class="card-text p-y-1 text-muted">Modified by: </small><small class="card-text p-y-1">{{ modified_by.first_name }} {{ modified_by.last_name }} </small><br>
-                    <small class="card-text p-y-1 text-muted">Last Modified: </small><small class="card-text p-y-1">{{ record.modified_at }}</small><br>   
-                
+
+                    <div class="divide-y-2">
+                        <div class="subheader text-truncate"
+                            data-bs-toggle="tooltip" 
+                            data-bs-html="true" 
+                            data-bs-placement="bottom"
+                            title="{{  record.name }}">
+                            {{ record.name }}
+                        </div> 
+
+                        <div>
+                            <small class="card-text p-y-1 text-muted">Created by: </small><small class="card-text p-y-1">{{ created_by.first_name }} {{ created_by.last_name }}</small><br>
+                            <small class="card-text p-y-1 text-muted">Date Created: </small><small class="card-text p-y-1">{{ record.created_at }}</small><br>
+                            <small class="card-text p-y-1 text-muted">Modified by: </small><small class="card-text p-y-1">{{ modified_by.first_name }} {{ modified_by.last_name }} </small><br>
+                            <small class="card-text p-y-1 text-muted">Last Modified: </small><small class="card-text p-y-1">{{ record.modified_at }}</small><br>   
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>

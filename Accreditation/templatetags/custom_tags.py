@@ -17,3 +17,8 @@ def sizify(value):
         ext = "MB"
     return '%s %s' %(str(round(value, 2)), ext)
 
+
+@register.filter
+def sort_alphabetically(queryset):
+    return sorted(queryset, key=lambda item: item.level.name)
+

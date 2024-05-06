@@ -317,8 +317,9 @@ class ProgramAccreditation_UpdateForm(forms.ModelForm):
 class ReviewUploadBin_Form(forms.ModelForm):
     STATUS_CHOICES = [
             ('approve', 'Approve'), 
+            ('fr', 'For Review'),
             ('rfr', 'Request for Resubmission')
-        ]   
+        ]    
     
     status = forms.ChoiceField(
         label = "Status", 
@@ -450,41 +451,13 @@ class RemarksResult_Form(forms.ModelForm):
         }
 
 
-
-# ---------------------------- [ REVIEW UPLOAD BIN FORM ] ---------------------------- #
-class ReviewUploadBin_Form(forms.ModelForm):
-    STATUS_CHOICES = [
-            ('approve', 'Approve'), 
-            ('rfr', 'Request for Resubmission'),
-            ('fr', 'For Review')
-        ]   
-    
-    status = forms.ChoiceField(
-        label = "Status", 
-        choices = STATUS_CHOICES,
-        required = True, 
-        error_messages={'required': "Please select a status before submitting the form."},
-        widget=forms.Select(attrs={'class': 'form-control form-select select'}))
-
-
-    
-    class Meta:
-        model = instrument_level_folder
-        fields = ('status', 'remarks')
-
-    widgets = {
-        'remarks': forms.Textarea(attrs={'required': False}),
-        }
-
-
-
 # ---------------------------- [ REVIEW File FORM ] ---------------------------- #
 class ReviewFile_Form(forms.ModelForm):
     STATUS_CHOICES = [
             ('approve', 'Approve'), 
-            ('rfr', 'Request for Resubmission'),
-            ('fr', 'For Review')
-        ]   
+            ('fr', 'For Review'),
+            ('rfr', 'Request for Resubmission')
+        ]     
     
     status = forms.ChoiceField(
         label = "Status", 
