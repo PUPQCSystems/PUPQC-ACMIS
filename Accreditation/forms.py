@@ -316,9 +316,11 @@ class ProgramAccreditation_UpdateForm(forms.ModelForm):
 # ---------------------------- [ REVIEW UPLOAD BIN FORM ] ---------------------------- #
 class ReviewUploadBin_Form(forms.ModelForm):
     STATUS_CHOICES = [
-            ('approve', 'Correct'), 
-            ('fr', 'For Review'),
-            ('rfr', 'Request for Resubmission')
+            (5, '5 - Excellent'), 
+            (4, '4 - Very Satisfactory'), 
+            (3, '3 - Satisfactory'), 
+            (2, '2 - Fair'), 
+            (1, '1 - Poor'), 
         ]    
     
     status = forms.ChoiceField(
@@ -454,10 +456,12 @@ class RemarksResult_Form(forms.ModelForm):
 # ---------------------------- [ REVIEW File FORM ] ---------------------------- #
 class ReviewFile_Form(forms.ModelForm):
     STATUS_CHOICES = [
-            ('approve', 'Correct'), 
-            ('fr', 'For Review'),
-            ('rfr', 'Request for Resubmission')
-        ]     
+            (5, '5 - Excellent'), 
+            (4, '4 - Very Satisfactory'), 
+            (3, '3 - Satisfactory'), 
+            (2, '2 - Fair'), 
+            (1, '1 - Poor'), 
+        ]       
     
     status = forms.ChoiceField(
         label = "Status", 
