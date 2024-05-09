@@ -28,8 +28,11 @@
                                     <div class="dropdown-menu dropdown-menu-end " id="dropdownMenu-{{ file.id }}">
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ file.id }}">Details</button>
                                         <a  href={% url 'accreditations:child-file-restore' pk=file.id %} class="dropdown-item">Restore</a>
-                                        <button type="button" class="dropdown-item text-danger file-delete-button" id="file-delete-button" 
-                                                data-id={{ file.id }}>Permanent Delete</button>
+
+                                        {% if user.is_superuser == True or user.id == file.uploaded_by_id %}   
+                                            <button type="button" class="dropdown-item text-danger file-delete-button" id="file-delete-button" 
+                                                    data-id={{ file.id }}>Permanent Delete</button>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -114,7 +117,7 @@
                                 </div>
 
                                 {% if file.status == 'approve'%}
-                                    <span class="badge badge-outline text-green">Approved</span>
+                                    <span class="badge badge-outline text-green">Correct</span>
                                 {% elif file.status == 'rfr' %}
                                     <span class="badge badge-outline text-red">Request for Resubmission</span>
 

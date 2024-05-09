@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.views import View
 from django.core.exceptions import ObjectDoesNotExist
 from Accreditation.models_views import UserGroupView
+from Accreditation.views_emailing import email_when_file_approved, email_when_file_for_review, email_when_file_request_resubmission, email_when_folder_approved, email_when_folder_for_review, email_when_folder_request_resubmission
 from Users.models import activity_log
 from .models import accreditation_certificates, files, instrument_level, instrument_level_folder, program_accreditation, user_assigned_to_folder #Import the model for data retieving
 from .forms import ChairManAssignedToFolder_Form, CoChairUserAssignedToFolder_Form, Create_InstrumentDirectory_Form, MemberAssignedToFolder_Form, PassedResult_Form, RemarksResult_Form, RenameFileForm, ReviewFile_Form, ReviewUploadBin_Form, RevisitResult_Form, SubmissionBin_Form
@@ -38,7 +39,7 @@ def parent_landing_page(request, pk):
     submission_bin_form = SubmissionBin_Form(request.POST or None)
     uploaded_files = files.objects.filter(instrument_level=pk, is_deleted=False)
     certificates_records = accreditation_certificates.objects.select_related('accredited_program').filter(is_deleted= False) 
-    records = instrument_level_folder.objects.filter(is_deleted= False, instrument_level=pk, parent_directory= None) #Getting all the data inside the Program table and storing it to the context variable
+    records = instrument_level_folder.objects.filter(is_deleted= False, instrument_level=pk, parent_directory= None).order_by('name') #Getting all the data inside the Program table and storing it to the context variable
     instrument_level_record = instrument_level.objects.select_related('instrument').get(id=pk, is_deleted= False)
 
     try:
@@ -281,7 +282,7 @@ def child_landing_page(request, pk):
     review_form = ReviewUploadBin_Form(request.POST or None)
     rename_form = RenameFileForm()
     uploaded_files = files.objects.filter(parent_directory=pk, is_deleted=False)
-    records = instrument_level_folder.objects.filter(is_deleted= False, parent_directory=pk) #Getting all the data inside the table and storing it to the context variable
+    records = instrument_level_folder.objects.filter(is_deleted= False, parent_directory=pk).order_by('name') #Getting all the data inside the table and storing it to the context variable
     parent_folder = instrument_level_folder.objects.select_related('parent_directory').get(is_deleted=False, id=pk) #Getting the data of the parent folder
     # Initialize an empty list to store update forms for each record
     details = []
@@ -686,8 +687,10 @@ def create_folder_review(request, pk):
             return JsonResponse({'errors': 'Folder not found'}, status=404)
 
     if request.method == 'POST':
+        users_assigned_to_folder = user_assigned_to_folder.objects.select_related('assigned_user', 'parent_directory').filter(parent_directory=folder)
         review_form = ReviewUploadBin_Form(request.POST or None, instance=folder)
         review =  request.POST.get('status')
+        remarks=  request.POST.get('remarks')
         if review_form.is_valid():
             review_form.instance.modified_by = request.user
             review_form.instance.reviewed_by = request.user
@@ -696,11 +699,21 @@ def create_folder_review(request, pk):
             if review == 'approve':
                 review_form.instance.progress_percentage = 100.00
 
+                for user in users_assigned_to_folder:
+                    email_when_folder_approved(folder, user, remarks)
+
             elif review == 'rfr':
                 review_form.instance.progress_percentage = 0.00
 
+                for user in users_assigned_to_folder:
+                    email_when_folder_request_resubmission(folder, user, remarks)
+
             elif review == 'fr':
                 review_form.instance.progress_percentage = 0.00
+
+                for user in users_assigned_to_folder:
+                    email_when_folder_for_review(folder, user, remarks)
+
 
             review_form.save()
 
@@ -855,13 +868,15 @@ def change_to_not_reviewable_file(request, pk):
 @permission_required("Accreditation.change_files", raise_exception=True)
 def create_file_review(request, pk):
     try:
-        file_record = files.objects.select_related('parent_directory').get(id=pk)
+        file_record = files.objects.select_related('parent_directory','instrument_level', 'uploaded_by').get(id=pk)
     except files.DoesNotExist:
         return JsonResponse({'errors': 'File not found'}, status=404)
 
     if request.method == 'POST':
         review_form = ReviewFile_Form(request.POST or None, instance=file_record)
+        users_assigned_to_folder = user_assigned_to_folder.objects.select_related('assigned_user', 'parent_directory').filter(parent_directory=file_record.parent_directory)
         review =  request.POST.get('status')
+        remarks =  request.POST.get('remarks')
         if review_form.is_valid():
             review_form.instance.modified_by = request.user
             review_form.instance.reviewed_by = request.user
@@ -878,6 +893,30 @@ def create_file_review(request, pk):
 
             elif file_record.parent_directory_id == None and file_record.instrument_level_id:
                 parent_calculate_progress(file_record.instrument_level_id)
+
+
+
+            if review == 'approve':
+                review_form.instance.progress_percentage = 100.00
+
+                # if file_record.instrument_level and file_record.parent_directory == None:
+                #     email_when_file_approved(file_record, file_record.uploaded_by, remarks)
+
+                # elif file_record.instrument_level and file_record.parent_directory:
+                #     email_when_file_approved(file_record, user, remarks)
+
+
+            elif review == 'rfr':
+                review_form.instance.progress_percentage = 0.00
+
+                # for user in users_assigned_to_folder:
+                #     email_when_file_request_resubmission(file_record, user, remarks)
+
+            elif review == 'fr':
+                review_form.instance.progress_percentage = 0.00
+
+                # for user in users_assigned_to_folder:
+                #     email_when_file_for_review(file_record, user, remarks)
 
 
             messages.success(request, f'File is successfully reviewed!')

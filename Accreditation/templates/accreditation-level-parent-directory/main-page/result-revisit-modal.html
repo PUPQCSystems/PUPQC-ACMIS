@@ -35,11 +35,11 @@
 
 									<div class="divide-y scrollable" style="height: 10rem">
 
-										{% for file in records %}
+										{% for file in certificates_records %}
 											{% if file.accredited_program_id == accred_program.id %}
 												<div class="row">
 													<div class="col">
-														<a href="#" class="text-muted" style="font-size: 10px">{{ file.certificate_name }}</a>
+														<a class="text-muted" style="font-size: 10px"href="{{file.certificate_path.url}}" target="_blank">{{ file.certificate_name }}</a>
 													</div>
 												</div>
 											{% endif %}

@@ -1,52 +1,56 @@
-<div class="col-md-12 col-lg-12">
-    <div class="card rounded">
-      <div class="card-header">
-        <h3 class="card-title">Reviewer Tasks</h3>
-      </div>
-      <div class="card-body table-responsive">
-        <table id="review-table" class="table card-table table-vcenter">
-          <thead>
-            <tr>
-              <th class="text-center">Title</th>
-              <th class="text-center">Program</th>
-              <th class="text-center">Instrument Name</th>
-              <th class="text-center">Instrument Level</th>
-              <th class="text-center">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for record in reviewable_folders %}
-              <tr style="font-size: 10px">
-                <td>
-                  <a href="#" data-bs-toggle="modal" data-bs-target="#review-modal-{{record.id}}">{{ record.name }}</a>
-                </td>
+{% if user.is_superuser %}
 
-                <td class="text-nowrap text-muted">
-                  {{ record.instrument_level.instrument.program }}
-                </td>
+    <div class="col-md-12 col-lg-12">
+        <div class="card rounded">
+            <div class="card-header">
+            <h3 class="card-title">Reviewer Tasks</h3>
+            </div>
+            <div class="card-body table-responsive">
+            <table id="review-table" class="table card-table table-vcenter">
+                <thead>
+                <tr>
+                    <th class="text-center">Title</th>
+                    <th class="text-center">Program</th>
+                    <th class="text-center">Instrument Name</th>
+                    <th class="text-center">Instrument Level</th>
+                    <th class="text-center">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for record in reviewable_folders %}
+                    <tr style="font-size: 10px">
+                    <td>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#review-modal-{{record.id}}">{{ record.name }}</a>
+                    </td>
 
-                <td class="text-nowrap text-muted">
-                  {{ record.instrument_level.instrument.name }}
-                </td>
+                    <td class="text-nowrap text-muted">
+                        {{ record.instrument_level.instrument.program }}
+                    </td>
 
-                <td class="text-nowrap text-muted">
-                  {{ record.instrument_level.level}}
-                </td>
+                    <td class="text-nowrap text-muted">
+                        {{ record.instrument_level.instrument.name }}
+                    </td>
 
-                <td class="text-nowrap text-muted text-center">
-                    <span class="badge badge-outline text-cyan">For Review</span>
-                </td>
-            </tr>
+                    <td class="text-nowrap text-muted">
+                        {{ record.instrument_level.level}}
+                    </td>
 
-            {% block modal_content %}
-              {% include "dashboard_landing/review-modal.html" %}
-            {% endblock modal_content %}
+                    <td class="text-nowrap text-muted text-center">
+                        <span class="badge badge-outline text-cyan">For Review</span>
+                    </td>
+                </tr>
 
-          {% endfor %}
-        </tbody>
-      </table>
-      </div>
+         
+                    {% include "dashboard_landing/review-modal.html" %}
+     
+
+                {% endfor %}
+            </tbody>
+            </table>
+            </div>
+        </div>
+
     </div>
 
-  </div>
+{% endif %}
   

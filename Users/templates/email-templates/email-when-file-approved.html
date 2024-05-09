@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body { 
+font-family: Arial, sans-serif;
+text-align: center;
+}
+.icon-approved {
+font-size: 50px; 
+color: green; 
+}
+</style>
+</head>
+<body>
+
+    <h2>FILE APPROVED</h2>
+
+    <p>
+        <strong>Program:</strong> {{file.instrument_level.instrument.program}} <br/>
+        <strong>Instrument:</strong> {{file.instrument_level }}
+    </p>
+
+    <p>Dear {{ user.assigned_user.first_name }} {{ user.assigned_user.last_name }},</p>
+    <p>The File "{{ file.name }}" has been approved.</p>
+
+
+
+    {% if remarks %}
+        <p>{{ remarks|safe }}</p>
+    {% endif %} 
+
+    <p>Thank you,<br/>
+    PUPQC-ACMIS</p> 
+</body>
+</html>

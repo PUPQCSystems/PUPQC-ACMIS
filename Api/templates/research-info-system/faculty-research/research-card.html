@@ -22,7 +22,7 @@
                     <tbody>
 
                         {% for record in records %}
-                            <tr>
+                            <tr class="small">
                                 <td>
                                     {{ record.research_paper.title }}
                                 </td>
@@ -60,6 +60,16 @@
                         <!-- Add the remaining rows as per your data -->
                         <!-- ... (additional rows) ... -->
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Research Title</th>
+                            <th>Content</th>
+                            <th>Abstract</th>
+                            <th>Publish Date</th>
+                            <th>Authors</th>      
+                            <th style="width: 5rem">Evidence</th>  
+                        </tr>
+                    </tfoot>
                 </table> 
             </div>
         </div>

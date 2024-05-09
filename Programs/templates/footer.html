@@ -1,113 +1,45 @@
 {% load static %}
 
 <div><!-- footer -->
-  <footer class="text-center text-lg-start text-white" style="margin-top: auto; background: url('{% static 'custom-assets/landing-page/images/foota-1.png' %}') no-repeat; background-size: cover;">
-      <!-- Grid container -->
-      <div class="container p-4">
-        <!--Grid row-->
-        <div class="row my-4">
-          <!--Grid column-->
-          <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-  
-            <div class="shadow-1-strong d-flex align-items-center justify-content-center mb-4 mx-auto" style="width: 150px;">
-              <img src= {% static 'images\ROPLogo.png' %} alt=""
-                   loading="lazy" />
-            </div>
-  
-            <p class="text-center text-dark">Republic of the Philippines</p>
-            <p class="text-center text-dark">All content is in the public domain unless otherwise stated.</p>
-  
-            <ul class="list-unstyled d-flex flex-row justify-content-center">
-              <li>
-                <a class="text-white px-2" href="#!">
-                  <i class="fab fa-facebook-square"></i>
-                </a>
-              </li>
-              <li>
-                <a class="text-white px-2" href="#!">
-                  <i class="fab fa-instagram"></i>
-                </a>
-              </li>
-              <li>
-                <a class="text-white ps-2" href="#!">
-                  <i class="fab fa-youtube"></i>
-                </a>
-              </li>
-            </ul>
-  
-          </div>
-          <!--Grid column-->
-  
-          <!--Grid column-->
-          <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-            <p class="text-uppercase mb-4 text-dark h6">About GOVPH</p>
-            <p class="text-dark">Learn more about the Philippine government, its structure, how government works and the people behind it.</p>
-
-            <ul class="list-unstyled">
-                <li class="mb-2">
-                  <a href="#!" class="text-dark">Official Gazette</a>
-                </li>
-                <li class="mb-2">
-                    <a href="#!" class="text-dark">Open Data Portal</a>
-                  </li>
-              </ul>
-          </div>
-          <!--Grid column-->
-  
-          <!--Grid column-->
-          <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-            <p class="text-uppercase mb-4 text-dark h6">Government Links</p>
-  
-            <ul class="list-unstyled">
-                <li class="mb-2">
-                    <a href="#!" class="text-dark">Official Gazette</a>
-                  </li>
-                  <li class="mb-2">
-                      <a href="#!" class="text-dark">Open Data Portal</a>
-                    </li>
-            </ul>
-          </div>
-          <!--Grid column-->
-  
-          <!--Grid column-->
-          <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-            <h6 class="text-uppercase mb-4 text-dark">Government Linkst</h6    >
-  
-                <ul class="list-unstyled">
-                    <li class="mb-2">
-                        <a href="#!" class="text-dark">Office of the President</a>
-                      </li>
-                      <li class="mb-2">
-                          <a href="#!" class="text-dark">Office of the Vice President</a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#!" class="text-dark">Senate of the Philippines</a>
-                      </li>
-                      <li class="mb-2">
-                          <a href="#!" class="text-dark">House of Representatives</a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#!" class="text-dark">Supreme Court</a>
-                      </li>
-                      <li class="mb-2">
-                          <a href="#!" class="text-dark">Court of Appeals</a>
-                    </li>
-                    <li class="mb-2">
-                          <a href="#!" class="text-dark">Sandiganbayan</a>
-                    </li>
-                </ul>
-          </div>
-          <!--Grid column-->
-          
+  <footer class="footer footer-transparent d-print-none">
+    <div class="container-xl">
+      <div class="row text-center align-items-center flex-row-reverse">
+        <div class="col-lg-auto ms-lg-auto">
+          <ul class="list-inline list-inline-dots mb-0">
+            <li class="list-inline-item"><a href="https://tabler.io/docs" target="_blank" class="link-secondary" rel="noopener">Sir Estong</a></li>
+            <li class="list-inline-item"><a href="./license.html" class="link-secondary">Sir Markkie</a></li>
+            <li class="list-inline-item"><a href="https://github.com/tabler/tabler" target="_blank" class="link-secondary" rel="noopener">Ma'am Grace</a></li>
+            <li class="list-inline-item">
+              <a href="https://github.com/sponsors/codecalm" target="_blank" class="link-secondary" rel="noopener">
+                <!-- Download SVG icon from http://tabler-icons.io/i/heart -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon text-pink icon-filled icon-inline" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg>
+                ACMIS Group
+              </a>
+            </li>
+          </ul>
         </div>
-        <!--Grid row-->
+        <div class="col-12 col-lg-auto mt-3 mt-lg-0">
+          <ul class="list-inline list-inline-dots mb-0">
+            <li class="list-inline-item">
+              Copyright &copy; 2024
+              <a href="." class="link-secondary">PUPQC-ACMIS</a>.
+              All rights reserved.
+            </li>
+            <li class="list-inline-item">
+              <a href="./changelog.html" class="link-secondary" rel="noopener">
+                v1.0.0
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
-      <!-- Grid container -->
+    </div>
+  </footer>
   
-      <!-- Copyright -->
+      {% comment %} <!-- Copyright -->
       <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
         © 1998-2021 POLYTECHNIC UNIVERSITY OF THE PHILIPPINES
       </div>
-      <!-- Copyright -->
+      <!-- Copyright --> {% endcomment %}
     </footer>
 </div> <!-- End pf footer -->

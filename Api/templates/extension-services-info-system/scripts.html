@@ -1,0 +1,68 @@
+<script>
+    $(document).ready(function () {
+        my_table = $('#esis-table').DataTable({
+            initComplete: function () {
+            this.api()
+                .columns()
+                .every(function () {
+                    let column = this;
+                    let title = column.footer().textContent;
+    
+                    // Create input element
+                    let input = document.createElement('input');
+                    input.placeholder = title;
+                    column.footer().replaceChildren(input);
+    
+                    // Event listener for user input
+                    input.addEventListener('keyup', () => {
+                        if (column.search() !== this.value) {
+                            column.search(input.value).draw();
+                        }
+                    });
+                });
+            },
+            scrollX: true,
+
+            lengthMenu: [
+                [5, 10, 25, 50, 100, -1],
+                [5, 10, 25, 50, 100, 'All']
+            ],
+
+            dom: 'B<"row"<"col-sm-6"l><"col-sm-6"f>>rt<"row mt-2 justify-content-between"<"col-md-auto me-auto"i><"col-md-auto ms-auto"p>>', // Define the layout with Bootstrap classes
+
+            buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                columns: ':visible',
+                                rows:':visible'
+                            }
+                        }, 
+                        {
+                            extend: 'pdfHtml5',
+                            exportOptions: {
+                                columns: ':visible',
+                                rows:':visible'
+                            }
+                        },   
+                        {
+                            extend: 'print',
+                            exportOptions: {
+                                columns: ':visible',
+                                rows:':visible'
+                            }
+                            }
+                        , 'colvis'],
+            layout: {
+                topStart: 'buttons'
+            },
+    
+         
+        });
+    
+      my_table.buttons().container()
+      .appendTo('#student-award-table_wrapper .col-md-6:eq(0)');
+
+        
+    });
+</script>

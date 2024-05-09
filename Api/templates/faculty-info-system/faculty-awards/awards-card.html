@@ -24,7 +24,7 @@
                         <tbody>
 
                             {% for record in records %}
-                                <tr>
+                                <tr class="small">
 
                                     <td>
                                         {{ record.FirstName }}{% if record.MiddleInitial %} {{ record.MiddleInitial }}.{% endif %} {{ record.LastName }}
@@ -60,6 +60,18 @@
                                 </tr>
                             {% endfor %}
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Name</th>
+                                <th>Title</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>     
+                                <th>Duration</th>   
+                                <th>Conducted by</th>   
+                                <th>Type</th> 
+                                <th>Evidence</th>   
+                            </tr>
+                        </tfoot>
                     </table> 
                 </div>
 

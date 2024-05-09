@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    # ' django.contrib.staticfiles', #I added this for files
     "whitenoise.runserver_nostatic",
     'whitenoise',
     'django.contrib.staticfiles',
@@ -105,6 +106,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
+                # 'django.template.context_processors.media', #I added this code for the files to be viewed
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',

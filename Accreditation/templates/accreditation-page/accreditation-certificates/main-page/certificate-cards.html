@@ -14,7 +14,7 @@
 							data-bs-placement="bottom"
 							title="{{  file.certificate_name }}">
 						
-								<a class="text-reset" href="#">{{file.certificate_name}}</a>
+								<a class="text-reset"  href="{{file.certificate_path.url}}" target="_blank">{{file.certificate_name}}</a>
 							</div>
 							<div class="col-1 ms-auto lh-1">
 								<div class="dropdown">
@@ -41,7 +41,7 @@
 						</div>
 
 						<br>
-						<a class="text-decoration-none text-reset" href="#">
+						<a class="text-decoration-none text-reset"  href="{{file.certificate_path.url}}" target="_blank">
 							<div class="border  p-4 rounded-4 text-center">
 								{% if file.certificate_name|slice:"-4:" == '.pdf' %}
 									<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="#DE3B38"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="folder-icon icon icon-tabler icons-tabler-outline icon-tabler-file-type-pdf">
@@ -142,11 +142,11 @@
 			<div class="empty-header">0 records</div>
 			<p class="empty-title">Oops… It seems like there are no records in this page. </p>
 			<p class="empty-subtitle text-muted">
-			You can create a record if you like. Just click the 'Add Result or Modify Result' button and save the details.
+				You can create a record if you like. Just click the 'Add Result or Modify Result' button and save the details.
 			</p>
 			<div class="empty-action">
 
-			{% if user.is_superuser == True or perms.Accreditation.add_accreditation_certificates%}
+			{% if user.is_superuser == True %}
 				{% if accred_program.is_done == False and today > accred_program.survey_visit_date|date:"Y-m-d" and accred_program.revisit_date == None %}
 					<a href="#" class="btn btn-outline-info  ms-auto position-relative" data-bs-toggle="modal" data-bs-target="#result-modal">
 						Add Result

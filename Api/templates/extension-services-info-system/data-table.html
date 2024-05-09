@@ -1,0 +1,74 @@
+<div class="row row-cards">
+    <div class="card ">
+        <div class="card-header ">
+            <h2 class="card-title">Lists of Extension Projects
+                <small class="card-subtitle small">(The data in the table displays information of extension projects of the Polytechnic University of the Philippines)</small>
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="tbl-container">
+                <div id="table-default" class="data_table table-responsive">
+                    <table id="esis-table" class="display no-wrap table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Extension Name</th>
+                                <th>Program</th>
+                                <th>Project Title</th>
+                                <th>Project Type</th>
+                                <th>Lead Proponent</th> 
+                                <th>Collaborator</th> 
+                                <th>Benificiaries</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in records %}  
+                                {% for project in item.Projects  %}
+                                <tr class="small">
+                                    <td>{{ item.Name }}</td>
+                                    <td>{{ item.Program.Name }}</td>
+                    
+                                    <td> 
+                                        {{ project.Title }}
+                                    </td>
+                                    <td> 
+                                        {{ project.ProjectType }}
+                                    </td>
+
+                                    <td> 
+                                        {{ project.LeadProponent.Faculty.FirstName }}    {{ project.LeadProponent.Faculty.MiddleName }} {{ project.LeadProponent.Faculty.LastName }}
+                                    </td>
+
+                                    <td> 
+                                        {{ project.Collaborator.Organization}}
+                                    </td>
+                    
+                                    <td>{{  project.TargetGroup }} </td>
+                                    <td>{{  project.StartDate }}</td>
+                                    <td>{{  project.EndDate }}</td>
+                    
+                                </tr>
+                                {% endfor %}
+                            {% endfor %} 
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Extension Name</th>
+                                <th>Program</th>
+                                <th>Project Title</th>
+                                <th>Project Type</th>
+                                <th>Lead Proponent</th> 
+                                <th>Collaborator</th> 
+                                <th>Benificiaries</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                            </tr>
+                        </tfoot>
+                    </table>                
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

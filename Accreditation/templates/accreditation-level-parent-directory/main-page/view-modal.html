@@ -181,14 +181,16 @@
 									</div>
 								</div>
 
-								<div class="datagrid-item">
-									<div class="datagrid-title">Modified by</div>
-									<div class="datagrid-content">
-										{% if record.modified_at %}
-											{{ record.modified_by.first_name }} {{ record.modified_by.last_name }} at {{ record.modified_at }}
-										{% endif %}
+								{% if record.modified_by %}
+									<div class="datagrid-item">
+										<div class="datagrid-title">Modified by</div>
+										<div class="datagrid-content">
+										
+												{{ record.modified_by.first_name }} {{ record.modified_by.last_name }} at {{ record.modified_at }}
+								
+										</div>
 									</div>
-								</div>
+								{% endif %}
 
 								{% if record.is_submission_bin %}
 								{% else %}
@@ -260,7 +262,7 @@
 									<div class="col-4"><b>Status</b></div>
 									<div class="col-6 text-break ">
 										{% if record.status == 'approve'%}
-											<span class="badge badge-outline text-green">Approved</span>
+											<span class="badge badge-outline text-green">Correct</span>
 										{% elif record.status == 'rfr' %}
 											<span class="badge badge-outline text-red">Request for Resubmission</span>
 

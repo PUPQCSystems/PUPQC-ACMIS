@@ -2,7 +2,7 @@
     <div class="subheader mb-2">Navigations</div>
     <div class="list-group list-group-transparent mb-2">
         <a class="list-group-item d-flex align-items-center" href="{% url "apis:research-info-faculty"  program_accred_pk=program_accred_pk %}">
-            Faculty's Researches
+            Faculty Researches
         </a>
 
         <a class="list-group-item d-flex align-items-center" href="{% url "apis:faculty-awards-info" program_accred_pk=program_accred_pk %}">
@@ -10,13 +10,13 @@
         </a>
 
         <a class="list-group-item d-flex align-items-center" href="{% url "apis:research-info-student" program_accred_pk=program_accred_pk %}">
-            Student's Researches
+            Student Researches
         </a>
         <a class="list-group-item d-flex align-items-center" href="{% url "apis:student-award-page" program_accred_pk=program_accred_pk %}">
-            Student's Award and Certification
+            Student Awards and Certifications
         </a>
 
-        <a class="list-group-item d-flex align-items-center" href="{% url "apis:extension-info" %}">
+        <a class="list-group-item d-flex align-items-center" href="{% url "apis:extension-info" program_accred_pk=program_accred_pk %}">
             Extensions
         </a>
 

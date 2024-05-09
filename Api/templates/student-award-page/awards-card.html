@@ -21,7 +21,7 @@
 
                         {% for item in records.result %}
 
-                            <tr>
+                            <tr class="small">
                                 <td>{{ item.StudentNumber }}</td>
                                 <td>{{ item.StudentName }}</td>
                                 <td>{{ item.Batch }}</td>
@@ -34,6 +34,16 @@
                         {% endfor %}
             
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Student Number</th>
+                            <th>Student Name</th>
+                            <th>Batch</th>
+                            <th>Class Name</th>
+                            <th>Lister</th>
+                            <th>Semester</th>
+                        </tr>
+                    </tfoot>
                 </table> 
             </div>
 

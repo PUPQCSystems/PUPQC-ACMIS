@@ -316,7 +316,7 @@ class ProgramAccreditation_UpdateForm(forms.ModelForm):
 # ---------------------------- [ REVIEW UPLOAD BIN FORM ] ---------------------------- #
 class ReviewUploadBin_Form(forms.ModelForm):
     STATUS_CHOICES = [
-            ('approve', 'Approve'), 
+            ('approve', 'Correct'), 
             ('fr', 'For Review'),
             ('rfr', 'Request for Resubmission')
         ]    
@@ -454,7 +454,7 @@ class RemarksResult_Form(forms.ModelForm):
 # ---------------------------- [ REVIEW File FORM ] ---------------------------- #
 class ReviewFile_Form(forms.ModelForm):
     STATUS_CHOICES = [
-            ('approve', 'Approve'), 
+            ('approve', 'Correct'), 
             ('fr', 'For Review'),
             ('rfr', 'Request for Resubmission')
         ]     

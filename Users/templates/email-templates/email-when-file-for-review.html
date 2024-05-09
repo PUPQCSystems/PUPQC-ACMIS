@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body { 
+font-family: Arial, sans-serif;
+text-align: center;
+}
+.icon-review { 
+font-size: 50px; 
+color: orange;  /* Orange for 'under review' */
+}
+</style>
+</head>
+<body> 
+<h2>File Under Review</h2> 
+
+<p>
+    <strong>Program:</strong> {{ file.instrument_level.instrument.program }} <br/>
+    <strong>Instrument:</strong> {{ file.instrument_level }} 
+</p>
+
+<p>Dear {{ user.assigned_user.first_name }} {{ user.assigned_user.last_name }},</p>
+
+<p>The file "{{ file.name }}" is currently under review.  We'll notify you when the review is complete. </p>
+
+{% if remarks %}
+    <p>{{ remarks|safe }}</p> 
+{% endif %} 
+
+<p>Thank you,<br/>
+PUPQC-ACMIS</p> 
+</body>
+</html>

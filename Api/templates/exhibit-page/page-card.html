@@ -51,10 +51,24 @@
             <!-- Photo -->
             <div class="img-responsive img-responsive-21x90 card-img-top" style="background-image: url({% static 'custom-assets/images/exhibits-page/student-awards.jpg' %})"></div>
             <div class="card-body">
-                <h3 class="card-title">Student Awards&Recognitions</h3>
+                <h3 class="card-title">Student Awards & Recognitions</h3>
                 <p class="text-secondary">
                     This page likely contains records of awards and recognitions received by students. 
                     It may include details such as the name of the award, date received, recipient's name, and possibly a brief description of the achievement.
+                </p>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <a href="{% url "apis:extension-info" program_accred_pk=program_accred_pk %}" class="card card-link" onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
+            <!-- Photo -->
+            <div class="img-responsive img-responsive-21x90 card-img-top" style="background-image: url({% static 'custom-assets/images/exhibits-page/extension-projects.jpg' %})"></div>
+            <div class="card-body">
+                <h3 class="card-title">Extension Projects</h3>
+                <p class="text-secondary">
+                    This page likely contains records related to the extension projects of the PUP-QC. 
+                    It may include details such as Extension Name, Project Titles, Benificiaries, and other extension projects related data.
                 </p>
             </div>
         </a>

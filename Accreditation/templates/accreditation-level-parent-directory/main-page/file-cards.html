@@ -17,7 +17,7 @@
                             data-bs-placement="bottom"
                             title="{{  file.file_name }}">
                         
-                                <a class="text-reset" href="#">{{file.file_name}}</a>
+                                <a class="text-reset" href="{{file.file_path.url}}" target="_blank">{{file.file_name}} </a>
                             </div>
                             <div class="col-1 ms-auto lh-1">
                                 <div class="dropdown">
@@ -30,7 +30,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end " id="dropdownMenu-{{ file.id }}">
-                                        {% if perms.Accreditation.change_files %} 
+                                        {% if user.is_superuser %}
                                             {% if file.can_be_reviewed %}
                                                 <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#review-file-modal-{{ file.id }}">Review</button>
                                             {% endif %}
@@ -47,7 +47,7 @@
                                             {% if file.can_be_reviewed %}
                                                 <form method="POST" action="{% url 'accreditations:change-to-unreviewable' pk=file.id %}" id="change-to-unreviewable-{{file.id}}">
                                                     {% csrf_token %}
-                                                    <button type="submit" class="dropdown-item" data-id="{{ file.id }}">Make Unreviewable</button>
+                                                    <button type="submit" class="dropdown-item" data-id="{{ file.id }}"><small>Make Unreviewable/Supporting Document</small></button>
                                                 </form>
                                             
                                             {% else %}
@@ -59,7 +59,7 @@
                                            
                                         {% endif %}
 
-                                        {% if perms.Accreditation.delete_files %}           
+                                        {% if user.is_superuser == True or user.id == file.uploaded_by_id %}        
                                             <form method="POST" action="{% url 'accreditations:parent-directory-file-archive' pk=file.id %}" id="archive-form-{{ file.id }}">
                                                 {% csrf_token %}
                                                 <button type="button" class="dropdown-item text-danger archive-button" data-id="{{ file.id }}">Archive</button>
@@ -71,7 +71,7 @@
                         </div>
 
                         <br>
-                        <a class="text-decoration-none text-reset" href="#">
+                        <a class="text-decoration-none text-reset" href="{{file.file_path.url}}" target="_blank">
                             <div class="border  p-4 rounded-4 text-center">
                                 {% if file.file_name|slice:"-4:" == '.pdf' %}
                                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="#DE3B38"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="folder-icon icon icon-tabler icons-tabler-outline icon-tabler-file-type-pdf">
@@ -149,7 +149,7 @@
                                 </div>
 
                                 {% if file.status == 'approve'%}
-                                    <span class="badge badge-outline text-green">Approved</span>
+                                    <span class="badge badge-outline text-green">Correct</span>
                                 {% elif file.status == 'rfr' %}
                                     <span class="badge badge-outline text-red">Request for Resubmission</span>
 

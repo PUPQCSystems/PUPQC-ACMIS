@@ -26,9 +26,11 @@
                                     <div class="dropdown-menu dropdown-menu-end " id="dropdownMenu-{{ record.id }}">
                                         <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
                                         <a  href={% url 'accreditations:parent-directory-recycle-bin-restore' ins_pk=instrument_level_record.id pk=record.id %} class="dropdown-item">Restore</a>
-                                        <button type="button" class="dropdown-item text-danger delete-button" id="delete-button" 
-                                                data-id={{ record.id }}>Permanent Delete</button>
-                                       
+
+                                        {% if user.is_superuser == True or user.id == record.created_by_id %}   
+                                            <button type="button" class="dropdown-item text-danger delete-button" id="delete-button" 
+                                                    data-id={{ record.id }}>Permanent Delete</button>
+                                        {% endif %}
                         
                                     </div>
                                 </div>
@@ -106,7 +108,7 @@
 
                                 {% if record.can_be_reviewed %}
                                     {% if record.status == 'approve'%}
-                                        <span class="badge badge-outline text-green">Approved</span>
+                                        <span class="badge badge-outline text-green">Correct</span>
                                     {% elif record.status == 'rfr' %}
                                         <span class="badge badge-outline text-red">Request for Resubmission</span>
 

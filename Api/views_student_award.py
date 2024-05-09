@@ -58,9 +58,43 @@ def landing_page(request, program_accred_pk):
             return render(request, 'student-award-page/landing-page.html', context)
         
         else:
+            context = dummy_data(program_accred_pk)
+            return render(request, 'student-award-page/landing-page.html', context)
             # Handle unsuccessful request
-            return JsonResponse({'error': f"Failed to fetch data from the API: {response.status_code}"}, status=500)
+            # return JsonResponse({'error': f"Failed to fetch data from the API: {response.status_code}"}, status=500)
     except requests.RequestException as e:
         # Handle request exception
-        return JsonResponse({'error': f"Request to API failed: {e}"}, status=500)
+        context = dummy_data(program_accred_pk)
+        return render(request, 'student-award-page/landing-page.html', context)
     
+
+
+def dummy_data(program_accred_pk):
+        # Initialize counters for PL and DL
+    PL_count = 0
+    DL_count = 0
+    with open('student_awards.json') as f:  # Replace with the correct path
+        json_data = json.load(f)
+    data = json_data
+
+    # Get the record that has an id equal to program_accred_pk
+    accred_program = program_accreditation.objects.select_related('instrument_level', 'program').get(id=program_accred_pk)
+
+    # Codes for SUM OF PL AND DL
+    # Iterate over the records
+    for record in data["result"]:
+        if record["Lister"] == "President Lister":
+            PL_count += 1
+        elif record["Lister"] == "Dean Lister":
+            DL_count += 1            
+
+    context = {
+        'records': data,
+        'PL_count': PL_count,
+        'DL_count': DL_count,
+        'program_accred_pk': program_accred_pk,
+        'accred_program': accred_program
+    }
+
+    return context
+

@@ -12,7 +12,7 @@ urlpatterns = [
     path('exhibit/<str:program_accred_pk>/', views_exhibits.landing_page, name='exhibit-page'),
     path('student-awards/<str:program_accred_pk>/', views_student_award.landing_page, name='student-award-page'),
 
-    path('esis/extension/records/', views_esis.extension_info, name='extension-info'),
+    path('esis/extension/records/<str:program_accred_pk>/', views_esis.extension_info, name='extension-info'),
     path('ris/research/infos/students/<str:program_accred_pk>/', views_ris.research_student, name='research-info-student'),
     path('ris/research/infos/faculties/<str:program_accred_pk>/', views_ris.research_faculty, name='research-info-faculty'),
 
