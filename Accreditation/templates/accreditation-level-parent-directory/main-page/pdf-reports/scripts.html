@@ -1,0 +1,10 @@
+<script>
+    function generatePDF() {
+        const doc = new jsPDF();
+        doc.html(document.getElementById('contentToConvert'), {
+        callback: function (doc) {
+            doc.save('my-report.pdf'); 
+        }
+        });
+    }
+</script>

@@ -11,6 +11,10 @@ from django.contrib import auth
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
+import random
+import string
+from django.contrib.auth.hashers import make_password
+
 
 @login_required
 def landing_page(request):
@@ -37,14 +41,33 @@ def landing_page(request):
 
 @login_required
 def register(request):
+    password = generate_mixed_characters(length=12, include_symbols=True)
 
-    register_form = CreateUserForm(request.POST)
+    form = CreateUserForm(request.POST)
+
+    register_form = CreateUserForm(data={
+    'password1': password,
+    'password2': password,
+    'first_name': request.POST.get('first_name'),
+    'last_name': request.POST.get('last_name'),
+    'middle_name': request.POST.get('middle_name'),
+    'email': request.POST.get('email')
+    # ... any other required fields
+    })
     auth_group_id = request.POST.get('selected_group')
+
 
     if auth_group_id:
         if register_form.is_valid():
+            # Example usage:
+
+            print(password) 
+
+            if auth_group_id == 'admin':
+                register_form.instance.is_superuser = True
+
             user_email = request.POST.get('email')
-            user_password = request.POST.get('password1')
+            user_password = password 
             user_first_name = request.POST.get('first_name')
             user_last_name = request.POST.get('last_name')
 
@@ -52,15 +75,26 @@ def register(request):
             template = render_to_string('email-templates/register-email.html', 
                                         {'email': user_email, 'password': user_password, 'first_name': user_first_name, 'last_name': user_last_name})
 
-            # Create a new group
-            group = Group.objects.get(id=auth_group_id)
-            register_form.instance.created_by = request.user
-            user_record = register_form.save()
-            user_id = user_record.id
+            if auth_group_id == 'admin':
+                register_form.instance.is_superuser = True
+                register_form.instance.created_by = request.user
+                register_form.instance.password = make_password(password)
+                user_record = register_form.save()
 
-            # Add a user to the group
-            user = CustomUser.objects.get(id=user_id)
-            user.groups.add(group)
+
+            else:                # Create a new group
+                register_form.instance.created_by = request.user
+                register_form.instance.password = make_password(password)
+                user_record = register_form.save()
+
+                user_id = user_record.id
+                group = Group.objects.get(id=auth_group_id)
+                # Add a user to the group
+                user = CustomUser.objects.get(id=user_id)
+                user.groups.add(group)
+
+   
+
   
 
             email = EmailMessage(
@@ -115,9 +149,18 @@ def update_account(request, pk):
                     auth_group_id = request.POST.get('selected_group')
 
                     if auth_group_id:
-                    # Assuming you have a user instance and a group instance
-                        group = Group.objects.get(pk=auth_group_id)  # Replace new_group_id with the desired group ID
-                        user_role = group.name
+
+                        if auth_group_id == 'admin':
+                            update_form.instance.is_superuser = True
+                            user_role = 'System Admin'
+
+                        else:
+                            # Assuming you have a user instance and a group instance
+                            group = Group.objects.get(pk=auth_group_id)  # Replace new_group_id with the desired group ID
+                            user_role = group.name
+                            # Clear existing groups and set the new group
+                            account.groups.set([group])
+                            # Save the updated data to the database
 
                         template = render_to_string('email-templates/update-account-email.html', 
                                             {'email': user_email
@@ -128,8 +171,6 @@ def update_account(request, pk):
                                              , 'role': user_role})
                         
 
-                        # Clear existing groups and set the new group
-                        account.groups.set([group])
                         # Save the updated data to the database
                         update_form.instance.modified_by = request.user
                         update_form.save()
@@ -163,9 +204,20 @@ def update_account(request, pk):
             else:
                 auth_group_id = request.POST.get('selected_group')
                 if auth_group_id:
-                    # Assuming you have a user instance and a group instance
-                    group = Group.objects.get(pk=auth_group_id)  # Replace new_group_id with the desired group ID
-                    user_role = group.name
+
+                    if auth_group_id == 'admin':
+                        update_form.instance.is_superuser = True
+                        user_role = 'System Admin'
+
+                    else:
+                        # Assuming you have a user instance and a group instance
+                        group = Group.objects.get(pk=auth_group_id)  # Replace new_group_id with the desired group ID
+                        user_role = group.name
+                        # Clear existing groups and set the new group
+                        account.groups.set([group])
+                        # Save the updated data to the database
+                    update_form.instance.modified_by = request.user
+                    update_form.save()
 
                     template = render_to_string('email-templates/update-account-email.html', 
                                             {   'email': user_email
@@ -177,11 +229,7 @@ def update_account(request, pk):
                                              })
                     
 
-                    # Clear existing groups and set the new group
-                    account.groups.set([group])
-                    # Save the updated data to the database
-                    update_form.instance.modified_by = request.user
-                    update_form.save()
+
 
                     #Codes for sending Email to the user's account email 
                     email = EmailMessage(
@@ -294,4 +342,35 @@ def logout_view(request):
   auth.logout(request)
   # Redirect to a success page.
   return HttpResponseRedirect("/accounts/login/")
+
+
+def generate_mixed_characters(length=10, 
+                              include_lowercase=True, 
+                              include_uppercase=True, 
+                              include_digits=True, 
+                              include_symbols=False):
+    """
+    Generates a string of mixed characters with specified options.
+
+    Args:
+        length: Desired length of the generated string (default: 10)
+        include_lowercase: Whether to include lowercase letters (default: True)
+        include_uppercase: Whether to include uppercase letters (default: True)
+        include_digits: Whether to include digits (default: True)
+        include_symbols: Whether to include special symbols (default: False)
+    """
+
+    character_set = ""
+    if include_lowercase:
+        character_set += string.ascii_lowercase
+    if include_uppercase:
+        character_set += string.ascii_uppercase
+    if include_digits:
+        character_set += string.digits
+    if include_symbols:
+        character_set += string.punctuation
+
+    return ''.join(random.choice(character_set) for _ in range(length))
+
+
 

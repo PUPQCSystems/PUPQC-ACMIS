@@ -9,7 +9,7 @@ class CreateUserForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('email' ,'password1', 'password2','first_name', 'last_name', 'middle_name')
+        fields = ('email' ,'first_name', 'last_name', 'middle_name')
 
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control textinput',
@@ -38,24 +38,24 @@ class CreateUserForm(UserCreationForm):
                                                                 message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the middle name Field!")],
                                    }),
 
-            'password1': forms.PasswordInput(attrs={'class': 'form-control',
-                                                     'id': 'reg_password1_id',
-                                                'max_length':50, 
-                                                'min_length' : 8,
-                                                'required':True, 
-                                                'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
-                                                                            message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Label Field!")],
-                                               }),
+            # 'password1': forms.PasswordInput(attrs={'class': 'form-control',
+            #                                          'id': 'reg_password1_id',
+            #                                     'max_length':50, 
+            #                                     'min_length' : 8,
+            #                                     'required':True, 
+            #                                     'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+            #                                                                 message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Label Field!")],
+            #                                    }),
 
 
-            'password2': forms.PasswordInput(attrs={'class': 'form-control',
-                                                     'id': 'reg_password1_id',
-                                                'max_length':50, 
-                                                'min_length' : 8,
-                                                'required':True, 
-                                                'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
-                                                                            message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Label Field!")],
-                                                }),
+            # 'password2': forms.PasswordInput(attrs={'class': 'form-control',
+            #                                          'id': 'reg_password1_id',
+            #                                     'max_length':50, 
+            #                                     'min_length' : 8,
+            #                                     'required':True, 
+            #                                     'validators': [RegexValidator(r'^[a-zA-ZÁ-ÿ\s.,\'()&]*$', 
+            #                                                                 message="Only Letters, Decimal Point, Comma, Apostrophe, Ampersand, and Parentheses are allowed in the Label Field!")],
+            #                                     }),
 
             'email': forms.EmailInput(attrs={'class': 'form-control',
                                                      'id': 'reg_email_id',
@@ -81,14 +81,8 @@ class CreateUserForm(UserCreationForm):
         super().__init__(*args, **kwargs)
 
         # Customize help_texts for password input field
-        self.fields['password1'].help_text = (
-            "Your password must meet the following criteria:"
-            "<ul>"
-                "<li>Can’t be too similar to your other personal information.</li>"
-                "<li>Must contain at least 8 characters.</li>"
-                "<li>Can’t be a commonly used password.</li>"
-                "<li>Can’t be entirely numeric.</li>"
-            "</ul>"
+        self.fields['email'].help_text = (
+            "Please use the official company email address when setting up the account."
         )
 
 class UpdateForm(forms.ModelForm):

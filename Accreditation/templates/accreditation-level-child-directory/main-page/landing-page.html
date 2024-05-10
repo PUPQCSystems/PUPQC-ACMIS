@@ -92,6 +92,27 @@
 								<li class="nav-item">
 									<a href="#tabs-profile-8" class="nav-link" data-bs-toggle="tab">Files</a>
 								</li>
+								<li class="nav-item ms-auto" role="presentation">
+									<div class="dropdown">
+										<button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
+										  	Generate Report
+										</button>
+										<div class="dropdown-menu dropdown-menu-end" style="">
+										  <a class="dropdown-item" href="{% url "accreditations:parameter-mean-reports" pk=parent_folder.id %}" target="__blank">
+												Summary of Ratings
+										  </a>
+
+											<a class="dropdown-item" href="{% url "accreditations:completed-parameter-reports" pk=parent_folder.id %}" target="__blank">
+												Completed Status Summary
+											</a>
+
+											<a class="dropdown-item" href="{% url "accreditations:ongoing-parameter-reports" pk=parent_folder.id %}" target="__blank">
+												Ongoing Status Summary
+											</a>
+
+										</div>
+									  </div>
+								</li>
 							</ul>
 						</div>
 						<div class="card-body">

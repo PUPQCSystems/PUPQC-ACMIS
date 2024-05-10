@@ -13,7 +13,8 @@
         	<div class="modal-body">
 				<div class="row">
 					<div class=" col">
-						{{ register_form.first_name|as_crispy_field }}
+						<label class="form-label required">{{ register_form.first_name.label }}</label>
+						{{ register_form.first_name }}
 					</div>
 
 					<div class=" col">
@@ -21,7 +22,8 @@
 					</div>
 
 					<div class=" col">
-						{{ register_form.last_name|as_crispy_field }}
+						<label class="form-label required">{{ register_form.last_name.label }}</label>
+						{{ register_form.last_name}}
 					</div>
 	
 				</div>
@@ -35,6 +37,7 @@
 						<label class="form-label required">Select a User Role</label>
 						<select type="text" name="selected_group" id="id_select_group" class="form-select form-control" id="select-groups">
 							<option value="" selected disabled>Please select a role</option>
+							<option value="admin">System Admin</option>
 							{% if auth_groups %}
 								{% for group in auth_groups %}
 									<option value="{{ group.auth_group.id }}">{{ group.auth_group.name}}</option>
@@ -51,7 +54,7 @@
 
 				</div>
 
-				<div class="row">
+				{% comment %} <div class="row">
 					<div class="col">
 						{{ register_form.password1|as_crispy_field }}
 					</div>
@@ -59,7 +62,11 @@
 					<div class="col">
 						{{ register_form.password2|as_crispy_field }}
 					</div>
-				</div>
+				</div> {% endcomment %}
+				<li><!-- Download SVG icon from http://tabler-icons.io/i/info-circle -->
+					<svg xmlns="http://www.w3.org/2000/svg" class="icon text-blue" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path><path d="M12 9h.01"></path><path d="M11 12h1v4h1"></path></svg>
+					The system will automatically generate a password and sends it to the user's email.
+				</li>
 			</div>
 
 			<div class="modal-footer">

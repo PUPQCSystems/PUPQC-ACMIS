@@ -1,4 +1,4 @@
-EXPORTING DATA
+EXPORTING DATA FROM THE DATABASE FOR BACKUP
 
 18. python manage.py dumpdata auth.group > seeders\auth_group.json
 18. python manage.py dumpdata auth.group.permissions > seeders\auth_group_permissions.json

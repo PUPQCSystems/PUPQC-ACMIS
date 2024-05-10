@@ -14,7 +14,8 @@ class Create_Level_Form(forms.ModelForm):
         name = self.cleaned_data.get('name')
 
         # Define the regular expression pattern for the allowed formats
-        allowed_formats = re.compile(r'^(Level\s+[IVXLCDM]+|[IVXLCDM]+)$', re.IGNORECASE)
+        # allowed_formats = re.compile(r'^(Level\s+[IVXLCDM]+|[IVXLCDM]+)$', re.IGNORECASE)
+        allowed_formats = re.compile(r'^(Level\s+[IVXLCDM]+|[IVXLCDM]+|PSV)$', re.IGNORECASE)
 
         if not allowed_formats.match(name):
             raise forms.ValidationError('Invalid format. Please only use the "Level" word and followed by Roman numerals (e.g., IV, V) to create a Level. For example "Level IX" or "level ix')
@@ -161,15 +162,15 @@ class Create_InstrumentDirectory_Form(forms.ModelForm):
         fields = ('name', 'label','due_date', 'description', 'has_progress_bar', 'has_assign_button', 'can_be_reviewed')
 
 
-    def clean(self):
-        cleaned_data = super().clean()
-        due_date = cleaned_data.get('due_date')
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     due_date = cleaned_data.get('due_date')
 
-        if due_date:
-            if due_date < timezone.now():
-                raise ValidationError("Due Date should be set in the future.")
+    #     if due_date:
+    #         if due_date < timezone.now():
+    #             raise ValidationError("Due Date should be set in the future.")
 
-        return cleaned_data
+    #     return cleaned_data
 
 class SubmissionBin_Form(forms.ModelForm):
     name = forms.CharField(max_length=500, 
@@ -307,8 +308,8 @@ class ProgramAccreditation_UpdateForm(forms.ModelForm):
                 raise ValidationError("Mock Accreditation Date cannot be after the survey visit date. ")
 
             # Check if mock_accred_date is before the current date
-            if mock_accred_date < timezone.now():
-                raise ValidationError("Mock Accreditation Date should be set in the future. ")
+            # if mock_accred_date < timezone.now():
+            #     raise ValidationError("Mock Accreditation Date should be set in the future. ")
 
         return cleaned_data
     

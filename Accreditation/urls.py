@@ -1,5 +1,5 @@
 from django.urls import path
-from Accreditation import  views_accreditation, views_accreditation_result, views_assign_user, views_instrument_folder, views_instrument_level, views_submission_bin
+from Accreditation import  views_accreditation, views_accreditation_result, views_assign_user, views_instrument_folder, views_instrument_level, views_reports, views_submission_bin
 from . import views_level, views_bodies, views_instrument
 
 from Accreditation.views_instrument_level import *
@@ -122,9 +122,12 @@ urlpatterns = [
     path("accreditation-result/upload-file/<str:pk>/", views_accreditation_result.upload_files, name='accreditation-result-upload-file'),
 
 
-
-
-
+    path("area-completeness-reports/<str:pk>/", views_reports.GeneratePDF, name='area-completeness-reports'),
+    path("parameter-mean-reports/<str:pk>/", views_reports.ParameterMeanReport, name='parameter-mean-reports'),
+    path("completed-area-reports/<str:pk>/", views_reports.CompletedArea, name='completed-area-reports'),
+    path("ongoing-area-reports/<str:pk>/", views_reports.OngoingArea, name='ongoing-area-reports'),
+    path("completed-parameter-reports/<str:pk>/", views_reports.CompletedParameter, name='completed-parameter-reports'),
+    path("ongoing-parameter-reports/<str:pk>/", views_reports.OngoingParameter, name='ongoing-parameter-reports'),
 
 
 

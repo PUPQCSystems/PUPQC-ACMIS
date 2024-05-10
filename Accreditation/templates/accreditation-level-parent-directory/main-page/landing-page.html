@@ -97,9 +97,31 @@
 								<li class="nav-item">
 									<a href="#tabs-profile-8" class="nav-link" data-bs-toggle="tab">Files</a>
 								</li>
+
+								<li class="nav-item ms-auto" role="presentation">
+									<div class="dropdown">
+										<button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
+										  	Generate Report
+										</button>
+										<div class="dropdown-menu dropdown-menu-end" style="">
+										  <a class="dropdown-item" href="{% url "accreditations:area-completeness-reports" pk=instrument_level_record.id %}" target="__blank">
+												Instrument Completion Report
+										  </a>
+										  	<a class="dropdown-item" href="{% url "accreditations:completed-area-reports" pk=instrument_level_record.id %}" target="__blank">
+												Area Completion Status Summary
+											</a>
+
+											<a class="dropdown-item" href="{% url "accreditations:ongoing-area-reports" pk=instrument_level_record.id %}" target="__blank">
+												Ongoing Areas Summary
+											</a>
+
+										 
+										</div>
+									  </div>
+								</li>
 							</ul>
 						</div>
-						<div class="card-body">
+						<div class="card-body" id="contentToConvert">
 							<div class="tab-content">
 								<div class="tab-pane fade active show" id="tabs-home-8">
 									<h4>Folders</h4>
@@ -110,6 +132,7 @@
 									<h4>Files</h4>
 									{% include "accreditation-level-parent-directory/main-page/file-cards.html" %}
 								</div>
+						
 							</div>
 						</div>
 					</div>
@@ -126,6 +149,12 @@
 						</li>
 						<li class="nav-item">
 							<a href="#tabs-profile-8" class="nav-link" data-bs-toggle="tab">Files</a>
+						</li>
+
+						<li class="nav-item ms-auto" role="presentation">
+							<a href="#"class="btn nav-link" title="Generate Report">
+								Generate Report<!-- Download SVG icon from http://tabler-icons.io/i/settings -->
+							</a>
 						</li>
 					</ul>
 				</div>
@@ -152,6 +181,7 @@
 
 {% block js_content %}
   	{% include "accreditation-level-parent-directory/main-page/scripts.html" %}
+	{% include "accreditation-level-parent-directory/main-page/pdf-reports/scripts.html" %}
 {% endblock js_content %}
 
 {% block css_content %}

@@ -102,7 +102,7 @@
                                 <div class="dropdown-menu dropdown-menu-end">
 
                                     {% comment %} Permissions code for accreditation result feature {% endcomment %}
-                                	{% if perms.Accreditation.view_accreditation_certificates and perms.Accreditation.add_accreditation_certificates and perms.Accreditation.change_accreditation_certificates and perms.Accreditation.delete_accreditation_certificates %}
+
                                         
                                         {% if user.is_superuser == True and record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None %}
                                             <button id="{{ record.id }}" class="dropdown-item position-relative text-green" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
@@ -145,21 +145,6 @@
                                             <div class="dropdown-divider-top"></div>
 
                                         {% endif %}
-
-                                    {% else %}
-                                        <button id="{{ record.id }}" class="dropdown-item position-relative" 
-                                            data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}" disabled
-                                            data-bs-toggle="tooltip" 
-                                            data-bs-html="true" 
-                                            data-bs-placement="bottom"
-                                            title="You don't have the permissions to access this button.">
-                                            Add Result
-                                            <span class="badge bg-secondary ms-auto" style="font-size: 10px">Inactive</span>
-                                        </button>
-                                        <div class="dropdown-divider-top"></div>
-
-
-                                    {% endif %}
 
 
                                     {% if perms.Accreditation.view_program_accreditation %}

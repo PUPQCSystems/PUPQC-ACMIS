@@ -38,6 +38,8 @@
 				<div class="col">
 					<label class="form-label required">Select a User Role</label>
 					<select type="text" name="selected_group" id="id_select_role" class="form-select form-control" id="select-groups" value="">
+						<option value="" selected disabled>Please select a role</option>
+						<option value="admin">System Admin</option>
 						{% if auth_groups %}
 							{% for group in auth_groups %}
 								<option value="{{ group.auth_group.id }}">{{ group.auth_group.name}}</option>

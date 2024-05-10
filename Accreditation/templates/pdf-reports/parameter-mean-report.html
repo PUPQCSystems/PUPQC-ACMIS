@@ -1,0 +1,216 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <!-- TABLER CSS files -->
+        <link href="{% static 'tabler-template/dist/libs/plyr/dist/plyr.css' %}" rel="stylesheet"/>
+        <link href="{% static 'tabler-template/dist/css/tabler.min.css' %}" rel="stylesheet"/>
+        <link href="{% static 'tabler-template/dist/css/tabler-flags.min.css' %}" rel="stylesheet"/>
+        <link href="{% static 'tabler-template/dist/css/tabler-payments.min.css' %}" rel="stylesheet"/>
+        <link href="{% static 'tabler-template/dist/css/tabler-vendors.min.css' %}" rel="stylesheet"/>
+        <link href="{% static 'tabler-template/dist/css/demo.min.css' %}" rel="stylesheet"/>
+    </head>
+    <body>
+        <style>
+            img{
+                width: 60px !important;
+                height: auto !important;
+                text-align: center !important;
+            }
+            th{
+                border: .1rem solid !important;
+                border-color: lightgrey !important;
+                padding: 5px !important;
+
+            }
+
+            td {
+                border: .1rem solid !important;
+                border-color: lightgrey !important;
+                padding: 3px !important;
+            }
+
+            th {
+                background-color: #830000 !important;
+                color: white !important;
+            }
+
+                        /* In your CSS file */
+            .container-fluid {
+            text-align: center; /* Centers content within a fluid container */
+            }
+
+            .rating {
+                text-align: right; /* Centers content within a fluid container */
+                }
+    
+
+            .content { 
+            display: inline-block; /* Allows the image to be centered within its container */
+            }
+
+        </style>
+        <section class="m-4 p-4">
+            <div class="container-fluid">
+                <div class="content text-center">
+                    <img src="https://www.pngkey.com/png/detail/52-528919_the-pup-logo-polytechnic-university-of-the-philippines.png" alt="The Pup Logo - Polytechnic University Of The Philippines Logo@pngkey.com">
+                </div>
+                <div class="text-center">
+                    <p style="margin: 0 !important;">Republic of the Philippines</p>
+                </div>
+                <div class="text-center">
+                    <h6>Polytechnic University of the Philippines - Quezon City Campus</h6>
+                </div>
+            
+                <div class="mt-4 pt-3 text-center">
+                    <h5>Summary of Ratings</h5>
+                    <h6>{{ parent_folder.name }}: {{ parent_folder.label }}</h6>
+                    <p style="font-style: italic;">
+                        {{ parent_folder.instrument_level.instrument }} - {{ parent_folder.instrument_level.level }}
+                    </p>
+                </div>
+            </div>
+            
+        
+            
+            <div id="table-default" class="table-responsive">
+				<table id="" class="display no-wrap table table-vcenter">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Label</th>
+                            <th>Numerical Rating</th>
+                            <th>Descriptive Rating</th>
+                            {% comment %} <th>Interpretation</th> {% endcomment %}
+
+                        </tr>
+                    </thead>
+                    <tbody class="table-tbody">
+                        {% for record, assigned_users in details %}
+                        <tr class="small">
+                            <td >
+                                 <b>{{ record.name }}</b>
+                            </td>
+
+                            <td>
+                                {{ record.label }}
+                            </td>
+
+                            <td class="rating">
+                                {{ record.rating }}
+                            </td>
+
+                            <td>
+                                <ul>
+                                    {{ record.status }}
+
+                                </ul>
+                                    
+                            </td>
+
+
+						</tr>
+
+					{% endfor %}
+                    </tbody>
+                </table>
+        
+            </div>
+            <br>
+
+                <div class="row">
+                    Total Rating: <b>{{ total_sum }}</b>
+                 </div>
+
+                 <div class="row">
+                    Mean: <b>{{ area_mean }}</b>
+                 </div>
+
+                 <div class="row">
+                    Descriptive Rating: 
+                    <b>
+                    {% if area_mean > 4 and area_mean < 6 %}
+                        Excellent
+                    
+                    {% elif area_mean > 3 and area_mean < 5 %}
+                        Very Satisfactory
+
+                    {% elif area_mean > 2 and area_mean < 4 %}
+                        Satisfactory
+
+                    {% elif area_mean > 1 and area_mean < 3 %}
+                        Fair
+
+                    {% elif area_mean > 0 and area_mean < 2 %}
+                        Poor
+
+                    {% elif area_mean == 0 %}
+                        Missing
+
+                    {% endif %}
+                    </b>
+                 </div>
+
+    
+
+ 
+
+
+        </section>
+
+        
+        {% comment %}--------------------------[ TABLER JS ]--------------------------{% endcomment %}
+        <!-- Libs JS -->
+        <script src="{% static 'tabler-template/dist/libs/apexcharts/dist/apexcharts.min.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/libs/jsvectormap/dist/js/jsvectormap.min.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/libs/jsvectormap/dist/maps/world.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/libs/jsvectormap/dist/maps/world-merc.js' %}" defer></script>
+
+        <!-- Libs JS -->
+        <script src="{% static 'tabler-template/dist/libs/nouislider/dist/nouislider.min.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/libs/litepicker/dist/litepicker.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/libs/tom-select/dist/js/tom-select.base.min.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/libs/plyr/dist/plyr.min.js' %}" defer></script>
+
+        <!-- Tabler Core -->
+        <script src="{% static 'tabler-template/dist/libs/tinymce/tinymce.min.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/js/tabler.min.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/js/demo.min.js' %}" defer></script>
+
+
+        <script src="{% static 'vendor/DataTables/JSZip-3.10.1/jszip.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/pdfmake-0.2.7/pdfmake.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/pdfmake-0.2.7/vfs_fonts.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/DataTables-2.0.0/js/dataTables.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/DataTables-2.0.0/js/dataTables.bootstrap5.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/AutoFill-2.7.0/js/dataTables.autoFill.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/AutoFill-2.7.0/js/autoFill.bootstrap5.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Buttons-3.0.0/js/dataTables.buttons.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Buttons-3.0.0/js/buttons.bootstrap5.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Buttons-3.0.0/js/buttons.colVis.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Buttons-3.0.0/js/buttons.html5.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Buttons-3.0.0/js/buttons.print.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/ColReorder-2.0.0/js/dataTables.colReorder.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/DateTime-1.5.2/js/dataTables.dateTime.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/FixedColumns-5.0.0/js/dataTables.fixedColumns.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/FixedHeader-4.0.0/js/dataTables.fixedHeader.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/KeyTable-2.12.0/js/dataTables.keyTable.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Responsive-3.0.0/js/dataTables.responsive.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Responsive-3.0.0/js/responsive.bootstrap5.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/RowGroup-1.5.0/js/dataTables.rowGroup.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/RowReorder-1.5.0/js/dataTables.rowReorder.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Scroller-2.4.0/js/dataTables.scroller.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/SearchBuilder-1.7.0/js/dataTables.searchBuilder.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/SearchBuilder-1.7.0/js/searchBuilder.bootstrap5.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/SearchPanes-2.3.0/js/dataTables.searchPanes.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/SearchPanes-2.3.0/js/searchPanes.bootstrap5.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Select-2.0.0/js/dataTables.select.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/StateRestore-1.4.0/js/dataTables.stateRestore.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/StateRestore-1.4.0/js/stateRestore.bootstrap5.min.js' %}"></script>
+    </body>
+</html>
+
+
