@@ -146,13 +146,16 @@
                                 </div>
 
 
-                                {% if file.status == 'approve'%}
+                                {% comment %} {% if file.status == 'approve'%}
                                     <span class="badge badge-outline text-green">Correct</span>
                                 {% elif file.status == 'rfr' %}
                                     <span class="badge badge-outline text-red">Request for Resubmission</span>
 
                                 {% elif file.status == 'fr' %}
                                     <span class="badge badge-outline text-cyan">For Review</span>
+                                {% endif %} {% endcomment %}
+                                {% if file.can_be_reviewed %}
+                                    <span class="badge badge-outline text-cyan">[{{file.rating}}] - {{ file.status }}</span>
                                 {% endif %}
         
                         

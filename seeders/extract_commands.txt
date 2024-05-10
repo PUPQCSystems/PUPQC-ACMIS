@@ -1,0 +1,77 @@
+EXPORTING DATA
+
+18. python manage.py dumpdata auth.group > seeders\auth_group.json
+18. python manage.py dumpdata auth.group.permissions > seeders\auth_group_permissions.json
+21. python manage.py dumpdata auth.permission > seeders\auth_permission.json
+1. python manage.py dumpdata contenttypes.contenttype > seeders\content_types.json
+22. python manage.py dumpdata sessions.session > seeders\sessions_data.json
+1. python manage.py dumpdata Users.CustomUser > seeders\users.json
+2. python manage.py dumpdata Users.CustomUser_profile > seeders\user_profile.json
+3. python manage.py dumpdata Users.auth_group_info > seeders\auth_group_info.json
+3. python manage.py dumpdata Accreditation.accredbodies > seeders\accredbodies.json
+4. python manage.py dumpdata Programs.Programs > seeders\programs.json
+6. python manage.py dumpdata Accreditation.accredlevel > seeders\accredlevel.json
+7. python manage.py dumpdata Accreditation.instrument > seeders\instrument.json
+8. python manage.py dumpdata Accreditation.instrument_level > seeders\instrument_level.json
+9. python manage.py dumpdata Accreditation.program_accreditation > seeders\program_accreditation.json
+10. python manage.py dumpdata Accreditation.instrument_level_folder > seeders\instrument_level_folder.json
+11. python manage.py dumpdata Accreditation.files > seeders\files.json
+12. python manage.py dumpdata Accreditation.accreditation_certificates > seeders\accreditation_certificates.json
+13. python manage.py dumpdata Accreditation.user_assigned_to_folder > seeders\user_assigned_to_folder.json
+14. python manage.py dumpdata Users.auth_group_info > seeders\auth_group_info.json
+15. python manage.py dumpdata Accreditation.result_remarks > seeders\result_remarks.json
+16. python manage.py dumpdata Users.activity_log > seeders\activity_log.json
+
+
+
+
+LOADING DATA TO THE DATABASE
+18. python manage.py loaddata seeders\auth_group.json
+21. python manage.py loaddata seeders\auth_permission.json
+12. python manage.py loaddata seeders\auth_group_permissions.json
+22. python manage.py loaddata seeders\sessions_data.json
+21. python manage.py loaddata seeders\content_types.json
+1. python manage.py loaddata seeders\users.json
+2. python manage.py loaddata seeders\auth_group_info.json
+2. python manage.py loaddata seeders\user_profile.json
+3. python manage.py loaddata seeders\accredbodies.json
+4. python manage.py loaddata seeders\programs.json
+6. python manage.py loaddata seeders\accredlevel.json
+7. python manage.py loaddata seeders\instrument.json
+8. python manage.py loaddata seeders\instrument_level.json
+9. python manage.py loaddata seeders\program_accreditation.json
+10. python manage.py loaddata seeders\instrument_level_folder.json
+11. python manage.py loaddata seeders\files.json
+12. python manage.py loaddata seeders\accreditation_certificates.json
+13. python manage.py loaddata seeders\user_assigned_to_folder.json
+15. python manage.py loaddata seeders\result_remarks.json
+16. python manage.py loaddata seeders\activity_log.json
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -28,15 +28,15 @@
 				</a>
 				<div class="dropdown-menu">
 				{% if perms.Accreditation.add_instrument_level_folder %}
-					<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-simple-modal">
+					{% comment %} <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-simple-modal">
 						New Folder (Simple)
-					</a>
+					</a> {% endcomment %}
 					<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-advance-modal">
-						New Folder (Advance)
+						New Folder
 					</a>
-					<a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-submission-bin-modal">
+					{% comment %} <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#create-submission-bin-modal">
 						Submission Bin
-					</a>
+					</a> {% endcomment %}
 				{% endif %}
 
 				{% if perms.Accreditation.add_files %}

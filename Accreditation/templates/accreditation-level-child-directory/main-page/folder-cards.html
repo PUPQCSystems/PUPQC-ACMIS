@@ -133,7 +133,7 @@
                                 {% endif %}
 
 
-                            {% if record.can_be_reviewed %}
+                            {% comment %} {% if record.can_be_reviewed %}
                                 {% if record.status == 'approve'%}
                                     <span class="badge badge-outline text-green">Correct</span>
                                 {% elif record.status == 'rfr' %}
@@ -142,7 +142,9 @@
                                 {% else %}
                                     <span class="badge badge-outline text-cyan">For Review</span>
                                 {% endif %}
-                            {% endif %}
+                            {% endif %} {% endcomment %}
+                            
+                            <span class="badge badge-outline text-cyan">[{{record.rating}}] - {{ record.status }}</span>
 
                             <br>
                         

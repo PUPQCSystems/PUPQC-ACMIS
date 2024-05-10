@@ -321,20 +321,21 @@ class ReviewUploadBin_Form(forms.ModelForm):
             (3, '3 - Satisfactory'), 
             (2, '2 - Fair'), 
             (1, '1 - Poor'), 
+            (0, '0 - Missing')
         ]    
     
-    status = forms.ChoiceField(
-        label = "Status", 
+    rating = forms.ChoiceField(
+        label = "Rating Scale", 
         choices = STATUS_CHOICES,
         required = True, 
-        error_messages={'required': "Please select a status before submitting the form."},
+        error_messages={'required': "Please select a rating before submitting the form."},
         widget=forms.Select(attrs={'class': 'form-control form-select select'}))
 
 
     
     class Meta:
         model = instrument_level_folder
-        fields = ('status', 'remarks')
+        fields = ('rating', 'remarks')
 
     widgets = {
         'remarks': forms.Textarea(attrs={'required': False}),
@@ -461,20 +462,21 @@ class ReviewFile_Form(forms.ModelForm):
             (3, '3 - Satisfactory'), 
             (2, '2 - Fair'), 
             (1, '1 - Poor'), 
+            (0, '0 - Missing')
         ]       
     
-    status = forms.ChoiceField(
-        label = "Status", 
+    rating = forms.ChoiceField(
+        label = "Rating Scale", 
         choices = STATUS_CHOICES,
         required = True, 
-        error_messages={'required': "Please select a status before submitting the form."},
+        error_messages={'required': "Please select a rating before submitting the form."},
         widget=forms.Select(attrs={'class': 'form-control form-select select'}))
 
 
     
     class Meta:
         model = files
-        fields = ('status', 'remarks')
+        fields = ('rating', 'remarks')
 
     widgets = {
         'remarks': forms.Textarea(attrs={'required': False}),

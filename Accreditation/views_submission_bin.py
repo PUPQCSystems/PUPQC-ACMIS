@@ -79,7 +79,7 @@ def create_submissionBin_parent(request, pk):
         submission_bin_form.instance.accepted_file_type = all_file_types
         submission_bin_form.instance.is_submission_bin = True
         submission_bin_form.instance.can_be_reviewed = True
-        submission_bin_form.instance.status = 'fr'
+        submission_bin_form.instance.status = 'For Review'
 
         # submission_bin_form.instance.accepted_file_count = request.POST.get('accepted_file_count')
         submission_bin_form.instance.accepted_file_count = 10
@@ -138,7 +138,7 @@ def create_submissionBin_child(request, pk):
         submission_bin_form.instance.accepted_file_type = all_file_types
         submission_bin_form.instance.is_submission_bin = True
         submission_bin_form.instance.can_be_reviewed = True
-        submission_bin_form.instance.status = 'fr'
+        submission_bin_form.instance.status = 'For Review'
 
         # submission_bin_form.instance.accepted_file_count = request.POST.get('accepted_file_count')
         submission_bin_form.instance.accepted_file_count = 10
@@ -246,7 +246,7 @@ def create_files(request, pk):
 
             if length != 0:
                 if length <= submission_bin.accepted_file_count:
-                    submission_bin.status = "fr"
+                    submission_bin.status = "For Review"
                     submission_bin.save()
                     print(submission_bin.accepted_file_count)
                     for file_num in range(0, int(length)):
@@ -308,7 +308,8 @@ def create_parent_folder_files(request, pk):
                     uploaded_by = request.user,
                     file_name =  request.FILES.get(f'files{file_num}'), 
                     file_path=request.FILES.get(f'files{file_num}'),
-                    status="fr"
+                    status="For Review",
+                    rating = 0
                     
                 )
 
@@ -352,7 +353,8 @@ def create_child_folder_files(request, pk):
                     uploaded_by = request.user,
                     file_name =  request.FILES.get(f'files{file_num}'), 
                     file_path=request.FILES.get(f'files{file_num}'),
-                    status="fr"
+                    status="For Review",
+                    rating = 0
                     
                 )
 
@@ -372,7 +374,7 @@ def create_child_folder_files(request, pk):
 
 
             folder = instrument_level_folder.objects.get(id=pk)
-            folder.status = 'fr'
+            folder.status = 'For Review'
             folder.save()
 
             if folder.parent_directory_id:
@@ -539,7 +541,8 @@ def change_to_reviewable_file(request, pk):
 
     if request.method == 'POST':
         file_record.can_be_reviewed = True
-        file_record.status = 'fr'
+        file_record.status = 'For Review'
+        file_record.rating = 0
         file_record.modified_by = request.user
         file_record.save()
 

@@ -344,7 +344,8 @@ def create_child(request, pk):
             create_form.instance.is_advance = True
 
             if can_be_reviewed:
-                create_form.instance.status = 'fr'
+                create_form.instance.status = 'Missing'
+                create_form.instance.rating = 0
 
         create_form.instance.created_by = request.user
         create_form.instance.parent_directory_id = pk
@@ -689,30 +690,60 @@ def create_folder_review(request, pk):
     if request.method == 'POST':
         users_assigned_to_folder = user_assigned_to_folder.objects.select_related('assigned_user', 'parent_directory').filter(parent_directory=folder)
         review_form = ReviewUploadBin_Form(request.POST or None, instance=folder)
-        review =  request.POST.get('status')
+        review =  request.POST.get('rating')
         remarks=  request.POST.get('remarks')
         if review_form.is_valid():
             review_form.instance.modified_by = request.user
             review_form.instance.reviewed_by = request.user
             review_form.instance.reviewed_at = timezone.now()
 
-            if review == 'approve':
+            if review == 5:
                 review_form.instance.progress_percentage = 100.00
+                review_form.instance.rating = review
+                review_form.instance.status = "Excellent"
 
-                for user in users_assigned_to_folder:
-                    email_when_folder_approved(folder, user, remarks)
+            elif review == 4:
+                review_form.instance.progress_percentage = 80.00
+                review_form.instance.rating = review
+                review_form.instance.status = "Very Satisfactory"
 
-            elif review == 'rfr':
+
+            elif review == 3:
+                review_form.instance.progress_percentage = 60.00
+                review_form.instance.rating = review
+                review_form.instance.status = "Satisfactory"
+
+
+            elif review == 2:
+                review_form.instance.progress_percentage = 40.00
+                review_form.instance.rating = review
+                review_form.instance.status = "Fair"
+
+
+            elif review == 1:
+                review_form.instance.progress_percentage = 20.00
+                review_form.instance.rating = review
+                review_form.instance.status = "Poor"
+
+            elif review == 0:
                 review_form.instance.progress_percentage = 0.00
+                review_form.instance.rating = review
+                review_form.instance.status = "Missing"
 
-                for user in users_assigned_to_folder:
-                    email_when_folder_request_resubmission(folder, user, remarks)
+            #     for user in users_assigned_to_folder:
+            #         email_when_folder_approved(folder, user, remarks)
 
-            elif review == 'fr':
-                review_form.instance.progress_percentage = 0.00
+            # elif review == 'rfr':
+            #     review_form.instance.progress_percentage = 0.00
 
-                for user in users_assigned_to_folder:
-                    email_when_folder_for_review(folder, user, remarks)
+            #     for user in users_assigned_to_folder:
+            #         email_when_folder_request_resubmission(folder, user, remarks)
+
+            # elif review == 'fr':
+            #     review_form.instance.progress_percentage = 0.00
+
+            #     for user in users_assigned_to_folder:
+            #         email_when_folder_for_review(folder, user, remarks)
 
 
             review_form.save()
@@ -875,12 +906,40 @@ def create_file_review(request, pk):
     if request.method == 'POST':
         review_form = ReviewFile_Form(request.POST or None, instance=file_record)
         users_assigned_to_folder = user_assigned_to_folder.objects.select_related('assigned_user', 'parent_directory').filter(parent_directory=file_record.parent_directory)
-        review =  request.POST.get('status')
+        review =  request.POST.get('rating')
         remarks =  request.POST.get('remarks')
         if review_form.is_valid():
             review_form.instance.modified_by = request.user
             review_form.instance.reviewed_by = request.user
             review_form.instance.reviewed_at = timezone.now()
+
+            if review == '5':
+                review_form.instance.rating = review
+                review_form.instance.status = "Excellent"
+
+            elif review == '4':
+                review_form.instance.rating = review
+                review_form.instance.status = "Very Satisfactory"
+
+
+            elif review == '3':
+                review_form.instance.rating = review
+                review_form.instance.status = "Satisfactory"
+
+
+            elif review == '2':
+                review_form.instance.rating = review
+                review_form.instance.status = "Fair"
+
+
+            elif review == '1':
+                review_form.instance.rating = review
+                review_form.instance.status = "Poor"
+
+            elif review == '0':
+                review_form.instance.rating = review
+                review_form.instance.status = "Missing"
+
             review_form.save()
 
             # Call this function to review child records of the parent folder
@@ -896,8 +955,8 @@ def create_file_review(request, pk):
 
 
 
-            if review == 'approve':
-                review_form.instance.progress_percentage = 100.00
+            # if review == 'approve':
+            #     review_form.instance.progress_percentage = 100.00
 
                 # if file_record.instrument_level and file_record.parent_directory == None:
                 #     email_when_file_approved(file_record, file_record.uploaded_by, remarks)
@@ -906,14 +965,14 @@ def create_file_review(request, pk):
                 #     email_when_file_approved(file_record, user, remarks)
 
 
-            elif review == 'rfr':
-                review_form.instance.progress_percentage = 0.00
+            # elif review == 'rfr':
+            #     review_form.instance.progress_percentage = 0.00
 
                 # for user in users_assigned_to_folder:
                 #     email_when_file_request_resubmission(file_record, user, remarks)
 
-            elif review == 'fr':
-                review_form.instance.progress_percentage = 0.00
+            # elif review == 'fr':
+            #     review_form.instance.progress_percentage = 0.00
 
                 # for user in users_assigned_to_folder:
                 #     email_when_file_for_review(file_record, user, remarks)
@@ -970,24 +1029,110 @@ def rename_file(request, pk):
 
 
 
+# def parent_calculate_progress(instrument_level_id):
+#     # Get the record who has the if of instrument_level_id
+#     instrument_level_record = instrument_level.objects.get(id=instrument_level_id)
+    
+#      # Get the child files and child folders that has a "approved" status
+#     folders_count = instrument_level_folder.objects.filter(Q(can_be_reviewed=True) | Q(has_progress_bar=True), instrument_level_id=instrument_level_id, parent_directory_id=None, is_deleted=False).count()
+#     files_count = files.objects.filter(can_be_reviewed=True, instrument_level_id=instrument_level_id, parent_directory_id=None, is_deleted=False).count()
+#     child_folders = instrument_level_folder.objects.filter(Q(can_be_reviewed=True) | Q(has_progress_bar=True), instrument_level_id=instrument_level_id, parent_directory_id=None, is_deleted=False)
+#     child_files = files.objects.filter(can_be_reviewed=True, instrument_level_id=instrument_level_id, parent_directory_id=None, is_deleted=False)
+    
+
+#     overall_count = folders_count + files_count
+#     overall_percentage = overall_count * 100
+
+#     file_percentage_sum = 0.00
+#     folder_percentage_sum = 0.00
+#     overall_percentage_sum = 0.00
+
+#     # Get the sum of the progress percentage of all files and folders
+#     for folder in child_folders:
+#         if folder.has_progress_bar and folder.can_be_reviewed:
+#             if folder.progress_percentage:
+#                 folder_percentage_sum += float(folder.progress_percentage)
+
+#             else:
+#                 folder_percentage_sum += 0.00
+
+
+#         elif folder.has_progress_bar == True and folder.can_be_reviewed == False:
+#             if folder.progress_percentage:
+#                 folder_percentage_sum += float(folder.progress_percentage)
+
+#             else:
+#                 folder_percentage_sum += 0.00
+
+#         elif folder.has_progress_bar == False and folder.can_be_reviewed:
+#             if folder.status == 'approve':
+#                 folder_percentage_sum += 100.00
+               
+
+#             elif folder.status == 'rfr':
+#                 folder_percentage_sum += 0.00
+               
+
+#             elif folder.status == "fr":
+#                 folder_percentage_sum += 0.00
+            
+
+#     for file in child_files:
+#         if file.can_be_reviewed:
+#             if file.status == 'approve':
+#                 file_percentage_sum += 100.00
+#             elif file.status == 'rfr':
+#                 file_percentage_sum += 0.00
+
+#             elif file.status == "fr":
+#                 file_percentage_sum += 0.00
+
+#     overall_percentage_sum = file_percentage_sum + folder_percentage_sum
+
+#     if overall_percentage_sum:
+#         progress_percentage = overall_percentage_sum / overall_percentage * 100
+
+#     else:
+#         progress_percentage = 0.00
+    
+#     instrument_level_record.progress_percentage = progress_percentage
+
+#     if progress_percentage == 100.0:
+#         instrument_level_record.status = 'approve'
+
+#     else:
+#         instrument_level_record.status = 'fr'
+
+#     instrument_level_record.save()
+    
+#     return
+
+
 def parent_calculate_progress(instrument_level_id):
     # Get the record who has the if of instrument_level_id
     instrument_level_record = instrument_level.objects.get(id=instrument_level_id)
-
+    
      # Get the child files and child folders that has a "approved" status
     folders_count = instrument_level_folder.objects.filter(Q(can_be_reviewed=True) | Q(has_progress_bar=True), instrument_level_id=instrument_level_id, parent_directory_id=None, is_deleted=False).count()
     files_count = files.objects.filter(can_be_reviewed=True, instrument_level_id=instrument_level_id, parent_directory_id=None, is_deleted=False).count()
     child_folders = instrument_level_folder.objects.filter(Q(can_be_reviewed=True) | Q(has_progress_bar=True), instrument_level_id=instrument_level_id, parent_directory_id=None, is_deleted=False)
     child_files = files.objects.filter(can_be_reviewed=True, instrument_level_id=instrument_level_id, parent_directory_id=None, is_deleted=False)
+    
 
     overall_count = folders_count + files_count
     overall_percentage = overall_count * 100
+
+    folder_rating_sum = 0.00
+    file_rating_sum = 0.00
+    overall_rating_sum = 0.00
+    
+    overall_mean = 0.00
 
     file_percentage_sum = 0.00
     folder_percentage_sum = 0.00
     overall_percentage_sum = 0.00
 
-
+    
     # Get the sum of the progress percentage of all files and folders
     for folder in child_folders:
         if folder.has_progress_bar and folder.can_be_reviewed:
@@ -997,37 +1142,64 @@ def parent_calculate_progress(instrument_level_id):
             else:
                 folder_percentage_sum += 0.00
 
-
-        elif folder.has_progress_bar == True and folder.can_be_reviewed == False:
-            if folder.progress_percentage:
-                folder_percentage_sum += float(folder.progress_percentage)
-
-            else:
-                folder_percentage_sum += 0.00
-
         elif folder.has_progress_bar == False and folder.can_be_reviewed:
-            if folder.status == 'approve':
-                folder_percentage_sum += 100.00
-               
 
-            elif folder.status == 'rfr':
-                folder_percentage_sum += 0.00
-               
+            if folder.rating:
+                if float(folder.rating) >= 4.1 and float(folder.rating) <= 5.0:
+                    folder_percentage_sum += float(folder.rating) / 5 * 100
+                    folder_rating_sum += float(folder.rating)
 
-            elif folder.status == "fr":
-                folder_percentage_sum += 0.00
-            
+                elif float(folder.rating) >= 3.1 and float(folder.rating) <= 4.0:
+                    folder_percentage_sum += float(folder.rating) / 5 * 100
+                    folder_rating_sum += float(folder.rating)
+                
+                elif float(folder.rating) >= 2.1 and float(folder.rating) <= 3.0:
+                    folder_percentage_sum += float(folder.rating) / 5 * 100
+                    folder_rating_sum += float(folder.rating)
 
-    for file in child_files:
-        if file.can_be_reviewed:
-            if file.status == 'approve':
-                file_percentage_sum += 100.00
-            elif file.status == 'rfr':
-                file_percentage_sum += 0.00
+                elif float(folder.rating) >= 1.1 and float(folder.rating) <= 2.0:
+                    folder_percentage_sum += float(folder.rating) / 5 * 100
+                    folder_rating_sum += float(folder.rating)
 
-            elif file.status == "fr":
-                file_percentage_sum += 0.00
+                elif float(folder.rating) >= 0.1 and float(folder.rating) <= 1.0:
+                    folder_percentage_sum += float(folder.rating) / 5 * 100
+                    folder_rating_sum += float(folder.rating)
 
+                elif float(folder.rating) == 0.0:
+                    folder_percentage_sum += float(folder.rating) / 5 * 100
+                    folder_rating_sum += float(folder.rating)
+
+    if child_files:
+        for file in child_files:
+            if file.can_be_reviewed:
+
+                if float(file.rating) >= 4.1 and float(file.rating) <= 5.0:
+                    file_percentage_sum += float(file.rating) / 5 * 100
+                    file_rating_sum += float(file.rating)
+
+                elif float(file.rating) >= 3.1 and float(file.rating) <= 4.0:
+                    file_percentage_sum += float(file.rating) / 5 * 100
+                    file_rating_sum += float(file.rating)
+
+                
+                elif float(file.rating) >= 2.1 and float(file.rating) <= 3.0:
+                    file_percentage_sum += float(file.rating) / 5 * 100
+                    file_rating_sum += float(file.rating)
+
+                elif float(file.rating) >= 1.1 and float(file.rating) <= 2.0:
+                    file_percentage_sum += float(file.rating) / 5 * 100
+                    file_rating_sum += float(file.rating)
+
+                elif float(file.rating) >= 0.1 and float(file.rating) <= 1.0:
+                    file_percentage_sum += float(file.rating) / 5 * 100
+                    file_rating_sum += float(file.rating)
+
+                elif float(file.rating) == 0.0:
+                    file_percentage_sum += float(file.rating) / 5 * 100
+                    file_rating_sum += float(file.rating)
+    
+          
+    overall_rating_sum = file_rating_sum + folder_rating_sum
     overall_percentage_sum = file_percentage_sum + folder_percentage_sum
 
     if overall_percentage_sum:
@@ -1035,18 +1207,43 @@ def parent_calculate_progress(instrument_level_id):
 
     else:
         progress_percentage = 0.00
-    
     instrument_level_record.progress_percentage = progress_percentage
 
-    if progress_percentage == 100.0:
-        instrument_level_record.status = 'approve'
+    print('Overall Rating: ', overall_rating_sum)
+    if overall_rating_sum:
+        mean = overall_rating_sum / overall_count
 
     else:
-        instrument_level_record.status = 'fr'
+        mean = 0
+    instrument_level_record.rating = mean
+    print('MEAN ', mean)
+        
+
+    if progress_percentage >= 81.0 and progress_percentage <= 100.0:
+        instrument_level_record.status = 'Excellent'
+
+    elif progress_percentage >= 61.0 and progress_percentage <= 80.0:
+        instrument_level_record.status = 'Very Satisfactory'
+
+    elif progress_percentage >= 41.0 and progress_percentage <= 60.0:
+        instrument_level_record.status = 'Satisfactory'
+
+    elif progress_percentage >= 21.0 and progress_percentage <= 40.0:
+        instrument_level_record.status = 'Fair'
+
+    elif progress_percentage >= 1.0 and progress_percentage <= 20.0:
+        instrument_level_record.status = 'Poor'
+
+    elif progress_percentage == 0:
+        instrument_level_record.status = 'Missing'
+
 
     instrument_level_record.save()
+
     
     return
+
+
 
 
 
@@ -1063,11 +1260,17 @@ def calculate_progress(folder_id):
     overall_count = folders_count + files_count
     overall_percentage = overall_count * 100
 
+    folder_rating_sum = 0.00
+    file_rating_sum = 0.00
+    overall_rating_sum = 0.00
+    
+    overall_mean = 0.00
+
     file_percentage_sum = 0.00
     folder_percentage_sum = 0.00
     overall_percentage_sum = 0.00
 
-
+    
     # Get the sum of the progress percentage of all files and folders
     for folder in child_folders:
         if folder.has_progress_bar and folder.can_be_reviewed:
@@ -1077,44 +1280,101 @@ def calculate_progress(folder_id):
             else:
                 folder_percentage_sum += 0.00
 
-
         elif folder.has_progress_bar == False and folder.can_be_reviewed:
-            if folder.status == 'approve':
-                folder_percentage_sum += 100.00
-               
 
-            elif folder.status == 'rfr':
-                folder_percentage_sum += 0.00
-               
+            if folder.rating:
+                if float(folder.rating) >= 4.1 and float(folder.rating) <= 5.0:
+                    folder_percentage_sum += float(folder.rating) / 5 * 100
+                    folder_rating_sum += float(folder.rating)
 
-            elif folder.status == "fr":
-                folder_percentage_sum += 0.00
+                elif float(folder.rating) >= 3.1 and float(folder.rating) <= 4.0:
+                    folder_percentage_sum += float(folder.rating) / 5 * 100
+                    folder_rating_sum += float(folder.rating)
                 
+                elif float(folder.rating) >= 2.1 and float(folder.rating) <= 3.0:
+                    folder_percentage_sum += float(folder.rating) / 5 * 100
+                    folder_rating_sum += float(folder.rating)
 
-    for file in child_files:
-        if file.can_be_reviewed:
-            if file.status == 'approve':
-                file_percentage_sum += 100.00
-            elif file.status == 'rfr':
-                file_percentage_sum += 0.00
+                elif float(folder.rating) >= 1.1 and float(folder.rating) <= 2.0:
+                    folder_percentage_sum += float(folder.rating) / 5 * 100
+                    folder_rating_sum += float(folder.rating)
 
-            elif file.status == "fr":
-                file_percentage_sum += 0.00
+                elif float(folder.rating) >= 0.1 and float(folder.rating) <= 1.0:
+                    folder_percentage_sum += float(folder.rating) / 5 * 100
+                    folder_rating_sum += float(folder.rating)
 
+                elif float(folder.rating) == 0.0:
+                    folder_percentage_sum += float(folder.rating) / 5 * 100
+                    folder_rating_sum += float(folder.rating)
+
+    if child_files:
+        for file in child_files:
+            if file.can_be_reviewed:
+
+                if float(file.rating) >= 4.1 and float(file.rating) <= 5.0:
+                    file_percentage_sum += float(file.rating) / 5 * 100
+                    file_rating_sum += float(file.rating)
+
+                elif float(file.rating) >= 3.1 and float(file.rating) <= 4.0:
+                    file_percentage_sum += float(file.rating) / 5 * 100
+                    file_rating_sum += float(file.rating)
+
+                
+                elif float(file.rating) >= 2.1 and float(file.rating) <= 3.0:
+                    file_percentage_sum += float(file.rating) / 5 * 100
+                    file_rating_sum += float(file.rating)
+
+                elif float(file.rating) >= 1.1 and float(file.rating) <= 2.0:
+                    file_percentage_sum += float(file.rating) / 5 * 100
+                    file_rating_sum += float(file.rating)
+
+                elif float(file.rating) >= 0.1 and float(file.rating) <= 1.0:
+                    file_percentage_sum += float(file.rating) / 5 * 100
+                    file_rating_sum += float(file.rating)
+
+                elif float(file.rating) == 0.0:
+                    file_percentage_sum += float(file.rating) / 5 * 100
+                    file_rating_sum += float(file.rating)
+    
+          
+    overall_rating_sum = file_rating_sum + folder_rating_sum
     overall_percentage_sum = file_percentage_sum + folder_percentage_sum
+
     if overall_percentage_sum:
         progress_percentage = overall_percentage_sum / overall_percentage * 100
 
     else:
         progress_percentage = 0.00
-    
     folder_record.progress_percentage = progress_percentage
 
-    if progress_percentage == 100.0:
-        folder_record.status = 'approve'
+    print('Overall Rating: ', overall_rating_sum)
+    if overall_rating_sum:
+        mean = overall_rating_sum / overall_count
 
     else:
-        folder_record.status = 'fr'
+        mean = 0
+    folder_record.rating = mean
+    print(folder_record.name, ': ', mean)
+        
+
+    if progress_percentage >= 81.0 and progress_percentage <= 100.0:
+        folder_record.status = 'Excellent'
+
+    elif progress_percentage >= 61.0 and progress_percentage <= 80.0:
+        folder_record.status = 'Very Satisfactory'
+
+    elif progress_percentage >= 41.0 and progress_percentage <= 60.0:
+        folder_record.status = 'Satisfactory'
+
+    elif progress_percentage >= 21.0 and progress_percentage <= 40.0:
+        folder_record.status = 'Fair'
+
+    elif progress_percentage >= 1.0 and progress_percentage <= 20.0:
+        folder_record.status = 'Poor'
+
+    elif progress_percentage == 0:
+        folder_record.status = 'Missing'
+
 
     folder_record.save()
 
@@ -1125,3 +1385,6 @@ def calculate_progress(folder_id):
         parent_calculate_progress(folder_record.instrument_level_id)
     
     return
+
+
+
