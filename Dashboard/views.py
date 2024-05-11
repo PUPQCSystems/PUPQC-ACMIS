@@ -19,7 +19,8 @@ def landing_page(request):
 	#Getting all the data inside the Program table and storing it to the context variable
 	under_accred_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted= False, is_done=False) 
 	under_accred_programs_count = program_accreditation.objects.filter(is_deleted= False, is_done=False).count() 	#This code counts the programs taht under accreditation
-	reviewable_folders = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').filter(is_deleted = False, status='fr', can_be_reviewed=True)
+	# reviewable_folders = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').filter(is_deleted = False, can_be_reviewed=True)
+	reviewable_folders = instrument_level_folder.objects.filter(~Q(progress_percentage=100.00), ~Q(rating=5.00), Q(has_progress_bar=True) | Q(can_be_reviewed = True), is_deleted= False).order_by('name') #Getting all the data inside the Program table and storing it to the context variable
 	uploaded_files = files.objects.select_related('instrument_level', 'parent_directory').filter(is_deleted = False)
 
 	accredited_records = program_accreditation.objects.select_related('instrument_level', 'program').filter(is_deleted= False, is_done=True, is_failed = False) 

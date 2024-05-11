@@ -43,6 +43,10 @@
             text-align: center; /* Centers content within a fluid container */
             }
 
+            .text-right {
+                text-align: right; /* Centers content within a fluid container */
+                }
+
             .content { 
             display: inline-block; /* Allows the image to be centered within its container */
             }
@@ -79,6 +83,8 @@
                             <th>Label</th>
                             <th>Instrument</th>
                             <th>Members</th>
+                            <th>Ratings</th>
+                            <th>Description</th>
                             <th>Completeness Percentage</th>
                             {% comment %} <th>Interpretation</th> {% endcomment %}
 
@@ -112,10 +118,18 @@
                                 {% endif %}
                                     
                             </td>
+                            <td class="text-right">    {{ record.rating }}</td>
+                            <td>    {{ record.status }}</td>
 
                             <td class="text-right">
                                 <span class="text-green d-inline-flex align-items-center lh-1">
-                                    {{ record.progress_percentage }}% <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
+                                    {% if record.progress_percentage  %}
+                                        {{ record.progress_percentage }}% 
+
+                                    {% else %}
+                                        0.00%
+                                    {% endif %}
+                                    <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M3 17l6 -6l4 4l8 -8"></path><path d="M14 7l7 0l0 7"></path></svg>
                                   </span>
                             </td>
