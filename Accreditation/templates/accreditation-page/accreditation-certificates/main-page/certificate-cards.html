@@ -141,9 +141,11 @@
 		<div class="empty">
 			<div class="empty-header">0 records</div>
 			<p class="empty-title">Oops… It seems like there are no records in this page. </p>
-			<p class="empty-subtitle text-muted">
-				You can create a record if you like. Just click the 'Add Result or Modify Result' button and save the details.
-			</p>
+			{% if user.is_superuser == True %}
+				<p class="empty-subtitle text-muted">
+					You can create a record if you like. Just click the 'Add Result or Modify Result' button and save the details.
+				</p>
+			{% endif %}
 			<div class="empty-action">
 
 			{% if user.is_superuser == True %}
@@ -172,14 +174,6 @@
 	
 				{% endif %}
 
-			{% else %}
-				<a href="#" class="btn btn-outline-info ms-auto position-relative"
-					data-bs-toggle="tooltip" 
-					data-bs-html="true" 
-					title="You do not have the permission to upload accreditation results. Please contact the system administrator."
-					disabled>
-					Add Result
-				</a>
 	
 			{% endif %}
 

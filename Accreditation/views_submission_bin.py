@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
-from Accreditation.views_instrument_folder import calculate_progress, check_status, parent_calculate_progress
+from Accreditation.views_instrument_folder import calculate_progress,parent_calculate_progress
 from Users.models import activity_log
 from .models import files, instrument_level, instrument_level_folder #Import the model for data retieving
 from .forms import Create_InstrumentDirectory_Form, ReviewUploadBin_Form, SubmissionBin_Form
@@ -105,7 +105,7 @@ def create_submissionBin_parent(request, pk):
         folder = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=new_record_id)
         if folder.parent_directory_id:
             # Call this function to check if there are existing child records with 'rfr'
-            check_status(folder.parent_directory_id)
+            # check_status(folder.parent_directory_id)
             calculate_progress(folder.parent_directory_id)
 
         elif folder.parent_directory_id == None and folder.instrument_level_id:
@@ -113,7 +113,7 @@ def create_submissionBin_parent(request, pk):
 
         if folder.parent_directory_id:
             # Call this function to check if there are existing child records with 'rfr'
-            check_status(folder.parent_directory_id)
+            # check_status(folder.parent_directory_id)
             calculate_progress(folder.parent_directory_id)
 
         elif folder.parent_directory_id == None and folder.instrument_level_id:
@@ -165,7 +165,7 @@ def create_submissionBin_child(request, pk):
         folder = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=new_record_id)
         if folder.parent_directory_id:
             # Call this function to check if there are existing child records with 'rfr'
-            check_status(folder.parent_directory_id)
+            # check_status(folder.parent_directory_id)
             calculate_progress(folder.parent_directory_id)
 
         elif folder.parent_directory_id == None and folder.instrument_level_id:
@@ -276,7 +276,7 @@ def create_files(request, pk):
 
                     if submission_bin.parent_directory_id:
                         # Call this function to check if there are existing child records with 'rfr'
-                        check_status(submission_bin.parent_directory_id)
+                        # check_status(submission_bin.parent_directory_id)
                         calculate_progress(submission_bin.parent_directory_id)
 
                     elif submission_bin.parent_directory_id == None and submission_bin.instrument_level_id:
@@ -309,7 +309,7 @@ def create_parent_folder_files(request, pk):
                     file_name =  request.FILES.get(f'files{file_num}'), 
                     file_path=request.FILES.get(f'files{file_num}'),
                     status="For Review",
-                    rating = 0
+                    rating = 0.00
                     
                 )
 
@@ -354,7 +354,7 @@ def create_child_folder_files(request, pk):
                     file_name =  request.FILES.get(f'files{file_num}'), 
                     file_path=request.FILES.get(f'files{file_num}'),
                     status="For Review",
-                    rating = 0
+                    rating = 0.00
                     
                 )
 
@@ -379,7 +379,7 @@ def create_child_folder_files(request, pk):
 
             if folder.parent_directory_id:
                 # Call this function to check if there are existing child records with 'rfr'
-                check_status(folder.parent_directory_id)
+                # check_status(folder.parent_directory_id)
                 calculate_progress(folder.parent_directory_id)
 
             elif folder.parent_directory_id == None and folder.instrument_level_id:
@@ -470,7 +470,7 @@ def restore(request, pk):
 
     if file_record.parent_directory_id:
         # Call this function to check if there are existing child records with 'rfr'
-        check_status(file_record.parent_directory_id)
+        # check_status(file_record.parent_directory_id)
         calculate_progress(file_record.parent_directory_id)
 
     elif file_record.parent_directory_id == None and file_record.instrument_level_id:
@@ -548,7 +548,7 @@ def change_to_reviewable_file(request, pk):
 
         if file_record.parent_directory_id:
             # Call this function to check if there are existing child records with 'rfr'
-            check_status(file_record.parent_directory_id)
+            # check_status(file_record.parent_directory_id)
             calculate_progress(file_record.parent_directory_id)
 
         elif file_record.parent_directory_id == None and file_record.instrument_level_id:
@@ -581,7 +581,7 @@ def change_to_not_reviewable_file(request, pk):
 
         if file_record.parent_directory_id:
             # Call this function to check if there are existing child records with 'rfr'
-            check_status(file_record.parent_directory_id)
+            # check_status(file_record.parent_directory_id)
             calculate_progress(file_record.parent_directory_id)
 
         elif file_record.parent_directory_id == None and file_record.instrument_level_id:

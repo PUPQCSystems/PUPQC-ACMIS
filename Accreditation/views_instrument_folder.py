@@ -130,7 +130,7 @@ def create(request, pk):
         folder = instrument_level_folder.objects.select_related('parent_directory', 'instrument_level').get(id=new_record_id)
         if folder.parent_directory_id:
             # Call this function to check if there are existing child records with 'rfr'
-            check_status(folder.parent_directory_id)
+            # check_status(folder.parent_directory_id)
             calculate_progress(folder.parent_directory_id)
 
         elif folder.parent_directory_id == None and folder.instrument_level_id:
@@ -202,7 +202,7 @@ def update(request, pk):
           
             if folder_record.parent_directory_id:
                 # Call this function to check if there are existing child records with 'rfr'
-                check_status(folder_record.parent_directory_id)
+                # check_status(folder_record.parent_directory_id)
                 calculate_progress(folder_record.parent_directory_id)
 
             elif folder_record.parent_directory_id == None and folder_record.instrument_level_id:
@@ -248,7 +248,7 @@ def archive(request, pk, level_id):
 
     if folder_record.parent_directory_id:
         # Call this function to check if there are existing child records with 'rfr'
-        check_status(folder_record.parent_directory_id)
+        # check_status(folder_record.parent_directory_id)
         calculate_progress(folder_record.parent_directory_id)
 
     elif folder_record.parent_directory_id == None and folder_record.instrument_level_id:
@@ -380,7 +380,7 @@ def create_child(request, pk):
 
         if folder.parent_directory_id:
             # Call this function to check if there are existing child records with 'rfr'
-            check_status(folder.parent_directory_id)
+            # check_status(folder.parent_directory_id)
             calculate_progress(folder.parent_directory_id)
 
         elif folder.parent_directory_id == None and folder.instrument_level_id:
@@ -424,7 +424,7 @@ def archive_child(request, pk, parent_id):
 
     if folder_record.parent_directory_id:
         # Call this function to check if there are existing child records with 'rfr'
-        check_status(folder_record.parent_directory_id)
+        # check_status(folder_record.parent_directory_id)
         calculate_progress(folder_record.parent_directory_id)
 
     elif folder_record.parent_directory_id == None and folder_record.instrument_level_id:
@@ -497,7 +497,7 @@ def restore_parent(request, ins_pk ,pk):
 
     if folder_record.parent_directory_id:
         # Call this function to check if there are existing child records with 'rfr'
-        check_status(folder_record.parent_directory_id)
+        # check_status(folder_record.parent_directory_id)
         calculate_progress(folder_record.parent_directory_id)
 
     elif folder_record.parent_directory_id == None and folder_record.instrument_level_id:
@@ -538,7 +538,7 @@ def restore_child(request, parent_pk ,pk):
 
     if folder_record.parent_directory_id:
         # Call this function to check if there are existing child records with 'rfr'
-        check_status(folder_record.parent_directory_id)
+        # check_status(folder_record.parent_directory_id)
         calculate_progress(folder_record.parent_directory_id)
 
     elif folder_record.parent_directory_id == None and folder_record.instrument_level_id:
@@ -578,7 +578,7 @@ def restore_child_file(request, pk):
 
     if file_record.parent_directory_id:
         # Call this function to check if there are existing child records with 'rfr'
-        check_status(file_record.parent_directory_id)
+        # check_status(file_record.parent_directory_id)
         calculate_progress(file_record.parent_directory_id)
 
     elif file_record.parent_directory_id == None and file_record.instrument_level_id:
@@ -661,7 +661,7 @@ def archive_files(request, pk):
 
     if file_record.parent_directory_id:
         # Call this function to check if there are existing child records with 'rfr'
-        check_status(file_record.parent_directory_id)
+        # check_status(file_record.parent_directory_id)
         calculate_progress(file_record.parent_directory_id)
 
     elif file_record.parent_directory_id == None and file_record.instrument_level_id:
@@ -697,35 +697,35 @@ def create_folder_review(request, pk):
             review_form.instance.reviewed_by = request.user
             review_form.instance.reviewed_at = timezone.now()
 
-            if review == 5:
+            if review == '5':
                 review_form.instance.progress_percentage = 100.00
                 review_form.instance.rating = review
                 review_form.instance.status = "Excellent"
 
-            elif review == 4:
+            elif review == '4':
                 review_form.instance.progress_percentage = 80.00
                 review_form.instance.rating = review
                 review_form.instance.status = "Very Satisfactory"
 
 
-            elif review == 3:
+            elif review == '3':
                 review_form.instance.progress_percentage = 60.00
                 review_form.instance.rating = review
                 review_form.instance.status = "Satisfactory"
 
 
-            elif review == 2:
+            elif review == '2':
                 review_form.instance.progress_percentage = 40.00
                 review_form.instance.rating = review
                 review_form.instance.status = "Fair"
 
 
-            elif review == 1:
+            elif review == '1':
                 review_form.instance.progress_percentage = 20.00
                 review_form.instance.rating = review
                 review_form.instance.status = "Poor"
 
-            elif review == 0:
+            elif review == '0':
                 review_form.instance.progress_percentage = 0.00
                 review_form.instance.rating = review
                 review_form.instance.status = "Missing"
@@ -753,7 +753,7 @@ def create_folder_review(request, pk):
 
             if folder.parent_directory_id:
                 # Call this function to check if there are existing child records with 'rfr'
-                check_status(folder.parent_directory_id)
+                # check_status(folder.parent_directory_id)
                 calculate_progress(folder.parent_directory_id)
 
             elif folder.parent_directory_id == None and folder.instrument_level_id:
@@ -778,52 +778,76 @@ def review_parent_contents(parent_folder_id, review):
 
     if child_files:
         for file in child_files:
-            file.status = review
+            file.rating = review
             file.save()
 
 
     if child_folders:
         for folder in child_folders:
             if folder.has_progress_bar == True or folder.can_be_reviewed == True:
-                folder.status = review
-                if review == 'rfr':
-                    folder.progress_percentage = 0.00
-                elif review == 'approve':
+                folder.rating = review
+
+                if review == '5':
+                        folder.status = "Excellent"
                         folder.progress_percentage = 100.00
-                folder.save()
+
+                elif review == '4':
+                        folder.status = "Very Satisfactory"
+                        folder.progress_percentage = 80.00
+
+
+                elif review == '3':
+                    folder.status = "Satisfactory"
+                    folder.progress_percentage = 60.00
+
+
+                elif review == '2':
+                    folder.status = "Fair"
+                    folder.progress_percentage = 40.00
+
+
+                elif review == '1':
+                    folder.status = "Poor"
+                    folder.progress_percentage = 20.00
+
+                elif review == '0':
+                    folder.status = "Missing"
+                    folder.progress_percentage = 0.00
+
+            folder.save()
     return
 
-def check_status(parent_folder_id):
-    # Get the record
-    try:
-        parent_folder = instrument_level_folder.objects.get(id=parent_folder_id)
-    except instrument_level_folder.DoesNotExist:
-        return
+# def check_status(parent_folder_id):
+#     # Get the record
+#     try:
+#         parent_folder = instrument_level_folder.objects.get(id=parent_folder_id)
+#     except instrument_level_folder.DoesNotExist:
+#         return
 
 
-    # Get the child records of the parent folder with a 'rfr' status
-    child_folders_rfr = instrument_level_folder.objects.filter(parent_directory_id=parent_folder_id, status='rfr', is_deleted=False).exists()
-    child_files_rfr = files.objects.filter(parent_directory_id=parent_folder_id, status='rfr',  is_deleted=False).exists()
+#     # Get the child records of the parent folder with a 'rfr' status
+#     child_folders_rfr = instrument_level_folder.objects.filter(parent_directory_id=parent_folder_id, status='rfr', is_deleted=False).exists()
+#     child_files_rfr = files.objects.filter(parent_directory_id=parent_folder_id, status='rfr',  is_deleted=False).exists()
 
-    # Get the child records of the parent folder with a 'fr' status
-    child_folders_fr = instrument_level_folder.objects.filter(parent_directory_id=parent_folder_id, status='fr',  is_deleted=False).exists()
-    child_files_fr = files.objects.filter(parent_directory_id=parent_folder_id, status='fr', is_deleted=False).exists()
+#     # Get the child records of the parent folder with a 'fr' status
+#     child_folders_fr = instrument_level_folder.objects.filter(parent_directory_id=parent_folder_id, status='fr',  is_deleted=False).exists()
+#     child_files_fr = files.objects.filter(parent_directory_id=parent_folder_id, status='fr', is_deleted=False).exists()
 
-    # Check if there are existing records that have 'rfr' status
-    if child_files_rfr or child_folders_rfr:
-        # If so, change the status of the parent folder to 'rfr' and save it
-        parent_folder.status='rfr'
-        parent_folder.save()
+#     # Check if there are existing records that have 'rfr' status
+#     if child_files_rfr or child_folders_rfr:
+#         # If so, change the status of the parent folder to 'rfr' and save it
+#         parent_folder.status='rfr'
+#         parent_folder.save()
 
-    elif child_files_fr or child_folders_fr:
-        # If so, change the status of the parent folder to 'fr' and save it
-        parent_folder.status='fr'
-        parent_folder.save()
+#     elif child_files_fr or child_folders_fr:
+#         # If so, change the status of the parent folder to 'fr' and save it
+#         parent_folder.status='fr'
+#         parent_folder.save()
 
-    else:
-        # Else, change the status of the parent folder to 'approve' and then save it
-        parent_folder.status='approve'
-        parent_folder.save()
+#     else:
+#         # Else, change the status of the parent folder to 'approve' and then save it
+#         parent_folder.status='approve'
+#         parent_folder.save()
 
    
     return
@@ -838,13 +862,13 @@ def change_to_reviewable_file(request, pk):
 
     if request.method == 'POST':
         file_record.can_be_reviewed = True
-        file_record.status = 'fr'
+        file_record.status = 'For Review'
         file_record.modified_by = request.user
         file_record.save()
 
         if file_record.parent_directory_id:
             # Call this function to check if there are existing child records with 'rfr'
-            check_status(file_record.parent_directory_id)
+            # check_status(file_record.parent_directory_id)
             calculate_progress(file_record.parent_directory_id)
 
         elif file_record.parent_directory_id == None and file_record.instrument_level_id:
@@ -877,7 +901,7 @@ def change_to_not_reviewable_file(request, pk):
 
         if file_record.parent_directory_id:
             # Call this function to check if there are existing child records with 'rfr'
-            check_status(file_record.parent_directory_id)
+            # check_status(file_record.parent_directory_id)
             calculate_progress(file_record.parent_directory_id)
 
         elif file_record.parent_directory_id == None and file_record.instrument_level_id:
@@ -947,7 +971,7 @@ def create_file_review(request, pk):
 
             if file_record.parent_directory_id:
                 # Call this function to check if there are existing child records with 'rfr'
-                check_status(file_record.parent_directory_id)
+                # check_status(file_record.parent_directory_id)
                 calculate_progress(file_record.parent_directory_id)
 
             elif file_record.parent_directory_id == None and file_record.instrument_level_id:
@@ -1358,21 +1382,27 @@ def calculate_progress(folder_id):
         
 
     if progress_percentage >= 81.0 and progress_percentage <= 100.0:
+        folder_record.rating = progress_percentage / 100 * 5
         folder_record.status = 'Excellent'
 
     elif progress_percentage >= 61.0 and progress_percentage <= 80.0:
+        folder_record.rating = progress_percentage / 100 * 5
         folder_record.status = 'Very Satisfactory'
 
     elif progress_percentage >= 41.0 and progress_percentage <= 60.0:
+        folder_record.rating = progress_percentage / 100 * 5
         folder_record.status = 'Satisfactory'
 
     elif progress_percentage >= 21.0 and progress_percentage <= 40.0:
+        folder_record.rating = progress_percentage / 100 * 5
         folder_record.status = 'Fair'
 
     elif progress_percentage >= 1.0 and progress_percentage <= 20.0:
+        folder_record.rating = progress_percentage / 100 * 5
         folder_record.status = 'Poor'
 
     elif progress_percentage == 0:
+        folder_record.rating = progress_percentage / 100 * 5
         folder_record.status = 'Missing'
 
 

@@ -1,0 +1,244 @@
+<div class="row row-cards">
+
+    <!-- For LOOP HERE-->
+    {% for record, update_form, created_by, modified_by in details  %}
+        {% if record.is_done == True and record.validity_date_from and record.validity_date_to %}
+            <div class="col-sm-6 col-lg-4">
+                <div class="card"  onmouseover="addHoverClass(this)" onmouseout="removeHoverClass(this)">
+                    <div class="card-status-start bg-primary"></div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+
+                            <div class="subheader"> {{ record.instrument_level.level }} 
+                                {% now "Y-m-d" as today %}
+
+
+                                {% if  today >= record.mock_accred_date|date:"Y-m-d" and today < record.survey_visit_date|date:"Y-m-d" %}
+                                    <span class="badge badge-outline text-green">Ongoing Mock Accreditation</span>
+
+                                {% elif today == record.survey_visit_date|date:"Y-m-d" %}
+                                    <span class="badge badge-outline text-green">Ongoing Actual Survey Visit</span>
+                            
+                                {% elif today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None %}
+
+                                    {% if record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None%}
+                                        <span class="badge badge-outline text-blue badge-blink">Awaiting Result</span>
+                    
+                                    {% elif record.revisit_date %}
+                                        <span class="badge badge-outline text-orange">Survey Revisit</span>
+                                    
+
+                                    {% elif record.is_done == True and record.validity_date_from and record.validity_date_to and record.revisit_date == None %}
+                                        <span class="badge badge-outline text-green">{{ record.instrument_level.level}} Certified </span>
+            
+
+                                    {% endif %}   
+                    
+                                {% elif today < record.revisit_compliance_deadline|date:"Y-m-d" %}
+
+                                    {% if record.is_done == False and today > record.revisit_compliance_deadline|date:"Y-m-d" and record.revisit_date == None%}
+                                            <span class="badge badge-outline text-blue badge-blink">Awaiting Result</span>
+                    
+                                    {% elif record.revisit_date %}
+                                        <span class="badge badge-outline text-orange">Subject for Revisit</span>
+                                
+                
+                                    {% elif record.is_done == True and record.validity_date_from and record.validity_date_to and record.revisit_date == None %}
+                                        <span class="badge badge-outline text-green">{{ record.instrument_level.level}} Certified </span>
+                            
+                
+                                    {% endif %}    
+                    
+                    
+                                {% elif record.revisit_date %}
+
+                                    {% if today == record.revisit_compliance_deadline|date:"Y-m-d" and today < record.revisit_date|date:"Y-m-d" %}
+                                        <span class="badge badge-outline text-green">Revisit Compliance Deadline</span>
+                                        {% if today  == record.revisit_compliance_deadline|date:"Y-m-d" %}
+                                            <span class="badge badge-outline text-warning badge-blink">{{ record.revisit_compliance_deadline|date:"F j, Y" }}</span>
+                                        {% else %}
+                                            <span class="badge badge-outline text-muted">{{ record.revisit_compliance_deadline|date:"F j, Y" }}</span>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if today <= record.revisit_date|date:"Y-m-d" and today > record.revisit_compliance_deadline|date:"Y-m-d" %}
+                                        <span class="badge badge-outline text-green">Survery Revisit</span>
+
+                                        {% if today  == record.revisit_date|date:"Y-m-d" %}
+                                            <span class="badge badge-outline text-blue badge-blink">{{ record.revisit_date|date:"F j, Y" }}</span>
+
+                                        {% else %}
+                                            <span class="badge badge-outline text-muted">{{ record.revisit_date|date:"F j, Y" }}</span>
+                                        {% endif %}
+                                    {% endif %}
+                    
+                                    {% if today > record.revisit_date|date:"Y-m-d" %}
+                    
+                                        {% if today > record.revisit_compliance_deadline|date:"Y-m-d" and record.is_done == False and record.is_failed == False %}
+                                            <span class="badge badge-outline text-blue badge-blink">Awaiting Result</span>
+                
+                                        {% elif record.is_done == True and record.is_failed == False and record.validity_date_from and record.validity_date_to %}
+                                                <span class="badge badge-outline text-green">{{ record.instrument_level.level}} Certified</span>
+                        
+                                        {% elif record.is_done == True and record.is_failed == True %}
+                                                <span class="badge badge-outline text-red"> Failed </span>
+                        
+                
+                                        {% endif %}    
+                                    {% endif %}
+
+                                {% else %}
+                                <span class="badge badge-outline text-blue">Ongoing Document Preparation</span>
+
+                                {% endif %}
+
+                            </div>
+
+                            <div class="ms-auto lh-1">
+                                
+                                <div class="dropdown">
+                                    <a class="text-muted" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+
+                                        {% comment %} Permissions code for accreditation result feature {% endcomment %}
+
+                                            
+                                            {% if user.is_superuser == True and record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date == None %}
+                                                <button id="{{ record.id }}" class="dropdown-item position-relative text-green" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
+                                                    Add Result 
+                                                    {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
+                                                    <span class="badge bg-green ms-auto badge-blink" style="font-size: 10px">Active</span>
+                                                </button>
+                                                <div class="dropdown-divider-top"></div>
+
+                                            {% elif user.is_superuser == True and record.is_done == True and record.is_failed == True %}
+                                                <button id="{{ record.id }}" class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
+                                                    Change Result 
+                                                    {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
+                                                    <span class="badge bg-blue ms-auto badge-blink" style="font-size: 10px">Active</span>
+                                                </button>
+                                                <div class="dropdown-divider-top"></div>
+
+                                            {% elif user.is_superuser == True and record.is_done == True and record.is_failed == False %}
+                                                <button id="{{ record.id }}" class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
+                                                    Change Result 
+                                                    {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
+                                                    <span class="badge bg-blue ms-auto badge-blink" style="font-size: 10px">Active</span>
+                                                </button>
+                                                <div class="dropdown-divider-top"></div>
+
+                                            {% elif user.is_superuser == True and record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" and record.revisit_date %}
+                                                <button id="{{ record.id }}" class="dropdown-item position-relative text-blue" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}">
+                                                    Change Result 
+                                                    {% comment %} <span class="badge bg-green badge-notification badge-blink"></span> {% endcomment %}
+                                                    <span class="badge bg-blue ms-auto badge-blink" style="font-size: 10px">Active</span>
+                                                </button>
+                                                <div class="dropdown-divider-top"></div>
+
+
+                                            {% elif user.is_superuser == True and record.is_done == False and today < record.survey_visit_date|date:"Y-m-d" and record.revisit_date  == None %}
+                                                <button id="{{ record.id }}" class="dropdown-item position-relative" data-bs-toggle="modal" data-bs-target="#result-modal-{{ record.id }}" disabled>
+                                                    Add Result
+                                                    <span class="badge bg-secondary ms-auto" style="font-size: 10px">Inactive</span>
+                                                </button>
+                                                <div class="dropdown-divider-top"></div>
+
+                                            {% endif %}
+
+
+                                        {% if perms.Accreditation.view_program_accreditation %}
+                                            <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-modal-{{ record.id }}">View</button>
+                                        {% endif %}
+                                    
+                                        {% if perms.Accreditation.change_program_accreditation %}
+                                            <button class="dropdown-item edit-button"  data-id={{ record.id }} data-bs-toggle="modal" data-bs-target="#edit-modal-{{ record.id }}">Edit</button>           
+                                        {% endif %}
+
+                                        {% if perms.Accreditation.delete_program_accreditation %}
+                                            <form method="POST" action="{% url 'accreditations:accreditation-archive' pk=record.id %}" id="archive-form-{{ record.id }}">
+                                                {% csrf_token %}
+                                                <button type="button" class="dropdown-item text-danger archive-button" data-id={{ record.id }}>Archive</button>
+                                            </form>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        
+                        <a href="{% url 'accreditations:instrument-level-directory' pk=record.instrument_level.id %}">
+                            <div class="h3 mb-3 text-truncate"
+                                data-bs-toggle="tooltip" 
+                                data-bs-html="true" 
+                                data-bs-placement="bottom"
+                                title="{{  record.program.program_name }}">
+                                {{ record.program.program_name }}
+                            </div>
+                        </a>
+                        <div class="d-flex">
+                            <div class="subheader">Accreditation Progress</div>
+                            <div class="ms-auto">
+                                <span class="text-green d-inline-flex align-items-center lh-1 subheader">
+                                    {% if record.instrument_level.progress_percentage %}
+                                        {{ record.instrument_level.progress_percentage }}% Done
+                                    {% else  %}
+                                            0% Done
+                                    {% endif %}
+                                
+                            </div>  
+                        </div>
+                        
+                        <div class="progress progress-sm">
+                            <div class="progress-bar bg-primary" style="width:{{ record.instrument_level.progress_percentage }}%" role="progressbar" aria-valuenow="      {{ record.instrument_level.progress_percentage }}" aria-valuemin="0" aria-valuemax="100" aria-label="{{ record.instrument_level.progress_percentage }} Complete">
+                                <span class="visually-hidden">{{ record.instrument_level.progress_percentage }}% Complete</span>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% block modal_content %}
+
+            {% if perms.Accreditation.view_program_accreditation %}
+                {% include "accreditation-page/program-accreditation/main-page/view-modal.html" %}
+            {% endif %}
+
+            {% if perms.Accreditation.change_program_accreditation %}
+                {% include "accreditation-page/program-accreditation/main-page/edit-modal.html" %}
+            {% endif %}
+
+            {% if user.is_superuser == True and record.is_done == False and today > record.survey_visit_date|date:"Y-m-d" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-passed-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-failed-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-revisit-modal.html" %}
+
+            {% elif user.is_superuser == True and record.is_done == True and record.is_failed == True %}
+                {% include "accreditation-page/program-accreditation/main-page/result-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-passed-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-failed-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-revisit-modal.html" %}
+
+            {% elif user.is_superuser == True and record.is_done == True and record.is_failed == False %}
+                {% include "accreditation-page/program-accreditation/main-page/result-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-passed-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-failed-modal.html" %}
+                {% include "accreditation-page/program-accreditation/main-page/result-revisit-modal.html" %}
+      
+            {% endif %}
+            
+
+
+        {% endblock modal_content %}
+        
+
+    {% endfor %}
+</div>

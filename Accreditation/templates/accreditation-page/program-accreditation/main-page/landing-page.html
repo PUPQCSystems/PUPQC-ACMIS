@@ -31,7 +31,44 @@
 
 
 	{% if perms.Accreditation.view_program_accreditation %}
-		{% include "accreditation-page/program-accreditation/main-page/accreditation-cards.html" %}
+
+
+
+        <!-- Page body -->
+        <div class="page-body">
+			<div class="container-xl">
+			  <ul class="nav nav-bordered mb-4" data-bs-toggle="tabs"> 
+				<li class="nav-item">
+				<a href="#ongoing" class="nav-link active" data-bs-toggle="tab">Ongoing Accreditation</a>
+				</li>
+				<li class="nav-item">
+				<a href="#completed" class="nav-link" data-bs-toggle="tab">Completed Accreditation</a>
+				</li>
+	
+			  </ul>
+			<div class="row">
+				<div class="tab-content">
+					<div class="tab-pane fade active show" id="ongoing">
+						<h4>Ongoing Accreditations</h4>
+						{% include "accreditation-page/program-accreditation/main-page/ongoing-accreditation-cards.html" %}
+					</div>
+
+					<div class="tab-pane fade" id="completed">
+						<h4>Completed Accreditations</h4>
+						{% include "accreditation-page/program-accreditation/main-page/completed-accreditation-cards.html" %}
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+
+
+
+
+
 	{% endif %}
 
 	{% if perms.Accreditation.add_program_accreditation %}

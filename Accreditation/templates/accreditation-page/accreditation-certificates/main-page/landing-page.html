@@ -76,7 +76,7 @@
 
 
 {% block modal_content %}
-	{% if user.is_superuser == True or perms.Accreditation.add_accreditation_certificates%}
+	{% if user.is_superuser == True or perms.Accreditation.view_accreditation_certificates%}
 		{% include "accreditation-page/accreditation-certificates/main-page/remarks-modal.html" %}
 		{% include "accreditation-page/accreditation-certificates/main-page/result-modal.html" %}
 		{% include "accreditation-page/accreditation-certificates/main-page/result-passed-modal.html" %}

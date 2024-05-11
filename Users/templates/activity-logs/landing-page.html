@@ -21,51 +21,110 @@
                 <div class="card-body">
                     <div class="divide-y">
 
-                        <!-- For LOOP HERE-->
-                        {% for record in log_paginator %}
-                            <div>
-                                <div class="row">
-                                    <div class="col-auto">
-
-                                        {% if record.acted_by.profile_pic %}
-                                            <span class="avatar" style="background-image: url(./static/avatars/000m.jpg)"></span>
-                                        
-                                        {% else %}
-                                            <span class="avatar">{{ record.acted_by.first_name|first|default:'' }} {{ record.acted_by.last_name|first|default:'' }}</span>
-                                        {% endif %}
-                    
-                                    </div>
-                                    <div class="col">
-                                        <div class="text-truncate">
-                                            <strong>{{ record.acted_by.first_name}} {{ record.acted_by.last_name}}</strong> {{ record.action}} <strong> in {{ record.module }}</strong>.
+                        {% if user.is_superuser %}
+                                <!-- For LOOP HERE-->
+                            {% for record in log_paginator %}
+                                <div>
+                                    <div class="row">
+                                        <div class="col-auto">
+    
+                                            {% if record.acted_by.profile_pic %}
+                                                <span class="avatar" style="background-image: url(./static/avatars/000m.jpg)"></span>
+                                            
+                                            {% else %}
+                                                <span class="avatar">{{ record.acted_by.first_name|first|default:'' }} {{ record.acted_by.last_name|first|default:'' }}</span>
+                                            {% endif %}
+                        
                                         </div>
-                                        <div class="text-muted">{{ record.datetime_acted|date:"F j, Y g:i A" }} </div>
-                                    </div>
-                                    <div class="col-auto align-self-center">
-
-                                    <!-- Conditional statement for the color badge per record -->
-                                    {% if record.type == "CREATE"  %}
-                                        <span class="badge badge-outline text-green">CREATE</span>
-
-                                    {% elif record.type == "UPDATE"  %}
-                                        <span class="badge badge-outline text-blue">UPDATE</span>
-
-                                    {% elif record.type == "ARCHIVE"  %}
-                                        <span class="badge badge-outline text-yellow">ARCHIVE</span>
-
-                                    {% elif record.type == "RESTORE"  %}
-                                        <span class="badge badge-outline text-purple">RESTORE</span>
-
-                                    {% elif record.type == "DESTROY"  %}
-                                        <span class="badge badge-outline text-red">DESTROY</span>
-                                
-                                    {% endif %}
-
-                                        
+                                        <div class="col">
+                                            <div class="text-truncate">
+                                                <strong>{{ record.acted_by.first_name}} {{ record.acted_by.last_name}}</strong> {{ record.action}} <strong> in {{ record.module }}</strong>.
+                                            </div>
+                                            <div class="text-muted">{{ record.datetime_acted|date:"F j, Y g:i A" }} </div>
+                                        </div>
+                                        <div class="col-auto align-self-center">
+    
+                                        <!-- Conditional statement for the color badge per record -->
+                                        {% if record.type == "CREATE"  %}
+                                            <span class="badge badge-outline text-green">CREATE</span>
+    
+                                        {% elif record.type == "UPDATE"  %}
+                                            <span class="badge badge-outline text-blue">UPDATE</span>
+    
+                                        {% elif record.type == "ARCHIVE"  %}
+                                            <span class="badge badge-outline text-yellow">ARCHIVE</span>
+    
+                                        {% elif record.type == "RESTORE"  %}
+                                            <span class="badge badge-outline text-purple">RESTORE</span>
+    
+                                        {% elif record.type == "DESTROY"  %}
+                                            <span class="badge badge-outline text-red">DESTROY</span>
+                                    
+                                        {% endif %}
+    
+                                            
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+
+                        {% else %}
+                                <!-- For LOOP HERE-->
+                            {% for record in log_paginator %}
+                                {% if record.acted_by.id == user.id %}
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-auto">
+
+                                                {% if record.acted_by.profile_pic %}
+                                                    <span class="avatar" style="background-image: url(./static/avatars/000m.jpg)"></span>
+                                                
+                                                {% else %}
+                                                    <span class="avatar">{{ record.acted_by.first_name|first|default:'' }} {{ record.acted_by.last_name|first|default:'' }}</span>
+                                                {% endif %}
+                            
+                                            </div>
+                                            <div class="col">
+                                                <div class="text-truncate">
+                                                    <strong>{{ record.acted_by.first_name}} {{ record.acted_by.last_name}}</strong> {{ record.action}} <strong> in {{ record.module }}</strong>.
+                                                </div>
+                                                <div class="text-muted">{{ record.datetime_acted|date:"F j, Y g:i A" }} </div>
+                                            </div>
+                                            <div class="col-auto align-self-center">
+
+                                            <!-- Conditional statement for the color badge per record -->
+                                            {% if record.type == "CREATE"  %}
+                                                <span class="badge badge-outline text-green">CREATE</span>
+
+                                            {% elif record.type == "UPDATE"  %}
+                                                <span class="badge badge-outline text-blue">UPDATE</span>
+
+                                            {% elif record.type == "ARCHIVE"  %}
+                                                <span class="badge badge-outline text-yellow">ARCHIVE</span>
+
+                                            {% elif record.type == "RESTORE"  %}
+                                                <span class="badge badge-outline text-purple">RESTORE</span>
+
+                                            {% elif record.type == "DESTROY"  %}
+                                                <span class="badge badge-outline text-red">DESTROY</span>
+                                        
+                                            {% endif %}
+
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                                {% endif %}
+
+                            {% endfor %}
+                            
+                        {% endif %}
+        
+
+
+
+
                     </div>
                 </div>
 

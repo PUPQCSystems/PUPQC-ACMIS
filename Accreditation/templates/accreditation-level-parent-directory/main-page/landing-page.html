@@ -152,9 +152,25 @@
 						</li>
 
 						<li class="nav-item ms-auto" role="presentation">
-							<a href="#"class="btn nav-link" title="Generate Report">
-								Generate Report<!-- Download SVG icon from http://tabler-icons.io/i/settings -->
-							</a>
+							<div class="dropdown">
+								<button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
+									  Generate Report
+								</button>
+								<div class="dropdown-menu dropdown-menu-end" style="">
+								  <a class="dropdown-item" href="{% url "accreditations:area-completeness-reports" pk=instrument_level_record.id %}" target="__blank">
+										Instrument Completion Report
+								  </a>
+									  <a class="dropdown-item" href="{% url "accreditations:completed-area-reports" pk=instrument_level_record.id %}" target="__blank">
+										Area Completion Status Summary
+									</a>
+
+									<a class="dropdown-item" href="{% url "accreditations:ongoing-area-reports" pk=instrument_level_record.id %}" target="__blank">
+										Ongoing Areas Summary
+									</a>
+
+								 
+								</div>
+							  </div>
 						</li>
 					</ul>
 				</div>
