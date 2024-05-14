@@ -103,13 +103,8 @@
 								<div class="row p-2">
 									<div class="col-4"><b>Status</b></div>
 									<div class="col-6 text-break ">
-										{% if file.status == 'approve'%}
-											<span class="badge badge-outline text-green">Correct</span>
-										{% elif file.status == 'rfr' %}
-											<span class="badge badge-outline text-red">Request for Resubmission</span>
-
-										{% elif file.status == 'fr' %}
-											<span class="badge badge-outline text-cyan">For Review</span>
+										{% if file.can_be_reviewed %}
+											<span class="badge badge-outline text-cyan">[{{file.rating}}] - {{ file.status }}</span>
 										{% endif %}
 
 									</div>
