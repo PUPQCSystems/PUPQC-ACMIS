@@ -1,0 +1,112 @@
+<div class="col-2">
+    <div class="row">
+        {% if accred_program %}
+            <div class="subheader mb-2">Other Modules</div>
+            <div class="list-group list-group-transparent mb-2">
+                <a class="list-group-item d-flex align-items-center" href="{% url "apis:exhibit-page" program_accred_pk=accred_program.id%}">
+                    EXHIBITS
+                </a>
+
+                {% if perms.Accreditation.view_accreditation_certificates %}
+                    <a class="list-group-item d-flex align-items-center" href="{% url "accreditations:accreditation-result-page" accred_program.id %}">
+                        ACCREDITATION RESULT
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <div class="subheader mb-2">INSTRUMENTS</div>
+        <div class="list-group list-group-transparent mb-2">
+
+            {% for nav_record in nav_records %}
+                {% if nav_record.parent_directory_id == None %}
+                    <div class="accordion-item">
+                        <div class="row align-items-center">
+                            <div class="col-8 text-truncate">
+                                <a class="list-group-item d-flex align-items-center" href="{% url 'accreditations:instrument-level-child-directory' pk=nav_record.id %}"
+                                    data-bs-toggle="tooltip" 
+                                    data-bs-html="true" 
+                                    data-bs-placement="bottom"
+                                    title="<small>{{  nav_record.name }}: {{ nav_record.label}}</small>">
+                                    {{ nav_record.name }}
+                                    </a>
+                                    
+                            </div>
+
+                            <div class="col-4">
+                                <button class="navi-button btn-sm btn-action btn rounded-circle btn-icon" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{nav_record.id}}" aria-expanded="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M9 6l6 6l-6 6" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="collapse-{{nav_record.id}}" class="accordion-collapse collapse p-0" data-bs-parent="#accordion-example">
+                            <div class="accordion-body pt-0 text-truncate">
+                                <ul>
+                                    {% for child_nav_record in nav_records %}
+                                        {% if child_nav_record.parent_directory_id == nav_record.id %}
+                                            <li>
+                                                <div class="accordion-item">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-8 text-truncate">
+                                                            <a class="small text-black p-2 d-flex align-items-center" href="{% url 'accreditations:instrument-level-child-directory' pk=child_nav_record.id %}"
+                                                                data-bs-toggle="tooltip" 
+                                                                data-bs-html="true" 
+                                                                data-bs-placement="bottom"
+                                                                title="<small>{{  child_nav_record.name }}: {{ child_nav_record.label}}</small>">
+                                                                {{  child_nav_record.name }}
+                                                                </a>
+                                                                
+                                                        </div>
+                                        
+                                                        <div class="col-4">
+                                                            <button class=" navi-button btn-sm btn-action btn rounded-circle btn-icon" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{child_nav_record.id}}" aria-expanded="true">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline nav-icon icon-tabler-chevron-right">
+                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                                    <path d="M9 6l6 6l-6 6" />
+                                                                    </svg>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    
+
+                                            
+                                                <div id="collapse-{{child_nav_record.id}}" class="accordion-collapse  p-0 collapse" data-bs-parent="#accordion-example">
+                                                    <div class="accordion-body pt-0">
+                                                        <ul>
+                                                            {% for grand_child_nav_record in nav_records %}
+                                                                {% if grand_child_nav_record.parent_directory_id == child_nav_record.id %}
+                                                                    <li>
+                                                                        <a class="small text-black p-2 d-flex align-items-center" href="{% url 'accreditations:instrument-level-child-directory' pk=grand_child_nav_record.id %}"
+                                                                            data-bs-toggle="tooltip" 
+                                                                            data-bs-html="true" 
+                                                                            data-bs-placement="bottom"
+                                                                            title="<small>{{  grand_child_nav_record.name }}: {{ grand_child_nav_record.label}}</small>">
+                                                                            {{  grand_child_nav_record.name }}
+                                                                        </a>
+                                                                    </li>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </ul>
+                                    
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+
+            {% endfor %}
+
+        </div>
+    </div>
+</div>

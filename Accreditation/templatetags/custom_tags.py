@@ -22,3 +22,20 @@ def sizify(value):
 def sort_alphabetically(queryset):
     return sorted(queryset, key=lambda item: item.level.name)
 
+@register.filter
+def custom_camel_case(value):
+    """
+    Converts a string to custom camel case:
+        - Capitalizes first letter of each word except those in the exclusion list.
+        - Lowercases words in the exclusion list.
+        - Maintains spaces between words.
+    """
+    words = value.split()
+    exclusion_words = ["is", "or", "of", "the", "in", "and"]
+
+    formatted_words = [
+        word.lower() if word.lower() in exclusion_words else word.capitalize() 
+        for word in words
+    ]
+    return " ".join(formatted_words)  # Join words with spaces
+

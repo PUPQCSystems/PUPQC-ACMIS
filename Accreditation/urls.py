@@ -128,6 +128,7 @@ urlpatterns = [
     path("ongoing-area-reports/<str:pk>/", views_reports.OngoingArea, name='ongoing-area-reports'),
     path("completed-parameter-reports/<str:pk>/", views_reports.CompletedParameter, name='completed-parameter-reports'),
     path("ongoing-parameter-reports/<str:pk>/", views_reports.OngoingParameter, name='ongoing-parameter-reports'),
+    path("overall-reports/<str:pk>/", views_reports.OverallReports, name='overall-reports'),
 
 
 

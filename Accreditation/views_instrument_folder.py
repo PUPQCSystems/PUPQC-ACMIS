@@ -39,7 +39,8 @@ def parent_landing_page(request, pk):
     submission_bin_form = SubmissionBin_Form(request.POST or None)
     uploaded_files = files.objects.filter(instrument_level=pk, is_deleted=False)
     certificates_records = accreditation_certificates.objects.select_related('accredited_program').filter(is_deleted= False) 
-    records = instrument_level_folder.objects.filter(is_deleted= False, instrument_level=pk, parent_directory= None).order_by('name') #Getting all the data inside the Program table and storing it to the context variable
+    records = instrument_level_folder.objects.filter(is_deleted= False, instrument_level=pk, parent_directory= None).order_by('name')
+    nav_records = instrument_level_folder.objects.filter(Q(can_be_reviewed=True) | Q(has_progress_bar=True), instrument_level=pk, is_deleted=False).order_by('name')
     instrument_level_record = instrument_level.objects.select_related('instrument').get(id=pk, is_deleted= False)
 
     try:
@@ -86,7 +87,8 @@ def parent_landing_page(request, pk):
                 'cochairman_form': cochairman_form,
                 'member_form': member_form,
                 'review_form': review_form,
-                'rename_form': rename_form
+                'rename_form': rename_form,
+                'nav_records': nav_records
                }  
 
     return render(request, 'accreditation-level-parent-directory/main-page/landing-page.html', context)
@@ -287,6 +289,7 @@ def child_landing_page(request, pk):
     # Initialize an empty list to store update forms for each record
     details = []
     user_records = UserGroupView.objects.all()
+    nav_records = instrument_level_folder.objects.filter(Q(can_be_reviewed=True) | Q(has_progress_bar=True), instrument_level=parent_folder.instrument_level_id, is_deleted=False).order_by('name')
 
 
     # Check if the logged-in user has access to the parent folder or any of its subfolders
@@ -320,7 +323,8 @@ def child_landing_page(request, pk):
                 'has_access': has_access,
                 'is_chairman': is_chairman,
                 'review_form': review_form,
-                'rename_form': rename_form
+                'rename_form': rename_form,
+                'nav_records': nav_records
                }  
 
     return render(request, 'accreditation-level-child-directory/main-page/landing-page.html', context)
@@ -344,7 +348,7 @@ def create_child(request, pk):
             create_form.instance.is_advance = True
 
             if can_be_reviewed:
-                create_form.instance.status = 'Missing'
+                create_form.instance.status = 'Empty'
                 create_form.instance.rating = 0
 
         create_form.instance.created_by = request.user

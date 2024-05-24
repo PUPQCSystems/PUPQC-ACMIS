@@ -830,3 +830,15 @@
         })
     })
 </script>  
+
+
+
+<script>
+    document.querySelectorAll('.navi-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const icon = this.querySelector('svg'); // Find the SVG within *this* button
+            icon.classList.toggle('rotate-90'); 
+        });
+    });
+    
+</script>

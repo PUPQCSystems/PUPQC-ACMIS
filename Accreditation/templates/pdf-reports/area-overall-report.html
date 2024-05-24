@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <!-- TABLER CSS files -->
+        <link href="{% static 'tabler-template/dist/libs/plyr/dist/plyr.css' %}" rel="stylesheet"/>
+        <link href="{% static 'tabler-template/dist/css/tabler.min.css' %}" rel="stylesheet"/>
+        <link href="{% static 'tabler-template/dist/css/tabler-flags.min.css' %}" rel="stylesheet"/>
+        <link href="{% static 'tabler-template/dist/css/tabler-payments.min.css' %}" rel="stylesheet"/>
+        <link href="{% static 'tabler-template/dist/css/tabler-vendors.min.css' %}" rel="stylesheet"/>
+        <link href="{% static 'tabler-template/dist/css/demo.min.css' %}" rel="stylesheet"/>
+    </head>
+    <body>
+        <style>
+            img{
+                width: 60px !important;
+                height: auto !important;
+                text-align: center !important;
+            }
+            th{
+                border: .1rem solid !important;
+                border-color: lightgrey !important;
+                padding: 5px !important;
+
+            }
+
+            td {
+                border: .1rem solid !important;
+                border-color: lightgrey !important;
+                padding: 3px !important;
+            }
+
+            th {
+                background-color: #830000 !important;
+                color: white !important;
+            }
+
+                        /* In your CSS file */
+            .container-fluid {
+            text-align: center; /* Centers content within a fluid container */
+            }
+
+            .text-right {
+                text-align: right; /* Centers content within a fluid container */
+                }
+
+            .content { 
+            display: inline-block; /* Allows the image to be centered within its container */
+            }
+
+        </style>
+        <section class="m-4 p-4">
+            <div class="container-fluid">
+                <div class="content text-center">
+                    <img src="https://www.pngkey.com/png/detail/52-528919_the-pup-logo-polytechnic-university-of-the-philippines.png" alt="The Pup Logo - Polytechnic University Of The Philippines Logo@pngkey.com">
+                </div>
+                <div class="text-center">
+                    <p style="margin: 0 !important;">Republic of the Philippines</p>
+                </div>
+                <div class="text-center">
+                    <h6>Polytechnic University of the Philippines - Quezon City Campus</h6>
+                </div>
+            
+                <div class="mt-4 pt-3 text-center">
+                    <h5>Instrument Completion Report</h5>
+                    <h6>{{ parent_folder.instrument.program }}</h6>
+                    <p style="font-style: italic;">
+                        {{ parent_folder.instrument }} 
+                    </p>
+                </div>
+            </div>
+            
+        
+            
+            <div id="table-default" class="table-responsive">
+				<table id="" class="display no-wrap table table-vcenter">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Label</th>
+                            <th>Instrument</th>
+                            <th>Members</th>
+                            <th>Ratings</th>
+                            <th>Description</th>
+                            <th>Completeness Percentage</th>
+                            {% comment %} <th>Interpretation</th> {% endcomment %}
+
+                        </tr>
+                    </thead>B
+                    <tbody class="table-tbody">
+                        {% for record, assigned_users in details %}
+						<tr class="small">
+                            <td>
+                             <b>{{ record.name }}</b>
+                            </td>
+
+                            <td>
+                            {{ record.label }}
+                            </td>
+
+                            <td>
+                            {{ record.instrument_level }}
+                            </td>
+
+                            <td>
+                                {% if assigned_users %}
+                                <ul>
+                                    {% for user_assigned in assigned_users  %}
+                                        <li><small>{{ user_assigned.assigned_user.first_name }} {{ user_assigned.assigned_user.last_name }}</small> </li>
+                                    {% endfor %}
+                                </ul>
+
+                                {% else %}
+                                    No Members
+                                {% endif %}
+                                    
+                            </td>
+                            <td class="text-right">    {{ record.rating }}</td>
+                            <td>    {{ record.status }}</td>
+
+                            <td class="text-right">
+                                <span class="text-green d-inline-flex align-items-center lh-1">
+                                    {% if record.progress_percentage  %}
+                                        {{ record.progress_percentage }}% 
+
+                                    {% else %}
+                                        0.00%
+                                    {% endif %}
+                                    <!-- Download SVG icon from http://tabler-icons.io/i/trending-up -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M3 17l6 -6l4 4l8 -8"></path><path d="M14 7l7 0l0 7"></path></svg>
+                                  </span>
+                            </td>
+
+						</tr>
+
+					{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        
+        {% comment %}--------------------------[ TABLER JS ]--------------------------{% endcomment %}
+        <!-- Libs JS -->
+        <script src="{% static 'tabler-template/dist/libs/apexcharts/dist/apexcharts.min.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/libs/jsvectormap/dist/js/jsvectormap.min.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/libs/jsvectormap/dist/maps/world.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/libs/jsvectormap/dist/maps/world-merc.js' %}" defer></script>
+
+        <!-- Libs JS -->
+        <script src="{% static 'tabler-template/dist/libs/nouislider/dist/nouislider.min.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/libs/litepicker/dist/litepicker.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/libs/tom-select/dist/js/tom-select.base.min.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/libs/plyr/dist/plyr.min.js' %}" defer></script>
+
+        <!-- Tabler Core -->
+        <script src="{% static 'tabler-template/dist/libs/tinymce/tinymce.min.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/js/tabler.min.js' %}" defer></script>
+        <script src="{% static 'tabler-template/dist/js/demo.min.js' %}" defer></script>
+
+
+        <script src="{% static 'vendor/DataTables/JSZip-3.10.1/jszip.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/pdfmake-0.2.7/pdfmake.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/pdfmake-0.2.7/vfs_fonts.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/DataTables-2.0.0/js/dataTables.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/DataTables-2.0.0/js/dataTables.bootstrap5.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/AutoFill-2.7.0/js/dataTables.autoFill.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/AutoFill-2.7.0/js/autoFill.bootstrap5.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Buttons-3.0.0/js/dataTables.buttons.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Buttons-3.0.0/js/buttons.bootstrap5.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Buttons-3.0.0/js/buttons.colVis.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Buttons-3.0.0/js/buttons.html5.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Buttons-3.0.0/js/buttons.print.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/ColReorder-2.0.0/js/dataTables.colReorder.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/DateTime-1.5.2/js/dataTables.dateTime.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/FixedColumns-5.0.0/js/dataTables.fixedColumns.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/FixedHeader-4.0.0/js/dataTables.fixedHeader.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/KeyTable-2.12.0/js/dataTables.keyTable.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Responsive-3.0.0/js/dataTables.responsive.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Responsive-3.0.0/js/responsive.bootstrap5.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/RowGroup-1.5.0/js/dataTables.rowGroup.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/RowReorder-1.5.0/js/dataTables.rowReorder.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Scroller-2.4.0/js/dataTables.scroller.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/SearchBuilder-1.7.0/js/dataTables.searchBuilder.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/SearchBuilder-1.7.0/js/searchBuilder.bootstrap5.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/SearchPanes-2.3.0/js/dataTables.searchPanes.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/SearchPanes-2.3.0/js/searchPanes.bootstrap5.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/Select-2.0.0/js/dataTables.select.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/StateRestore-1.4.0/js/dataTables.stateRestore.min.js' %}"></script>
+        <script src="{% static 'vendor/DataTables/StateRestore-1.4.0/js/stateRestore.bootstrap5.min.js' %}"></script>
+    </body>
+</html>
+
+

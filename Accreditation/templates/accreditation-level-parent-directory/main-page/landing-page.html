@@ -71,20 +71,9 @@
 
 		{% if accred_program %}
 			<div class="row g-4 row-cards">
-				<div class="col-2">
-						<div class="subheader mb-2">Navigations</div>
-						<div class="list-group list-group-transparent mb-2">
-							<a class="list-group-item d-flex align-items-center" href="{% url "apis:exhibit-page" program_accred_pk=accred_program.id%}">
-								EXHIBITS
-							</a>
 
-							{% if perms.Accreditation.view_accreditation_certificates %}
-								<a class="list-group-item d-flex align-items-center" href="{% url "accreditations:accreditation-result-page" accred_program.id %}">
-									ACCREDITATION RESULT
-								</a>
-							{% endif %}
-						</div>
-				</div>
+				{% include "accreditation-level-parent-directory/main-page/partials/area-navigation.html" %}
+
 				<div class="row row-cards">
 					{% include "accreditation-level-parent-directory/main-page/accreditation-info.html" %}
 

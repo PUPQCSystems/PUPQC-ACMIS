@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tags %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -27,7 +28,7 @@
 
             }
 
-            td {
+            .custom-td {
                 border: .1rem solid !important;
                 border-color: lightgrey !important;
                 padding: 3px !important;
@@ -38,21 +39,23 @@
                 color: white !important;
             }
 
-                        /* In your CSS file */
+
+            /* In your CSS file */
             .container-fluid {
             text-align: center; /* Centers content within a fluid container */
             }
-
-            .rating {
-                text-align: right; /* Centers content within a fluid container */
-                }
-    
 
             .content { 
             display: inline-block; /* Allows the image to be centered within its container */
             }
 
+          header-td {
+            border-style: hidden !important;
+            padding: 10px !important;
+          }
         </style>
+
+
         <section class="m-4 p-4">
             <div class="container-fluid">
                 <div class="content text-center">
@@ -62,48 +65,111 @@
                     <p style="margin: 0 !important;">Republic of the Philippines</p>
                 </div>
                 <div class="text-center">
-                    <h6>Polytechnic University of the Philippines - Quezon City Campus</h6>
+                    <h6>Polytechnic University of the Philippines <br> Quezon City Campus</h6>
                 </div>
             
                 <div class="mt-4 pt-3 text-center">
                     <h5>Summary of Ratings</h5>
-                    <h6>{{ parent_folder.name }}: {{ parent_folder.label }}</h6>
-                    <p style="font-style: italic;">
-                        {{ parent_folder.instrument_level.instrument }} - {{ parent_folder.instrument_level.level }}
-                    </p>
                 </div>
             </div>
-            
-        
+
+
+            <table id="header-table">
+                <tbody class="table-tbody">
+                    <tr>
+                        <td class="header-td" >
+                            <p>
+                                <b>Area</b> <br> {{ parent_folder.name }}: {{ parent_folder.label }}
+                            </p>
+                        </td>
+
+                        <td class="header-td" style="text-align: left;">
+                            <p> 
+                                <b>Present Accreditation Status</b> <br>
+
+                                {% if accred_program.instrument_level.level.name == 'LEVEL I' and accred_program.is_done and accred_program.validity_date_from and accred_program.validity_date_to %}
+                                    Level I Re-Accredited
+
+                                {% elif accred_program.instrument_level.level.name == 'LEVEL I' and accred_program.is_done == False and accred_program.validity_date_from == None and accred_program.validity_date_to == None %}
+                                    Preliminary Survey Visit
+
+                                {% elif accred_program.instrument_level.level.name == 'LEVEL II' and accred_program.is_done and accred_program.validity_date_from and accred_program.validity_date_to %}
+                                    Level II Re-Accredited
+                    
+
+                                {% elif accred_program.instrument_level.level.name == 'LEVEL II' and accred_program.is_done == False and accred_program.validity_date_from == None and accred_program.validity_date_to == None %}
+                                    Level I Re-Accredited
+
+
+                                {% elif accred_program.instrument_level.level.name == 'LEVEL III' and accred_program.is_done and accred_program.validity_date_from and accred_program.validity_date_to %}
+                                    Level III Re-Accredited
+                    
+
+                                {% elif accred_program.instrument_level.level.name == 'LEVEL III' and accred_program.is_done == False and accred_program.validity_date_from == None and accred_program.validity_date_to == None %}
+                                    Level II Re-Accredited
+
+
+                                {% elif accred_program.instrument_level.level.name == 'LEVEL IV' and accred_program.is_done and accred_program.validity_date_from and accred_program.validity_date_to %}
+                                    Level IV Re-Accredited
+                    
+
+                                {% elif accred_program.instrument_level.level.name == 'LEVEL IV' and accred_program.is_done == False and accred_program.validity_date_from == None and accred_program.validity_date_to == None %}
+                                    Level III Re-Accredited
+
+                                {% endif %}
+
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                    </tr>
+                    
+                    <tr style="margin-top: 20px;">
+                        <td class="header-td">
+                            <p>
+                                <b>Program</b> <br> {{ parent_folder.instrument_level.instrument.program.program_name|custom_camel_case }} ({{ parent_folder.instrument_level.instrument.program.abbreviation }})
+                            </p>
+                        </td>
+
+                        <td class="header-td" style="text-align: left;">
+                            <p>
+                                <b>Date of Actual Survey Visit</b> <br> {{ accred_program.survey_visit_date|date:"F d, Y" }}
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        <br>
             
             <div id="table-default" class="table-responsive">
-				<table id="" class="display no-wrap table table-vcenter">
+				<table id="main-table" class="display no-wrap table table-vcenter">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Label</th>
-                            <th>Numerical Rating</th>
-                            <th>Descriptive Rating</th>
-                            {% comment %} <th>Interpretation</th> {% endcomment %}
-
+                            <th class="custom-th">Parameter</th>
+                            <th class="custom-th">Description</th>
+                            <th class="custom-th">Numerical Rating</th>
+                            <th class="custom-th">Descriptive Rating</th>
+       
                         </tr>
                     </thead>
                     <tbody class="table-tbody">
                         {% for record, assigned_users in details %}
                         <tr class="small">
-                            <td >
+                            <td class="custom-td" >
                                  <b>{{ record.name }}</b>
                             </td>
 
-                            <td>
+                            <td class="custom-td">
                                 {{ record.label }}
                             </td>
 
-                            <td class="rating">
+                            <td class="custom-td" style="text-align: center;">
                                 {{ record.rating }}
                             </td>
 
-                            <td>
+                            <td class="custom-td" style="text-align: center;">
                                 <ul>
                                     {{ record.status }}
 
@@ -121,42 +187,67 @@
             </div>
             <br>
 
-                <div class="row">
-                    Total Rating: <b>{{ total_sum }}</b>
-                 </div>
+            <table id="header-table">
+                <tbody class="table-tbody">
+                    <tr>
+                        <td class="header-td" >
+                        </td>
 
-                 <div class="row">
-                    Mean: <b>{{ area_mean }}</b>
-                 </div>
+                        <td class="header-td" style="text-align: right;">
+                            <b><i>Total Rating:</i></b>
+                        </td>
 
-                 <div class="row">
-                    Descriptive Rating: 
-                    <b>
-                    {% if area_mean > 4 and area_mean < 6 %}
-                        Excellent
+                        <td class="header-td" style="text-align: center;">
+                            <b><h5>{{ total_sum }}</h5></b>
+                        </td>
+
+                        <td class="header-td" style="text-align: left;">
+                        </td>
+                    </tr>
                     
-                    {% elif area_mean > 3 and area_mean < 5 %}
-                        Very Satisfactory
+                    <tr>
+                        <td class="header-td" >
+                        </td>
 
-                    {% elif area_mean > 2 and area_mean < 4 %}
-                        Satisfactory
+                        <td class="header-td" style="text-align: right;">
+                            <b><i>Mean:</i></b>
+                        </td>
 
-                    {% elif area_mean > 1 and area_mean < 3 %}
-                        Fair
+                        <td class="header-td" style="text-align: center;">
+                            <b><h5>{{ area_mean }}</h5></b>
+                        </td>
 
-                    {% elif area_mean > 0 and area_mean < 2 %}
-                        Poor
+                        <td class="header-td" style="text-align: center;">
+                            <b><h5>
+                            {% if area_mean > 4 and area_mean < 6 %}
+                                Excellent
+                            
+                            {% elif area_mean > 3 and area_mean < 5 %}
+                                Very Satisfactory
+        
+                            {% elif area_mean > 2 and area_mean < 4 %}
+                                Satisfactory
+        
+                            {% elif area_mean > 1 and area_mean < 3 %}
+                                Fair
+        
+                            {% elif area_mean > 0 and area_mean < 2 %}
+                                Poor
+        
+                            {% elif area_mean == 0 %}
+                                Missing
+        
+                            {% endif %}
+                            </h5>
+                            </b>
+                     
+                        </td>
 
-                    {% elif area_mean == 0 %}
-                        Missing
+                    </tr>
+                </tbody>
+            </table>
 
-                    {% endif %}
-                    </b>
-                 </div>
-
-    
-
- 
+            
 
 
         </section>
