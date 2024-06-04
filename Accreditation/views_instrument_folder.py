@@ -44,7 +44,7 @@ def parent_landing_page(request, pk):
     instrument_level_record = instrument_level.objects.select_related('instrument').get(id=pk, is_deleted= False)
 
     try:
-        accred_program = program_accreditation.objects.get(instrument_level_id=pk) #Getting all the data inside the Program table and storing it to the context variable
+        accred_program = program_accreditation.objects.select_related('instrument_level').get(instrument_level_id=pk) #Getting all the data inside the Program table and storing it to the context variable
     except ObjectDoesNotExist:
         accred_program = False  # Set accred_program to False when the record does not exist
 
