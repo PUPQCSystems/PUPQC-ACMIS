@@ -1,43 +1,170 @@
-
-{% extends "guest-base.html" %}
 {% load static %}
-{% load crispy_forms_tags %}
 
-{% block content %}
-	{% if form.errors %}
-		<script>
-			toastr.error("Please enter a correct email address and password. Note that both fields may be case-sensitive.");
-		</script>
-	{% endif %}
+<!DOCTYPE html>
+<html lang="en">
 
-	<div class="container container-tight py-4">
-		<div class="text-center mb-4">
-			<a href="." class="navbar-brand navbar-brand-autodark"><img src="./static/logo.svg" height="36" alt=""></a>
-		</div>
-		<div class="card card-md">
-			<div class="card-body">
-				<h2 class="h2 text-center mb-4">Login to your account</h2>
-				<form action="{% url 'login' %}" method="post" autocomplete="off" novalidate>
-					{% csrf_token %}
-					<div class="mb-3">
-						{{ form.username|as_crispy_field }}
-					</div>
-					<div class="mb-2">
-						{{ form.password|as_crispy_field  }}
-						</label>
-					
-					</div>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+        <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+        <title>myPUPQC-ACMIS</title>
+        <link rel="icon" href="{% static 'custom-assets/images/pupqcfaculty.png' %}">
+        <link rel="stylesheet" href=" {% static 'custom-assets/css/login.css' %} ">
+       
+    	{% include "dependencies/CSS_dependencies.html" %} 
+        <style>
+            .form-control.is-invalid{
+                background-image: none !important;
+                padding-right: 0px !important;
+            }
+            .theheck {
+                position: absolute;
+                right: 1rem;
+                top: 0.5rem;
+                cursor: pointer;
+                z-index: 9999;
+            }
+        </style>
+    </head>
 
-	
-					{% comment %} <div class="g-recaptcha" data-sitekey="6LdrVFgpAAAAAEEV4M1nnonALFH00nHgiSHpGgFu"></div> {% endcomment %}
-					<div class="form-footer">
-						<button type="submit" class="btn btn-primary w-100">Sign in</button>
-					</div>
-				</form>
+    <body>
+        <div class="page page-center">
+            <div class="logo py-4 p-4">
+                <a href="#">
+                    <img src="{% static 'custom-assets/images/myPUPQC.png' %}" alt="myPUPQC" width="170">
+                </a>
+            </div>
+            <div class="container container-tight py-4">
+                <div class="card card-md card-rad" style="border-radius: 1rem;">
+                    <div class="card-body pb-4">
+                        <h2 class="h2 text-center mb-0 fw-bolder">PUP-ACMIS Faculty Module</h2>
+                        <div class="text-center text-muted">
+                            <span class="form-check-label">Sign in to start your session</span>
+                        </div>
 
-			</div>
-			
-		</div>
-	</div>
 
-{% endblock content %}
+                        <form action="{% url 'login' %}" method="POST" autocomplete="off" novalidate>
+                            {% csrf_token %}
+                            <div class="mb-3 mt-4">
+                                <input type="email" name="username" class="form-control {% if messages %}is-invalid{% endif %}" placeholder="Enter Address" autocomplete="off" id="email-input">
+                                <span class="invalid-feedback" id="email-error">  
+                                    {% if messages %}
+                                        Please enter a valid email address
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="mb-2">
+                                <div class="input-group" style="box-shadow: none;">
+                                    
+                                    <span id="eye-cons" class="theheck mt-0">
+                                        <a href="#" class="link-secondary" id="toggle-password" title="Show password">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" id="eye-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                <path d="M21 9c-2.4 2.667 -5.4 4 -9 4c-3.6 0 -6.6 -1.333 -9 -4"/>
+                                                <path d="M3 15l2.5 -3.8"/>
+                                                <path d="M21 14.976l-2.492 -3.776"/>
+                                                <path d="M9 17l.5 -4"/>
+                                                <path d="M15 17l-.5 -4"/>
+                                            </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" id="eye-off-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/>
+                                                <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/>
+                                            </svg>
+                                        </a>
+                                    </span>
+                                    <input type="password" name="password" class="form-control {% if messages %}is-invalid{% endif %}" placeholder="Password" autocomplete="off" id="password" style="border-radius: 0.2rem; background: transparent !important;">
+                                    <span class="invalid-feedback" id="pass-error"> 
+                                        {% if messages %}
+                                            Please enter a correct password
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                            <script>
+                                const passInput = document.getElementById('password');
+                                const passError = document.getElementById('pass-error');
+                                passInput.addEventListener('input', function() {
+                                    passError.style.display = 'none';
+                                    passInput.classList.remove('is-invalid');
+                                });
+                                const emailInput = document.getElementById('email-input');
+                                const emailError = document.getElementById('email-error');
+                                emailInput.addEventListener('input', function() {
+                                    emailError.style.display = 'none';
+                                    emailInput.classList.remove('is-invalid');
+                                });
+                            </script>
+                            <script>
+                                document.getElementById('toggle-password').addEventListener('click', function (e) {
+                                    e.preventDefault();
+                                    const passwordInput = document.getElementById('password');
+                                    const eyeIcon = document.getElementById('eye-icon');
+                                    const eyeOffIcon = document.getElementById('eye-off-icon');
+
+                                    if (passwordInput.getAttribute('type') === 'password') {
+                                        passwordInput.setAttribute('type', 'text');
+                                        eyeIcon.style.display = 'none';
+                                        eyeOffIcon.style.display = 'inline';
+                                        this.title = 'Hide password';
+                                    } 
+                                    else {
+                                        passwordInput.setAttribute('type', 'password');
+                                        eyeIcon.style.display = 'inline';
+                                        eyeOffIcon.style.display = 'none';
+                                        this.title = 'Show password';
+                                    }
+                                });
+                            </script>
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary w-100">Log in</button>
+                            </div>
+                            <hr class="my-3">
+                            <div class="text-center text-muted pb-3">
+                                <span class="form-check-label">A faculty's guide on how to use the Accreditation & Certification Management Information System</span>
+                            </div>
+                            <div class="btn-list" style="flex-wrap: nowrap !important;">
+                                <a href="#" class="btn btn-gray w-100 fw-bolder text-muted">
+                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-brand-youtube"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 3a5 5 0 0 1 5 5v8a5 5 0 0 1 -5 5h-12a5 5 0 0 1 -5 -5v-8a5 5 0 0 1 5 -5zm-9 6v6a1 1 0 0 0 1.514 .857l5 -3a1 1 0 0 0 0 -1.714l-5 -3a1 1 0 0 0 -1.514 .857z" /></svg>
+                                    Youtube
+                                </a>
+                                <a href="#" class="btn btn-gray w-100 fw-bolder text-muted">
+                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24"  height="24" viewBox="0 0 30 30" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-brand-facebook">
+                                        <path d="M24,4H6C4.895,4,4,4.895,4,6v18c0,1.105,0.895,2,2,2h10v-9h-3v-3h3v-1.611C16,9.339,17.486,8,20.021,8 c1.214,0,1.856,0.09,2.16,0.131V11h-1.729C19.376,11,19,11.568,19,12.718V14h3.154l-0.428,3H19v9h5c1.105,0,2-0.895,2-2V6 C26,4.895,25.104,4,24,4z"></path>
+                                    </svg>
+                                    Facebook
+                                </a>
+                            </div>
+                        </form>
+
+
+                    </div>
+                    <div class="text-center mb-4">
+                        <p class="text-sm text-gray-600">By using this service, you understood and agree to the PUP <br/>Online Services
+                            <a href="https://www.pup.edu.ph/terms/" class="text-decoration-underline text-blue fst-normal fw-medium">Terms of Use</a>
+                            and
+                            <a href="https://www.pup.edu.ph/privacy/" class="text-decoration-underline text-blue fst-normal fw-medium">Privacy Statement</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page-indx containerz">
+            <div class="upper-circle"></div>
+            <div class="circle bottom-right-yellow-small-circle"></div>
+            <div class="circle bottom-right-red-circle"></div>
+            <div class="circle bottom-left-yellow-small-circle"></div>
+            <div class="circle bottom-left-red-circle"></div>
+        </div>
+        <div class="bgcl">
+        </div>
+    </body>
+
+	{% include "dependencies/JS_dependencies.html" %}
+</html>
+{% comment %} <span  id="eye-cons" class="input-group-text {% if messages and not messages|length_is:'0' %}is-invalid{% endif %}" style="border-left: 0px !important; background-color: transparent !important; border-radius: 4px !important;">
+    <a href="#" class="link-secondary" id="toggle-password" title="Show password">                                            
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" id="eye-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M21 9c-2.4 2.667 -5.4 4 -9 4c-3.6 0 -6.6 -1.333 -9 -4" /><path d="M3 15l2.5 -3.8" /><path d="M21 14.976l-2.492 -3.776" /><path d="M9 17l.5 -4" /><path d="M15 17l-.5 -4" /></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" id="eye-off-icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
+    </a>
+</span> {% endcomment %}

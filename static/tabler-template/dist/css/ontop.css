@@ -1,0 +1,13 @@
+
+.fade-on-scroll {
+    position: fixed;
+    bottom: 20px;
+    right: 20px; /* Adjust positioning as needed */
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    z-index: 100; /* Ensure button is above other elements */
+}
+
+.fade-on-scroll.fade-in {
+    opacity: 1; /* Button fades in on scroll down */
+}

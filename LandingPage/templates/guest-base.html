@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
 
+	<link rel="stylesheet" href="{% static 'custom-assets/css/login.css' %}">
+
+
 	<title> PUP-ACIS </title>
 
     <!-- CSS DEPENDENCIES-->
@@ -16,8 +19,8 @@
 		<script src="{% static 'tabler-template/dist/js/demo-theme.min.js' %}"></script>
 		<div class="page page-center">
 			
-			<!-- TOP NAVIGATION BAR -->
-			{% include "top-nav/top-nav.html" %}
+			{% comment %} <!-- TOP NAVIGATION BAR -->
+			{% include "top-nav/top-nav.html" %} {% endcomment %}
 
 
 			<!-- MAIN CONTENTS -->

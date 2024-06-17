@@ -1,0 +1,132 @@
+
+/* Login Body Part */
+.upper-circle {
+    position: absolute;
+    width: 75vw;
+    height: 20vw;
+    top: -10vh;
+    left: 95vh;
+    border-radius: 20vw 0px 0px 20vw;
+    background-color: #700001;
+    transform: rotate(-38.05deg);
+}
+.circle {
+    position: absolute;
+    border-radius: 50%;
+}
+.bottom-right-yellow-small-circle,
+.bottom-right-red-circle,
+.bottom-left-yellow-small-circle,
+.bottom-left-red-circle {
+    position: absolute;
+    border-radius: 50%;
+    background-color: #FEBE00;
+}
+.bottom-right-yellow-small-circle {
+    background-color: #FEBE00;
+    width: 1.5vw;
+    height: 1.5vw;
+    bottom: 25vh;
+    right: 15vw;
+}
+.bottom-right-red-circle {
+    width: 3.5vw;
+    height: 3.5vw;
+    bottom: 18vh;
+    right: 16vw;
+    background-color: #700001;
+}
+.bottom-left-yellow-small-circle {
+    width: 1.5vw;
+    height: 1.5vw;
+    bottom: 17vh;
+    left: 6vw;
+    background-color: #FEBE00;
+}
+.bottom-left-red-circle {
+    width: 3.5vw;
+    height: 3.5vw;
+    bottom: 10vh;
+    left: 7vw;
+    background-color: #700001;
+}
+
+/* Background Shapes */
+body {
+    background-image: url('../img/pupbg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow-x: hidden;
+    height: 100%;
+    font-family: 'Outfit', sans-serif !important;
+}
+.bgcl {
+    background-color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: -1;
+}
+h1, h2, h3, h4, h5, h6,
+p, li > a, a, .form-check-label {
+    font-family: "Outfit", sans-serif !important;
+}
+.card-rad {
+    border-radius: 1rem;
+}
+.hr-text:before {
+    content: "";
+    margin-left: 0;
+    margin-right: 0;
+}
+.hr-text:before {
+    content: "";
+    margin-left: 0rem;
+}
+.hr-text:after {
+    content: "";
+    margin-left: 0 !important;  
+}
+.page-center {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+}
+.containerz {
+    overflow: hidden;
+}
+.card {
+    width: 100%;
+    z-index: 3;
+}
+
+/* Responsive Tabs */
+@media (min-width: 406px) {
+    html {
+        overflow: hidden !important;
+    }
+    .card-rad {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+@media (min-width: 1px) {
+    html {
+        overflow: hidden !important;
+    }
+    .card-rad {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
